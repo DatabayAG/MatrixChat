@@ -43,6 +43,10 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
      */
     private static $instance = null;
     /**
+     * @var PluginConfig
+     */
+    private $pluginConfig;
+    /**
      * @var Container
      */
     public $dic;
@@ -63,6 +67,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
         $this->dic = $DIC;
         $this->ctrl = $this->dic->ctrl();
         $this->settings = new ilSetting(self::class);
+        $this->pluginConfig = new PluginConfig($this->settings);
         parent::__construct();
     }
 
@@ -164,10 +169,15 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
     public function updateLanguages($a_lang_keys = null) : void
     {
         try {
-            $jsonTranslationLoader = new JsonTranslationLoader();
+            $jsonTranslationLoader = new JsonTranslationLoader($this->getDirectory() . "/lang");
             $jsonTranslationLoader->load();
         } catch (Exception $e) {
         }
         parent::updateLanguages($a_lang_keys);
+    }
+
+    public function getPluginConfig() : PluginConfig
+    {
+        return $this->pluginConfig;
     }
 }

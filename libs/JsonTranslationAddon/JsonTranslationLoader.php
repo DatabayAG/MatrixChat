@@ -62,7 +62,7 @@ class JsonTranslationLoader
         $languageFiles = array_filter(
             $this->findJsonFiles($this->baseDir),
             static function (string $key) use ($langKeys) : bool {
-                return in_array($key, $langKeys, true);
+                return !is_array($langKeys) || in_array($key, $langKeys, true);
             },
             ARRAY_FILTER_USE_KEY
         );

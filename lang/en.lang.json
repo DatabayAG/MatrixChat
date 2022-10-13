@@ -13,5 +13,17 @@
       "notActivated": "Plugin is not active, yet. Please activate it.",
       "requiredParameterMissing": "A required parameter could not be found."
     }
+  },
+  "matrix": {
+    "admin": {
+      "username": {
+        "input": "Username of the Matrix-Server administrator",
+        "info": "Will be used to do administrator tasks like creating rooms."
+      },
+      "password": {
+        "input": "Password of the Matrix-Server administrator",
+        "info": "Will be used to do administrator tasks like creating rooms."
+      }
+    }
   }
 }

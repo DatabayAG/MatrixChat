@@ -13,5 +13,18 @@
       "notActivated": "Das Plugin ist nicht aktiviert. Bitte aktivieren Sie dieses zunächst.",
       "requiredParameterMissing": "Ein benötigter Parameter konnte nicht gefunden werden."
     }
+  },
+  "matrix": {
+    "admin": {
+      "username": {
+        "input": "Benutzername des Matrix-Server Administrators",
+        "info": "Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen."
+      },
+      "password": {
+        "input": "Passwort des Matrix-Server Administrators",
+        "info": "Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen."
+      }
+
+    }
   }
 }
