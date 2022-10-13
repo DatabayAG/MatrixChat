@@ -1,0 +1,30 @@
+{
+  "name": "plugin/matrix-chat-client",
+  "description": "An ILIAS UIHook plugin",
+  "type": "project",
+  "license": "GPL",
+  "authors": [
+    {
+      "name": "mbeym",
+      "email": "mbeym@databay.de"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "ILIAS\\Plugin\\MatrixChatClient\\": "src/",
+      "ILIAS\\Plugin\\MatrixChatClient\\Libs\\" : "libs/"
+    },
+    "classmap": ["./src", "./libs"]
+  },
+  "require": {
+    "php": ">=7.3"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-latest",
+    "captainhook/captainhook": "^5.10",
+    "friendsofphp/php-cs-fixer": "^3.11"
+  },
+  "config": {
+    "classmap-authoritative": true
+  }
+}

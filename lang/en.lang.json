@@ -1,0 +1,17 @@
+{
+  "general": {
+    "cmd": {
+      "undefined": "No command was found",
+      "notFound": "Command '%s' could not be found"
+    },
+    "update": {
+      "success": "Update successful",
+      "failed": "Update failed"
+    },
+    "plugin": {
+      "settings": "Plugin Settings",
+      "notActivated": "Plugin is not active, yet. Please activate it.",
+      "requiredParameterMissing": "A required parameter could not be found."
+    }
+  }
+}

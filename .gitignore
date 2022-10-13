@@ -1,0 +1,4 @@
+/vendor/
+/.idea
+/ipg-metadata.json
+/.php-cs-fixer.cache

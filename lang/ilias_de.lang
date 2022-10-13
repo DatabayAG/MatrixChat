@@ -1,0 +1,7 @@
+general.cmd.undefined#:#Kein Kommando wurde gefunden
+general.cmd.notFound#:#Kommando '%s' wurde nicht gefunden
+general.update.success#:#Aktualisierung erfolgreich
+general.update.failed#:#Aktualisierung fehlgeschlagen
+general.plugin.settings#:#Plugin-Einstellungen
+general.plugin.notActivated#:#Das Plugin ist nicht aktiviert. Bitte aktivieren Sie dieses zunächst.
+general.plugin.requiredParameterMissing#:#Ein benötigter Parameter konnte nicht gefunden werden.
