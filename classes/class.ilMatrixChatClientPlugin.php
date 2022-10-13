@@ -20,6 +20,8 @@ declare(strict_types=1);
 use ILIAS\DI\Container;
 
 use ILIAS\Plugin\MatrixChatClient\Libs\JsonTranslationLoader\JsonTranslationLoader;
+use ILIAS\Plugin\MatrixChatClient\Model\PluginConfig;
+use ILIAS\PluginLib\ConfigLoader\Exception\ConfigLoadException;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -67,7 +69,10 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
         $this->dic = $DIC;
         $this->ctrl = $this->dic->ctrl();
         $this->settings = new ilSetting(self::class);
-        $this->pluginConfig = new PluginConfig($this->settings);
+        try {
+            $this->pluginConfig = (new PluginConfig($this->settings))->load();
+        } catch (ConfigLoadException|ReflectionException $e) {
+        }
         parent::__construct();
     }
 

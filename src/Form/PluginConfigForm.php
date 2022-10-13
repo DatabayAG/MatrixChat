@@ -19,6 +19,7 @@ use ilMatrixChatClientPlugin;
 use ilTextInputGUI;
 use ilPasswordInputGUI;
 use ilMatrixChatClientConfigGUI;
+use ilUriInputGUI;
 
 /**
  * Class PluginConfigForm
@@ -37,6 +38,26 @@ class PluginConfigForm extends ilPropertyFormGUI
         parent::__construct();
         $this->plugin = ilMatrixChatClientPlugin::getInstance();
 
+        $this->setFormAction($this->ctrl->getFormActionByClass(ilMatrixChatClientConfigGUI::class, "showSettings"));
+        $this->setId("{$this->plugin->getId()}_{$this->plugin->getPluginName()}_plugin_config_form");
+        $this->setTitle($this->plugin->txt("general.plugin.settings"));
+
+        $matrixApiUrl = new ilUriInputGUI($this->plugin->txt("matrix.api.url"), "matrixApiUrl");
+        $matrixApiUrl->setRequired(true);
+
+        $matrixAdminUsername = new ilTextInputGUI($this->plugin->txt("matrix.admin.username.input"), "matrixAdminUsername");
+        $matrixAdminUsername->setRequired(true);
+        $matrixAdminUsername->setInfo($this->plugin->txt("matrix.admin.username.info"));
+
+        $matrixAdminPassword = new ilPasswordInputGUI($this->plugin->txt("matrix.admin.password.input"), "matrixAdminPassword");
+        $matrixAdminPassword->setRequired(true);
+        $matrixAdminPassword->setInfo($this->plugin->txt("matrix.admin.password.info"));
+        $matrixAdminPassword->setSkipSyntaxCheck(true);
+        $matrixAdminPassword->setRetype(false);
+
+        $this->addItem($matrixApiUrl);
+        $this->addItem($matrixAdminUsername);
+        $this->addItem($matrixAdminPassword);
         $this->addCommandButton("saveSettings", $this->lng->txt("save"));
     }
 }

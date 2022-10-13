@@ -15,6 +15,9 @@
     }
   },
   "matrix": {
+    "api": {
+      "url": "Url of the Matrix-Server API"
+    },
     "admin": {
       "username": {
         "input": "Username of the Matrix-Server administrator",

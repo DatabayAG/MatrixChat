@@ -7,6 +7,7 @@ general.update.failed#:#Update failed
 general.plugin.settings#:#Plugin Settings
 general.plugin.notActivated#:#Plugin is not active, yet. Please activate it.
 general.plugin.requiredParameterMissing#:#A required parameter could not be found.
+matrix.api.url#:#Url of the Matrix-Server API
 matrix.admin.username.input#:#Username of the Matrix-Server administrator
 matrix.admin.username.info#:#Will be used to do administrator tasks like creating rooms.
 matrix.admin.password.input#:#Password of the Matrix-Server administrator

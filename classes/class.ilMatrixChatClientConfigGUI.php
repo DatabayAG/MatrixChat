@@ -88,7 +88,7 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
         $form = new PluginConfigForm();
 
         if (!$form->checkInput()) {
-            ilUtil::sendFailure($this->plugin->txt("updateFailed"));
+            ilUtil::sendFailure($this->plugin->txt("general.update.failed"));
             $form->setValuesByPost();
             $this->showSettings($form);
             return;
@@ -97,12 +97,13 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
         $form->setValuesByPost();
 
         $this->plugin->getPluginConfig()
+                     ->setMatrixApiUrl($form->getInput("matrixApiUrl"))
                      ->setMatrixAdminUsername($form->getInput("matrixAdminUsername"))
                      ->setMatrixAdminPassword($form->getInput("matrixAdminPassword"));
 
         try {
             $this->plugin->getPluginConfig()->save();
-            ilUtil::sendSuccess($this->plugin->txt("updateSuccessful"), true);
+            ilUtil::sendSuccess($this->plugin->txt("general.update.success"), true);
         } catch (Exception $e) {
             ilUtil::sendFailure($this->plugin->txt($e->getMessage()), true);
         }

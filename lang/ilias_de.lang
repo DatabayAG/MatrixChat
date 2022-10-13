@@ -7,6 +7,7 @@ general.update.failed#:#Aktualisierung fehlgeschlagen
 general.plugin.settings#:#Plugin-Einstellungen
 general.plugin.notActivated#:#Das Plugin ist nicht aktiviert. Bitte aktivieren Sie dieses zunächst.
 general.plugin.requiredParameterMissing#:#Ein benötigter Parameter konnte nicht gefunden werden.
+matrix.api.url#:#Url der Matrix-Server API
 matrix.admin.username.input#:#Benutzername des Matrix-Server Administrators
 matrix.admin.username.info#:#Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen.
 matrix.admin.password.input#:#Passwort des Matrix-Server Administrators
