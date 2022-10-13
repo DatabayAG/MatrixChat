@@ -22,6 +22,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 
 use ILIAS\DI\Container;
+use ILIAS\Plugin\MatrixChatClient\Libs\ControllerHandler\ControllerHandler;
 
 /**
 * Class ilMatrixChatClientUIHookGUI
@@ -41,12 +42,17 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
      * @var ilCtrl
      */
     private $ctrl;
+    /**
+     * @var ControllerHandler
+     */
+    private $controllerHandler;
 
     public function __construct()
     {
         $this->plugin = ilMatrixChatClientPlugin::getInstance();
         $this->dic = $this->plugin->dic;
         $this->ctrl = $this->dic->ctrl();
+        $this->controllerHandler = new ControllerHandler($this->plugin);
     }
 
     public function getHTML($a_comp, $a_part, $a_par = []) : array
@@ -59,6 +65,11 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
         }
 
         return $this->uiHookResponse();
+    }
+
+    public function executeCommand() : void
+    {
+        $this->controllerHandler->handleCommand($this->plugin->dic->ctrl()->getCmd());
     }
 
     /**
