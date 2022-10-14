@@ -160,7 +160,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
     public function denyConfigIfPluginNotActive() : void
     {
         if (!$this->isActive()) {
-            ilUtil::sendFailure($this->txt("plugin_not_activated"), true);
+            ilUtil::sendFailure($this->txt("general.plugin.notActivated"), true);
             $this->ctrl->redirectByClass(ilObjComponentSettingsGUI::class, "view");
         }
     }

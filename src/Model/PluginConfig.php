@@ -14,9 +14,9 @@
 
 namespace ILIAS\Plugin\MatrixChatClient\Model;
 
-use ILIAS\PluginLib\ConfigLoader\Model\ConfigBase;
-use ILIAS\PluginLib\ConfigLoader\Exception\ConfigLoadException;
 use Exception;
+use ILIAS\Plugin\MatrixChatClient\Libs\IliasConfigLoader\Model\ConfigBase;
+use ILIAS\Plugin\MatrixChatClient\Libs\IliasConfigLoader\Exception\ConfigLoadException;
 
 /**
  * Class PluginConfig

@@ -122,7 +122,7 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
         if (method_exists($this, $cmd)) {
             $this->{$cmd}();
         } else {
-            ilUtil::sendFailure(sprintf($this->plugin->txt("cmdNotFound"), $cmd));
+            ilUtil::sendFailure(sprintf($this->plugin->txt("general.cmd.notFound"), $cmd));
             $this->{$this->getDefaultCommand()}();
         }
     }

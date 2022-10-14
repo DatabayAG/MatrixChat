@@ -14,7 +14,24 @@
       "requiredParameterMissing": "A required parameter could not be found."
     }
   },
+  "chat": "Chat",
   "matrix": {
+    "chat" : {
+      "login": {
+        "failed": "Matrix login failed",
+        "success": "Matrix login successful"
+      },
+      "room": {
+        "invite": {
+          "available": "Room invite available",
+          "invalid": "Room invite invalid"
+        }
+      },
+      "course": {
+        "settings": "Chat settings",
+        "enable": "Activate Matrix-Chat integration for the Course"
+      }
+    },
     "api": {
       "url": "Url of the Matrix-Server API"
     },
