@@ -27,6 +27,12 @@
         "success": "Matrix-Login erfolgreich"
       },
       "room": {
+        "delete": {
+          "confirm": "Möchten Sie auch den Chatraum löschen?",
+          "button": "Chatraum löschen",
+          "success": "Chatraum erfolgreich gelöscht",
+          "failed": "Chatraum konnte nicht gelöscht werden"
+        },
         "invite": {
           "available": "Raum einladung verfügbar",
           "invalid": "Raum einladung ungültig"

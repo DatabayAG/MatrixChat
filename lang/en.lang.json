@@ -27,6 +27,12 @@
         "success": "Matrix login successful"
       },
       "room": {
+        "delete": {
+          "confirm": "Would you like to fully delete the associated chat room?",
+          "button": "Delete chat room",
+            "success": "Room deleted successfully",
+            "failed": "Room could not be deleted"
+        },
         "invite": {
           "available": "Room invite available",
           "invalid": "Room invite invalid"
