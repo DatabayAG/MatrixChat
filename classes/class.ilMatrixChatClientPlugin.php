@@ -3,25 +3,26 @@
 declare(strict_types=1);
 
 /**
-* This file is part of ILIAS, a powerful learning management system
-* published by ILIAS open source e-Learning e.V.
-*
-* ILIAS is licensed with the GPL-3.0,
-* see https://www.gnu.org/licenses/gpl-3.0.en.html
-* You should have received a copy of said license along with the
-* source code, too.
-*
-* If this is not the case or you just want to try ILIAS, you'll find
-* us at:
-* https://www.ilias.de
-* https://github.com/ILIAS-eLearning
-*
-*********************************************************************/
-use ILIAS\DI\Container;
+ * This file is part of ILIAS, a powerful learning management system
+ * published by ILIAS open source e-Learning e.V.
+ *
+ * ILIAS is licensed with the GPL-3.0,
+ * see https://www.gnu.org/licenses/gpl-3.0.en.html
+ * You should have received a copy of said license along with the
+ * source code, too.
+ *
+ * If this is not the case or you just want to try ILIAS, you'll find
+ * us at:
+ * https://www.ilias.de
+ * https://github.com/ILIAS-eLearning
+ *
+ *********************************************************************/
 
+use ILIAS\DI\Container;
 use ILIAS\Plugin\MatrixChatClient\Libs\JsonTranslationLoader\JsonTranslationLoader;
 use ILIAS\Plugin\MatrixChatClient\Model\PluginConfig;
-use ILIAS\PluginLib\ConfigLoader\Exception\ConfigLoadException;
+use ILIAS\Plugin\MatrixChatClient\Api\MatrixApiCommunicator;
+use ILIAS\Plugin\MatrixChatClient\Libs\IliasConfigLoader\Exception\ConfigLoadException;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -49,6 +50,10 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
      */
     private $pluginConfig;
     /**
+     * @var MatrixApiCommunicator
+     */
+    public $matrixApi;
+    /**
      * @var Container
      */
     public $dic;
@@ -61,18 +66,17 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
      */
     public $settings;
 
-
-
+    /**
+     * @throws ConfigLoadException
+     */
     public function __construct()
     {
         global $DIC;
         $this->dic = $DIC;
         $this->ctrl = $this->dic->ctrl();
         $this->settings = new ilSetting(self::class);
-        try {
-            $this->pluginConfig = (new PluginConfig($this->settings))->load();
-        } catch (ConfigLoadException|ReflectionException $e) {
-        }
+        $this->pluginConfig = (new PluginConfig($this->settings))->load();
+        $this->matrixApi = new MatrixApiCommunicator($this, $this->pluginConfig->getMatrixApiUrl());
         parent::__construct();
     }
 
