@@ -47,7 +47,7 @@ class ChatCourseSettingsController extends BaseController
 
     public function showSettings(?ChatCourseSettingsForm $form = null) : void
     {
-        $refId = $this->verifyRefIdQueryParameter();
+        $refId = (int) $this->verifyQueryParameter("ref_id");
         if (!$form) {
             $form = new ChatCourseSettingsForm();
             $courseSettings = $this->courseSettingsRepo->read($refId) ?? new CourseSettings();
@@ -91,7 +91,7 @@ class ChatCourseSettingsController extends BaseController
 
         $form->setValuesByPost();
 
-        $courseId = (int) $this->verifyRefIdQueryParameter();
+        $courseId = (int) $this->verifyQueryParameter("ref_id");
         $courseSettings = $this->courseSettingsRepo->read($courseId) ?? new CourseSettings();
         if (!$courseSettings) {
             $courseSettings = (new CourseSettings())
@@ -131,7 +131,7 @@ class ChatCourseSettingsController extends BaseController
 
     public function confirmDisableCourseChatIntegration(?DisableCourseChatIntegrationForm $form = null) : void
     {
-        $courseId = $this->verifyRefIdQueryParameter();
+        $courseId = (int) $this->verifyQueryParameter("ref_id");
 
         $this->mainTpl->loadStandardTemplate();
 
@@ -151,7 +151,7 @@ class ChatCourseSettingsController extends BaseController
         }
 
         $form->setValuesByPost();
-        $courseId = $this->verifyRefIdQueryParameter();
+        $courseId = (int) $this->verifyQueryParameter("ref_id");
         $deleteRoom = (bool) $form->getInput("deleteChatRoom");
 
         if (!$deleteRoom) {

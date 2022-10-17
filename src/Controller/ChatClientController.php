@@ -61,12 +61,10 @@ class ChatClientController extends BaseController
 
         $this->request = $this->dic->http()->request();
         $query = $this->request->getQueryParams();
-        if (!isset($query["ref_id"]) || !$query["ref_id"]) {
-            ilUtil::sendFailure($this->plugin->txt("general.plugin.requiredParameterMissing"), true);
-            $this->plugin->redirectToHome();
-        }
 
-        $this->courseId = (int) $query["ref_id"];
+        $courseId = (int) $this->verifyQueryParameter("ref_id");
+
+        $this->courseId = (int) $courseId;
         $this->courseSettingsRepo = CourseSettingsRepository::getInstance();
         $this->courseSettings = $this->courseSettingsRepo->read((int) $this->courseId);
     }

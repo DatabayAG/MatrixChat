@@ -11,7 +11,7 @@
     "plugin": {
       "settings": "Plugin Settings",
       "notActivated": "Plugin is not active, yet. Please activate it.",
-      "requiredParameterMissing": "A required parameter could not be found."
+      "requiredParameterMissing": "The required parameter '%s' could not be found."
     }
   },
   "chat": "Chat",

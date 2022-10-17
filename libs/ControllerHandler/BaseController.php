@@ -24,6 +24,7 @@ use ilCtrl;
 use ilTabsGUI;
 use ilLanguage;
 use ILIAS\Plugin\MatrixChatClient\Api\MatrixApiCommunicator;
+use ilUtil;
 
 /**
  * Class BaseController
@@ -136,5 +137,15 @@ abstract class BaseController
             ],
             static::getCommand($cmd)
         );
+    }
+
+    public function verifyQueryParameter(string $parameterName) : string
+    {
+        $query = $this->dic->http()->request()->getQueryParams();
+        if (!isset($query[$parameterName])) {
+            ilUtil::sendFailure(sprintf($this->plugin->txt("general.plugin.requiredParameterMissing"), $parameterName), true);
+            $this->plugin->redirectToHome();
+        }
+        return $query[$parameterName];
     }
 }
