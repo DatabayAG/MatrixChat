@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 /**
  * This file is part of ILIAS, a powerful learning management system
  * published by ILIAS open source e-Learning e.V.
@@ -84,10 +86,10 @@ class MatrixUserApi extends MatrixApiEndpointBase
                     switch ($status) {
                         case "invite":
                             return new RoomInvite($id);
-                            case "join":
-                                return (new RoomJoined($id))
-                                    ->setTimeline($roomData["timeline"])
-                                    ->setUnreadNotifications($roomData["unread_notifications"]);
+                        case "join":
+                            return (new RoomJoined($id))
+                                ->setTimeline($roomData["timeline"])
+                                ->setUnreadNotifications($roomData["unread_notifications"]);
                         default:
                             return null;
                     }
@@ -102,7 +104,8 @@ class MatrixUserApi extends MatrixApiEndpointBase
         try {
             $result = $this->sendRequest(
                 "/_matrix/client/v3/join/{$roomInvite->getRoomId()}",
-                "POST", [],
+                "POST",
+                [],
                 $user->getAccessToken()
             );
         } catch (MatrixApiException $e) {

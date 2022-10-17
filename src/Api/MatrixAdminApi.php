@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 /**
  * This file is part of ILIAS, a powerful learning management system
  * published by ILIAS open source e-Learning e.V.
@@ -25,7 +27,6 @@ use ILIAS\Plugin\MatrixChatClient\Model\MatrixRoom;
  */
 class MatrixAdminApi extends MatrixApiEndpointBase
 {
-
     /**
      * @var MatrixUser|null
      */
@@ -76,8 +77,12 @@ class MatrixAdminApi extends MatrixApiEndpointBase
     public function getRoom(string $matrixRoomId) : ?MatrixRoom
     {
         try {
-            $response = $this->sendRequest("/_synapse/admin/v1/rooms/$matrixRoomId", "GET", [],
-                $this->getUser()->getAccessToken());
+            $response = $this->sendRequest(
+                "/_synapse/admin/v1/rooms/$matrixRoomId",
+                "GET",
+                [],
+                $this->getUser()->getAccessToken()
+            );
         } catch (MatrixApiException $e) {
             return null;
         }
@@ -92,11 +97,15 @@ class MatrixAdminApi extends MatrixApiEndpointBase
      */
     public function createRoom(string $name) : MatrixRoom
     {
-        $response = $this->sendRequest("/_matrix/client/v3/createRoom", "POST",
+        $response = $this->sendRequest(
+            "/_matrix/client/v3/createRoom",
+            "POST",
             [
                 "name" => $name,
                 "preset" => "private_chat"
-            ], $this->getUser()->getAccessToken());
+            ],
+            $this->getUser()->getAccessToken()
+        );
 
         return (new MatrixRoom())
             ->setId($response["room_id"])
