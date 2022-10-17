@@ -82,6 +82,7 @@ sudo service matrix-synapse restart
 ```bash
 register_new_matrix_user -u <Username> -p <Password> -a -c /etc/matrix-synapse/homeserver.yaml
 ```
+- Note that the ``<Username>`` should be **lowercase**.
 - Replace ``<Username>`` with your desired username
 - Replace ``<Password>`` with your desired password
 - ``-a´`` means Admin user.
