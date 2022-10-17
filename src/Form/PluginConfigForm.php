@@ -20,6 +20,7 @@ use ilTextInputGUI;
 use ilPasswordInputGUI;
 use ilMatrixChatClientConfigGUI;
 use ilUriInputGUI;
+use ilUtil;
 
 /**
  * Class PluginConfigForm
@@ -42,6 +43,15 @@ class PluginConfigForm extends ilPropertyFormGUI
         $this->setId("{$this->plugin->getId()}_{$this->plugin->getPluginName()}_plugin_config_form");
         $this->setTitle($this->plugin->txt("general.plugin.settings"));
 
+        if ($this->plugin->matrixApi->general->serverReachable()) {
+            ilUtil::sendSuccess($this->plugin->txt("matrix.server.reachable"), true);
+        } else {
+            ilUtil::sendFailure($this->plugin->txt("matrix.server.unreachable"), true);
+        }
+        if (!$this->plugin->matrixApi->admin->checkAdminUser()) {
+            ilUtil::sendFailure($this->plugin->txt("matrix.admin.loginInvalid"), true);
+        }
+
         $matrixApiUrl = new ilUriInputGUI($this->plugin->txt("matrix.api.url"), "matrixApiUrl");
         $matrixApiUrl->setRequired(true);
 
@@ -50,7 +60,6 @@ class PluginConfigForm extends ilPropertyFormGUI
         $matrixAdminUsername->setInfo($this->plugin->txt("matrix.admin.username.info"));
 
         $matrixAdminPassword = new ilPasswordInputGUI($this->plugin->txt("matrix.admin.password.input"), "matrixAdminPassword");
-        $matrixAdminPassword->setRequired(true);
         $matrixAdminPassword->setInfo($this->plugin->txt("matrix.admin.password.info"));
         $matrixAdminPassword->setSkipSyntaxCheck(true);
         $matrixAdminPassword->setRetype(false);
