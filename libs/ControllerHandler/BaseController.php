@@ -23,14 +23,20 @@ use ilUIPluginRouterGUI;
 use ilCtrl;
 use ilTabsGUI;
 use ilLanguage;
+use ILIAS\Plugin\MatrixChatClient\Api\MatrixApiCommunicator;
 
 /**
  * Class BaseController
+ *
  * @package ILIAS\Plugin\MatrixChatClient\Controller
  * @author  Marvin Beym <mbeym@databay.de>
  */
 abstract class BaseController
 {
+    /**
+     * @var MatrixApiCommunicator
+     */
+    public $matrixApi;
     /**
      * @var ilCtrl
      */
@@ -70,6 +76,7 @@ abstract class BaseController
         $this->lng->loadLanguageModule("crs");
         $this->ctrl = $this->dic->ctrl();
         $this->tabs = $this->dic->tabs();
+        $this->matrixApi = $this->plugin->matrixApi;
     }
 
     public static function getInstance(?Container $dic = null) : BaseController

@@ -43,10 +43,6 @@ class ChatClientController extends BaseController
      */
     private $courseSettings;
     /**
-     * @var MatrixApiCommunicator
-     */
-    private $matrixApi;
-    /**
      * @var int
      */
     private $courseId;
@@ -71,7 +67,6 @@ class ChatClientController extends BaseController
         }
 
         $this->courseId = (int) $query["ref_id"];
-        $this->matrixApi = $this->plugin->matrixApi;
         $this->courseSettingsRepo = CourseSettingsRepository::getInstance();
         $this->courseSettings = $this->courseSettingsRepo->read((int) $this->courseId);
     }

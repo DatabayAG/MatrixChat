@@ -22,6 +22,9 @@ use ILIAS\Plugin\MatrixChatClient\Model\CourseSettings;
 use Exception;
 use ILIAS\DI\Container;
 use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
+use ilObjCourse;
+use ilConfirmationGUI;
+use ILIAS\Plugin\MatrixChatClient\Form\DisableCourseChatIntegrationForm;
 
 /**
  * Class ChatCourseSettingsController
@@ -95,16 +98,80 @@ class ChatCourseSettingsController extends BaseController
                 ->setCourseId($courseId);
         }
 
-        $courseSettings->setChatIntegrationEnabled((bool) $form->getInput("chatIntegrationEnabled"));
+
+        $enableChatIntegration = (bool) $form->getInput("chatIntegrationEnabled");
+
+        $courseSettings->setChatIntegrationEnabled($enableChatIntegration);
+
+        if (!$courseSettings->getMatrixRoomId()) {
+            $roomExists = false;
+        } else {
+            $roomExists = $this->matrixApi->admin->roomExists($courseSettings->getMatrixRoomId());
+        }
+
+        if ($enableChatIntegration && !$roomExists) {
+            $room = $this->matrixApi->admin->createRoom(ilObjCourse::_lookupTitle(ilObjCourse::_lookupObjId($courseId)));
+            $courseSettings->setMatrixRoomId($room->getId());
+        }
 
         try {
             $this->courseSettingsRepo->save($courseSettings);
-            ilUtil::sendSuccess($this->plugin->txt("updateSuccessful"), true);
         } catch (Exception $ex) {
             ilUtil::sendFailure($this->plugin->txt("updateFailed"), true);
+            $this->redirectToCommand("showSettings");
         }
 
+        if (!$enableChatIntegration && $roomExists) {
+            $this->redirectToCommand("confirmDisableCourseChatIntegration", ["ref_id" => $courseSettings->getCourseId()]);
+        }
+
+        ilUtil::sendSuccess($this->plugin->txt("general.update.success"), true);
         $this->redirectToCommand("showSettings");
+    }
+
+    public function confirmDisableCourseChatIntegration(?DisableCourseChatIntegrationForm $form = null) : void
+    {
+        $courseId = $this->verifyRefIdQueryParameter();
+
+        $this->mainTpl->loadStandardTemplate();
+
+        if (!$form) {
+            $form = new DisableCourseChatIntegrationForm($courseId);
+        }
+        $this->mainTpl->setContent($form->getHTML());
+        $this->mainTpl->printToStdOut();
+    }
+
+    public function disableCourseChatIntegration() : void
+    {
+        $form = new DisableCourseChatIntegrationForm();
+        if (!$form->checkInput()) {
+            $form->setValuesByPost();
+            $this->confirmDisableCourseChatIntegration($form);
+        }
+
+        $form->setValuesByPost();
+        $courseId = $this->verifyRefIdQueryParameter();
+        $deleteRoom = (bool) $form->getInput("deleteChatRoom");
+
+        if (!$deleteRoom) {
+            $this->redirectToCommand("showSettings", ["ref_id" => $courseId]);
+        }
+
+        $courseSettings = $this->courseSettingsRepo->read($courseId);
+        if (!$courseSettings) {
+            $this->redirectToCommand("showSettings", ["ref_id" => $courseId]);
+        }
+
+        if ($this->matrixApi->admin->roomExists($courseSettings->getMatrixRoomId()) && $this->matrixApi->admin->deleteRoom($courseSettings->getMatrixRoomId())) {
+            $courseSettings->setMatrixRoomId(null);
+            if ($this->courseSettingsRepo->save($courseSettings)) {
+                ilUtil::sendSuccess($this->plugin->txt("matrix.chat.room.delete.success"), true);
+                $this->redirectToCommand("showSettings", ["ref_id" => $courseId]);
+            }
+        }
+
+        ilUtil::sendFailure($this->plugin->txt("matrix.chat.room.delete.failed"), true);
     }
 
     private function verifyRefIdQueryParameter() : int

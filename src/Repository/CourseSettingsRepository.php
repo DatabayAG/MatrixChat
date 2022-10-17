@@ -110,8 +110,8 @@ class CourseSettingsRepository
                 "UPDATE " . self::TABLE_NAME . " SET chat_integration_enabled = %s, matrix_room_id = %s WHERE course_id = %s",
                 [
                     "integer",
-                    "integer",
-                    "text"
+                    "text",
+                    "integer"
                 ],
                 [
                     $courseSettings->isChatIntegrationEnabled(),
@@ -119,7 +119,7 @@ class CourseSettingsRepository
                     $courseSettings->getCourseId()
                 ]
             );
-            return true;
+            return $affectedRows === 1;
         }
 
         $affectedRows = (int) $this->db->manipulateF(
