@@ -19,7 +19,7 @@ use ILIAS\Plugin\MatrixChatClient\Libs\IliasConfigLoader\Model\UnloadablePropert
 
 /**
  * Class ConfigLoadException
- * @package ILIAS\Plugin\ChatClientInterface\Exception
+ * @package ILIAS\Plugin\MatrixChatClient\Exception
  * @author  Marvin Beym <mbeym@databay.de>
  */
 class ConfigLoadException extends Exception

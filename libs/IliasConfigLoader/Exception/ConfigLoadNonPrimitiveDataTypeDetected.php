@@ -18,7 +18,7 @@ use Exception;
 
 /**
  * Class ConfigLoadNonPrimitiveDataTypeDetected
- * @package ILIAS\Plugin\ChatClientInterface\Exception
+ * @package ILIAS\Plugin\MatrixChatClient\Exception
  * @author  Marvin Beym <mbeym@databay.de>
  */
 class ConfigLoadNonPrimitiveDataTypeDetected extends Exception

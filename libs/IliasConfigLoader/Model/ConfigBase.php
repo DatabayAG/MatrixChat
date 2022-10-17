@@ -24,7 +24,7 @@ use TypeError;
 
 /**
  * Class ConfigBase
- * @package ILIAS\Plugin\ChatClientInterface\Model
+ * @package ILIAS\Plugin\MatrixChatClient\Model
  * @author  Marvin Beym <mbeym@databay.de>
  */
 class ConfigBase
