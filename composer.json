@@ -17,12 +17,13 @@
     "classmap": ["./src", "./libs"]
   },
   "require": {
-    "php": ">=7.3"
+    "php": ">=7.3",
+    "symfony/http-client": "^5.4"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest",
-    "captainhook/captainhook": "^5.10",
-    "friendsofphp/php-cs-fixer": "^3.11"
+    "friendsofphp/php-cs-fixer": "^3.12",
+    "captainhook/captainhook": "^5.10"
   },
   "config": {
     "classmap-authoritative": true
