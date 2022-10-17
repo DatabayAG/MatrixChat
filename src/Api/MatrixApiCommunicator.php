@@ -50,12 +50,12 @@ class MatrixApiCommunicator
      */
     public $general;
 
-    public function __construct(ilMatrixChatClientPlugin $plugin, string $apiUrl)
+    public function __construct(ilMatrixChatClientPlugin $plugin, string $matrixServerUrl)
     {
         $this->client = HttpClient::create();
         $this->plugin = $plugin;
-        $this->admin = new MatrixAdminApi($apiUrl, $this->client, $this->plugin);
-        $this->user = new MatrixUserApi($apiUrl, $this->client, $this->plugin);
-        $this->general = new MatrixGeneralApi($apiUrl, $this->client, $this->plugin);
+        $this->admin = new MatrixAdminApi($matrixServerUrl, $this->client, $this->plugin);
+        $this->user = new MatrixUserApi($matrixServerUrl, $this->client, $this->plugin);
+        $this->general = new MatrixGeneralApi($matrixServerUrl, $this->client, $this->plugin);
     }
 }

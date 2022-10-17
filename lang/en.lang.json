@@ -17,6 +17,7 @@
   "chat": "Chat",
   "matrix": {
     "server": {
+      "url": "Matrix Server (Synapse) URL",
       "reachable": "Server is reachable",
       "unreachable": "Server is unreachable"
     },
@@ -35,9 +36,6 @@
         "settings": "Chat settings",
         "enable": "Activate Matrix-Chat integration for the Course"
       }
-    },
-    "api": {
-      "url": "Url of the Matrix-Server API"
     },
     "admin": {
       "loginInvalid": "Admin-Login invalid",

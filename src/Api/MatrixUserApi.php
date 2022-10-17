@@ -29,7 +29,7 @@ class MatrixUserApi extends MatrixApiEndpointBase
     public function login(string $username, string $password, $loginType = "m.login.password") : ?MatrixUser
     {
         try {
-            $response = $this->sendRequest("login", "POST", [
+            $response = $this->sendRequest("/_matrix/client/v3/login", "POST", [
                 "type" => $loginType,
                 "user" => $username,
                 "password" => $password
@@ -50,7 +50,7 @@ class MatrixUserApi extends MatrixApiEndpointBase
      */
     public function getState(MatrixUser $user) : array
     {
-        return $this->sendRequest("sync?access_token={$user->getAccessToken()}");
+        return $this->sendRequest("/_matrix/client/v3/sync?access_token={$user->getAccessToken()}");
     }
 
     /**
@@ -70,7 +70,7 @@ class MatrixUserApi extends MatrixApiEndpointBase
         $roomId = $courseSettings->getMatrixRoomId();
 
         $this->login("admin", "Test123");
-        //$a = $this->sendRequest("rooms/$roomId/messages", "GET", [], $this->getAccessToken());
+        //$a = $this->sendRequest("/_matrix/client/v3/rooms/$roomId/messages", "GET", [], $this->getAccessToken());
 
         try {
             $data = $this->getState($user);
@@ -101,7 +101,7 @@ class MatrixUserApi extends MatrixApiEndpointBase
     {
         try {
             $result = $this->sendRequest(
-                "join/{$roomInvite->getRoomId()}",
+                "/_matrix/client/v3/join/{$roomInvite->getRoomId()}",
                 "POST", [],
                 $user->getAccessToken()
             );

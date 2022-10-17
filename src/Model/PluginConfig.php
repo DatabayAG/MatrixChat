@@ -29,7 +29,7 @@ class PluginConfig extends ConfigBase
     /**
      * @var string
      */
-    private $matrixApiUrl = "";
+    private $matrixServerUrl = "";
     /**
      * @var string
      */
@@ -42,18 +42,18 @@ class PluginConfig extends ConfigBase
     /**
      * @return string
      */
-    public function getMatrixApiUrl() : string
+    public function getMatrixServerUrl() : string
     {
-        return $this->matrixApiUrl;
+        return $this->matrixServerUrl;
     }
 
     /**
-     * @param string $matrixApiUrl
+     * @param string $matrixServerUrl
      * @return PluginConfig
      */
-    public function setMatrixApiUrl(string $matrixApiUrl) : PluginConfig
+    public function setMatrixServerUrl(string $matrixServerUrl) : PluginConfig
     {
-        $this->matrixApiUrl = $matrixApiUrl;
+        $this->matrixServerUrl = $matrixServerUrl;
         return $this;
     }
 

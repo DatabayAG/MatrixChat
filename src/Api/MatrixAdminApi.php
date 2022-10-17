@@ -36,7 +36,7 @@ class MatrixAdminApi extends MatrixApiEndpointBase
     public function login() : ?MatrixUser
     {
         try {
-            $response = $this->sendRequest("login", "POST", [
+            $response = $this->sendRequest("/_matrix/client/v3/login", "POST", [
                 "type" => "m.login.password",
                 "user" => $this->plugin->getPluginConfig()->getMatrixAdminUsername(),
                 "password" => $this->plugin->getPluginConfig()->getMatrixAdminPassword()

@@ -76,7 +76,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
         $this->ctrl = $this->dic->ctrl();
         $this->settings = new ilSetting(self::class);
         $this->pluginConfig = (new PluginConfig($this->settings))->load();
-        $this->matrixApi = new MatrixApiCommunicator($this, $this->pluginConfig->getMatrixApiUrl());
+        $this->matrixApi = new MatrixApiCommunicator($this, $this->pluginConfig->getmatrixServerUrl());
         parent::__construct();
     }
 

@@ -34,7 +34,7 @@ abstract class MatrixApiEndpointBase
     /**
      * @var string
      */
-    private $apiUrl;
+    private $matrixServerUrl;
     /**
      * @var CourseSettingsRepository
      */
@@ -48,25 +48,25 @@ abstract class MatrixApiEndpointBase
      */
     protected $plugin;
 
-    public function __construct(string $apiUrl, HttpClientInterface $client, ilMatrixChatClientPlugin $plugin)
+    public function __construct(string $matrixServerUrl, HttpClientInterface $client, ilMatrixChatClientPlugin $plugin)
     {
-        $this->apiUrl = $apiUrl;
+        $this->matrixServerUrl = $matrixServerUrl;
         $this->client = $client;
         $this->plugin = $plugin;
         $this->courseSettingsRepo = CourseSettingsRepository::getInstance();
     }
 
 
-    private function getApiUrl(string $apiEndpoint) : string
+    private function getApiUrl(string $apiCall) : string
     {
-        return $this->apiUrl . "/" . $apiEndpoint;
+        return $this->matrixServerUrl . "/" . ltrim($apiCall, "/");
     }
 
     /**
      * @throws MatrixApiException
      */
     protected function sendRequest(
-        string $apiEndpoint,
+        string $apiCall,
         string $method = "GET",
         array $body = [],
         ?string $token = null
@@ -84,7 +84,7 @@ abstract class MatrixApiEndpointBase
         }
 
         try {
-            $request = $this->client->request($method, $this->getApiUrl($apiEndpoint), $options);
+            $request = $this->client->request($method, $this->getApiUrl($apiCall), $options);
             $content = $request->getContent();
         } catch (TransportExceptionInterface|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface $e) {
             throw new MatrixApiException("REQUEST_ERROR", $e->getMessage());

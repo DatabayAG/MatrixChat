@@ -8,6 +8,7 @@ general.plugin.settings#:#Plugin-Einstellungen
 general.plugin.notActivated#:#Das Plugin ist nicht aktiviert. Bitte aktivieren Sie dieses zunächst.
 general.plugin.requiredParameterMissing#:#Ein benötigter Parameter konnte nicht gefunden werden.
 chat#:#Chat
+matrix.server.url#:#Matrix Server (Synapse) URL
 matrix.server.reachable#:#Server erreichbar
 matrix.server.unreachable#:#Server nicht erreichbar
 matrix.chat.login.failed#:#Matrix-Login fehlgeschlagen
@@ -16,7 +17,6 @@ matrix.chat.room.invite.available#:#Raum einladung verfügbar
 matrix.chat.room.invite.invalid#:#Raum einladung ungültig
 matrix.chat.course.settings#:#Chat-Einstellungen
 matrix.chat.course.enable#:#Aktiviere Matrix-Chat Integration für den Kurs
-matrix.api.url#:#Url der Matrix-Server API
 matrix.admin.loginInvalid#:#Admin-Login ungültig
 matrix.admin.username.input#:#Benutzername des Matrix-Server Administrators
 matrix.admin.username.info#:#Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen.

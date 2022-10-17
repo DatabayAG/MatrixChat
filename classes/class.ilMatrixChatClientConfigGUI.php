@@ -96,8 +96,10 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
 
         $form->setValuesByPost();
 
+        $matrixServerUrl = rtrim($form->getInput("matrixServerUrl"), "/");
+
         $this->plugin->getPluginConfig()
-                     ->setMatrixApiUrl($form->getInput("matrixApiUrl"))
+                     ->setMatrixServerUrl($matrixServerUrl)
                      ->setMatrixAdminUsername($form->getInput("matrixAdminUsername"));
 
         $matrixAdminPassword = $form->getInput("matrixAdminPassword");

@@ -27,7 +27,7 @@ class MatrixGeneralApi extends MatrixApiEndpointBase
     public function getSupportedLoginMethods() : array
     {
         try {
-            $response = $this->sendRequest("login");
+            $response = $this->sendRequest("/_matrix/client/v3/login");
         } catch (MatrixApiException $e) {
             return [];
         }

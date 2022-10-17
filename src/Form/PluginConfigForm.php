@@ -52,8 +52,8 @@ class PluginConfigForm extends ilPropertyFormGUI
             ilUtil::sendFailure($this->plugin->txt("matrix.admin.loginInvalid"), true);
         }
 
-        $matrixApiUrl = new ilUriInputGUI($this->plugin->txt("matrix.api.url"), "matrixApiUrl");
-        $matrixApiUrl->setRequired(true);
+        $matrixServerUrl = new ilUriInputGUI($this->plugin->txt("matrix.server.url"), "matrixServerUrl");
+        $matrixServerUrl->setRequired(true);
 
         $matrixAdminUsername = new ilTextInputGUI($this->plugin->txt("matrix.admin.username.input"), "matrixAdminUsername");
         $matrixAdminUsername->setRequired(true);
@@ -64,7 +64,7 @@ class PluginConfigForm extends ilPropertyFormGUI
         $matrixAdminPassword->setSkipSyntaxCheck(true);
         $matrixAdminPassword->setRetype(false);
 
-        $this->addItem($matrixApiUrl);
+        $this->addItem($matrixServerUrl);
         $this->addItem($matrixAdminUsername);
         $this->addItem($matrixAdminPassword);
         $this->addCommandButton("saveSettings", $this->lng->txt("save"));
