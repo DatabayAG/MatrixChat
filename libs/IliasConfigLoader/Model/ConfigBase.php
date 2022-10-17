@@ -44,12 +44,15 @@ class ConfigBase
         $this->settings = $settings;
     }
 
-    public function toArray() : array
+    public function toArray($blacklist = []) : array
     {
         $data = [];
         foreach ($this->getProperties(new ReflectionClass($this))->getLoadable() as $loadableProperty) {
             $property = $loadableProperty->getProperty();
             $property->setAccessible(true);
+            if (in_array($property->getName(), $blacklist, true)) {
+                continue;
+            }
             $data[$property->getName()] = $property->getValue($this);
         }
         return $data;
