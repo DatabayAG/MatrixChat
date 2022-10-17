@@ -16,7 +16,11 @@
   },
   "chat": "Chat",
   "matrix": {
-    "chat" : {
+    "server": {
+      "reachable": "Server erreichbar",
+      "unreachable": "Server nicht erreichbar"
+    },
+    "chat": {
       "login": {
         "failed": "Matrix-Login fehlgeschlagen",
         "success": "Matrix-Login erfolgreich"
@@ -36,15 +40,15 @@
       "url": "Url der Matrix-Server API"
     },
     "admin": {
+      "loginInvalid": "Admin-Login ungültig",
       "username": {
         "input": "Benutzername des Matrix-Server Administrators",
         "info": "Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen."
       },
       "password": {
         "input": "Passwort des Matrix-Server Administrators",
-        "info": "Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen."
+        "info": "Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen.<br>Eingabefeld wird nach abspeichern des Passwortes geleert!"
       }
-
     }
   }
 }

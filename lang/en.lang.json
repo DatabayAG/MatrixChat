@@ -16,6 +16,10 @@
   },
   "chat": "Chat",
   "matrix": {
+    "server": {
+      "reachable": "Server is reachable",
+      "unreachable": "Server is unreachable"
+    },
     "chat" : {
       "login": {
         "failed": "Matrix login failed",
@@ -36,13 +40,14 @@
       "url": "Url of the Matrix-Server API"
     },
     "admin": {
+      "loginInvalid": "Admin-Login invalid",
       "username": {
         "input": "Username of the Matrix-Server administrator",
         "info": "Will be used to do administrator tasks like creating rooms."
       },
       "password": {
         "input": "Password of the Matrix-Server administrator",
-        "info": "Will be used to do administrator tasks like creating rooms."
+        "info": "Will be used to do administrator tasks like creating rooms.<br>Input-Field will be cleared after saving the password!"
       }
     }
   }
