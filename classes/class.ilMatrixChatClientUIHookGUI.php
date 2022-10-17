@@ -114,17 +114,17 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
             return;
         }
 
-        $dic->ctrl()->setParameterByClass(self::class, "ref_id", (int) $query["ref_id"]);
-        $tabs->addSubTab(
-            "matrix-chat",
-            $this->plugin->txt("chat"),
-            $dic->ctrl()->getLinkTargetByClass([
-                ilUIPluginRouterGUI::class,
-                self::class,
-            ], ChatClientController::getCommand("showChat"))
-        );
-
-        $a = "";
+        if ($this->plugin->matrixApi->general->serverReachable()) {
+            $dic->ctrl()->setParameterByClass(self::class, "ref_id", (int) $query["ref_id"]);
+            $tabs->addSubTab(
+                "matrix-chat",
+                $this->plugin->txt("chat"),
+                $dic->ctrl()->getLinkTargetByClass([
+                    ilUIPluginRouterGUI::class,
+                    self::class,
+                ], ChatClientController::getCommand("showChat"))
+            );
+        }
     }
 
     private function injectChatIntegrationConfigTab(Container $dic) : void
@@ -149,14 +149,17 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
         }
 
         $dic->ctrl()->setParameterByClass(self::class, "ref_id", (int) $query["ref_id"]);
-        $tabs->addSubTab(
-            "matrix-chat-course-settings",
-            $this->plugin->txt("matrix.chat.course.settings"),
-            $dic->ctrl()->getLinkTargetByClass([
-                ilUIPluginRouterGUI::class,
-                self::class,
-            ], ChatCourseSettingsController::getCommand("showSettings"))
-        );
+
+        if ($this->plugin->matrixApi->general->serverReachable()) {
+            $tabs->addSubTab(
+                "matrix-chat-course-settings",
+                $this->plugin->txt("matrix.chat.course.settings"),
+                $dic->ctrl()->getLinkTargetByClass([
+                    ilUIPluginRouterGUI::class,
+                    self::class,
+                ], ChatCourseSettingsController::getCommand("showSettings"))
+            );
+        }
     }
 
     /**

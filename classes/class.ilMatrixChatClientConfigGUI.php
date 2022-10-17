@@ -75,7 +75,7 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
         if ($form === null) {
             $form = new PluginConfigForm();
             $form->setValuesByArray(
-                $this->plugin->getPluginConfig()->toArray(),
+                $this->plugin->getPluginConfig()->toArray(["matrixAdminPassword"]),
                 true
             );
         }
@@ -98,8 +98,12 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
 
         $this->plugin->getPluginConfig()
                      ->setMatrixApiUrl($form->getInput("matrixApiUrl"))
-                     ->setMatrixAdminUsername($form->getInput("matrixAdminUsername"))
-                     ->setMatrixAdminPassword($form->getInput("matrixAdminPassword"));
+                     ->setMatrixAdminUsername($form->getInput("matrixAdminUsername"));
+
+        $matrixAdminPassword = $form->getInput("matrixAdminPassword");
+        if ($matrixAdminPassword !== "") {
+            $this->plugin->getPluginConfig()->setMatrixAdminPassword($matrixAdminPassword);
+        }
 
         try {
             $this->plugin->getPluginConfig()->save();
