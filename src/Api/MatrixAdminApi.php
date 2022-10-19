@@ -43,7 +43,8 @@ class MatrixAdminApi extends MatrixApiEndpointBase
             $response = $this->sendRequest("/_matrix/client/v3/login", "POST", [
                 "type" => "m.login.password",
                 "user" => $this->plugin->getPluginConfig()->getMatrixAdminUsername(),
-                "password" => $this->plugin->getPluginConfig()->getMatrixAdminPassword()
+                "password" => $this->plugin->getPluginConfig()->getMatrixAdminPassword(),
+                "device_id" => "ilias_matrix_chat_device_admin"
             ]);
         } catch (MatrixApiException $e) {
             return null;
