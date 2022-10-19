@@ -25,9 +25,9 @@ namespace ILIAS\Plugin\MatrixChatClient\Model;
 class CourseSettings
 {
     /**
-     * @var int
+     * @var int|null
      */
-    private $courseId;
+    private $courseId = null;
     /**
      * @var bool
      */
@@ -38,7 +38,10 @@ class CourseSettings
      */
     private $matrixRoomId;
 
-    public function getCourseId() : int
+    /**
+     * @return int|null
+     */
+    public function getCourseId() : ?int
     {
         return $this->courseId;
     }

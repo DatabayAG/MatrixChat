@@ -52,15 +52,10 @@ class ChatCourseSettingsController extends BaseController
         $refId = (int) $this->verifyQueryParameter("ref_id");
         if (!$form) {
             $form = new ChatCourseSettingsForm();
-            $courseSettings = $this->courseSettingsRepo->read($refId) ?? new CourseSettings();
-            $form->setValuesByArray(
-                [
-                    "matrixRoomId" => $courseSettings->getMatrixRoomId(),
-                    "chatIntegrationEnabled" => $courseSettings->isChatIntegrationEnabled(),
-                    "courseId" => $courseSettings->getCourseId()
-                ],
-                true
-            );
+            $courseSettings = $this->courseSettingsRepo->read($refId);
+            $form->setValuesByArray([
+                "chatIntegrationEnabled" => $courseSettings->isChatIntegrationEnabled(),
+            ], true);
         }
 
         $this->mainTpl->setTitle($this->plugin->txt("matrix.chat.course.settings"));
@@ -94,12 +89,7 @@ class ChatCourseSettingsController extends BaseController
         $form->setValuesByPost();
 
         $courseId = (int) $this->verifyQueryParameter("ref_id");
-        $courseSettings = $this->courseSettingsRepo->read($courseId) ?? new CourseSettings();
-        if (!$courseSettings) {
-            $courseSettings = (new CourseSettings())
-                ->setCourseId($courseId);
-        }
-
+        $courseSettings = $this->courseSettingsRepo->read($courseId);
 
         $enableChatIntegration = (bool) $form->getInput("chatIntegrationEnabled");
 

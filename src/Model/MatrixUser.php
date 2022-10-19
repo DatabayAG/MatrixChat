@@ -20,15 +20,20 @@ use JsonSerializable;
 
 /**
  * Class MatrixUser
+ *
  * @package ILIAS\Plugin\MatrixChatClient\Model
  * @author  Marvin Beym <mbeym@databay.de>
  */
 class MatrixUser implements JsonSerializable
 {
     /**
+     * @var int
+     */
+    private $iliasUserId;
+    /**
      * @var string
      */
-    private $id;
+    private $matrixUserId;
     /**
      * @var string
      */
@@ -43,20 +48,38 @@ class MatrixUser implements JsonSerializable
     private $device_id;
 
     /**
-     * @return string
+     * @return int
      */
-    public function getId() : string
+    public function getIliasUserId() : int
     {
-        return $this->id;
+        return $this->iliasUserId;
     }
 
     /**
-     * @param string $id
+     * @param int $iliasUserId
      * @return MatrixUser
      */
-    public function setId(string $id) : MatrixUser
+    public function setIliasUserId(int $iliasUserId) : MatrixUser
     {
-        $this->id = $id;
+        $this->iliasUserId = $iliasUserId;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMatrixUserId() : string
+    {
+        return $this->matrixUserId;
+    }
+
+    /**
+     * @param string $matrixUserId
+     * @return MatrixUser
+     */
+    public function setMatrixUserId(string $matrixUserId) : MatrixUser
+    {
+        $this->matrixUserId = $matrixUserId;
         return $this;
     }
 

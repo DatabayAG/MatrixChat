@@ -81,7 +81,7 @@ class CourseSettingsRepository
         return $data;
     }
 
-    public function read(int $courseId) : ?CourseSettings
+    public function read(int $courseId) : CourseSettings
     {
         $result = $this->db->queryF(
             "SELECT * FROM " . self::TABLE_NAME . " WHERE course_id = %s",
@@ -90,7 +90,7 @@ class CourseSettingsRepository
         );
 
         if ($result->numRows() === 0) {
-            return null;
+            return (new CourseSettings())->setCourseId($courseId);
         }
 
         $data = $this->db->fetchAssoc($result);
@@ -102,7 +102,13 @@ class CourseSettingsRepository
 
     public function exists(int $courseId) : bool
     {
-        return $this->read($courseId) !== null;
+        $result = $this->db->queryF(
+            "SELECT course_id FROM " . self::TABLE_NAME . " WHERE course_id = %s",
+            ["integer"],
+            [$courseId]
+        );
+
+        return $result->numRows() === 1;
     }
 
     public function save(CourseSettings $courseSettings) : bool
