@@ -6,7 +6,7 @@ general.update.success#:#Aktualisierung erfolgreich
 general.update.failed#:#Aktualisierung fehlgeschlagen
 general.plugin.settings#:#Plugin-Einstellungen
 general.plugin.notActivated#:#Das Plugin ist nicht aktiviert. Bitte aktivieren Sie dieses zunächst.
-general.plugin.requiredParameterMissing#:#Ein benötigter Parameter konnte nicht gefunden werden.
+general.plugin.requiredParameterMissing#:#Der benötigte Parameter '%s' konnte nicht gefunden werden.
 chat#:#Chat
 matrix.server.url#:#Matrix Server (Synapse) URL
 matrix.server.reachable#:#Server erreichbar

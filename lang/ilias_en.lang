@@ -6,7 +6,7 @@ general.update.success#:#Update successful
 general.update.failed#:#Update failed
 general.plugin.settings#:#Plugin Settings
 general.plugin.notActivated#:#Plugin is not active, yet. Please activate it.
-general.plugin.requiredParameterMissing#:#A required parameter could not be found.
+general.plugin.requiredParameterMissing#:#The required parameter '%s' could not be found.
 chat#:#Chat
 matrix.server.url#:#Matrix Server (Synapse) URL
 matrix.server.reachable#:#Server is reachable
