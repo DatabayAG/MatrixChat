@@ -20,31 +20,61 @@ use ILIAS\Plugin\MatrixChatClient\Model\Room\RoomInvite;
 use ILIAS\Plugin\MatrixChatClient\Model\Room\RoomJoined;
 use ILIAS\Plugin\MatrixChatClient\Model\Room\RoomModel;
 use ILIAS\Plugin\MatrixChatClient\Model\MatrixUser;
+use ILIAS\Plugin\MatrixChatClient\Repository\UserDeviceRepository;
+use ILIAS\Plugin\MatrixChatClient\Libs\UserField\UserFieldLoader;
+use Exception;
 
 /**
  * Class MatrixUserApi
+ *
  * @package ILIAS\Plugin\MatrixChatClient\Api
  * @author  Marvin Beym <mbeym@databay.de>
  */
 class MatrixUserApi extends MatrixApiEndpointBase
 {
-    public function login(string $username, string $password, $loginType = "m.login.password") : ?MatrixUser
+    /**
+     * @throws Exception
+     */
+    public function login(int $iliasUserId, $loginType = "m.login.password") : ?MatrixUser
     {
+        $userFieldLoader = UserFieldLoader::getInstance();
+
+        $configuredUsernameField = $userFieldLoader->getUserFieldById($this->plugin->getPluginConfig()->getUsernameFieldId());
+        $configuredPasswordField = $userFieldLoader->getUserFieldById($this->plugin->getPluginConfig()->getPasswordFieldId());
+
+        if (!$configuredUsernameField || !$configuredPasswordField) {
+            throw new Exception("matrix.admin.auth.byLoginAndPassword.notConfigured");
+        }
+
+        $usernameField = $userFieldLoader->getUserFieldForUser($iliasUserId, $configuredUsernameField->getId());
+        $passwordField = $userFieldLoader->getUserFieldForUser($iliasUserId, $configuredPasswordField->getId());
+
+        if (!$usernameField || !$passwordField) {
+            throw new Exception("matrix.admin.auth.byLoginAndPassword.notConfigured");
+        }
+
+        if (!$usernameField->getValue() || !$passwordField->getValue()) {
+            throw new Exception("matrix.admin.auth.byLoginAndPassword.missingUsernamePassword");
+        }
+
+        $deviceId = UserDeviceRepository::getInstance()->read($iliasUserId);
         try {
             $response = $this->sendRequest("/_matrix/client/v3/login", "POST", [
                 "type" => $loginType,
-                "user" => $username,
-                "password" => $password
+                "user" => $usernameField->getValue(),
+                "password" => $passwordField->getValue(),
+                "device_id" => $deviceId
             ]);
         } catch (MatrixApiException $e) {
             return null;
         }
 
         return (new MatrixUser())
-            ->setId($response["user_id"])
+            ->setMatrixUserId($response["user_id"])
             ->setAccessToken($response["access_token"])
             ->setHomeServer($response["home_server"])
-            ->setDeviceId($response["device_id"]);
+            ->setDeviceId($deviceId)
+            ->setIliasUserId($iliasUserId);
     }
 
     /**
@@ -70,9 +100,6 @@ class MatrixUserApi extends MatrixApiEndpointBase
             return null;
         }
         $roomId = $courseSettings->getMatrixRoomId();
-
-        $this->login("admin", "Test123");
-        //$a = $this->sendRequest("/_matrix/client/v3/rooms/$roomId/messages", "GET", [], $this->getAccessToken());
 
         try {
             $data = $this->getState($user);
