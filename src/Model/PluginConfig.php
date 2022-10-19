@@ -40,6 +40,14 @@ class PluginConfig extends ConfigBase
      * @var string
      */
     private $matrixAdminPassword = "";
+    /**
+     * @var string
+     */
+    private $usernameFieldId = "";
+    /**
+     * @var string
+     */
+    private $passwordFieldId = "";
 
     /**
      * @return string
@@ -92,6 +100,42 @@ class PluginConfig extends ConfigBase
     public function setMatrixAdminPassword(string $matrixAdminPassword) : PluginConfig
     {
         $this->matrixAdminPassword = $matrixAdminPassword;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUsernameFieldId() : string
+    {
+        return $this->usernameFieldId;
+    }
+
+    /**
+     * @param string $usernameFieldId
+     * @return PluginConfig
+     */
+    public function setUsernameFieldId(string $usernameFieldId) : PluginConfig
+    {
+        $this->usernameFieldId = $usernameFieldId;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPasswordFieldId() : string
+    {
+        return $this->passwordFieldId;
+    }
+
+    /**
+     * @param string $passwordFieldId
+     * @return PluginConfig
+     */
+    public function setPasswordFieldId(string $passwordFieldId) : PluginConfig
+    {
+        $this->passwordFieldId = $passwordFieldId;
         return $this;
     }
 

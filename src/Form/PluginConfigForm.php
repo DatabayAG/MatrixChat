@@ -23,6 +23,8 @@ use ilPasswordInputGUI;
 use ilMatrixChatClientConfigGUI;
 use ilUriInputGUI;
 use ilUtil;
+use ilSelectInputGUI;
+use ILIAS\Plugin\MatrixChatClient\Libs\UserField\UserFieldLoader;
 
 /**
  * Class PluginConfigForm
@@ -66,9 +68,21 @@ class PluginConfigForm extends ilPropertyFormGUI
         $matrixAdminPassword->setSkipSyntaxCheck(true);
         $matrixAdminPassword->setRetype(false);
 
+        $usernameFieldId = new ilSelectInputGUI($this->plugin->txt("matrix.admin.auth.byLoginAndPassword.usernameField.title"), "usernameFieldId");
+        $usernameFieldId->setRequired(true);
+        $usernameFieldId->setInfo($this->plugin->txt("matrix.admin.auth.byLoginAndPassword.usernameField.info"));
+        $usernameFieldId->setOptions(UserFieldLoader::getInstance()->getAllUserFieldsAsOptions());
+
+        $passwordFieldId = new ilSelectInputGUI($this->plugin->txt("matrix.admin.auth.byLoginAndPassword.passwordField.title"), "passwordFieldId");
+        $passwordFieldId->setRequired(true);
+        $passwordFieldId->setInfo($this->plugin->txt("matrix.admin.auth.byLoginAndPassword.passwordField.info"));
+        $passwordFieldId->setOptions(UserFieldLoader::getInstance()->getAllUserFieldsAsOptions());
+
         $this->addItem($matrixServerUrl);
         $this->addItem($matrixAdminUsername);
         $this->addItem($matrixAdminPassword);
+        $this->addItem($usernameFieldId);
+        $this->addItem($passwordFieldId);
         $this->addCommandButton("saveSettings", $this->lng->txt("save"));
     }
 }

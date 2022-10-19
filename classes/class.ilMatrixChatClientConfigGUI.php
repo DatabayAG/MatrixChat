@@ -12,6 +12,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 /**
  * Class ilMatrixChatClientConfigGUI
+ *
  * @author  Marvin Beym <mbeym@databay.de>
  */
 class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
@@ -100,7 +101,9 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
 
         $this->plugin->getPluginConfig()
                      ->setMatrixServerUrl($matrixServerUrl)
-                     ->setMatrixAdminUsername($form->getInput("matrixAdminUsername"));
+                     ->setMatrixAdminUsername($form->getInput("matrixAdminUsername"))
+                     ->setUsernameFieldId($form->getInput("usernameFieldId"))
+                     ->setPasswordFieldId($form->getInput("passwordFieldId"));
 
         $matrixAdminPassword = $form->getInput("matrixAdminPassword");
         if ($matrixAdminPassword !== "") {
@@ -118,6 +121,7 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
 
     /**
      * Calls the function for a received command
+     *
      * @param $cmd
      * @throws Exception
      */
@@ -135,6 +139,7 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
 
     /**
      * Returns the default command
+     *
      * @return string
      */
     protected function getDefaultCommand() : string
