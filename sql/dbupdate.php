@@ -38,6 +38,6 @@ if (!$ilDB->tableExists("mcc_user_device")) {
             "notnull" => true,
         ],
     ]);
-    $ilDB->addPrimaryKey("mcc_user_device", ["user_id", "device_id"]);
+    $ilDB->addPrimaryKey("mcc_user_device", ["user_id"]);
 }
 ?>
