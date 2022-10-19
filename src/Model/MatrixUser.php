@@ -140,10 +140,11 @@ class MatrixUser implements JsonSerializable
     public function jsonSerialize() : array
     {
         return [
-            'userId' => $this->getId(),
-            'accessToken' => $this->getAccessToken(),
-            'homeServer' => $this->getHomeServer(),
-            'deviceId' => $this->getDeviceId()
+            "iliasUserId" => $this->getIliasUserId(),
+            "matrixUserId" => $this->getMatrixUserId(),
+            "accessToken" => $this->getAccessToken(),
+            "homeServer" => $this->getHomeServer(),
+            "deviceId" => $this->getDeviceId()
         ];
     }
 }
