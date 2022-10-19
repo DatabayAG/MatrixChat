@@ -170,4 +170,9 @@ class MatrixAdminApi extends MatrixApiEndpointBase
 
         return true;
     }
+
+    public function isUserMemberOfRoom(MatrixUser $matrixUser, string $matrixRoomId) : bool
+    {
+        return in_array($matrixUser->getMatrixUserId(), $this->getRoomMembers($matrixRoomId), true);
+    }
 }
