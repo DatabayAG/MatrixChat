@@ -108,9 +108,13 @@ class MatrixAdminApi extends MatrixApiEndpointBase
             $this->getUser()->getAccessToken()
         );
 
-        return (new MatrixRoom())
+
+        $matrixRoom = (new MatrixRoom())
             ->setId($response["room_id"])
             ->setName($name);
+
+        $this->addUserToRoom($this->getUser(), $matrixRoom);
+        return $matrixRoom;
     }
 
     public function deleteRoom(string $roomId) : bool
@@ -147,5 +151,23 @@ class MatrixAdminApi extends MatrixApiEndpointBase
         }
 
         return $response["members"];
+    }
+
+    public function addUserToRoom(MatrixUser $matrixUser, MatrixRoom $matrixRoom) : bool
+    {
+        try {
+            $response = $this->sendRequest(
+                "/_synapse/admin/v1/join/{$matrixRoom->getId()}",
+                "POST",
+                [
+                    "user_id" => $matrixUser->getMatrixUserId(),
+                ],
+                $this->getUser()->getAccessToken()
+            );
+        } catch (MatrixApiException $e) {
+            return false;
+        }
+
+        return true;
     }
 }
