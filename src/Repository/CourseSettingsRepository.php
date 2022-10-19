@@ -37,7 +37,7 @@ class CourseSettingsRepository
     /**
      * @var string
      */
-    protected const TABLE_NAME = "cci_course_settings";
+    protected const TABLE_NAME = "mcc_course_settings";
 
     public function __construct(?ilDBInterface $db = null)
     {
