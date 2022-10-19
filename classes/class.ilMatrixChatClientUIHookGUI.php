@@ -25,6 +25,7 @@ use ILIAS\DI\Container;
 use ILIAS\Plugin\MatrixChatClient\Libs\ControllerHandler\ControllerHandler;
 use ILIAS\Plugin\MatrixChatClient\Controller\ChatCourseSettingsController;
 use ILIAS\Plugin\MatrixChatClient\Controller\ChatClientController;
+use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
 
 /**
 * Class ilMatrixChatClientUIHookGUI
@@ -114,7 +115,9 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
             return;
         }
 
-        if ($this->plugin->matrixApi->general->serverReachable()) {
+        $courseSettings = CourseSettingsRepository::getInstance($this->dic->database())->read((int) $query["ref_id"]);
+
+        if ($this->plugin->matrixApi->general->serverReachable() && $courseSettings && $courseSettings->isChatIntegrationEnabled()) {
             $dic->ctrl()->setParameterByClass(self::class, "ref_id", (int) $query["ref_id"]);
             $tabs->addSubTab(
                 "matrix-chat",
