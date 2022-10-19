@@ -14,12 +14,11 @@ matrix.server.unreachable#:#Server is unreachable
 matrix.chat.login.failed#:#Matrix login failed
 matrix.chat.login.success#:#Matrix login successful
 matrix.chat.room.notFound#:#Room could not be found.
+matrix.chat.room.memberAssignFailed#:#User could not be added to the room.
 matrix.chat.room.delete.confirm#:#Would you like to fully delete the associated chat room?
 matrix.chat.room.delete.button#:#Delete chat room
 matrix.chat.room.delete.success#:#Room deleted successfully
 matrix.chat.room.delete.failed#:#Room could not be deleted
-matrix.chat.room.invite.available#:#Room invite available
-matrix.chat.room.invite.invalid#:#Room invite invalid
 matrix.chat.course.settings#:#Chat settings
 matrix.chat.course.enable#:#Activate Matrix-Chat integration for the Course
 matrix.admin.loginInvalid#:#Admin-Login invalid
