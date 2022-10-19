@@ -128,4 +128,24 @@ class MatrixAdminApi extends MatrixApiEndpointBase
 
         return true;
     }
+
+    /**
+     * @param string $roomId
+     * @return string[]
+     */
+    public function getRoomMembers(string $roomId) : array
+    {
+        try {
+            $response = $this->sendRequest(
+                "/_synapse/admin/v1/rooms/$roomId/members",
+                "GET",
+                [],
+                $this->getUser()->getAccessToken()
+            );
+        } catch (MatrixApiException $e) {
+            return [];
+        }
+
+        return $response["members"];
+    }
 }
