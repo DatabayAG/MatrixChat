@@ -51,7 +51,7 @@ class MatrixAdminApi extends MatrixApiEndpointBase
         }
 
         return (new MatrixUser())
-            ->setId($response["user_id"])
+            ->setMatrixUserId($response["user_id"])
             ->setAccessToken($response["access_token"])
             ->setHomeServer($response["home_server"])
             ->setDeviceId($response["device_id"]);
