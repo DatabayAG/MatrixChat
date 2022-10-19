@@ -13,6 +13,7 @@ matrix.server.reachable#:#Server is reachable
 matrix.server.unreachable#:#Server is unreachable
 matrix.chat.login.failed#:#Matrix login failed
 matrix.chat.login.success#:#Matrix login successful
+matrix.chat.room.notFound#:#Room could not be found.
 matrix.chat.room.delete.confirm#:#Would you like to fully delete the associated chat room?
 matrix.chat.room.delete.button#:#Delete chat room
 matrix.chat.room.delete.success#:#Room deleted successfully
@@ -26,3 +27,9 @@ matrix.admin.username.input#:#Username of the Matrix-Server administrator
 matrix.admin.username.info#:#Will be used to do administrator tasks like creating rooms.
 matrix.admin.password.input#:#Password of the Matrix-Server administrator
 matrix.admin.password.info#:#Will be used to do administrator tasks like creating rooms.<br>Input-Field will be cleared after saving the password!
+matrix.admin.auth.byLoginAndPassword.notConfigured#:#Authentication with username and password is not configured
+matrix.admin.auth.byLoginAndPassword.missingUsernamePassword#:#No Username or Password was configured. Please configure a username and password first.
+matrix.admin.auth.byLoginAndPassword.usernameField.title#:#Username Userfield
+matrix.admin.auth.byLoginAndPassword.usernameField.info#:#The Userfield which contains the username for the matrix user.
+matrix.admin.auth.byLoginAndPassword.passwordField.title#:#Password Userfield
+matrix.admin.auth.byLoginAndPassword.passwordField.info#:#The Userfield which contains the password for the matrix user.

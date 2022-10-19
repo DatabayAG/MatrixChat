@@ -27,6 +27,7 @@
         "success": "Matrix-Login erfolgreich"
       },
       "room": {
+        "notFound": "Raum konnte nicht gefunden werden.",
         "delete": {
           "confirm": "Möchten Sie auch den Chatraum löschen?",
           "button": "Chatraum löschen",
@@ -52,6 +53,20 @@
       "password": {
         "input": "Passwort des Matrix-Server Administrators",
         "info": "Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen.<br>Eingabefeld wird nach abspeichern des Passwortes geleert!"
+      },
+      "auth": {
+        "byLoginAndPassword": {
+          "notConfigured": "Authentifizierung mit Benutzername und Passwort ist nicht konfiguriert",
+          "missingUsernamePassword": "Es wurde kein Benutzername oder Passwort konfiguriert. Bitte konfigurieren Sie zuerst einen Benutzernamen und ein Passwort",
+          "usernameField": {
+            "title": "Benutzername Benutzerfeld",
+            "info": "Das Benutzerfeld, welches den Benutzernamen für den Matrix Benutzer enthält."
+          },
+          "passwordField": {
+            "title": "Passwort Benutzerfeld",
+            "info": "Das Benutzerfeld, welches das Passwort für den Matrix Benutzer enthält."
+          }
+        }
       }
     }
   }

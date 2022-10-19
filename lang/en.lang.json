@@ -21,17 +21,18 @@
       "reachable": "Server is reachable",
       "unreachable": "Server is unreachable"
     },
-    "chat" : {
+    "chat": {
       "login": {
         "failed": "Matrix login failed",
         "success": "Matrix login successful"
       },
       "room": {
+        "notFound": "Room could not be found.",
         "delete": {
           "confirm": "Would you like to fully delete the associated chat room?",
           "button": "Delete chat room",
-            "success": "Room deleted successfully",
-            "failed": "Room could not be deleted"
+          "success": "Room deleted successfully",
+          "failed": "Room could not be deleted"
         },
         "invite": {
           "available": "Room invite available",
@@ -52,6 +53,20 @@
       "password": {
         "input": "Password of the Matrix-Server administrator",
         "info": "Will be used to do administrator tasks like creating rooms.<br>Input-Field will be cleared after saving the password!"
+      },
+      "auth": {
+        "byLoginAndPassword": {
+          "notConfigured": "Authentication with username and password is not configured",
+          "missingUsernamePassword": "No Username or Password was configured. Please configure a username and password first.",
+          "usernameField": {
+            "title": "Username Userfield",
+            "info": "The Userfield which contains the username for the matrix user."
+          },
+          "passwordField": {
+            "title": "Password Userfield",
+            "info": "The Userfield which contains the password for the matrix user."
+          }
+        }
       }
     }
   }

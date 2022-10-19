@@ -13,6 +13,7 @@ matrix.server.reachable#:#Server erreichbar
 matrix.server.unreachable#:#Server nicht erreichbar
 matrix.chat.login.failed#:#Matrix-Login fehlgeschlagen
 matrix.chat.login.success#:#Matrix-Login erfolgreich
+matrix.chat.room.notFound#:#Raum konnte nicht gefunden werden.
 matrix.chat.room.delete.confirm#:#Möchten Sie auch den Chatraum löschen?
 matrix.chat.room.delete.button#:#Chatraum löschen
 matrix.chat.room.delete.success#:#Chatraum erfolgreich gelöscht
@@ -26,3 +27,9 @@ matrix.admin.username.input#:#Benutzername des Matrix-Server Administrators
 matrix.admin.username.info#:#Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen.
 matrix.admin.password.input#:#Passwort des Matrix-Server Administrators
 matrix.admin.password.info#:#Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen.<br>Eingabefeld wird nach abspeichern des Passwortes geleert!
+matrix.admin.auth.byLoginAndPassword.notConfigured#:#Authentifizierung mit Benutzername und Passwort ist nicht konfiguriert
+matrix.admin.auth.byLoginAndPassword.missingUsernamePassword#:#Es wurde kein Benutzername oder Passwort konfiguriert. Bitte konfigurieren Sie zuerst einen Benutzernamen und ein Passwort
+matrix.admin.auth.byLoginAndPassword.usernameField.title#:#Benutzername Benutzerfeld
+matrix.admin.auth.byLoginAndPassword.usernameField.info#:#Das Benutzerfeld, welches den Benutzernamen für den Matrix Benutzer enthält.
+matrix.admin.auth.byLoginAndPassword.passwordField.title#:#Passwort Benutzerfeld
+matrix.admin.auth.byLoginAndPassword.passwordField.info#:#Das Benutzerfeld, welches das Passwort für den Matrix Benutzer enthält.
