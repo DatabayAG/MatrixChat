@@ -1,93 +1,87 @@
 document.addEventListener("DOMContentLoaded", () => {
-  let client;
-  let chatContainerElement;
-  let chatMessageWriterInputElement;
-  let markdownRenderer;
-  let easyMDE;
-  let matrixChatConfig = {
-    baseUrl: "",
-    ajax: {
-      getTemplateAjax: ""
-    },
-    user: {
-      accessToken: "",
-      matrixUserId: "",
-      iliasUserId: "",
-      deviceId: "",
-    },
-    roomId: ""
-  };
+    let client;
+    let chatContainerElement;
+    let chatMessageWriterInputElement;
+    let markdownRenderer;
+    let easyMDE;
+    let matrixChatConfig = {
+      baseUrl: "",
+      ajax: {
+        getTemplateAjax: ""
+      },
+      user: {
+        accessToken: "",
+        matrixUserId: "",
+        iliasUserId: "",
+        deviceId: "",
+      },
+      roomId: ""
+    };
 
-  let templates = {
-    getTemplate: async function (templateName) {
-      if (!templates.storage[templateName]) {
-        templates.storage[templateName] = await fetch(
-          matrixChatConfig.ajax.getTemplateAjax + `&templateName=tpl.${templateName}.html`)
-        .then(response => response.text());
-      }
-
-      return templates.storage[templateName] ?? "";
-    },
-    storage: {}
-  }
-
-  let translation = {}
-
-  let init = async () => {
-    markdownRenderer = window.markdownit();
-    markdownRenderer.options.breaks = true;
-    console.log(markdownRenderer);
-    matrixChatConfig = window.matrixChatConfig;
-    translation = JSON.parse(window.matrixChatTranslation);
-    chatContainerElement = document.querySelector(".chat-messages-container");
-    chatMessageWriterInputElement = document.querySelector(".chat-message-writer-message");
-
-    easyMDE = new EasyMDE({
-      element: document.getElementById('chat-message-writer-message'),
-      toolbar: [
-        "bold",
-        "italic",
-        "quote",
-        "unordered-list",
-        "ordered-list",
-        "link",
-        "image",
-        {
-          name: "custom",
-          action: (editor) => {
-            let value = easyMDE.value();
-            if (value) {
-              onSendMessage(easyMDE.value());
-              easyMDE.value("");
-            }
-          },
-          className: "chat-message-writer-send",
-          text: translation.matrix.chat.send,
-        },
-      ]
-    });
-
-    //Test code for making ENTER key send message and CTRL+ENTER key insert new line
-    /*
-    document.addEventListener("keydown", (event) => {
-      let value = easyMDE.value();
-
-      if (
-        value
-        && event.key === "Enter"
-        && !event.ctrlKey
-        && !event.altKey
-        && !event.shiftKey
-        && !event.metaKey) {
-        onSendMessage(easyMDE.value());
-        easyMDE.value("");
-      } else {
-        if (event.key === "Enter" && event.ctrlKey) {
-          easyMDE.value(value + "\n");
+    let templates = {
+      getTemplate: async function (templateName) {
+        if (!templates.storage[templateName]) {
+          templates.storage[templateName] = await fetch(
+            matrixChatConfig.ajax.getTemplateAjax + `&templateName=tpl.${templateName}.html`)
+          .then(response => response.text());
         }
-      }
-    });
-     */
+
+        return templates.storage[templateName] ?? "";
+      },
+      storage: {}
+    }
+
+    let translation = {}
+
+    let init = async () => {
+      markdownRenderer = window.markdownit();
+      markdownRenderer.options.breaks = true;
+      console.log(markdownRenderer);
+      matrixChatConfig = window.matrixChatConfig;
+      translation = JSON.parse(window.matrixChatTranslation);
+      chatContainerElement = document.querySelector(".chat-messages-container");
+      chatMessageWriterInputElement = document.querySelector(".chat-message-writer-message");
+
+      easyMDE = new EasyMDE({
+        element: document.getElementById('chat-message-writer-message'),
+        toolbar: [
+          "bold",
+          "italic",
+          "quote",
+          "unordered-list",
+          "ordered-list",
+          "link",
+          "image",
+          {
+            name: "custom",
+            action: (editor) => {
+              let value = easyMDE.value();
+              if (value) {
+                onSendMessage(easyMDE.value());
+                easyMDE.value("");
+              }
+            },
+            className: "chat-message-writer-send",
+            text: translation.matrix.chat.send,
+          },
+        ]
+      });
+
+      document.addEventListener("keydown", (event) => {
+        let value = easyMDE.value();
+
+        if (
+          value
+          && event.key === "Enter"
+          && !event.ctrlKey
+          && !event.altKey
+          && !event.shiftKey
+          && !event.metaKey) {
+          onSendMessage(easyMDE.value());
+          easyMDE.value("");
+        }
+      });
+
       if (!chatContainerElement) {
         console.error("Chat messages container not found!");
         return;
@@ -220,4 +214,4 @@ document.addEventListener("DOMContentLoaded", () => {
     il.Util.addOnLoad(init);
   }
 )
-  ;
+;
