@@ -90,7 +90,8 @@ class MatrixAdminApi extends MatrixApiEndpointBase
 
         return (new MatrixRoom())
             ->setId($response["room_id"])
-            ->setName($response["name"]);
+            ->setName($response["name"])
+            ->setEncrypted($response["encryption"] !== null);
     }
 
     /**

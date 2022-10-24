@@ -41,3 +41,25 @@
 .chat-message-writer-message {
     width: inherit;
 }
+
+.chat-encryption-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.chat-encryption {
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border-radius: 2rem;
+}
+
+.chat-encrypted {
+    background: greenyellow;
+    color: black;
+}
+
+.chat-unencrypted {
+    background: red;
+    color: white;
+}

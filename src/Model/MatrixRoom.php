@@ -35,6 +35,10 @@ class MatrixRoom
      * @var string
      */
     private $name;
+    /**
+     * @var bool
+     */
+    private $encrypted = false;
 
     /**
      * @return string
@@ -69,6 +73,24 @@ class MatrixRoom
     public function setName(string $name) : MatrixRoom
     {
         $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEncrypted() : bool
+    {
+        return $this->encrypted;
+    }
+
+    /**
+     * @param bool $encrypted
+     * @return MatrixRoom
+     */
+    public function setEncrypted(bool $encrypted) : MatrixRoom
+    {
+        $this->encrypted = $encrypted;
         return $this;
     }
 }
