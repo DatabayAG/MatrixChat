@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
             await client.decryptEventIfNeeded(event, { isRetry: false, emit: false });
             switch (content.msgtype) {
               case "m.text":
-                onAddMessage(event.sender, content.body, content.msgtype);
+                onAddMessage(event.sender, content.body);
                 break;
               case "m.image":
                 onAddImageMessage(
@@ -174,7 +174,7 @@ document.addEventListener("DOMContentLoaded", () => {
       chatContainerElement.scrollTop = chatContainerElement.scrollHeight;
     }
 
-    let onAddMessage = async (sender, message, messageType) => {
+    let onAddMessage = async (sender, message) => {
       let element = document.createElement("div");
       element.setAttribute("sender", sender.userId);
       console.log();
