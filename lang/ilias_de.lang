@@ -11,8 +11,11 @@ chat#:#Chat
 matrix.server.url#:#Matrix Server (Synapse) URL
 matrix.server.reachable#:#Server erreichbar
 matrix.server.unreachable#:#Server nicht erreichbar
+matrix.chat.send#:#Senden
 matrix.chat.login.failed#:#Matrix-Login fehlgeschlagen
 matrix.chat.login.success#:#Matrix-Login erfolgreich
+matrix.chat.room.encryption.encrypted#:#Verschlüsselt
+matrix.chat.room.encryption.unencrypted#:#Unverschlüsselt
 matrix.chat.room.notFound#:#Raum konnte nicht gefunden werden.
 matrix.chat.room.memberAssignFailed#:#Benutzer konnte nicht zum Raum hinzugefügt werden.
 matrix.chat.room.delete.confirm#:#Möchten Sie auch den Chatraum löschen?

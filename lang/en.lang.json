@@ -22,11 +22,19 @@
       "unreachable": "Server is unreachable"
     },
     "chat": {
+      "notifications": {
+        "changedName": "User '%s' changed their name to '%s'"
+      },
+      "send": "Send",
       "login": {
         "failed": "Matrix login failed",
         "success": "Matrix login successful"
       },
       "room": {
+        "encryption": {
+          "encrypted": "Encrypted",
+          "unencrypted": "Unencrypted"
+        },
         "notFound": "Room could not be found.",
         "memberAssignFailed": "User could not be added to the room.",
         "delete": {
