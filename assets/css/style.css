@@ -18,6 +18,18 @@
     flex-direction: column;
 }
 
+.chat-message-content > p > img {
+    width: fit-content;
+    max-width: 200px;
+    height: fit-content;
+}
+
+.chat-message-image {
+    width: fit-content;
+    max-width: 200px;
+    height: fit-content;
+}
+
 .chat-message-author {
 
 }
@@ -39,8 +51,30 @@
     padding: 1rem 0;
 }
 
-.chat-message-writer-send {
-    width: 10%
+.chat-message-writer > .EasyMDEContainer {
+    width: 100%;
+}
+
+.editor-toolbar {
+    display: flex;
+}
+
+button.chat-message-writer-send {
+    margin-left: auto !important;
+    color: white !important;
+    background-color: #4c6586 !important;
+    border-color: #4c6586 !important;
+}
+
+button.chat-message-writer-send:hover {
+    color: white !important;
+    background-color: #3a4c65 !important;
+    border-color: #36485f !important;
+}
+
+.CodeMirror-scroll {
+    min-height: 1rem !important;
+    max-height: 30rem !important;
 }
 
 .chat-message-writer-message {
