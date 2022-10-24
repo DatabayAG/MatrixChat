@@ -7,6 +7,7 @@
     padding: 2rem;
     display: flex;
     flex-direction: column;
+    height: 400px;
     font-size: 1.4rem;
     gap: 1rem;
     overflow-y: scroll;
@@ -36,6 +37,10 @@
     flex-direction: row;
     width: 100%;
     padding: 1rem 0;
+}
+
+.chat-message-writer-send {
+    width: 10%
 }
 
 .chat-message-writer-message {
