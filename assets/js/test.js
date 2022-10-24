@@ -3,6 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let chatContainerElement;
   let chatMessageWriterInputElement;
   let chatMessageWriterSendButtonElement;
+  let markdownRenderer;
+  let easyMDE;
   let matrixChatConfig = {
     baseUrl: "",
     ajax: {
@@ -10,26 +12,50 @@ document.addEventListener("DOMContentLoaded", () => {
     },
     user: {
       accessToken: "",
-      userId: "",
+      matrixUserId: "",
+      iliasUserId: "",
       deviceId: "",
     },
     roomId: ""
   };
 
-  let data = {
-    templates: {
-      chatMessage: ""
-    }
-  };
+  let templates = {
+    getTemplate: async function (templateName) {
+      if (!templates.storage[templateName]) {
+        templates.storage[templateName] = await fetch(
+          matrixChatConfig.ajax.getTemplateAjax + `&templateName=tpl.${templateName}.html`)
+        .then(response => response.text());
+      }
 
+      return templates.storage[templateName] ?? "";
+    },
+    storage: {
+
+    }
+  }
+
+  let translation = {
+
+  }
 
   let init = async () => {
+    markdownRenderer = window.markdownit();
+    console.log(markdownRenderer);
     matrixChatConfig = window.matrixChatConfig;
+    translation = JSON.parse(window.matrixChatTranslation);
     chatContainerElement = document.querySelector(".chat-messages-container");
     chatMessageWriterInputElement = document.querySelector(".chat-message-writer-message");
     chatMessageWriterSendButtonElement = document.querySelector(".chat-message-writer-send");
 
-    chatMessageWriterSendButtonElement.addEventListener("click", () => onSendMessage(chatMessageWriterInputElement.value))
+    chatMessageWriterSendButtonElement.addEventListener("click", () => {
+      let value = easyMDE.value();
+      if (value) {
+        onSendMessage(easyMDE.value());
+        easyMDE.value("");
+      }
+    })
+
+    easyMDE = new EasyMDE({element: document.getElementById('chat-message-writer-message')});
 
 
     if (!chatContainerElement) {
@@ -37,40 +63,66 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    await loadTemplates();
     client = await initClient();
     client.setGlobalErrorOnUnknownDevices(false); //Not recommended
 
-    for (let i = 0; i < 10; i++) {
-      console.log(i + "--------------------------------");
-    }
-
     client.once('sync', function(state, prevState, res) {
-      if(state === 'PREPARED') {
-        console.log("prepared");
-      } else {
-        console.log(state);
+      if(state !== 'PREPARED') {
         process.exit(1);
       }
     });
     client.on("Room.timeline", async function(event, room, toStartOfTimeline) {
-      if (event.getType() !== "m.room.encrypted") {
-        console.log(event);
-        return;
-      }
+      let content = event.getContent();
 
-      await client.decryptEventIfNeeded(event, {isRetry: false, emit: false});
-      onAddMessage(event.getSender(), event.getContent().body, event.getContent().msgtype);
+      switch (event.getType()) {
+        case "m.room.encrypted":
+        case "m.room.message":
+          await client.decryptEventIfNeeded(event, {isRetry: false, emit: false});
+          switch (content.msgtype)
+          {
+            case "m.text":
+              onAddMessage(event.sender, content.body, content.msgtype);
+              break;
+            case "m.image":
+              let a = client.mxcUrlToHttp(content.url, 400, 400, "scale", false);
+              console.log(a);
+              break;
+            case "m.audio":
+            case "m.video":
+            case "m.location":
+            case "m.emote":
+              break;
+          }
+          break;
+        case "m.room.member":
+          if (content.membership === "join" && content.displayname) {
+            let previousName = "";
+            document.querySelectorAll(
+              `div[sender="${event.sender.userId}"]`)
+            .forEach((messageContainerElm) => {
+              let authorElm = messageContainerElm.querySelector(".chat-message-author");
+              if (authorElm) {
+                previousName = authorElm.innerText;
+                authorElm.innerText = content.displayname;
+              }
+            });
+
+            if (previousName !== "") {
+              addNotificationMessage(
+                translation.matrix.chat.notifications.changedName
+                .replace("%s", previousName)
+                .replace("%s", content.displayname)
+              );
+            }
+          }
+          break;
+        default:
+      }
+      console.log(event);
     });
     await client.startClient({ initialSyncLimit: 10 });
   }
 
-  let loadTemplates = async () => {
-    data.templates.chatMessage = await fetch(
-      matrixChatConfig.ajax.getTemplateAjax + "&templateName=tpl.chat-message.html")
-    .then(response => response.text()
-    );
-  }
 
   let onSendMessage = (message) => {
     client.sendEvent(
@@ -84,28 +136,44 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       ''
     ).then((ere) => {
-      console.log(ere);
+      //console.log(ere);
     })
   }
 
-  let onAddMessage = (sender, message, messageType) => {
+  let addNotificationMessage = async (message) => {
     let element = document.createElement("div");
-    element.innerHTML = data.templates.chatMessage
-    .replaceAll("{% author %}", sender)
-    .replaceAll("{% date %}", "15.08.20000")
+    element.innerHTML = (await templates.getTemplate("chatNotification"))
     .replaceAll("{% message %}", message);
     chatContainerElement.appendChild(element);
+    chatContainerElement.scrollTop = chatContainerElement.scrollHeight;
+  }
+
+  let onAddMessage = async (sender, message, messageType) => {
+    let element = document.createElement("div");
+    element.setAttribute("sender", sender.userId);
+
+    element.innerHTML = (await templates.getTemplate("chatMessage"))
+    .replaceAll("{% author %}", sender.name)
+    .replaceAll("{% date %}", "15.08.20000")
+    .replaceAll("{% message %}", markdownRenderer.render(message));
+    chatContainerElement.appendChild(element);
+    chatContainerElement.scrollTop = chatContainerElement.scrollHeight;
+  }
+
+  let onAddImageMessage = async (sender, url, altText) => {
+    let element = document.createElement("img");
+    element.setAttribute("src", url);
+    element.innerHTML = (await templates.getTemplate("chatImageMessage"));
+    element.setAttribute("alt", altText);
   }
 
   let initClient = async () => {
     let client = matrixcs.createClient({
       baseUrl: matrixChatConfig.baseUrl,
       accessToken: matrixChatConfig.user.accessToken,
-      userId: matrixChatConfig.user.userId,
+      userId: matrixChatConfig.user.matrixUserId,
       deviceId: matrixChatConfig.user.deviceId,
     });
-    //let a = client.getRoom(window.matrixChatConfig.room_id);
-    //console.log(window.matrixChatConfig.room_id);
     return client.initCrypto()
     .then(() => {
       return client;
