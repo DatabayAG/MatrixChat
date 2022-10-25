@@ -22,6 +22,16 @@
       "unreachable": "Server is unreachable"
     },
     "chat": {
+      "loadLimit": {
+        "initial": {
+          "title": "Initial chat message load limit",
+          "info": "How many messages should be loaded when the chat is opened (newest x messages)"
+        },
+        "history": {
+          "title": "Old messages to load",
+          "info": "How many messages to load at the same time when the user scrolls up in the Chat-Window"
+        }
+      },
       "notifications": {
         "changedName": "User '%s' changed their name to '%s'"
       },

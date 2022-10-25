@@ -48,6 +48,14 @@ class PluginConfig extends ConfigBase
      * @var string
      */
     private $passwordFieldId = "";
+    /**
+     * @var int
+     */
+    private $chatInitialLoadLimit = 20;
+    /**
+     * @var int
+     */
+    private $chatHistoryLoadLimit = 20;
 
     /**
      * @return string
@@ -136,6 +144,42 @@ class PluginConfig extends ConfigBase
     public function setPasswordFieldId(string $passwordFieldId) : PluginConfig
     {
         $this->passwordFieldId = $passwordFieldId;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getChatInitialLoadLimit() : int
+    {
+        return $this->chatInitialLoadLimit;
+    }
+
+    /**
+     * @param int $chatInitialLoadLimit
+     * @return PluginConfig
+     */
+    public function setChatInitialLoadLimit(int $chatInitialLoadLimit) : PluginConfig
+    {
+        $this->chatInitialLoadLimit = $chatInitialLoadLimit;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getChatHistoryLoadLimit() : int
+    {
+        return $this->chatHistoryLoadLimit;
+    }
+
+    /**
+     * @param int $chatHistoryLoadLimit
+     * @return PluginConfig
+     */
+    public function setChatHistoryLoadLimit(int $chatHistoryLoadLimit) : PluginConfig
+    {
+        $this->chatHistoryLoadLimit = $chatHistoryLoadLimit;
         return $this;
     }
 

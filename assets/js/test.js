@@ -17,7 +17,9 @@ document.addEventListener("DOMContentLoaded", () => {
         iliasUserId: "",
         deviceId: "",
       },
-      roomId: ""
+      roomId: "",
+      chatInitialLoadLimit: 20,
+      chatHistoryLoadLimit: 20
     };
 
     let templates = {
@@ -156,7 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
             break;
         }
       });
-      await client.startClient({ initialSyncLimit: 10 });
+      await client.startClient({ initialSyncLimit: matrixChatConfig.chatInitialLoadLimit });
     }
 
 
@@ -256,7 +258,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const tls = room.getTimelineSets()[0];
       client
       .getEventTimeline(tls, firstRoomEvent.event.event_id)
-      .then(et => client.paginateEventTimeline(et, { backwards: true, limit: 10 }))
+      .then(et => client.paginateEventTimeline(et, { backwards: true, limit: matrixChatConfig.chatHistoryLoadLimit }))
       .then(success => {
         //Scroll to previously first message element.
         if (success && currentTopMessageElm) {

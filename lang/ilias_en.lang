@@ -11,6 +11,11 @@ chat#:#Chat
 matrix.server.url#:#Matrix Server (Synapse) URL
 matrix.server.reachable#:#Server is reachable
 matrix.server.unreachable#:#Server is unreachable
+matrix.chat.loadLimit.initial.title#:#Initial chat message load limit
+matrix.chat.loadLimit.initial.info#:#How many messages should be loaded when the chat is opened (newest x messages)
+matrix.chat.loadLimit.history.title#:#Old messages to load
+matrix.chat.loadLimit.history.info#:#How many messages to load at the same time when the user scrolls up in the Chat-Window
+matrix.chat.notifications.changedName#:#User '%s' changed their name to '%s'
 matrix.chat.send#:#Send
 matrix.chat.login.failed#:#Matrix login failed
 matrix.chat.login.success#:#Matrix login successful

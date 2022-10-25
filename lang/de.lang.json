@@ -22,6 +22,16 @@
       "unreachable": "Server nicht erreichbar"
     },
     "chat": {
+      "loadLimit": {
+        "initial": {
+          "title": "Initiales Chat-Nachrichten Limit",
+          "info": "Wie viele Nachrichten sollen beim Laden des Chats initial geladen werden (neusten x Nachrichten)"
+        },
+        "history": {
+          "title": "Alte Nachrichten nachlade Limit",
+          "info": "Wie viele Nachrichten gleichzeitig sollen nachgeladen werden, wenn der Benutzer im Chat-Fenster nach oben scrollt"
+        }
+      },
       "notifications": {
         "changedName": "Benutzer '%s' hat seinen Namen auf '%s' geändert"
       },

@@ -25,6 +25,7 @@ use ilUriInputGUI;
 use ilUtil;
 use ilSelectInputGUI;
 use ILIAS\Plugin\MatrixChatClient\Libs\UserField\UserFieldLoader;
+use ilNumberInputGUI;
 
 /**
  * Class PluginConfigForm
@@ -78,11 +79,21 @@ class PluginConfigForm extends ilPropertyFormGUI
         $passwordFieldId->setInfo($this->plugin->txt("matrix.admin.auth.byLoginAndPassword.passwordField.info"));
         $passwordFieldId->setOptions(UserFieldLoader::getInstance()->getAllUserFieldsAsOptions());
 
+        $chatInitialLoadLimit = new ilNumberInputGUI($this->plugin->txt("matrix.chat.loadLimit.initial.title"), "chatInitialLoadLimit");
+        $chatInitialLoadLimit->setRequired(true);
+        $chatInitialLoadLimit->setInfo($this->plugin->txt("matrix.chat.loadLimit.initial.info"));
+
+        $chatHistoryLoadLimit = new ilNumberInputGUI($this->plugin->txt("matrix.chat.loadLimit.history.title"), "chatHistoryLoadLimit");
+        $chatHistoryLoadLimit->setRequired(true);
+        $chatHistoryLoadLimit->setInfo($this->plugin->txt("matrix.chat.loadLimit.history.info"));
+
         $this->addItem($matrixServerUrl);
         $this->addItem($matrixAdminUsername);
         $this->addItem($matrixAdminPassword);
         $this->addItem($usernameFieldId);
         $this->addItem($passwordFieldId);
+        $this->addItem($chatInitialLoadLimit);
+        $this->addItem($chatHistoryLoadLimit);
         $this->addCommandButton("saveSettings", $this->lng->txt("save"));
     }
 }
