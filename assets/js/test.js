@@ -104,14 +104,10 @@ document.addEventListener("DOMContentLoaded", () => {
             await client.decryptEventIfNeeded(event, { isRetry: false, emit: false });
             switch (content.msgtype) {
               case "m.text":
-                onAddMessage(event.sender, content.body);
+                onAddMessage(event);
                 break;
               case "m.image":
-                onAddImageMessage(
-                  event.sender,
-                  client.mxcUrlToHttp(content.url, 400, 400, "scale", false),
-                  content.body
-                );
+                onAddImageMessage(event);
                 break;
               case "m.audio":
               case "m.video":
@@ -134,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
               });
 
               if (previousName !== "") {
-                addNotificationMessage(
+                await addNotificationMessage(
                   translation.matrix.chat.notifications.changedName
                   .replace("%s", previousName)
                   .replace("%s", content.displayname)
@@ -167,34 +163,42 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     let addNotificationMessage = async (message) => {
-      let element = document.createElement("div");
+      let element = document.createElement("template");
       element.innerHTML = (await templates.getTemplate("chatNotification"))
       .replaceAll("{% message %}", message);
-      chatContainerElement.appendChild(element);
+
+      chatContainerElement.appendChild(element.content.firstChild);
       chatContainerElement.scrollTop = chatContainerElement.scrollHeight;
     }
 
-    let onAddMessage = async (sender, message) => {
-      let element = document.createElement("div");
-      element.setAttribute("sender", sender.userId);
-      console.log();
+    let onAddMessage = async (event) => {
+      let date = event.getDate();
+
+      let element = document.createElement("template");
       element.innerHTML = (await templates.getTemplate("chatMessage"))
-      .replaceAll("{% author %}", sender.name)
-      .replaceAll("{% date %}", "15.08.20000")
-      .replaceAll("{% message %}", markdownRenderer.render(message));
-      chatContainerElement.appendChild(element);
+      .replaceAll("{% sender %}", event.sender.userId)
+      .replaceAll("{% eventId %}", event.getId())
+      .replaceAll("{% author %}", event.sender.name)
+      .replaceAll("{% date %}", dateToString(date))
+      .replaceAll("{% message %}", markdownRenderer.render(event.getContent().body));
+      chatContainerElement.appendChild(element.content.firstChild);
       chatContainerElement.scrollTop = chatContainerElement.scrollHeight;
     }
 
-    let onAddImageMessage = async (sender, url, altText) => {
-      let element = document.createElement("div");
+    let onAddImageMessage = async (event) => {
+      let date = event.getDate();
+      let content = event.getContent();
+      let url = client.mxcUrlToHttp(content, 400, 400, "scale", false);
+
+      let element = document.createElement("template");
       element.setAttribute("src", url);
       element.innerHTML = (await templates.getTemplate("chatImageMessage"))
+      .replaceAll("{% eventId %}", event.getId())
       .replaceAll("{% src %}", url)
-      .replaceAll("{% altText %}", altText)
-      .replaceAll("{% author %}", sender.name)
-      .replaceAll("{% date %}", "15.08.20000")
-      chatContainerElement.appendChild(element);
+      .replaceAll("{% altText %}", content.body)
+      .replaceAll("{% author %}", event.sender.name)
+      .replaceAll("{% date %}", dateToString(date))
+      chatContainerElement.appendChild(element.content.firstChild);
       chatContainerElement.scrollTop = chatContainerElement.scrollHeight;
     }
 
@@ -209,6 +213,29 @@ document.addEventListener("DOMContentLoaded", () => {
       .then(() => {
         return client;
       });
+    }
+
+    let dateToString = (date) => {
+      return date.toLocaleDateString("de-DE", {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    };
+
+    let checkConcatMessage = (currentEvent, previousEvent, secondsDiff = 60) => {
+      if (!previousEvent) {
+        return false;
+      }
+
+      if (currentEvent.sender.userId !== previousEvent.sender.userId) {
+        return false;
+      }
+
+      return Math.abs((currentEvent.getDate().getTime() - previousEvent.getDate()
+      .getTime()) / 1000) < secondsDiff;
     }
 
     il.Util.addOnLoad(init);
