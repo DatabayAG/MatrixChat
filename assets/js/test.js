@@ -1,9 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
     let client;
     let chatContainerElement;
-    let chatMessageWriterInputElement;
     let markdownRenderer;
     let easyMDE;
+    let firstRoomEvent;
+
+
     let matrixChatConfig = {
       baseUrl: "",
       ajax: {
@@ -36,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
       storage: {}
     }
 
-    let translation = {}
+    let translation = {};
 
     let init = async () => {
       markdownRenderer = window.markdownit();
@@ -45,7 +47,11 @@ document.addEventListener("DOMContentLoaded", () => {
       matrixChatConfig = window.matrixChatConfig;
       translation = JSON.parse(window.matrixChatTranslation);
       chatContainerElement = document.querySelector(".chat-messages-container");
-      chatMessageWriterInputElement = document.querySelector(".chat-message-writer-message");
+      chatContainerElement.addEventListener("scroll", (event) => {
+        if (chatContainerElement.scrollTop === 0) {
+          paginate();
+        }
+      })
 
       easyMDE = new EasyMDE({
         element: document.getElementById('chat-message-writer-message'),
@@ -95,8 +101,14 @@ document.addEventListener("DOMContentLoaded", () => {
       client = await initClient();
       client.setGlobalErrorOnUnknownDevices(false); //Not recommended
 
-
       client.on("Room.timeline", async function (event, room, toStartOfTimeline) {
+        if (room.roomId !== matrixChatConfig.roomId) {
+          return;
+        }
+        if (!firstRoomEvent) {
+          firstRoomEvent = event;
+        }
+
         let content = event.getContent();
 
         switch (event.getType()) {
@@ -105,10 +117,10 @@ document.addEventListener("DOMContentLoaded", () => {
             await client.decryptEventIfNeeded(event, { isRetry: false, emit: false });
             switch (content.msgtype) {
               case "m.text":
-                onAddMessage(event);
+                await onAddMessage(event, toStartOfTimeline);
                 break;
               case "m.image":
-                onAddImageMessage(event);
+                await onAddImageMessage(event, toStartOfTimeline);
                 break;
               case "m.audio":
               case "m.video":
@@ -140,8 +152,9 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             break;
           default:
+            console.log(event);
+            break;
         }
-        console.log(event);
       });
       await client.startClient({ initialSyncLimit: 10 });
     }
@@ -171,7 +184,7 @@ document.addEventListener("DOMContentLoaded", () => {
       chatContainerElement.scrollTop = chatContainerElement.scrollHeight;
     }
 
-    let onAddMessage = async (event) => {
+    let onAddMessage = async (event, prepend = false) => {
       let date = event.getDate();
 
       let element = document.createElement("template");
@@ -181,11 +194,17 @@ document.addEventListener("DOMContentLoaded", () => {
         date: dateToString(date),
         message: markdownRenderer.render(event.getContent().body)
       }));
-      chatContainerElement.appendChild(element.content.firstChild);
-      chatContainerElement.scrollTop = chatContainerElement.scrollHeight;
+
+      if (prepend) {
+        chatContainerElement.insertBefore(element.content.firstChild,
+          chatContainerElement.firstChild);
+      } else {
+        chatContainerElement.appendChild(element.content.firstChild);
+        chatContainerElement.scrollTop = chatContainerElement.scrollHeight;
+      }
     }
 
-    let onAddImageMessage = async (event) => {
+    let onAddImageMessage = async (event, prepend = false) => {
       let date = event.getDate();
       let content = event.getContent();
       let url = client.mxcUrlToHttp(content, 400, 400, "scale", false);
@@ -199,8 +218,13 @@ document.addEventListener("DOMContentLoaded", () => {
         author: event.sender.name,
         date: dateToString(date),
       }));
-      chatContainerElement.appendChild(element.content.firstChild);
-      chatContainerElement.scrollTop = chatContainerElement.scrollHeight;
+      if (prepend) {
+        chatContainerElement.insertBefore(element.content.firstChild,
+          chatContainerElement.firstChild);
+      } else {
+        chatContainerElement.appendChild(element.content.firstChild);
+        chatContainerElement.scrollTop = chatContainerElement.scrollHeight;
+      }
     }
 
     let initClient = async () => {
@@ -209,6 +233,7 @@ document.addEventListener("DOMContentLoaded", () => {
         accessToken: matrixChatConfig.user.accessToken,
         userId: matrixChatConfig.user.matrixUserId,
         deviceId: matrixChatConfig.user.deviceId,
+        timelineSupport: true,
       });
       return client.initCrypto()
       .then(() => {
@@ -216,9 +241,27 @@ document.addEventListener("DOMContentLoaded", () => {
           if (state !== 'PREPARED') {
             process.exit(1);
           }
+
+
         });
 
         return client;
+      });
+    }
+
+    let paginate = () => {
+      let currentTopMessageElm = chatContainerElement.children[0];
+
+      const room = client.getRoom(matrixChatConfig.roomId);
+      const tls = room.getTimelineSets()[0];
+      client
+      .getEventTimeline(tls, firstRoomEvent.event.event_id)
+      .then(et => client.paginateEventTimeline(et, { backwards: true, limit: 10 }))
+      .then(success => {
+        //Scroll to previously first message element.
+        if (success && currentTopMessageElm) {
+          currentTopMessageElm.scrollIntoView();
+        }
       });
     }
 
@@ -231,19 +274,6 @@ document.addEventListener("DOMContentLoaded", () => {
         minute: '2-digit'
       });
     };
-
-    let checkConcatMessage = (currentEvent, previousEvent, secondsDiff = 60) => {
-      if (!previousEvent) {
-        return false;
-      }
-
-      if (currentEvent.sender.userId !== previousEvent.sender.userId) {
-        return false;
-      }
-
-      return Math.abs((currentEvent.getDate().getTime() - previousEvent.getDate()
-      .getTime()) / 1000) < secondsDiff;
-    }
 
     il.Util.addOnLoad(init);
   }
