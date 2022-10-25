@@ -137,7 +137,7 @@ class ChatClientController extends BaseController
         $this->mainTpl->addJavaScript($this->plugin->jsFolder("libs/markdown-it.min.js"));
         $this->mainTpl->addJavaScript($this->plugin->jsFolder("libs/olm.js"));
         $this->mainTpl->addJavaScript($this->plugin->jsFolder("libs/browser-matrix.js"));
-        $this->mainTpl->addJavaScript($this->plugin->jsFolder("test.js"));
+        $this->mainTpl->addJavaScript($this->plugin->jsFolder("chat-implementation.js"));
         $this->mainTpl->addCss($this->plugin->cssFolder("style.css"));
         $this->mainTpl->addCss($this->plugin->cssFolder("easymde.min.css"));
 
