@@ -19,14 +19,19 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     let templates = {
-      getTemplate: async function (templateName) {
+      getTemplate: async function (templateName, data = {}) {
         if (!templates.storage[templateName]) {
           templates.storage[templateName] = await fetch(
             matrixChatConfig.ajax.getTemplateAjax + `&templateName=tpl.${templateName}.html`)
           .then(response => response.text());
         }
 
-        return templates.storage[templateName] ?? "";
+        let templateHtml = templates.storage[templateName];
+        Object.keys(data).forEach(key => {
+          templateHtml = templateHtml.replaceAll("{% " + key + " %}", data[key]);
+        })
+
+        return templateHtml;
       },
       storage: {}
     }
@@ -36,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let init = async () => {
       markdownRenderer = window.markdownit();
       markdownRenderer.options.breaks = true;
-      console.log(markdownRenderer);
+
       matrixChatConfig = window.matrixChatConfig;
       translation = JSON.parse(window.matrixChatTranslation);
       chatContainerElement = document.querySelector(".chat-messages-container");
@@ -164,8 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let addNotificationMessage = async (message) => {
       let element = document.createElement("template");
-      element.innerHTML = (await templates.getTemplate("chatNotification"))
-      .replaceAll("{% message %}", message);
+      element.innerHTML = (await templates.getTemplate("chatNotification", { message: message }));
 
       chatContainerElement.appendChild(element.content.firstChild);
       chatContainerElement.scrollTop = chatContainerElement.scrollHeight;
@@ -175,12 +179,12 @@ document.addEventListener("DOMContentLoaded", () => {
       let date = event.getDate();
 
       let element = document.createElement("template");
-      element.innerHTML = (await templates.getTemplate("chatMessage"))
-      .replaceAll("{% sender %}", event.sender.userId)
-      .replaceAll("{% eventId %}", event.getId())
-      .replaceAll("{% author %}", event.sender.name)
-      .replaceAll("{% date %}", dateToString(date))
-      .replaceAll("{% message %}", markdownRenderer.render(event.getContent().body));
+      element.innerHTML = (await templates.getTemplate("chatMessage", {
+        eventId: event.getId(),
+        author: event.sender.name,
+        date: dateToString(date),
+        message: markdownRenderer.render(event.getContent().body)
+      }));
       chatContainerElement.appendChild(element.content.firstChild);
       chatContainerElement.scrollTop = chatContainerElement.scrollHeight;
     }
@@ -192,12 +196,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
       let element = document.createElement("template");
       element.setAttribute("src", url);
-      element.innerHTML = (await templates.getTemplate("chatImageMessage"))
-      .replaceAll("{% eventId %}", event.getId())
-      .replaceAll("{% src %}", url)
-      .replaceAll("{% altText %}", content.body)
-      .replaceAll("{% author %}", event.sender.name)
-      .replaceAll("{% date %}", dateToString(date))
+      element.innerHTML = (await templates.getTemplate("chatImageMessage", {
+        eventId: event.getId(),
+        src: url,
+        altText: content.body,
+        author: event.sender.name,
+        date: dateToString(date),
+      }));
       chatContainerElement.appendChild(element.content.firstChild);
       chatContainerElement.scrollTop = chatContainerElement.scrollHeight;
     }
