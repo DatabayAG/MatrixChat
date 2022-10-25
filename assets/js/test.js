@@ -95,11 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
       client = await initClient();
       client.setGlobalErrorOnUnknownDevices(false); //Not recommended
 
-      client.once('sync', function (state, prevState, res) {
-        if (state !== 'PREPARED') {
-          process.exit(1);
-        }
-      });
+
       client.on("Room.timeline", async function (event, room, toStartOfTimeline) {
         let content = event.getContent();
 
@@ -216,6 +212,12 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       return client.initCrypto()
       .then(() => {
+        client.once('sync', function (state, prevState, res) {
+          if (state !== 'PREPARED') {
+            process.exit(1);
+          }
+        });
+
         return client;
       });
     }
