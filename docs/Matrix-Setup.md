@@ -87,3 +87,30 @@ register_new_matrix_user -u <Username> -p <Password> -a -c /etc/matrix-synapse/h
 - Replace ``<Password>`` with your desired password
 - ``-a´`` means Admin user.
 - ``-c`` is the path to the homeserver config file.
+
+## Enabling LDAP login (Without SSL!)
+
+Add the following section to the file ``/etc/matrix-synapse/homeserver.yaml``
+
+```yaml
+modules:
+ - module: "ldap_auth_provider.LdapAuthProviderModule"
+   config:
+     enabled: true
+     uri: "<ldap-url>"
+     start_tls: false
+     base: "<ldap-base>"
+     attributes:
+        uid: "uid"
+        mail: "mail"
+        name: "givenName"
+     filter: "(objectClass=posixAccount)"
+```
+
+1. Replace ``<ldap-url>`` with your ldap server url. 
+   - Example: ``ldap://ldap01.my-domain.de:389``
+2. Replace ``<ldap-base>`` with your ldap base.
+   - Example: ``ou=users,dc=my-domain,dc=de``
+3. Adapt the ``attributes`` to fit what your LDAP-Server returns for a user
+   - Note that all attributes (**uid**, **mail** & **name**) are required to be inside the **attributes:** section.   
+   - It's not required that the LDAP-Server returns something for **mail** or **name**. 
