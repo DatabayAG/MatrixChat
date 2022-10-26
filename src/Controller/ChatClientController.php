@@ -28,6 +28,8 @@ use ILIAS\Filesystem\Stream\Streams;
 use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
 use Exception;
 use ilCourseParticipants;
+use ilSession;
+use ILIAS\Plugin\MatrixChatClient\Form\ChatLoginForm;
 
 /**
  * Class ChatClientController
@@ -100,15 +102,9 @@ class ChatClientController extends BaseController
             )
         );
 
-        try {
-            if (($matrixUser = $this->matrixApi->user->login($this->dic->user()->getId())) === null) {
-                ilUtil::sendFailure($this->plugin->txt("matrix.chat.login.failed"), true);
-                $this->mainTpl->printToStdOut();
-                return;
-            }
-        } catch (Exception $e) {
-            ilUtil::sendFailure($this->plugin->txt($e->getMessage()), true);
-            $this->mainTpl->printToStdOut();
+        $matrixUser = ilSession::get("matrixUser");
+        if (!$matrixUser) {
+            $this->redirectToCommand("showChatLogin", ["ref_id" => $this->courseId]);
             return;
         }
 
@@ -166,7 +162,6 @@ class ChatClientController extends BaseController
         $translationJson = "{}";
         if (is_file($translationFilePath) && is_readable($translationFilePath)) {
             $translationJson = file_get_contents($translationFilePath);
-        } else {
         }
 
         $this->mainTpl->addOnLoadCode(
@@ -179,6 +174,60 @@ class ChatClientController extends BaseController
 
         $this->mainTpl->setContent($tpl->get());
         $this->mainTpl->printToStdOut();
+    }
+
+    public function showChatLogin(?ChatLoginForm $form = null) : void
+    {
+        if (!$form) {
+            $form = new ChatLoginForm();
+        }
+
+        $this->tabs->setBackTarget(
+            $this->lng->txt("content"),
+            $this->ctrl->getLinkTargetByClass(
+                ["ilRepositoryGUI", "ilObjCourseGUI"],
+                "view"
+            )
+        );
+        $this->mainTpl->loadStandardTemplate();
+
+        $this->mainTpl->setContent($form->getHTML());
+        $this->mainTpl->printToStdOut();
+    }
+
+    public function saveChatLogin() : void
+    {
+        $form = new ChatLoginForm();
+
+        if(!$form->checkInput()) {
+            ilUtil::sendFailure($this->plugin->txt("matrix.chat.login.failed"));
+            $form->setValuesByPost();
+            $this->showChatLogin($form);
+            return;
+        }
+
+        $form->setValuesByPost();
+
+        try {
+            $matrixUser = $this->matrixApi->user->login($this->dic->user()->getId(), $form->getInput("username"), $form->getInput("password"));
+            if (!$matrixUser) {
+                throw new Exception("Login failed");
+            }
+        } catch (Exception $ex) {
+            ilUtil::sendFailure($this->plugin->txt("matrix.chat.login.failed"), true);
+            $form->setValuesByArray(["password" => "", true]);
+            $this->showChatLogin($form);
+            return;
+        }
+
+        ilSession::set("matrixUser", $matrixUser);
+
+        try {
+            ilUtil::sendSuccess($this->plugin->txt("matrix.chat.login.success"), true);
+            $this->showChat();
+        } catch (ilTemplateException $e) {
+            $this->redirectToCommand("showChat", ["ref_id" => $this->courseId]);
+        }
     }
 
     public function getTemplateAjax() : void

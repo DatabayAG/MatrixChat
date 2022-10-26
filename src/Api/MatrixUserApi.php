@@ -35,34 +35,14 @@ class MatrixUserApi extends MatrixApiEndpointBase
     /**
      * @throws Exception
      */
-    public function login(int $iliasUserId, $loginType = "m.login.password") : ?MatrixUser
+    public function login(int $iliasUserId, string $username, string $password) : ?MatrixUser
     {
-        $userFieldLoader = UserFieldLoader::getInstance();
-
-        $configuredUsernameField = $userFieldLoader->getUserFieldById($this->plugin->getPluginConfig()->getUsernameFieldId());
-        $configuredPasswordField = $userFieldLoader->getUserFieldById($this->plugin->getPluginConfig()->getPasswordFieldId());
-
-        if (!$configuredUsernameField || !$configuredPasswordField) {
-            throw new Exception("matrix.admin.auth.notConfigured");
-        }
-
-        $usernameField = $userFieldLoader->getUserFieldForUser($iliasUserId, $configuredUsernameField->getId());
-        $passwordField = $userFieldLoader->getUserFieldForUser($iliasUserId, $configuredPasswordField->getId());
-
-        if (!$usernameField || !$passwordField) {
-            throw new Exception("matrix.admin.auth.notConfigured");
-        }
-
-        if (!$usernameField->getValue() || !$passwordField->getValue()) {
-            throw new Exception("matrix.admin.auth.byLoginAndPassword.missingUsernamePassword");
-        }
-
         $deviceId = UserDeviceRepository::getInstance()->read($iliasUserId);
         try {
             $response = $this->sendRequest("/_matrix/client/v3/login", "POST", [
-                "type" => $loginType,
-                "user" => $usernameField->getValue(),
-                "password" => $passwordField->getValue(),
+                "type" => "m.login.password",
+                "user" => $username,
+                "password" => $password,
                 "device_id" => $deviceId
             ]);
         } catch (MatrixApiException $e) {

@@ -70,6 +70,7 @@
         "info": "Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen.<br>Eingabefeld wird nach abspeichern des Passwortes geleert!"
       },
       "auth": {
+        "login": "In Matrix-Chat einloggen",
         "notConfigured": "Authentifizierung ist nicht (korrekt) konfiguriert",
         "method": "Authentifizierungs Methode",
         "byLoginAndPassword": {

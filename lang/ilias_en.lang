@@ -34,6 +34,7 @@ matrix.admin.username.input#:#Username of the Matrix-Server administrator
 matrix.admin.username.info#:#Will be used to do administrator tasks like creating rooms.
 matrix.admin.password.input#:#Password of the Matrix-Server administrator
 matrix.admin.password.info#:#Will be used to do administrator tasks like creating rooms.<br>Input-Field will be cleared after saving the password!
+matrix.admin.auth.login#:#Login into Matrix Chat
 matrix.admin.auth.notConfigured#:#Authentication is not (correctly) configured
 matrix.admin.auth.method#:#Authentication method
 matrix.admin.auth.byLoginAndPassword.title#:#Authentication using Username and Password

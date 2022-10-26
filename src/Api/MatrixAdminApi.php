@@ -67,6 +67,12 @@ class MatrixAdminApi extends MatrixApiEndpointBase
         if ($this->adminUser === null) {
             $this->adminUser = $this->login();
         }
+
+        if (!$this->adminUser) {
+            $this->adminUser = $this->login();
+        }
+
+
         return $this->adminUser;
     }
 

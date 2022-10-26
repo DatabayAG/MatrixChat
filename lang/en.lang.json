@@ -70,6 +70,7 @@
         "info": "Will be used to do administrator tasks like creating rooms.<br>Input-Field will be cleared after saving the password!"
       },
       "auth": {
+        "login": "Login into Matrix Chat",
         "notConfigured": "Authentication is not (correctly) configured",
         "method": "Authentication method",
         "byLoginAndPassword": {

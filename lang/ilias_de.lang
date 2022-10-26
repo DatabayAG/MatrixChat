@@ -34,6 +34,7 @@ matrix.admin.username.input#:#Benutzername des Matrix-Server Administrators
 matrix.admin.username.info#:#Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen.
 matrix.admin.password.input#:#Passwort des Matrix-Server Administrators
 matrix.admin.password.info#:#Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen.<br>Eingabefeld wird nach abspeichern des Passwortes geleert!
+matrix.admin.auth.login#:#In Matrix-Chat einloggen
 matrix.admin.auth.notConfigured#:#Authentifizierung ist nicht (korrekt) konfiguriert
 matrix.admin.auth.method#:#Authentifizierungs Methode
 matrix.admin.auth.byLoginAndPassword.title#:#Authentifizierung über Benutzername und Passwort
