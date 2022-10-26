@@ -39,5 +39,5 @@ matrix.admin.auth.method#:#Authentication method
 matrix.admin.auth.byLoginAndPassword.title#:#Authentication using Username and Password
 matrix.admin.auth.byLoginAndPassword.missingUsernamePassword#:#No Username or Password was configured. Please configure a username and password first.
 matrix.admin.auth.byLdap.title#:#Authentication using LDAP
-matrix.admin.auth.byLdap.ldapServerField.title#:#LDAP-Server
-matrix.admin.auth.byLdap.ldapServerField.info#:#The LDAP-Server which should be used to authenticate the user with Matrix.
+matrix.admin.auth.byLdap.autoLogin.title#:#Automatic ldap login
+matrix.admin.auth.byLdap.autoLogin.info#:#If activated, the user will be automatically logged into the Matrix-Chat, once the user logins into ILIAS.<br><br><span style='color: red;'>For this the login even will be catched!</span>

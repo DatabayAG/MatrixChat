@@ -26,6 +26,7 @@ use ilUtil;
 use ilNumberInputGUI;
 use ilRadioGroupInputGUI;
 use ilRadioOption;
+use ilCheckboxInputGUI;
 
 /**
  * Class PluginConfigForm
@@ -84,6 +85,10 @@ class PluginConfigForm extends ilPropertyFormGUI
             "byLoginAndPassword"
         );
         $byLdap = new ilRadioOption($this->plugin->txt("matrix.admin.auth.byLdap.title"), "byLdap");
+        $useLdapAutoLogin = new ilCheckboxInputGUI($this->plugin->txt("matrix.admin.auth.byLdap.autoLogin.title"), "useLdapAutoLogin");
+        $useLdapAutoLogin->setInfo($this->plugin->txt("matrix.admin.auth.byLdap.autoLogin.info"));
+        $byLdap->addSubItem($useLdapAutoLogin);
+
 
         $loginMethod->addOption($byLoginAndPassword);
         $loginMethod->addOption($byLdap);

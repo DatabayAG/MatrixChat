@@ -38,5 +38,5 @@ matrix.admin.auth.notConfigured#:#Authentifizierung ist nicht (korrekt) konfigur
 matrix.admin.auth.method#:#Authentifizierungs Methode
 matrix.admin.auth.byLoginAndPassword.title#:#Authentifizierung über Benutzername und Passwort
 matrix.admin.auth.byLdap.title#:#Authentifizierung über LDAP
-matrix.admin.auth.byLdap.ldapServerField.title#:#LDAP-Server
-matrix.admin.auth.byLdap.ldapServerField.info#:#Der LDAP-Server, welcher für die authentifizierung mit MAtrix genutzt werden soll.
+matrix.admin.auth.byLdap.autoLogin.title#:#Automatisches LDAP login
+matrix.admin.auth.byLdap.autoLogin.info#:#Wenn aktiviert, wird der Benutzer automatisch in den Matrix-Chat eingeloggt, wenn er sich das erste Mal in ILIAS anmeldet.<br><br><span style='color: red;'>Hierzu wird das login Event abgefangen!</span>

@@ -55,6 +55,11 @@ class PluginConfig extends ConfigBase
     private $loginMethod = "byLoginAndPassword";
 
     /**
+     * @var bool
+     */
+    private $useLdapAutoLogin = false;
+
+    /**
      * @return string
      */
     public function getMatrixServerUrl() : string
@@ -159,6 +164,24 @@ class PluginConfig extends ConfigBase
     public function setLoginMethod(string $loginMethod) : PluginConfig
     {
         $this->loginMethod = $loginMethod;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUseLdapAutoLogin() : bool
+    {
+        return $this->useLdapAutoLogin;
+    }
+
+    /**
+     * @param bool $useLdapAutoLogin
+     * @return PluginConfig
+     */
+    public function setUseLdapAutoLogin(bool $useLdapAutoLogin) : PluginConfig
+    {
+        $this->useLdapAutoLogin = $useLdapAutoLogin;
         return $this;
     }
 

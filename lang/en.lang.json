@@ -78,9 +78,9 @@
         },
         "byLdap": {
           "title": "Authentication using LDAP",
-          "ldapServerField": {
-            "title": "LDAP-Server",
-            "info": "The LDAP-Server which should be used to authenticate the user with Matrix."
+          "autoLogin": {
+            "title": "Automatic ldap login",
+            "info": "If activated, the user will be automatically logged into the Matrix-Chat, once the user logins into ILIAS.<br><br><span style='color: red;'>For this the login even will be catched!</span>"
           }
         }
       }

@@ -77,9 +77,9 @@
         },
         "byLdap": {
           "title": "Authentifizierung über LDAP",
-          "ldapServerField": {
-            "title": "LDAP-Server",
-            "info": "Der LDAP-Server, welcher für die authentifizierung mit MAtrix genutzt werden soll."
+          "autoLogin": {
+            "title": "Automatisches LDAP login",
+            "info": "Wenn aktiviert, wird der Benutzer automatisch in den Matrix-Chat eingeloggt, wenn er sich das erste Mal in ILIAS anmeldet.<br><br><span style='color: red;'>Hierzu wird das login Event abgefangen!</span>"
           }
         }
       }
