@@ -34,9 +34,10 @@ matrix.admin.username.input#:#Username of the Matrix-Server administrator
 matrix.admin.username.info#:#Will be used to do administrator tasks like creating rooms.
 matrix.admin.password.input#:#Password of the Matrix-Server administrator
 matrix.admin.password.info#:#Will be used to do administrator tasks like creating rooms.<br>Input-Field will be cleared after saving the password!
-matrix.admin.auth.byLoginAndPassword.notConfigured#:#Authentication with username and password is not configured
+matrix.admin.auth.notConfigured#:#Authentication is not (correctly) configured
+matrix.admin.auth.method#:#Authentication method
+matrix.admin.auth.byLoginAndPassword.title#:#Authentication using Username and Password
 matrix.admin.auth.byLoginAndPassword.missingUsernamePassword#:#No Username or Password was configured. Please configure a username and password first.
-matrix.admin.auth.byLoginAndPassword.usernameField.title#:#Username Userfield
-matrix.admin.auth.byLoginAndPassword.usernameField.info#:#The Userfield which contains the username for the matrix user.
-matrix.admin.auth.byLoginAndPassword.passwordField.title#:#Password Userfield
-matrix.admin.auth.byLoginAndPassword.passwordField.info#:#The Userfield which contains the password for the matrix user.
+matrix.admin.auth.byLdap.title#:#Authentication using LDAP
+matrix.admin.auth.byLdap.ldapServerField.title#:#LDAP-Server
+matrix.admin.auth.byLdap.ldapServerField.info#:#The LDAP-Server which should be used to authenticate the user with Matrix.

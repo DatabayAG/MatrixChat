@@ -43,14 +43,14 @@ class MatrixUserApi extends MatrixApiEndpointBase
         $configuredPasswordField = $userFieldLoader->getUserFieldById($this->plugin->getPluginConfig()->getPasswordFieldId());
 
         if (!$configuredUsernameField || !$configuredPasswordField) {
-            throw new Exception("matrix.admin.auth.byLoginAndPassword.notConfigured");
+            throw new Exception("matrix.admin.auth.notConfigured");
         }
 
         $usernameField = $userFieldLoader->getUserFieldForUser($iliasUserId, $configuredUsernameField->getId());
         $passwordField = $userFieldLoader->getUserFieldForUser($iliasUserId, $configuredPasswordField->getId());
 
         if (!$usernameField || !$passwordField) {
-            throw new Exception("matrix.admin.auth.byLoginAndPassword.notConfigured");
+            throw new Exception("matrix.admin.auth.notConfigured");
         }
 
         if (!$usernameField->getValue() || !$passwordField->getValue()) {

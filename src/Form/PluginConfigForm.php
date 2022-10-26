@@ -23,12 +23,13 @@ use ilPasswordInputGUI;
 use ilMatrixChatClientConfigGUI;
 use ilUriInputGUI;
 use ilUtil;
-use ilSelectInputGUI;
-use ILIAS\Plugin\MatrixChatClient\Libs\UserField\UserFieldLoader;
 use ilNumberInputGUI;
+use ilRadioGroupInputGUI;
+use ilRadioOption;
 
 /**
  * Class PluginConfigForm
+ *
  * @package ILIAS\Plugin\MatrixChatClient\Form
  * @author  Marvin Beym <mbeym@databay.de>
  */
@@ -60,38 +61,51 @@ class PluginConfigForm extends ilPropertyFormGUI
         $matrixServerUrl = new ilUriInputGUI($this->plugin->txt("matrix.server.url"), "matrixServerUrl");
         $matrixServerUrl->setRequired(true);
 
-        $matrixAdminUsername = new ilTextInputGUI($this->plugin->txt("matrix.admin.username.input"), "matrixAdminUsername");
+        $matrixAdminUsername = new ilTextInputGUI(
+            $this->plugin->txt("matrix.admin.username.input"),
+            "matrixAdminUsername"
+        );
         $matrixAdminUsername->setRequired(true);
         $matrixAdminUsername->setInfo($this->plugin->txt("matrix.admin.username.info"));
 
-        $matrixAdminPassword = new ilPasswordInputGUI($this->plugin->txt("matrix.admin.password.input"), "matrixAdminPassword");
+        $matrixAdminPassword = new ilPasswordInputGUI(
+            $this->plugin->txt("matrix.admin.password.input"),
+            "matrixAdminPassword"
+        );
         $matrixAdminPassword->setInfo($this->plugin->txt("matrix.admin.password.info"));
         $matrixAdminPassword->setSkipSyntaxCheck(true);
         $matrixAdminPassword->setRetype(false);
 
-        $usernameFieldId = new ilSelectInputGUI($this->plugin->txt("matrix.admin.auth.byLoginAndPassword.usernameField.title"), "usernameFieldId");
-        $usernameFieldId->setRequired(true);
-        $usernameFieldId->setInfo($this->plugin->txt("matrix.admin.auth.byLoginAndPassword.usernameField.info"));
-        $usernameFieldId->setOptions(UserFieldLoader::getInstance()->getAllUserFieldsAsOptions());
+        $loginMethod = new ilRadioGroupInputGUI($this->plugin->txt("matrix.admin.auth.method"), "loginMethod");
+        $loginMethod->setRequired(true);
 
-        $passwordFieldId = new ilSelectInputGUI($this->plugin->txt("matrix.admin.auth.byLoginAndPassword.passwordField.title"), "passwordFieldId");
-        $passwordFieldId->setRequired(true);
-        $passwordFieldId->setInfo($this->plugin->txt("matrix.admin.auth.byLoginAndPassword.passwordField.info"));
-        $passwordFieldId->setOptions(UserFieldLoader::getInstance()->getAllUserFieldsAsOptions());
+        $byLoginAndPassword = new ilRadioOption(
+            $this->plugin->txt("matrix.admin.auth.byLoginAndPassword.title"),
+            "byLoginAndPassword"
+        );
+        $byLdap = new ilRadioOption($this->plugin->txt("matrix.admin.auth.byLdap.title"), "byLdap");
 
-        $chatInitialLoadLimit = new ilNumberInputGUI($this->plugin->txt("matrix.chat.loadLimit.initial.title"), "chatInitialLoadLimit");
+        $loginMethod->addOption($byLoginAndPassword);
+        $loginMethod->addOption($byLdap);
+
+        $chatInitialLoadLimit = new ilNumberInputGUI(
+            $this->plugin->txt("matrix.chat.loadLimit.initial.title"),
+            "chatInitialLoadLimit"
+        );
         $chatInitialLoadLimit->setRequired(true);
         $chatInitialLoadLimit->setInfo($this->plugin->txt("matrix.chat.loadLimit.initial.info"));
 
-        $chatHistoryLoadLimit = new ilNumberInputGUI($this->plugin->txt("matrix.chat.loadLimit.history.title"), "chatHistoryLoadLimit");
+        $chatHistoryLoadLimit = new ilNumberInputGUI(
+            $this->plugin->txt("matrix.chat.loadLimit.history.title"),
+            "chatHistoryLoadLimit"
+        );
         $chatHistoryLoadLimit->setRequired(true);
         $chatHistoryLoadLimit->setInfo($this->plugin->txt("matrix.chat.loadLimit.history.info"));
 
         $this->addItem($matrixServerUrl);
         $this->addItem($matrixAdminUsername);
         $this->addItem($matrixAdminPassword);
-        $this->addItem($usernameFieldId);
-        $this->addItem($passwordFieldId);
+        $this->addItem($loginMethod);
         $this->addItem($chatInitialLoadLimit);
         $this->addItem($chatHistoryLoadLimit);
         $this->addCommandButton("saveSettings", $this->lng->txt("save"));

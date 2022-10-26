@@ -34,9 +34,9 @@ matrix.admin.username.input#:#Benutzername des Matrix-Server Administrators
 matrix.admin.username.info#:#Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen.
 matrix.admin.password.input#:#Passwort des Matrix-Server Administrators
 matrix.admin.password.info#:#Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen.<br>Eingabefeld wird nach abspeichern des Passwortes geleert!
-matrix.admin.auth.byLoginAndPassword.notConfigured#:#Authentifizierung mit Benutzername und Passwort ist nicht konfiguriert
-matrix.admin.auth.byLoginAndPassword.missingUsernamePassword#:#Es wurde kein Benutzername oder Passwort konfiguriert. Bitte konfigurieren Sie zuerst einen Benutzernamen und ein Passwort
-matrix.admin.auth.byLoginAndPassword.usernameField.title#:#Benutzername Benutzerfeld
-matrix.admin.auth.byLoginAndPassword.usernameField.info#:#Das Benutzerfeld, welches den Benutzernamen für den Matrix Benutzer enthält.
-matrix.admin.auth.byLoginAndPassword.passwordField.title#:#Passwort Benutzerfeld
-matrix.admin.auth.byLoginAndPassword.passwordField.info#:#Das Benutzerfeld, welches das Passwort für den Matrix Benutzer enthält.
+matrix.admin.auth.notConfigured#:#Authentifizierung ist nicht (korrekt) konfiguriert
+matrix.admin.auth.method#:#Authentifizierungs Methode
+matrix.admin.auth.byLoginAndPassword.title#:#Authentifizierung über Benutzername und Passwort
+matrix.admin.auth.byLdap.title#:#Authentifizierung über LDAP
+matrix.admin.auth.byLdap.ldapServerField.title#:#LDAP-Server
+matrix.admin.auth.byLdap.ldapServerField.info#:#Der LDAP-Server, welcher für die authentifizierung mit MAtrix genutzt werden soll.

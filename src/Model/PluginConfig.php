@@ -41,14 +41,6 @@ class PluginConfig extends ConfigBase
      */
     private $matrixAdminPassword = "";
     /**
-     * @var string
-     */
-    private $usernameFieldId = "";
-    /**
-     * @var string
-     */
-    private $passwordFieldId = "";
-    /**
      * @var int
      */
     private $chatInitialLoadLimit = 20;
@@ -56,6 +48,11 @@ class PluginConfig extends ConfigBase
      * @var int
      */
     private $chatHistoryLoadLimit = 20;
+
+    /**
+     * @var string
+     */
+    private $loginMethod = "byLoginAndPassword";
 
     /**
      * @return string
@@ -112,42 +109,6 @@ class PluginConfig extends ConfigBase
     }
 
     /**
-     * @return string
-     */
-    public function getUsernameFieldId() : string
-    {
-        return $this->usernameFieldId;
-    }
-
-    /**
-     * @param string $usernameFieldId
-     * @return PluginConfig
-     */
-    public function setUsernameFieldId(string $usernameFieldId) : PluginConfig
-    {
-        $this->usernameFieldId = $usernameFieldId;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPasswordFieldId() : string
-    {
-        return $this->passwordFieldId;
-    }
-
-    /**
-     * @param string $passwordFieldId
-     * @return PluginConfig
-     */
-    public function setPasswordFieldId(string $passwordFieldId) : PluginConfig
-    {
-        $this->passwordFieldId = $passwordFieldId;
-        return $this;
-    }
-
-    /**
      * @return int
      */
     public function getChatInitialLoadLimit() : int
@@ -180,6 +141,24 @@ class PluginConfig extends ConfigBase
     public function setChatHistoryLoadLimit(int $chatHistoryLoadLimit) : PluginConfig
     {
         $this->chatHistoryLoadLimit = $chatHistoryLoadLimit;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLoginMethod() : string
+    {
+        return $this->loginMethod;
+    }
+
+    /**
+     * @param string $loginMethod
+     * @return PluginConfig
+     */
+    public function setLoginMethod(string $loginMethod) : PluginConfig
+    {
+        $this->loginMethod = $loginMethod;
         return $this;
     }
 

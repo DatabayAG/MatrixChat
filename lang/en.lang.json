@@ -70,16 +70,17 @@
         "info": "Will be used to do administrator tasks like creating rooms.<br>Input-Field will be cleared after saving the password!"
       },
       "auth": {
+        "notConfigured": "Authentication is not (correctly) configured",
+        "method": "Authentication method",
         "byLoginAndPassword": {
-          "notConfigured": "Authentication with username and password is not configured",
-          "missingUsernamePassword": "No Username or Password was configured. Please configure a username and password first.",
-          "usernameField": {
-            "title": "Username Userfield",
-            "info": "The Userfield which contains the username for the matrix user."
-          },
-          "passwordField": {
-            "title": "Password Userfield",
-            "info": "The Userfield which contains the password for the matrix user."
+            "title": "Authentication using Username and Password",
+          "missingUsernamePassword": "No Username or Password was configured. Please configure a username and password first."
+        },
+        "byLdap": {
+          "title": "Authentication using LDAP",
+          "ldapServerField": {
+            "title": "LDAP-Server",
+            "info": "The LDAP-Server which should be used to authenticate the user with Matrix."
           }
         }
       }
