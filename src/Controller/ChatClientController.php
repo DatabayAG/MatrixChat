@@ -199,7 +199,7 @@ class ChatClientController extends BaseController
     {
         $form = new ChatLoginForm();
 
-        if(!$form->checkInput()) {
+        if (!$form->checkInput()) {
             ilUtil::sendFailure($this->plugin->txt("matrix.chat.login.failed"));
             $form->setValuesByPost();
             $this->showChatLogin($form);
