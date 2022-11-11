@@ -109,7 +109,7 @@ class ChatCourseSettingsController extends BaseController
         try {
             $this->courseSettingsRepo->save($courseSettings);
         } catch (Exception $ex) {
-            ilUtil::sendFailure($this->plugin->txt("updateFailed"), true);
+            ilUtil::sendFailure($this->plugin->txt("general.update.failed"), true);
             $this->redirectToCommand("showSettings");
         }
 
