@@ -30,6 +30,7 @@ use Exception;
 use ilCourseParticipants;
 use ilSession;
 use ILIAS\Plugin\MatrixChatClient\Form\ChatLoginForm;
+use ILIAS\Plugin\MatrixChatClient\Model\MatrixUser;
 
 /**
  * Class ChatClientController
@@ -102,7 +103,15 @@ class ChatClientController extends BaseController
             )
         );
 
-        $matrixUser = ilSession::get("matrixUser");
+        $matrixUser = MatrixUser::createFromJson(
+            json_decode(
+                ilSession::get("matrixUser"),
+                true,
+                512,
+                JSON_THROW_ON_ERROR
+            )
+        );
+
         if (!$matrixUser) {
             $this->redirectToCommand("showChatLogin", ["ref_id" => $this->courseId]);
             return;
@@ -127,7 +136,6 @@ class ChatClientController extends BaseController
                 );
             }
         }
-
 
         $this->mainTpl->addJavaScript($this->plugin->jsFolder("libs/easymde.min.js"));
         $this->mainTpl->addJavaScript($this->plugin->jsFolder("libs/markdown-it.min.js"));
@@ -171,7 +179,6 @@ class ChatClientController extends BaseController
             )
         );
 
-
         $this->mainTpl->setContent($tpl->get());
         $this->mainTpl->printToStdOut();
     }
@@ -209,7 +216,11 @@ class ChatClientController extends BaseController
         $form->setValuesByPost();
 
         try {
-            $matrixUser = $this->matrixApi->user->login($this->dic->user()->getId(), $form->getInput("username"), $form->getInput("password"));
+            $matrixUser = $this->matrixApi->user->login(
+                $this->dic->user()->getId(),
+                $form->getInput("username"),
+                $form->getInput("password")
+            );
             if (!$matrixUser) {
                 throw new Exception("Login failed");
             }
@@ -220,7 +231,7 @@ class ChatClientController extends BaseController
             return;
         }
 
-        ilSession::set("matrixUser", $matrixUser);
+        ilSession::set("matrixUser", json_encode($matrixUser, JSON_THROW_ON_ERROR));
 
         try {
             ilUtil::sendSuccess($this->plugin->txt("matrix.chat.login.success"), true);
