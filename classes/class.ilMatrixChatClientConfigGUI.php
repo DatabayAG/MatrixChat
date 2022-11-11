@@ -54,6 +54,9 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
      */
     private $ctrl;
 
+    /**
+     * @throws ilPluginException
+     */
     public function __construct()
     {
         global $DIC;
@@ -65,7 +68,14 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
         $this->upload = $this->dic->upload();
         $this->logger = $this->dic->logger()->root();
         $this->user = $this->dic->user();
-        $this->plugin = ilMatrixChatClientPlugin::getInstance();
+
+        $this->plugin = ilPlugin::getPluginObject(
+            $_GET["ctype"],
+            $_GET["cname"],
+            $_GET["slot_id"],
+            $_GET["pname"]
+        );
+        $this->plugin->denyConfigIfPluginNotActive();
     }
 
     /**
