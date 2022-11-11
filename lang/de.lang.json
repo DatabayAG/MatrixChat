@@ -40,6 +40,9 @@
         "failed": "Matrix-Login fehlgeschlagen",
         "success": "Matrix-Login erfolgreich"
       },
+      "logout": {
+        "success": "Matrix-Logout erfolgreich"
+      },
       "room": {
         "encryption": {
           "encrypted": "Verschlüsselt",

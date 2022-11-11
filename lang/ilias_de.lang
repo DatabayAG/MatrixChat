@@ -19,6 +19,7 @@ matrix.chat.notifications.changedName#:#Benutzer '%s' hat seinen Namen auf '%s' 
 matrix.chat.send#:#Senden
 matrix.chat.login.failed#:#Matrix-Login fehlgeschlagen
 matrix.chat.login.success#:#Matrix-Login erfolgreich
+matrix.chat.logout.success#:#Matrix-Logout erfolgreich
 matrix.chat.room.encryption.encrypted#:#Verschlüsselt
 matrix.chat.room.encryption.unencrypted#:#Unverschlüsselt
 matrix.chat.room.notFound#:#Raum konnte nicht gefunden werden.

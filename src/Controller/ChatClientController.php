@@ -150,6 +150,8 @@ class ChatClientController extends BaseController
         $this->mainTpl->addCss($this->plugin->cssFolder("easymde.min.css"));
 
         $tpl = new ilTemplate($this->plugin->templatesFolder("tpl.chat-integration.html"), true, true);
+        $tpl->setVariable("LOGOUT_URL", $this->getCommandLink("chatLogout", ["ref_id" => $this->courseId]));
+        $tpl->setVariable("LOGOUT_TEXT", $this->lng->txt("logout"));
         $tpl->setVariable(
             $room->isEncrypted() ? "ENCRYPTED_TEXT" : "UNENCRYPTED_TEXT",
             $this->plugin->txt($room->isEncrypted() ? "matrix.chat.room.encryption.encrypted" : "matrix.chat.room.encryption.unencrypted")
@@ -204,6 +206,15 @@ class ChatClientController extends BaseController
 
         $this->mainTpl->setContent($form->getHTML());
         $this->mainTpl->printToStdOut();
+    }
+
+    public function chatLogout() : void
+    {
+        ilSession::set("matrixUser", null);
+
+        ilUtil::sendSuccess($this->plugin->txt("matrix.chat.logout.success"), true);
+
+        $this->redirectToCommand("showChatLogin", ["ref_id" => $this->courseId]);
     }
 
     public function saveChatLogin() : void

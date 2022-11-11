@@ -204,9 +204,16 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
         if (
             $a_event !== "afterLogin"
             || PHP_SAPI === 'cli'
-            || !$this->pluginConfig->isUseLdapAutoLogin()
-            || $this->pluginConfig->getLoginMethod() !== "byLdap"
         ) {
+            return;
+        }
+
+        //Make sure matrixUser in session is always unset first.
+        ilSession::set("matrixUser", null);
+
+
+        if (!$this->pluginConfig->isUseLdapAutoLogin()
+            || $this->pluginConfig->getLoginMethod() !== "byLdap") {
             return;
         }
 
