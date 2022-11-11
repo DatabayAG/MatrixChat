@@ -189,4 +189,48 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
     {
         return $this->pluginConfig;
     }
+
+    /**
+     * Called by ilias event system to hook into afterLogin event.
+     *
+     * @param $a_component
+     * @param $a_event
+     * @param $a_parameter
+     * @return void
+     * @throws JsonException
+     */
+    public function handleEvent($a_component, $a_event, $a_parameter) : void
+    {
+        if (
+            $a_event !== "afterLogin"
+            || PHP_SAPI === 'cli'
+            || !$this->pluginConfig->isUseLdapAutoLogin()
+            || $this->pluginConfig->getLoginMethod() !== "byLdap"
+        ) {
+            return;
+        }
+
+        $post = $this->dic->http()->request()->getParsedBody();
+
+        if (!isset($post["username"], $post["password"])) {
+            return;
+        }
+
+        try {
+            $matrixUser = $this->matrixApi->user->login(
+                $this->dic->user()->getId(),
+                $post["username"],
+                $post["password"]
+            );
+            if (!$matrixUser) {
+                return;
+            }
+        } catch (Exception $e) {
+            return;
+        }
+
+        ilSession::set("matrixUser", json_encode($matrixUser, JSON_THROW_ON_ERROR));
+
+        //ToDo: Continue here - check if user can now immediately access chat (user needs to be added to course first)
+    }
 }
