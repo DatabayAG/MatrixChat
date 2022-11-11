@@ -150,4 +150,19 @@ class MatrixUser implements JsonSerializable
 
         return $data;
     }
+
+    public static function createFromJson(array $json) : ?MatrixUser
+    {
+        $matrixUser = new self();
+
+        $refClass = new ReflectionClass($matrixUser);
+        foreach ($refClass->getProperties() as $property) {
+            if ($json[$property->getName()] === null) {
+                return null;
+            }
+            $property->setAccessible(true);
+            $property->setValue($matrixUser, $json[$property->getName()]);
+        }
+        return $matrixUser;
+    }
 }
