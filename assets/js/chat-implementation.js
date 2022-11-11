@@ -55,6 +55,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       })
 
+      let encryptionEnableButtonElm = document.querySelector("#encryption_enable_button");
+      if (encryptionEnableButtonElm) {
+        encryptionEnableButtonElm.addEventListener("click", () => {
+          enableEncryption();
+        })
+      }
+
       easyMDE = new EasyMDE({
         element: document.getElementById('chat-message-writer-message'),
         toolbar: [
@@ -229,6 +236,30 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
+    let enableEncryption = () => {
+      /*
+      client.setRoomEncryption(matrixChatConfig.roomId, {
+        algorithm: "m.megolm.v1.aes-sha2",
+      }).then(() => {
+        console.log("Encryption enabled");
+        client.sendEvent(
+          matrixChatConfig.roomId,
+          null,
+          'm.room.encryption',
+          {
+            algorithm: "m.megolm.v1.aes-sha2"
+          },
+        ).then((ere) => {
+          console.log(ere);
+        })
+      }).catch((err) => {
+        console.error(err);
+      });
+
+       */
+      console.error("Not implemented yet!");
+    }
+
     let initClient = async () => {
       let client = matrixcs.createClient({
         baseUrl: matrixChatConfig.baseUrl,
@@ -258,7 +289,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const tls = room.getTimelineSets()[0];
       client
       .getEventTimeline(tls, firstRoomEvent.event.event_id)
-      .then(et => client.paginateEventTimeline(et, { backwards: true, limit: matrixChatConfig.chatHistoryLoadLimit }))
+      .then(et => client.paginateEventTimeline(et,
+        { backwards: true, limit: matrixChatConfig.chatHistoryLoadLimit }))
       .then(success => {
         //Scroll to previously first message element.
         if (success && currentTopMessageElm) {

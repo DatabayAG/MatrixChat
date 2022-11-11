@@ -156,6 +156,9 @@ class ChatClientController extends BaseController
             $room->isEncrypted() ? "ENCRYPTED_TEXT" : "UNENCRYPTED_TEXT",
             $this->plugin->txt($room->isEncrypted() ? "matrix.chat.room.encryption.encrypted" : "matrix.chat.room.encryption.unencrypted")
         );
+        if (!$room->isEncrypted()) {
+            $tpl->setVariable("ENCRYPTION_ENABLE_TEXT", $this->lng->txt("enable"));
+        }
         $tpl->setVariable("SEND_TEXT", $this->plugin->txt("matrix.chat.send"));
         $this->mainTpl->addOnLoadCode(
             "window.matrixChatConfig = " . json_encode([
