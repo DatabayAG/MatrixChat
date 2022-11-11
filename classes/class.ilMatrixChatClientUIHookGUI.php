@@ -3,23 +3,22 @@
 declare(strict_types=1);
 
 /**
-* This file is part of ILIAS, a powerful learning management system
-* published by ILIAS open source e-Learning e.V.
-*
-* ILIAS is licensed with the GPL-3.0,
-* see https://www.gnu.org/licenses/gpl-3.0.en.html
-* You should have received a copy of said license along with the
-* source code, too.
-*
-* If this is not the case or you just want to try ILIAS, you'll find
-* us at:
-* https://www.ilias.de
-* https://github.com/ILIAS-eLearning
-*
-*********************************************************************/
+ * This file is part of ILIAS, a powerful learning management system
+ * published by ILIAS open source e-Learning e.V.
+ *
+ * ILIAS is licensed with the GPL-3.0,
+ * see https://www.gnu.org/licenses/gpl-3.0.en.html
+ * You should have received a copy of said license along with the
+ * source code, too.
+ *
+ * If this is not the case or you just want to try ILIAS, you'll find
+ * us at:
+ * https://www.ilias.de
+ * https://github.com/ILIAS-eLearning
+ *
+ *********************************************************************/
 
 require_once __DIR__ . '/../vendor/autoload.php';
-
 
 use ILIAS\DI\Container;
 use ILIAS\Plugin\MatrixChatClient\Libs\ControllerHandler\ControllerHandler;
@@ -28,9 +27,10 @@ use ILIAS\Plugin\MatrixChatClient\Controller\ChatClientController;
 use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
 
 /**
-* Class ilMatrixChatClientUIHookGUI
-* @ilCtrl_isCalledBy ilMatrixChatClientUIHookGUI: ilUIPluginRouterGUI
-*/
+ * Class ilMatrixChatClientUIHookGUI
+ *
+ * @ilCtrl_isCalledBy ilMatrixChatClientUIHookGUI: ilUIPluginRouterGUI
+ */
 class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
 {
     /**
@@ -106,7 +106,12 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
         if (
             $tabs->getActiveTab() !== "view_content"
             || !isset($query["cmdClass"], $query["baseClass"])
-            || $query["cmdClass"] !== strtolower(ilObjCourseGUI::class)
+            || !in_array($query["cmdClass"], [
+                ilObjCourseGUI::class,
+                ilRepositoryGUI::class,
+                strtolower(ilObjCourseGUI::class),
+                strtolower(ilRepositoryGUI::class),
+            ], true)
             || !in_array($query["baseClass"], [
                 ilRepositoryGUI::class,
                 strtolower(ilRepositoryGUI::class)
@@ -166,11 +171,12 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
     }
 
     /**
-    * Returns the array used to replace the html content
-    * @param string $mode
-    * @param string $html
-    * @return string[]
-    */
+     * Returns the array used to replace the html content
+     *
+     * @param string $mode
+     * @param string $html
+     * @return string[]
+     */
     protected function uiHookResponse(string $mode = ilUIHookPluginGUI::KEEP, string $html = "") : array
     {
         return ['mode' => $mode, 'html' => $html];
