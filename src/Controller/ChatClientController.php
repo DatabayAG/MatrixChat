@@ -103,14 +103,18 @@ class ChatClientController extends BaseController
             )
         );
 
-        $matrixUser = MatrixUser::createFromJson(
-            json_decode(
-                ilSession::get("matrixUser"),
-                true,
-                512,
-                JSON_THROW_ON_ERROR
-            )
-        );
+        try {
+            $matrixUser = MatrixUser::createFromJson(
+                json_decode(
+                    ilSession::get("matrixUser") ?? "[]",
+                    true,
+                    512,
+                    JSON_THROW_ON_ERROR
+                )
+            );
+        } catch (Exception $ex) {
+            $matrixUser = null;
+        }
 
         if (!$matrixUser) {
             $this->redirectToCommand("showChatLogin", ["ref_id" => $this->courseId]);
