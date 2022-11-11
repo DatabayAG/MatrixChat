@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace ILIAS\Plugin\MatrixChatClient\Model;
 
 use JsonSerializable;
+use ReflectionClass;
 
 /**
  * Class MatrixUser
@@ -139,12 +140,14 @@ class MatrixUser implements JsonSerializable
 
     public function jsonSerialize() : array
     {
-        return [
-            "iliasUserId" => $this->getIliasUserId(),
-            "matrixUserId" => $this->getMatrixUserId(),
-            "accessToken" => $this->getAccessToken(),
-            "homeServer" => $this->getHomeServer(),
-            "deviceId" => $this->getDeviceId()
-        ];
+        $refClass = new ReflectionClass($this);
+
+        $data = [];
+        foreach ($refClass->getProperties() as $property) {
+            $property->setAccessible(true);
+            $data[$property->getName()] = $property->getValue($this);
+        }
+
+        return $data;
     }
 }
