@@ -45,7 +45,7 @@ class MatrixUser implements JsonSerializable
     /**
      * @var string
      */
-    private $device_id;
+    private $deviceId;
 
     /**
      * @return int
@@ -124,16 +124,16 @@ class MatrixUser implements JsonSerializable
      */
     public function getDeviceId() : string
     {
-        return $this->device_id;
+        return $this->deviceId;
     }
 
     /**
-     * @param string $device_id
+     * @param string $deviceId
      * @return MatrixUser
      */
-    public function setDeviceId(string $device_id) : MatrixUser
+    public function setDeviceId(string $deviceId) : MatrixUser
     {
-        $this->device_id = $device_id;
+        $this->deviceId = $deviceId;
         return $this;
     }
 
