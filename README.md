@@ -2,10 +2,10 @@
 
 ## Requirements
 
-| Component | Min | Max | Link |
-|-----------|-----|-----| ---- |
-| PHP    | ![](https://img.shields.io/badge/7.3-blue.svg)    | ![](https://img.shields.io/badge/7.4-blue.svg)   | [PHP](https://php.net)
-| ILIAS  | ![](https://img.shields.io/badge/7.x-orange.svg)  | ![](https://img.shields.io/badge/7.x-orange.svg) | [ILIAS](https://ilias.de)
+| Component | Min                                              | Max                                              | Link                      |
+|-----------|--------------------------------------------------|--------------------------------------------------|---------------------------|
+| PHP       | ![](https://img.shields.io/badge/7.3-blue.svg)   | ![](https://img.shields.io/badge/7.4-blue.svg)   | [PHP](https://php.net)    |
+| ILIAS     | ![](https://img.shields.io/badge/7.x-orange.svg) | ![](https://img.shields.io/badge/7.x-orange.svg) | [ILIAS](https://ilias.de) |
 
 ---
 ## Table of contents
@@ -14,6 +14,8 @@
     * [Requirements](#requirements)
     * [Installation](#installation)
     * [Usage](#usage)
+    * [Matrix-Setup](docs/Matrix-Setup.md)
+    * [Roadmap](docs/ROADMAP.md)
 
 ---
 
@@ -34,3 +36,5 @@
 6. Choose **Activate** from the **Actions** dropdown.
 
 ## Usage
+
+ToDo
