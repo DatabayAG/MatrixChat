@@ -118,13 +118,12 @@ document.addEventListener("DOMContentLoaded", () => {
           firstRoomEvent = event;
         }
 
-        let content = event.getContent();
 
         switch (event.getType()) {
           case "m.room.encrypted":
-          case "m.room.message":
             await client.decryptEventIfNeeded(event, { isRetry: false, emit: false });
-            switch (content.msgtype) {
+          case "m.room.message":
+            switch (event.getContent().msgtype) {
               case "m.text":
                 await onAddMessage(event, toStartOfTimeline);
                 break;
@@ -139,6 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             break;
           case "m.room.member":
+            let content = event.getContent();
             if (content.membership === "join" && content.displayname) {
               let previousName = "";
               document.querySelectorAll(
