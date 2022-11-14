@@ -208,12 +208,13 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
             return;
         }
 
-        //Make sure matrixUser in session is always unset first.
+        //Make sure matrixUser in session is always unset first, just in case.
         ilSession::set("matrixUser", null);
 
 
         if (!$this->pluginConfig->isUseLdapAutoLogin()
-            || $this->pluginConfig->getLoginMethod() !== "byLdap") {
+            || $this->pluginConfig->getLoginMethod() !== "byLdap"
+            || strpos($this->dic->user()->getAuthMode(), "ldap") !== 0) {
             return;
         }
 
