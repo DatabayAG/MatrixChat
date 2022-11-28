@@ -139,25 +139,13 @@ document.addEventListener("DOMContentLoaded", () => {
             break;
           case "m.room.member":
             let content = event.getContent();
+            console.log(content);
             if (content.membership === "join" && content.displayname) {
-              let previousName = "";
-              document.querySelectorAll(
-                `div[sender="${event.sender.userId}"]`)
-              .forEach((messageContainerElm) => {
-                let authorElm = messageContainerElm.querySelector(".chat-message-author");
-                if (authorElm) {
-                  previousName = authorElm.innerText;
-                  authorElm.innerText = content.displayname;
-                }
-              });
-
-              if (previousName !== "") {
-                await addNotificationMessage(
-                  translation.matrix.chat.notifications.changedName
-                  .replace("%s", previousName)
-                  .replace("%s", content.displayname)
-                );
-              }
+              await addNotificationMessage(
+                translation.matrix.chat.notifications.changedName
+                .replace("%s", "AAA")
+                .replace("%s", content.displayname)
+              );
             }
             break;
           default:
