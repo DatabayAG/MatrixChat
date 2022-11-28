@@ -139,11 +139,12 @@ document.addEventListener("DOMContentLoaded", () => {
             break;
           case "m.room.member":
             let content = event.getContent();
-            console.log(content);
             if (content.membership === "join" && content.displayname) {
+              //ToDo: Change to only add notification when name actually changes
+              //ToDo: Also add actual "previous" name
               await addNotificationMessage(
                 translation.matrix.chat.notifications.changedName
-                .replace("%s", "AAA")
+                .replace("%s", "AAA") //Change
                 .replace("%s", content.displayname)
               );
             }

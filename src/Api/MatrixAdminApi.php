@@ -172,6 +172,10 @@ class MatrixAdminApi extends MatrixApiEndpointBase
                 $this->getUser()->getAccessToken()
             );
         } catch (MatrixApiException $e) {
+            //Todo: If admin user is not in room, he can't invite himself.
+            //Todo: Find any user in the room. Login as that user (https://matrix-org.github.io/synapse/latest/admin_api/user_admin_api.html#login-as-a-user)
+            //Todo: Then invite the admin user using that user.
+            //Todo: Then make the admin user an admin using: https://matrix-org.github.io/synapse/latest/admin_api/rooms.html#make-room-admin-api
             return false;
         }
 
