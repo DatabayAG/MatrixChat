@@ -98,6 +98,34 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
         $this->controllerHandler->handleCommand($this->plugin->dic->ctrl()->getCmd());
     }
 
+    private function checkSupportedIntegrationView() : bool
+    {
+        $query = $this->dic->http()->request()->getQueryParams();
+        if (!isset($query["cmdClass"], $query["baseClass"])) {
+            return false;
+        }
+
+        $cmdClasses = [
+            strtolower(ilObjCourseGUI::class),
+            strtolower(ilObjGroupGUI::class),
+                strtolower(ilRepositoryGUI::class),
+        ];
+        $baseClasses = [
+            ilRepositoryGUI::class,
+        ];
+
+        $cmdClasses = array_map((static function ($cmdClass) : string {
+            return strtolower($cmdClass);
+        }), $cmdClasses);
+
+        $baseClasses = array_map((static function ($baseClass) : string {
+            return strtolower($baseClass);
+        }), $baseClasses);
+
+        return in_array(strtolower($query["cmdClass"]), $cmdClasses, true)
+            && in_array(strtolower($query["baseClass"]), $baseClasses, true);
+    }
+
     private function injectChatIntegrationTab(Container $dic) : void
     {
         $tabs = $dic->tabs();
@@ -105,17 +133,7 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
 
         if (
             $tabs->getActiveTab() !== "view_content"
-            || !isset($query["cmdClass"], $query["baseClass"])
-            || !in_array($query["cmdClass"], [
-                ilObjCourseGUI::class,
-                ilRepositoryGUI::class,
-                strtolower(ilObjCourseGUI::class),
-                strtolower(ilRepositoryGUI::class),
-            ], true)
-            || !in_array($query["baseClass"], [
-                ilRepositoryGUI::class,
-                strtolower(ilRepositoryGUI::class)
-            ], true)
+            || !$this->checkSupportedIntegrationView()
         ) {
             return;
         }
@@ -141,12 +159,7 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
         $query = $dic->http()->request()->getQueryParams();
         if (
             $tabs->getActiveTab() !== "settings"
-            || !isset($query["cmdClass"], $query["baseClass"])
-            || $query["cmdClass"] !== strtolower(ilObjCourseGUI::class)
-            || !in_array($query["baseClass"], [
-                ilRepositoryGUI::class,
-                strtolower(ilRepositoryGUI::class)
-            ], true)
+            || !$this->checkSupportedIntegrationView()
         ) {
             return;
         }
