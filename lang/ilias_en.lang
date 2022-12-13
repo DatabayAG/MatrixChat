@@ -22,6 +22,7 @@ matrix.chat.login.success#:#Matrix login successful
 matrix.chat.logout.success#:#Matrix logout successful
 matrix.chat.room.encryption.encrypted#:#Encrypted
 matrix.chat.room.encryption.unencrypted#:#Unencrypted
+matrix.chat.room.notFoundEvenThoughEnabled#:#The room was not found even though the integration is enabled for the course.<br>It's possible the room was deleted by an external client or the used administrator cannot access it anymore!<br><br>The integration probably needs to be deactivated (deleting the room if possible) and then reactivated.
 matrix.chat.room.notFound#:#Room could not be found.
 matrix.chat.room.memberAssignFailed#:#User could not be added to the room.
 matrix.chat.room.delete.confirm#:#Would you like to fully delete the associated chat room?

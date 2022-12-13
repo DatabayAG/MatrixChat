@@ -48,6 +48,7 @@
           "encrypted": "Verschlüsselt",
           "unencrypted": "Unverschlüsselt"
         },
+        "notFoundEvenThoughEnabled": "Der Raum wurde nicht gefunden, obwohl diese Integration aktiviert ist.<br>Wahrscheinlich wurde der Raum durch einen Externen Client gelöscht oder der genutzte Administrator kann nicht mehr auf diesen Zugreifen!<br><br>Die Integration muss wahrscheinlich deaktiviert werden (und dabei der Raum gelöscht werden, falls möglich) und dann wieder aktiviert werden.",
         "notFound": "Raum konnte nicht gefunden werden.",
         "memberAssignFailed": "Benutzer konnte nicht zum Raum hinzugefügt werden.",
         "delete": {

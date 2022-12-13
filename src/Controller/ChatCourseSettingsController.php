@@ -53,6 +53,11 @@ class ChatCourseSettingsController extends BaseController
         if (!$form) {
             $form = new ChatCourseSettingsForm();
             $courseSettings = $this->courseSettingsRepo->read($refId);
+
+            if ($courseSettings->isChatIntegrationEnabled() && !$this->matrixApi->admin->getRoom($courseSettings->getMatrixRoomId())) {
+                ilUtil::sendFailure($this->plugin->txt("matrix.chat.room.notFoundEvenThoughEnabled", true));
+            }
+
             $form->setValuesByArray([
                 "chatIntegrationEnabled" => $courseSettings->isChatIntegrationEnabled(),
             ], true);

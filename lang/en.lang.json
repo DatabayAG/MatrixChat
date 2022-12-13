@@ -48,6 +48,7 @@
           "encrypted": "Encrypted",
           "unencrypted": "Unencrypted"
         },
+        "notFoundEvenThoughEnabled": "The room was not found even though the integration is enabled for the course.<br>It's possible the room was deleted by an external client or the used administrator cannot access it anymore!<br><br>The integration probably needs to be deactivated (deleting the room if possible) and then reactivated.",
         "notFound": "Room could not be found.",
         "memberAssignFailed": "User could not be added to the room.",
         "delete": {
