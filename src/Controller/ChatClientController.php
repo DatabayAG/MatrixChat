@@ -125,7 +125,10 @@ class ChatClientController extends BaseController
 
         if (!$room) {
             ilUtil::sendFailure($this->plugin->txt("matrix.chat.room.notFound"), true);
-            $this->mainTpl->printToStdOut();
+            $this->ctrl->redirectByClass(
+                ["ilRepositoryGUI", "ilObjCourseGUI"],
+                "view"
+            );
             return;
         }
 
