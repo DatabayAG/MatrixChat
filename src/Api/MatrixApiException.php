@@ -20,6 +20,7 @@ use Exception;
 
 /**
  * Class MatrixApiException
+ *
  * @package ILIAS\Plugin\MatrixChatClient\Api
  * @author  Marvin Beym <mbeym@databay.de>
  */
@@ -30,9 +31,9 @@ class MatrixApiException extends Exception
      */
     private $errorCode;
 
-    public function __construct(string $errorCode, string $errorMessage)
+    public function __construct(string $errorCode, string $errorMessage, int $code = 0)
     {
-        parent::__construct($errorMessage);
+        parent::__construct($errorMessage, $code);
         $this->setErrorCode($errorCode);
     }
 

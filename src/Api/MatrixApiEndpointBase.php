@@ -89,7 +89,7 @@ abstract class MatrixApiEndpointBase
             $request = $this->client->request($method, $this->getApiUrl($apiCall), $options);
             $content = $request->getContent();
         } catch (TransportExceptionInterface|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface $e) {
-            throw new MatrixApiException("REQUEST_ERROR", $e->getMessage());
+            throw new MatrixApiException("REQUEST_ERROR", $e->getMessage(), $e->getCode());
         }
 
         try {
