@@ -18,6 +18,7 @@ namespace ILIAS\Plugin\MatrixChatClient\Api;
 
 use ILIAS\Plugin\MatrixChatClient\Model\MatrixUser;
 use ILIAS\Plugin\MatrixChatClient\Model\MatrixRoom;
+use Throwable;
 
 /**
  * Class MatrixAdminApi
@@ -72,7 +73,6 @@ class MatrixAdminApi extends MatrixApiEndpointBase
             $this->adminUser = $this->login();
         }
 
-
         return $this->adminUser;
     }
 
@@ -94,10 +94,15 @@ class MatrixAdminApi extends MatrixApiEndpointBase
             return null;
         }
 
-        return (new MatrixRoom())
-            ->setId($response["room_id"])
-            ->setName($response["name"])
-            ->setEncrypted($response["encryption"] !== null);
+        try {
+            return (new MatrixRoom())
+                ->setId($response["room_id"])
+                ->setName($response["name"])
+                ->setEncrypted($response["encryption"] !== null);
+        } catch (Throwable $e) {
+            $this->plugin->dic->logger()->root()->error($e->getMessage());
+            return null;
+        }
     }
 
     /**
@@ -114,7 +119,6 @@ class MatrixAdminApi extends MatrixApiEndpointBase
             ],
             $this->getUser()->getAccessToken()
         );
-
 
         $matrixRoom = (new MatrixRoom())
             ->setId($response["room_id"])
