@@ -1,0 +1,20 @@
+<div class="chat">
+    <span class="chat-top-container">
+        <a href="{LOGOUT_URL}" class="btn btn-default">{LOGOUT_TEXT}</a>
+        <!-- BEGIN encrypted -->
+    <span class="chat-encryption chat-encrypted">{ENCRYPTED_TEXT}</span>
+        <!-- END encrypted -->
+        <!-- BEGIN unencrypted -->
+    <span class="chat-encryption chat-unencrypted">
+        <span>{UNENCRYPTED_TEXT}</span>
+        <button id="encryption_enable_button" style="display: none;" class="btn btn-default">{ENCRYPTION_ENABLE_TEXT}</button>
+    </span>
+        <!-- END unencrypted -->
+    </span>
+    <div class="chat-messages-container">
+
+    </div>
+    <div class="chat-message-writer">
+        <textarea id="chat-message-writer-message" class="chat-message-writer-message" type="text"></textarea>
+    </div>
+</div>

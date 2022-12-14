@@ -6,8 +6,41 @@ general.update.success#:#Update successful
 general.update.failed#:#Update failed
 general.plugin.settings#:#Plugin Settings
 general.plugin.notActivated#:#Plugin is not active, yet. Please activate it.
-general.plugin.requiredParameterMissing#:#A required parameter could not be found.
+general.plugin.requiredParameterMissing#:#The required parameter '%s' could not be found.
+chat#:#Chat
+matrix.server.url#:#Matrix Server (Synapse) URL
+matrix.server.reachable#:#Server is reachable
+matrix.server.unreachable#:#Server is unreachable
+matrix.chat.loadLimit.initial.title#:#Initial chat message load limit
+matrix.chat.loadLimit.initial.info#:#How many messages should be loaded when the chat is opened (newest x messages)
+matrix.chat.loadLimit.history.title#:#Old messages to load
+matrix.chat.loadLimit.history.info#:#How many messages to load at the same time when the user scrolls up in the Chat-Window
+matrix.chat.notifications.changedName#:#User '%s' changed their name to '%s'
+matrix.chat.send#:#Send
+matrix.chat.login.failed#:#Matrix login failed
+matrix.chat.login.success#:#Matrix login successful
+matrix.chat.logout.success#:#Matrix logout successful
+matrix.chat.room.encryption.encrypted#:#Encrypted
+matrix.chat.room.encryption.unencrypted#:#Unencrypted
+matrix.chat.room.notFoundEvenThoughEnabled#:#The room was not found even though the integration is enabled for the course.<br>It's possible the room was deleted by an external client or the used administrator cannot access it anymore!<br><br>The integration probably needs to be deactivated (deleting the room if possible) and then reactivated.
+matrix.chat.room.notFound#:#Room could not be found.
+matrix.chat.room.memberAssignFailed#:#User could not be added to the room.
+matrix.chat.room.delete.confirm#:#Would you like to fully delete the associated chat room?
+matrix.chat.room.delete.button#:#Delete chat room
+matrix.chat.room.delete.success#:#Room deleted successfully
+matrix.chat.room.delete.failed#:#Room could not be deleted
+matrix.chat.course.settings#:#Chat settings
+matrix.chat.course.enable#:#Activate Matrix-Chat integration for the Course
+matrix.admin.loginInvalid#:#Admin-Login invalid
 matrix.admin.username.input#:#Username of the Matrix-Server administrator
 matrix.admin.username.info#:#Will be used to do administrator tasks like creating rooms.
 matrix.admin.password.input#:#Password of the Matrix-Server administrator
-matrix.admin.password.info#:#Will be used to do administrator tasks like creating rooms.
+matrix.admin.password.info#:#Will be used to do administrator tasks like creating rooms.<br>Input-Field will be cleared after saving the password!
+matrix.admin.auth.login#:#Login into Matrix Chat
+matrix.admin.auth.notConfigured#:#Authentication is not (correctly) configured
+matrix.admin.auth.method#:#Authentication method
+matrix.admin.auth.byLoginAndPassword.title#:#Authentication using Username and Password
+matrix.admin.auth.byLoginAndPassword.missingUsernamePassword#:#No Username or Password was configured. Please configure a username and password first.
+matrix.admin.auth.byLdap.title#:#Authentication using LDAP
+matrix.admin.auth.byLdap.autoLogin.title#:#Automatic ldap login
+matrix.admin.auth.byLdap.autoLogin.info#:#If activated, the user will be automatically logged into the Matrix-Chat, once the user logins into ILIAS.<br><br><span style='color: red;'>For this the login even will be catched!</span>

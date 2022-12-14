@@ -12,6 +12,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 /**
  * Class ilMatrixChatClientConfigGUI
+ *
  * @author  Marvin Beym <mbeym@databay.de>
  */
 class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
@@ -53,6 +54,9 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
      */
     private $ctrl;
 
+    /**
+     * @throws ilPluginException
+     */
     public function __construct()
     {
         global $DIC;
@@ -64,7 +68,14 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
         $this->upload = $this->dic->upload();
         $this->logger = $this->dic->logger()->root();
         $this->user = $this->dic->user();
-        $this->plugin = ilMatrixChatClientPlugin::getInstance();
+
+        $this->plugin = ilPlugin::getPluginObject(
+            $_GET["ctype"],
+            $_GET["cname"],
+            $_GET["slot_id"],
+            $_GET["pname"]
+        );
+        $this->plugin->denyConfigIfPluginNotActive();
     }
 
     /**
@@ -75,7 +86,7 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
         if ($form === null) {
             $form = new PluginConfigForm();
             $form->setValuesByArray(
-                $this->plugin->getPluginConfig()->toArray(),
+                $this->plugin->getPluginConfig()->toArray(["matrixAdminPassword"]),
                 true
             );
         }
@@ -88,7 +99,7 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
         $form = new PluginConfigForm();
 
         if (!$form->checkInput()) {
-            ilUtil::sendFailure($this->plugin->txt("updateFailed"));
+            ilUtil::sendFailure($this->plugin->txt("general.update.failed"));
             $form->setValuesByPost();
             $this->showSettings($form);
             return;
@@ -96,13 +107,24 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
 
         $form->setValuesByPost();
 
+        $matrixServerUrl = rtrim($form->getInput("matrixServerUrl"), "/");
+
         $this->plugin->getPluginConfig()
+                     ->setMatrixServerUrl($matrixServerUrl)
                      ->setMatrixAdminUsername($form->getInput("matrixAdminUsername"))
-                     ->setMatrixAdminPassword($form->getInput("matrixAdminPassword"));
+                     ->setChatInitialLoadLimit((int) $form->getInput("chatInitialLoadLimit"))
+                     ->setChatHistoryLoadLimit((int) $form->getInput("chatHistoryLoadLimit"))
+                     ->setLoginMethod($form->getInput("loginMethod"))
+                     ->setUseLdapAutoLogin((bool) $form->getInput("useLdapAutoLogin"));
+
+        $matrixAdminPassword = $form->getInput("matrixAdminPassword");
+        if ($matrixAdminPassword !== "") {
+            $this->plugin->getPluginConfig()->setMatrixAdminPassword($matrixAdminPassword);
+        }
 
         try {
             $this->plugin->getPluginConfig()->save();
-            ilUtil::sendSuccess($this->plugin->txt("updateSuccessful"), true);
+            ilUtil::sendSuccess($this->plugin->txt("general.update.success"), true);
         } catch (Exception $e) {
             ilUtil::sendFailure($this->plugin->txt($e->getMessage()), true);
         }
@@ -111,6 +133,7 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
 
     /**
      * Calls the function for a received command
+     *
      * @param $cmd
      * @throws Exception
      */
@@ -121,13 +144,14 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
         if (method_exists($this, $cmd)) {
             $this->{$cmd}();
         } else {
-            ilUtil::sendFailure(sprintf($this->plugin->txt("cmdNotFound"), $cmd));
+            ilUtil::sendFailure(sprintf($this->plugin->txt("general.cmd.notFound"), $cmd));
             $this->{$this->getDefaultCommand()}();
         }
     }
 
     /**
      * Returns the default command
+     *
      * @return string
      */
     protected function getDefaultCommand() : string

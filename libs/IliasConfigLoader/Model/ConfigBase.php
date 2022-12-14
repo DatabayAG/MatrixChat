@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 /**
  * This file is part of ILIAS, a powerful learning management system
  * published by ILIAS open source e-Learning e.V.
@@ -24,7 +26,7 @@ use TypeError;
 
 /**
  * Class ConfigBase
- * @package ILIAS\Plugin\ChatClientInterface\Model
+ * @package ILIAS\Plugin\MatrixChatClient\Model
  * @author  Marvin Beym <mbeym@databay.de>
  */
 class ConfigBase
@@ -44,12 +46,15 @@ class ConfigBase
         $this->settings = $settings;
     }
 
-    public function toArray() : array
+    public function toArray($blacklist = []) : array
     {
         $data = [];
         foreach ($this->getProperties(new ReflectionClass($this))->getLoadable() as $loadableProperty) {
             $property = $loadableProperty->getProperty();
             $property->setAccessible(true);
+            if (in_array($property->getName(), $blacklist, true)) {
+                continue;
+            }
             $data[$property->getName()] = $property->getValue($this);
         }
         return $data;

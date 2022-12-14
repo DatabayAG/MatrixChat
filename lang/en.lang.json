@@ -11,18 +11,83 @@
     "plugin": {
       "settings": "Plugin Settings",
       "notActivated": "Plugin is not active, yet. Please activate it.",
-      "requiredParameterMissing": "A required parameter could not be found."
+      "requiredParameterMissing": "The required parameter '%s' could not be found."
     }
   },
+  "chat": "Chat",
   "matrix": {
+    "server": {
+      "url": "Matrix Server (Synapse) URL",
+      "reachable": "Server is reachable",
+      "unreachable": "Server is unreachable"
+    },
+    "chat": {
+      "loadLimit": {
+        "initial": {
+          "title": "Initial chat message load limit",
+          "info": "How many messages should be loaded when the chat is opened (newest x messages)"
+        },
+        "history": {
+          "title": "Old messages to load",
+          "info": "How many messages to load at the same time when the user scrolls up in the Chat-Window"
+        }
+      },
+      "notifications": {
+        "changedName": "User '%s' changed their name to '%s'"
+      },
+      "send": "Send",
+      "login": {
+        "failed": "Matrix login failed",
+        "success": "Matrix login successful"
+      },
+      "logout": {
+        "success": "Matrix logout successful"
+      },
+      "room": {
+        "encryption": {
+          "encrypted": "Encrypted",
+          "unencrypted": "Unencrypted"
+        },
+        "notFoundEvenThoughEnabled": "The room was not found even though the integration is enabled for the course.<br>It's possible the room was deleted by an external client or the used administrator cannot access it anymore!<br><br>The integration probably needs to be deactivated (deleting the room if possible) and then reactivated.",
+        "notFound": "Room could not be found.",
+        "memberAssignFailed": "User could not be added to the room.",
+        "delete": {
+          "confirm": "Would you like to fully delete the associated chat room?",
+          "button": "Delete chat room",
+          "success": "Room deleted successfully",
+          "failed": "Room could not be deleted"
+        }
+      },
+      "course": {
+        "settings": "Chat settings",
+        "enable": "Activate Matrix-Chat integration for the Course"
+      }
+    },
     "admin": {
+      "loginInvalid": "Admin-Login invalid",
       "username": {
         "input": "Username of the Matrix-Server administrator",
         "info": "Will be used to do administrator tasks like creating rooms."
       },
       "password": {
         "input": "Password of the Matrix-Server administrator",
-        "info": "Will be used to do administrator tasks like creating rooms."
+        "info": "Will be used to do administrator tasks like creating rooms.<br>Input-Field will be cleared after saving the password!"
+      },
+      "auth": {
+        "login": "Login into Matrix Chat",
+        "notConfigured": "Authentication is not (correctly) configured",
+        "method": "Authentication method",
+        "byLoginAndPassword": {
+            "title": "Authentication using Username and Password",
+          "missingUsernamePassword": "No Username or Password was configured. Please configure a username and password first."
+        },
+        "byLdap": {
+          "title": "Authentication using LDAP",
+          "autoLogin": {
+            "title": "Automatic ldap login",
+            "info": "If activated, the user will be automatically logged into the Matrix-Chat, once the user logins into ILIAS.<br><br><span style='color: red;'>For this the login even will be catched!</span>"
+          }
+        }
       }
     }
   }

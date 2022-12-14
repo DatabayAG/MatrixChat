@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 /**
  * This file is part of ILIAS, a powerful learning management system
  * published by ILIAS open source e-Learning e.V.
@@ -19,7 +21,7 @@ use ILIAS\Plugin\MatrixChatClient\Libs\IliasConfigLoader\Model\UnloadablePropert
 
 /**
  * Class ConfigLoadException
- * @package ILIAS\Plugin\ChatClientInterface\Exception
+ * @package ILIAS\Plugin\MatrixChatClient\Exception
  * @author  Marvin Beym <mbeym@databay.de>
  */
 class ConfigLoadException extends Exception

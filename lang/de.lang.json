@@ -11,20 +11,83 @@
     "plugin": {
       "settings": "Plugin-Einstellungen",
       "notActivated": "Das Plugin ist nicht aktiviert. Bitte aktivieren Sie dieses zunächst.",
-      "requiredParameterMissing": "Ein benötigter Parameter konnte nicht gefunden werden."
+      "requiredParameterMissing": "Der benötigte Parameter '%s' konnte nicht gefunden werden."
     }
   },
+  "chat": "Chat",
   "matrix": {
+    "server": {
+      "url": "Matrix Server (Synapse) URL",
+      "reachable": "Server erreichbar",
+      "unreachable": "Server nicht erreichbar"
+    },
+    "chat": {
+      "loadLimit": {
+        "initial": {
+          "title": "Initiales Chat-Nachrichten Limit",
+          "info": "Wie viele Nachrichten sollen beim Laden des Chats initial geladen werden (neusten x Nachrichten)"
+        },
+        "history": {
+          "title": "Alte Nachrichten nachlade Limit",
+          "info": "Wie viele Nachrichten gleichzeitig sollen nachgeladen werden, wenn der Benutzer im Chat-Fenster nach oben scrollt"
+        }
+      },
+      "notifications": {
+        "changedName": "Benutzer '%s' hat seinen Namen auf '%s' geändert"
+      },
+      "send": "Senden",
+      "login": {
+        "failed": "Matrix-Login fehlgeschlagen",
+        "success": "Matrix-Login erfolgreich"
+      },
+      "logout": {
+        "success": "Matrix-Logout erfolgreich"
+      },
+      "room": {
+        "encryption": {
+          "encrypted": "Verschlüsselt",
+          "unencrypted": "Unverschlüsselt"
+        },
+        "notFoundEvenThoughEnabled": "Der Raum wurde nicht gefunden, obwohl diese Integration aktiviert ist.<br>Wahrscheinlich wurde der Raum durch einen externen Client gelöscht oder der genutzte Administrator kann nicht mehr auf diesen zugreifen!<br><br>Die Integration muss wahrscheinlich deaktiviert (und dabei der Raum gelöscht werden, falls möglich) und dann wieder aktiviert werden.",
+        "notFound": "Raum konnte nicht gefunden werden.",
+        "memberAssignFailed": "Benutzer konnte nicht zum Raum hinzugefügt werden.",
+        "delete": {
+          "confirm": "Möchten Sie auch den Chatraum löschen?",
+          "button": "Chatraum löschen",
+          "success": "Chatraum erfolgreich gelöscht",
+          "failed": "Chatraum konnte nicht gelöscht werden"
+        }
+      },
+      "course": {
+        "settings": "Chat-Einstellungen",
+        "enable": "Aktiviere Matrix-Chat Integration für den Kurs"
+      }
+    },
     "admin": {
+      "loginInvalid": "Admin-Login ungültig",
       "username": {
         "input": "Benutzername des Matrix-Server Administrators",
         "info": "Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen."
       },
       "password": {
         "input": "Passwort des Matrix-Server Administrators",
-        "info": "Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen."
+        "info": "Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen.<br>Eingabefeld wird nach abspeichern des Passwortes geleert!"
+      },
+      "auth": {
+        "login": "In Matrix-Chat einloggen",
+        "notConfigured": "Authentifizierung ist nicht (korrekt) konfiguriert",
+        "method": "Authentifizierungs Methode",
+        "byLoginAndPassword": {
+          "title": "Authentifizierung über Benutzername und Passwort"
+        },
+        "byLdap": {
+          "title": "Authentifizierung über LDAP",
+          "autoLogin": {
+            "title": "Automatisches LDAP login",
+            "info": "Wenn aktiviert, wird der Benutzer automatisch in den Matrix-Chat eingeloggt, wenn er sich das erste Mal in ILIAS anmeldet.<br><br><span style='color: red;'>Hierzu wird das login Event abgefangen!</span>"
+          }
+        }
       }
-
     }
   }
 }

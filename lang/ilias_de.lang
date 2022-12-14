@@ -6,8 +6,40 @@ general.update.success#:#Aktualisierung erfolgreich
 general.update.failed#:#Aktualisierung fehlgeschlagen
 general.plugin.settings#:#Plugin-Einstellungen
 general.plugin.notActivated#:#Das Plugin ist nicht aktiviert. Bitte aktivieren Sie dieses zunächst.
-general.plugin.requiredParameterMissing#:#Ein benötigter Parameter konnte nicht gefunden werden.
+general.plugin.requiredParameterMissing#:#Der benötigte Parameter '%s' konnte nicht gefunden werden.
+chat#:#Chat
+matrix.server.url#:#Matrix Server (Synapse) URL
+matrix.server.reachable#:#Server erreichbar
+matrix.server.unreachable#:#Server nicht erreichbar
+matrix.chat.loadLimit.initial.title#:#Initiales Chat-Nachrichten Limit
+matrix.chat.loadLimit.initial.info#:#Wie viele Nachrichten sollen beim Laden des Chats initial geladen werden (neusten x Nachrichten)
+matrix.chat.loadLimit.history.title#:#Alte Nachrichten nachlade Limit
+matrix.chat.loadLimit.history.info#:#Wie viele Nachrichten gleichzeitig sollen nachgeladen werden, wenn der Benutzer im Chat-Fenster nach oben scrollt
+matrix.chat.notifications.changedName#:#Benutzer '%s' hat seinen Namen auf '%s' geändert
+matrix.chat.send#:#Senden
+matrix.chat.login.failed#:#Matrix-Login fehlgeschlagen
+matrix.chat.login.success#:#Matrix-Login erfolgreich
+matrix.chat.logout.success#:#Matrix-Logout erfolgreich
+matrix.chat.room.encryption.encrypted#:#Verschlüsselt
+matrix.chat.room.encryption.unencrypted#:#Unverschlüsselt
+matrix.chat.room.notFoundEvenThoughEnabled#:#Der Raum wurde nicht gefunden, obwohl diese Integration aktiviert ist.<br>Wahrscheinlich wurde der Raum durch einen externen Client gelöscht oder der genutzte Administrator kann nicht mehr auf diesen zugreifen!<br><br>Die Integration muss wahrscheinlich deaktiviert (und dabei der Raum gelöscht werden, falls möglich) und dann wieder aktiviert werden.
+matrix.chat.room.notFound#:#Raum konnte nicht gefunden werden.
+matrix.chat.room.memberAssignFailed#:#Benutzer konnte nicht zum Raum hinzugefügt werden.
+matrix.chat.room.delete.confirm#:#Möchten Sie auch den Chatraum löschen?
+matrix.chat.room.delete.button#:#Chatraum löschen
+matrix.chat.room.delete.success#:#Chatraum erfolgreich gelöscht
+matrix.chat.room.delete.failed#:#Chatraum konnte nicht gelöscht werden
+matrix.chat.course.settings#:#Chat-Einstellungen
+matrix.chat.course.enable#:#Aktiviere Matrix-Chat Integration für den Kurs
+matrix.admin.loginInvalid#:#Admin-Login ungültig
 matrix.admin.username.input#:#Benutzername des Matrix-Server Administrators
 matrix.admin.username.info#:#Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen.
 matrix.admin.password.input#:#Passwort des Matrix-Server Administrators
-matrix.admin.password.info#:#Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen.
+matrix.admin.password.info#:#Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen.<br>Eingabefeld wird nach abspeichern des Passwortes geleert!
+matrix.admin.auth.login#:#In Matrix-Chat einloggen
+matrix.admin.auth.notConfigured#:#Authentifizierung ist nicht (korrekt) konfiguriert
+matrix.admin.auth.method#:#Authentifizierungs Methode
+matrix.admin.auth.byLoginAndPassword.title#:#Authentifizierung über Benutzername und Passwort
+matrix.admin.auth.byLdap.title#:#Authentifizierung über LDAP
+matrix.admin.auth.byLdap.autoLogin.title#:#Automatisches LDAP login
+matrix.admin.auth.byLdap.autoLogin.info#:#Wenn aktiviert, wird der Benutzer automatisch in den Matrix-Chat eingeloggt, wenn er sich das erste Mal in ILIAS anmeldet.<br><br><span style='color: red;'>Hierzu wird das login Event abgefangen!</span>

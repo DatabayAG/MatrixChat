@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 /**
  * This file is part of ILIAS, a powerful learning management system
  * published by ILIAS open source e-Learning e.V.
@@ -19,9 +21,16 @@ use ilMatrixChatClientPlugin;
 use ilTextInputGUI;
 use ilPasswordInputGUI;
 use ilMatrixChatClientConfigGUI;
+use ilUriInputGUI;
+use ilUtil;
+use ilNumberInputGUI;
+use ilRadioGroupInputGUI;
+use ilRadioOption;
+use ilCheckboxInputGUI;
 
 /**
  * Class PluginConfigForm
+ *
  * @package ILIAS\Plugin\MatrixChatClient\Form
  * @author  Marvin Beym <mbeym@databay.de>
  */
@@ -37,6 +46,73 @@ class PluginConfigForm extends ilPropertyFormGUI
         parent::__construct();
         $this->plugin = ilMatrixChatClientPlugin::getInstance();
 
+        $this->setFormAction($this->ctrl->getFormActionByClass(ilMatrixChatClientConfigGUI::class, "showSettings"));
+        $this->setId("{$this->plugin->getId()}_{$this->plugin->getPluginName()}_plugin_config_form");
+        $this->setTitle($this->plugin->txt("general.plugin.settings"));
+
+        if ($this->plugin->matrixApi->general->serverReachable()) {
+            ilUtil::sendSuccess($this->plugin->txt("matrix.server.reachable"), true);
+        } else {
+            ilUtil::sendFailure($this->plugin->txt("matrix.server.unreachable"), true);
+        }
+        if (!$this->plugin->matrixApi->admin->checkAdminUser()) {
+            ilUtil::sendFailure($this->plugin->txt("matrix.admin.loginInvalid"), true);
+        }
+
+        $matrixServerUrl = new ilUriInputGUI($this->plugin->txt("matrix.server.url"), "matrixServerUrl");
+        $matrixServerUrl->setRequired(true);
+
+        $matrixAdminUsername = new ilTextInputGUI(
+            $this->plugin->txt("matrix.admin.username.input"),
+            "matrixAdminUsername"
+        );
+        $matrixAdminUsername->setRequired(true);
+        $matrixAdminUsername->setInfo($this->plugin->txt("matrix.admin.username.info"));
+
+        $matrixAdminPassword = new ilPasswordInputGUI(
+            $this->plugin->txt("matrix.admin.password.input"),
+            "matrixAdminPassword"
+        );
+        $matrixAdminPassword->setInfo($this->plugin->txt("matrix.admin.password.info"));
+        $matrixAdminPassword->setSkipSyntaxCheck(true);
+        $matrixAdminPassword->setRetype(false);
+
+        $loginMethod = new ilRadioGroupInputGUI($this->plugin->txt("matrix.admin.auth.method"), "loginMethod");
+        $loginMethod->setRequired(true);
+
+        $byLoginAndPassword = new ilRadioOption(
+            $this->plugin->txt("matrix.admin.auth.byLoginAndPassword.title"),
+            "byLoginAndPassword"
+        );
+        $byLdap = new ilRadioOption($this->plugin->txt("matrix.admin.auth.byLdap.title"), "byLdap");
+        $useLdapAutoLogin = new ilCheckboxInputGUI($this->plugin->txt("matrix.admin.auth.byLdap.autoLogin.title"), "useLdapAutoLogin");
+        $useLdapAutoLogin->setInfo($this->plugin->txt("matrix.admin.auth.byLdap.autoLogin.info"));
+        $byLdap->addSubItem($useLdapAutoLogin);
+
+
+        $loginMethod->addOption($byLoginAndPassword);
+        $loginMethod->addOption($byLdap);
+
+        $chatInitialLoadLimit = new ilNumberInputGUI(
+            $this->plugin->txt("matrix.chat.loadLimit.initial.title"),
+            "chatInitialLoadLimit"
+        );
+        $chatInitialLoadLimit->setRequired(true);
+        $chatInitialLoadLimit->setInfo($this->plugin->txt("matrix.chat.loadLimit.initial.info"));
+
+        $chatHistoryLoadLimit = new ilNumberInputGUI(
+            $this->plugin->txt("matrix.chat.loadLimit.history.title"),
+            "chatHistoryLoadLimit"
+        );
+        $chatHistoryLoadLimit->setRequired(true);
+        $chatHistoryLoadLimit->setInfo($this->plugin->txt("matrix.chat.loadLimit.history.info"));
+
+        $this->addItem($matrixServerUrl);
+        $this->addItem($matrixAdminUsername);
+        $this->addItem($matrixAdminPassword);
+        $this->addItem($loginMethod);
+        $this->addItem($chatInitialLoadLimit);
+        $this->addItem($chatHistoryLoadLimit);
         $this->addCommandButton("saveSettings", $this->lng->txt("save"));
     }
 }

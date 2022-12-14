@@ -3,23 +3,26 @@
 declare(strict_types=1);
 
 /**
-* This file is part of ILIAS, a powerful learning management system
-* published by ILIAS open source e-Learning e.V.
-*
-* ILIAS is licensed with the GPL-3.0,
-* see https://www.gnu.org/licenses/gpl-3.0.en.html
-* You should have received a copy of said license along with the
-* source code, too.
-*
-* If this is not the case or you just want to try ILIAS, you'll find
-* us at:
-* https://www.ilias.de
-* https://github.com/ILIAS-eLearning
-*
-*********************************************************************/
-use ILIAS\DI\Container;
+ * This file is part of ILIAS, a powerful learning management system
+ * published by ILIAS open source e-Learning e.V.
+ *
+ * ILIAS is licensed with the GPL-3.0,
+ * see https://www.gnu.org/licenses/gpl-3.0.en.html
+ * You should have received a copy of said license along with the
+ * source code, too.
+ *
+ * If this is not the case or you just want to try ILIAS, you'll find
+ * us at:
+ * https://www.ilias.de
+ * https://github.com/ILIAS-eLearning
+ *
+ *********************************************************************/
 
+use ILIAS\DI\Container;
 use ILIAS\Plugin\MatrixChatClient\Libs\JsonTranslationLoader\JsonTranslationLoader;
+use ILIAS\Plugin\MatrixChatClient\Model\PluginConfig;
+use ILIAS\Plugin\MatrixChatClient\Api\MatrixApiCommunicator;
+use ILIAS\Plugin\MatrixChatClient\Libs\IliasConfigLoader\Exception\ConfigLoadException;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -47,6 +50,10 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
      */
     private $pluginConfig;
     /**
+     * @var MatrixApiCommunicator
+     */
+    public $matrixApi;
+    /**
      * @var Container
      */
     public $dic;
@@ -59,15 +66,17 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
      */
     public $settings;
 
-
-
+    /**
+     * @throws ConfigLoadException
+     */
     public function __construct()
     {
         global $DIC;
         $this->dic = $DIC;
         $this->ctrl = $this->dic->ctrl();
         $this->settings = new ilSetting(self::class);
-        $this->pluginConfig = new PluginConfig($this->settings);
+        $this->pluginConfig = (new PluginConfig($this->settings))->load();
+        $this->matrixApi = new MatrixApiCommunicator($this, $this->pluginConfig->getmatrixServerUrl());
         parent::__construct();
     }
 
@@ -155,7 +164,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
     public function denyConfigIfPluginNotActive() : void
     {
         if (!$this->isActive()) {
-            ilUtil::sendFailure($this->txt("plugin_not_activated"), true);
+            ilUtil::sendFailure($this->txt("general.plugin.notActivated"), true);
             $this->ctrl->redirectByClass(ilObjComponentSettingsGUI::class, "view");
         }
     }
@@ -179,5 +188,57 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
     public function getPluginConfig() : PluginConfig
     {
         return $this->pluginConfig;
+    }
+
+    /**
+     * Called by ilias event system to hook into afterLogin event.
+     *
+     * @param $a_component
+     * @param $a_event
+     * @param $a_parameter
+     * @return void
+     * @throws JsonException
+     */
+    public function handleEvent($a_component, $a_event, $a_parameter) : void
+    {
+        if (
+            $a_event !== "afterLogin"
+            || PHP_SAPI === 'cli'
+        ) {
+            return;
+        }
+
+        //Make sure matrixUser in session is always unset first, just in case.
+        ilSession::set("matrixUser", null);
+
+
+        if (!$this->pluginConfig->isUseLdapAutoLogin()
+            || $this->pluginConfig->getLoginMethod() !== "byLdap"
+            || strpos($this->dic->user()->getAuthMode(), "ldap") !== 0) {
+            return;
+        }
+
+        $post = $this->dic->http()->request()->getParsedBody();
+
+        if (!isset($post["username"], $post["password"])) {
+            return;
+        }
+
+        try {
+            $matrixUser = $this->matrixApi->user->login(
+                $this->dic->user()->getId(),
+                $post["username"],
+                $post["password"]
+            );
+            if (!$matrixUser) {
+                return;
+            }
+        } catch (Exception $e) {
+            return;
+        }
+
+        ilSession::set("matrixUser", json_encode($matrixUser, JSON_THROW_ON_ERROR));
+
+        //ToDo: Continue here - check if user can now immediately access chat (user needs to be added to course first)
     }
 }
