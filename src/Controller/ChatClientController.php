@@ -165,7 +165,7 @@ class ChatClientController extends BaseController
         $tpl->setVariable("SEND_TEXT", $this->plugin->txt("matrix.chat.send"));
         $this->mainTpl->addOnLoadCode(
             "window.matrixChatConfig = " . json_encode([
-                "baseUrl" => "http://localhost:8008",
+                "baseUrl" => $this->plugin->getPluginConfig()->getMatrixServerUrl(),
                 "ajax" => [
                     "getTemplateAjax" => $this->getCommandLink("getTemplateAjax", [
                         "ref_id" => $this->courseId
