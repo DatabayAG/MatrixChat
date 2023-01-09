@@ -142,7 +142,8 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
 
         if ($this->plugin->matrixApi->general->serverReachable() && $courseSettings && $courseSettings->isChatIntegrationEnabled()) {
             $dic->ctrl()->setParameterByClass(self::class, "ref_id", (int) $query["ref_id"]);
-            $tabs->addSubTab(
+
+            $tabs->addTab(
                 "matrix-chat",
                 $this->plugin->txt("chat"),
                 $dic->ctrl()->getLinkTargetByClass([
