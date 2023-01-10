@@ -124,6 +124,18 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
         return $this->assetsFolder("js/$file");
     }
 
+    public function getObjGUIClassByType(string $type) : ?string
+    {
+        switch ($type) {
+            case "crs":
+                return ilObjCourseGUI::class;
+            case "grp":
+                return ilObjGroupGUI::class;
+            default:
+                return null;
+        }
+    }
+
     public function redirectToHome() : void
     {
         if ($this->isAtLeastIlias6()) {

@@ -31,6 +31,12 @@ use ilCourseParticipants;
 use ilSession;
 use ILIAS\Plugin\MatrixChatClient\Form\ChatLoginForm;
 use ILIAS\Plugin\MatrixChatClient\Model\MatrixUser;
+use ilObject;
+use JsonException;
+use ReflectionMethod;
+use ilUIPluginRouterGUI;
+use ilMatrixChatClientUIHookGUI;
+use ilObjGroupGUI;
 
 /**
  * Class ChatClientController
@@ -71,11 +77,47 @@ class ChatClientController extends BaseController
         $this->courseSettings = $this->courseSettingsRepo->read((int) $this->courseId);
     }
 
+    public function injectTabs(string $selectedTabId) : void
+    {
+        $gui = null;
+        $this->ctrl->setParameterByClass(ilUIPluginRouterGUI::class, "ref_id", $this->courseId);
+        switch (ilObject::_lookupType($this->courseId, true)) {
+            case "crs":
+                $gui = new ilObjCourseGUI();
+                $gui->getTabs();
+                break;
+            case "grp":
+                $gui = new ilObjGroupGUI([], $this->courseId, true);
+                $gui->getTabs();
+                break;
+        }
+
+        if ($gui) {
+            $reflectionMethod = new ReflectionMethod($gui, 'setTitleAndDescription');
+            $reflectionMethod->setAccessible(true);
+            $reflectionMethod->invoke($gui);
+
+            $this->dic['ilLocator']->addRepositoryItems($this->courseId);
+        }
+
+        $this->tabs->addTab(
+            "matrix-chat",
+            $this->plugin->txt("chat"),
+            $this->dic->ctrl()->getLinkTargetByClass([
+                ilUIPluginRouterGUI::class,
+                ilMatrixChatClientUIHookGUI::class,
+            ], self::getCommand("showChat"))
+        );
+
+        $this->tabs->activateTab($selectedTabId);
+    }
+
     /**
-     * @throws ilTemplateException
+     * @throws ilTemplateException|JsonException
      */
     public function showChat() : void
     {
+        $this->injectTabs("matrix-chat");
         $this->mainTpl->setTitle($this->plugin->txt("chat"));
         $this->mainTpl->loadStandardTemplate();
 
@@ -94,14 +136,6 @@ class ChatClientController extends BaseController
                 "view"
             );
         }
-
-        $this->tabs->setBackTarget(
-            $this->lng->txt("content"),
-            $this->ctrl->getLinkTargetByClass(
-                ["ilRepositoryGUI", "ilObjCourseGUI"],
-                "view"
-            )
-        );
 
         try {
             $matrixUser = MatrixUser::createFromJson(
@@ -205,13 +239,8 @@ class ChatClientController extends BaseController
             $form = new ChatLoginForm();
         }
 
-        $this->tabs->setBackTarget(
-            $this->lng->txt("content"),
-            $this->ctrl->getLinkTargetByClass(
-                ["ilRepositoryGUI", "ilObjCourseGUI"],
-                "view"
-            )
-        );
+        $this->injectTabs("matrix-chat");
+
         $this->mainTpl->loadStandardTemplate();
 
         $this->mainTpl->setContent($form->getHTML());
