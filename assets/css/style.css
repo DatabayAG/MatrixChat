@@ -81,7 +81,7 @@ button.chat-message-writer-send:hover {
     width: inherit;
 }
 
-.chat-logged-in-as-user {
+.chat-logged-in-as-user-displayname {
     font-size: larger;
     font-weight: bolder;
     color: #4c6586;
