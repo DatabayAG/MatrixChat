@@ -21,7 +21,6 @@ use ILIAS\Plugin\MatrixChatClient\Model\Room\RoomJoined;
 use ILIAS\Plugin\MatrixChatClient\Model\Room\RoomModel;
 use ILIAS\Plugin\MatrixChatClient\Model\MatrixUser;
 use ILIAS\Plugin\MatrixChatClient\Repository\UserDeviceRepository;
-use ILIAS\Plugin\MatrixChatClient\Libs\UserField\UserFieldLoader;
 use Exception;
 
 /**
@@ -35,9 +34,20 @@ class MatrixUserApi extends MatrixApiEndpointBase
     /**
      * @throws Exception
      */
-    public function login(int $iliasUserId, string $username, string $password) : ?MatrixUser
+    public function loginUser(int $iliasUserId, string $username, string $password) : ?MatrixUser
     {
         $deviceId = UserDeviceRepository::getInstance()->read($iliasUserId);
+        $matrixUser = $this->login($username, $password, $deviceId);
+
+        if (!$matrixUser) {
+            return null;
+        }
+        $matrixUser->setIliasUserId($iliasUserId);
+        return $matrixUser;
+    }
+
+    public function login(string $username, string $password, string $deviceId) : ?MatrixUser
+    {
         try {
             $response = $this->sendRequest("/_matrix/client/v3/login", "POST", [
                 "type" => "m.login.password",
@@ -55,19 +65,7 @@ class MatrixUserApi extends MatrixApiEndpointBase
             ->setMatrixDisplayName($this->getMatrixUserDisplayName($response["user_id"]))
             ->setAccessToken($response["access_token"])
             ->setHomeServer($response["home_server"])
-            ->setDeviceId($deviceId)
-            ->setIliasUserId($iliasUserId);
-    }
-
-    private function getMatrixUserDisplayName(string $matrixUserId) : string
-    {
-        try {
-            $response = $this->sendRequest("/_matrix/client/v3/profile/{$matrixUserId}/displayname");
-        } catch (MatrixApiException $e) {
-            return "";
-        }
-
-        return $response["displayname"];
+            ->setDeviceId($deviceId);
     }
 
     /**

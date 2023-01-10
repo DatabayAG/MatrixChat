@@ -28,6 +28,7 @@ use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
 
 /**
  * Class MatrixApiEndpointBase
+ *
  * @package ILIAS\Plugin\MatrixChatClient\Api
  * @author  Marvin Beym <mbeym@databay.de>
  */
@@ -58,6 +59,16 @@ abstract class MatrixApiEndpointBase
         $this->courseSettingsRepo = CourseSettingsRepository::getInstance();
     }
 
+    protected function getMatrixUserDisplayName(string $matrixUserId) : string
+    {
+        try {
+            $response = $this->sendRequest("/_matrix/client/v3/profile/{$matrixUserId}/displayname");
+        } catch (MatrixApiException $e) {
+            return "";
+        }
+
+        return $response["displayname"];
+    }
 
     private function getApiUrl(string $apiCall) : string
     {

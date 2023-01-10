@@ -225,7 +225,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
         }
 
         try {
-            $matrixUser = $this->matrixApi->user->login(
+            $matrixUser = $this->matrixApi->user->loginUser(
                 $this->dic->user()->getId(),
                 $post["username"],
                 $post["password"]

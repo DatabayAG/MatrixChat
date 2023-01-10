@@ -19,6 +19,8 @@ namespace ILIAS\Plugin\MatrixChatClient\Api;
 use ILIAS\Plugin\MatrixChatClient\Model\MatrixUser;
 use ILIAS\Plugin\MatrixChatClient\Model\MatrixRoom;
 use Throwable;
+use ilMatrixChatClientPlugin;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
  * Class MatrixAdminApi
@@ -32,30 +34,15 @@ class MatrixAdminApi extends MatrixApiEndpointBase
      * @var MatrixUser|null
      */
     private $adminUser;
-
     /**
-     * Optional: Other api calls will login automatically and remember the admin user for future use
-     *
-     * @return MatrixUser|null
+     * @var MatrixUserApi
      */
-    public function login() : ?MatrixUser
-    {
-        try {
-            $response = $this->sendRequest("/_matrix/client/v3/login", "POST", [
-                "type" => "m.login.password",
-                "user" => $this->plugin->getPluginConfig()->getMatrixAdminUsername(),
-                "password" => $this->plugin->getPluginConfig()->getMatrixAdminPassword(),
-                "device_id" => "ilias_matrix_chat_device_admin"
-            ]);
-        } catch (MatrixApiException $e) {
-            return null;
-        }
+    private $userApi;
 
-        return (new MatrixUser())
-            ->setMatrixUserId($response["user_id"])
-            ->setAccessToken($response["access_token"])
-            ->setHomeServer($response["home_server"])
-            ->setDeviceId($response["device_id"]);
+    public function __construct(string $matrixServerUrl, HttpClientInterface $client, ilMatrixChatClientPlugin $plugin, MatrixUserApi $userApi)
+    {
+        $this->userApi = $userApi;
+        parent::__construct($matrixServerUrl, $client, $plugin);
     }
 
     public function checkAdminUser() : bool
@@ -70,11 +57,19 @@ class MatrixAdminApi extends MatrixApiEndpointBase
     private function getUser() : MatrixUser
     {
         if ($this->adminUser === null) {
-            $this->adminUser = $this->login();
+            $this->adminUser = $this->userApi->login(
+                $this->plugin->getPluginConfig()->getMatrixAdminUsername(),
+                $this->plugin->getPluginConfig()->getMatrixAdminPassword(),
+                "ilias_matrix_chat_device_admin"
+            );
         }
 
         if (!$this->adminUser) {
-            $this->adminUser = $this->login();
+            $this->adminUser = $this->userApi->login(
+                $this->plugin->getPluginConfig()->getMatrixAdminUsername(),
+                $this->plugin->getPluginConfig()->getMatrixAdminPassword(),
+                "ilias_matrix_chat_device_admin"
+            );
         }
 
         return $this->adminUser;
