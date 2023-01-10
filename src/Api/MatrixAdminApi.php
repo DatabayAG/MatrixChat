@@ -60,7 +60,11 @@ class MatrixAdminApi extends MatrixApiEndpointBase
 
     public function checkAdminUser() : bool
     {
-        return $this->getUser() !== null;
+        try {
+            return $this->getUser() !== null;
+        } catch (Throwable $ex) {
+            return false;
+        }
     }
 
     private function getUser() : MatrixUser
