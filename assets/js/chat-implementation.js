@@ -144,7 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
               //ToDo: Also add actual "previous" name
               await addNotificationMessage(
                 translation.matrix.chat.notifications.changedName
-                .replace("%s", "AAA") //Change
+                .replace("%s", event.sender.name)
                 .replace("%s", content.displayname)
               );
             }
