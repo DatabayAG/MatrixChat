@@ -11,6 +11,7 @@ chat#:#Chat
 matrix.server.url#:#Matrix Server (Synapse) URL
 matrix.server.reachable#:#Server is reachable
 matrix.server.unreachable#:#Server is unreachable
+matrix.chat.loggedInAs#:#Logged in as %s
 matrix.chat.loadLimit.initial.title#:#Initial chat message load limit
 matrix.chat.loadLimit.initial.info#:#How many messages should be loaded when the chat is opened (newest x messages)
 matrix.chat.loadLimit.history.title#:#Old messages to load

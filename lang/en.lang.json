@@ -22,6 +22,7 @@
       "unreachable": "Server is unreachable"
     },
     "chat": {
+      "loggedInAs": "Logged in as %s",
       "loadLimit": {
         "initial": {
           "title": "Initial chat message load limit",

@@ -81,15 +81,25 @@ button.chat-message-writer-send:hover {
     width: inherit;
 }
 
+.chat-logged-in-as-user {
+    font-size: larger;
+    font-weight: bolder;
+    color: #4c6586;
+}
+
+.chat-logged-in-as {
+    padding: 0.5rem;
+}
+
 .chat-top-container {
     display: flex;
+    margin-bottom: 1rem;
     justify-content: space-between;
     align-items: center;
 }
 
 .chat-encryption {
     padding: 0.75rem;
-    margin-bottom: 1rem;
     border-radius: 1rem;
 }
 

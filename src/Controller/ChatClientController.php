@@ -155,6 +155,10 @@ class ChatClientController extends BaseController
         $tpl = new ilTemplate($this->plugin->templatesFolder("tpl.chat-integration.html"), true, true);
         $tpl->setVariable("LOGOUT_URL", $this->getCommandLink("chatLogout", ["ref_id" => $this->courseId]));
         $tpl->setVariable("LOGOUT_TEXT", $this->lng->txt("logout"));
+        $tpl->setVariable("LOGGED_IN_AS", sprintf(
+            $this->plugin->txt("matrix.chat.loggedInAs"),
+            "<span class='chat-logged-in-as-user'>{$matrixUser->getMatrixUsername()}</span>"
+        ));
         $tpl->setVariable(
             $room->isEncrypted() ? "ENCRYPTED_TEXT" : "UNENCRYPTED_TEXT",
             $this->plugin->txt($room->isEncrypted() ? "matrix.chat.room.encryption.encrypted" : "matrix.chat.room.encryption.unencrypted")
@@ -237,7 +241,7 @@ class ChatClientController extends BaseController
         $form->setValuesByPost();
 
         try {
-            $matrixUser = $this->matrixApi->user->login(
+            $matrixUser = $this->matrixApi->user->loginUser(
                 $this->dic->user()->getId(),
                 $form->getInput("username"),
                 $form->getInput("password")
