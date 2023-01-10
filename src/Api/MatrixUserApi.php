@@ -51,10 +51,23 @@ class MatrixUserApi extends MatrixApiEndpointBase
 
         return (new MatrixUser())
             ->setMatrixUserId($response["user_id"])
+            ->setMatrixUsername($username)
+            ->setMatrixDisplayName($this->getMatrixUserDisplayName($response["user_id"]))
             ->setAccessToken($response["access_token"])
             ->setHomeServer($response["home_server"])
             ->setDeviceId($deviceId)
             ->setIliasUserId($iliasUserId);
+    }
+
+    private function getMatrixUserDisplayName(string $matrixUserId) : string
+    {
+        try {
+            $response = $this->sendRequest("/_matrix/client/v3/profile/{$matrixUserId}/displayname");
+        } catch (MatrixApiException $e) {
+            return "";
+        }
+
+        return $response["displayname"];
     }
 
     /**
