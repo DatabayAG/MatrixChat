@@ -14,6 +14,30 @@
       "requiredParameterMissing": "The required parameter '%s' could not be found."
     }
   },
+  "config": {
+    "usernameScheme": {
+      "title": "Matrix-User naming scheme",
+      "info": "Dieses Schema wird verwendet, um den Matrix-Benutzernamen zu erzeugen,<br>wenn ILIAS-Benutzer einem Matrix-Chat beitreten wollen, aber bisher keinen Benutzer haben.<br>Unterstützte Variablen: <br>%s"
+    },
+    "adminUsername": {
+      "title": "Username of the Matrix-Server administrator",
+      "info": "Will be used to do administrator tasks like creating rooms."
+    },
+    "adminPassword": {
+      "title": "Password of the Matrix-Server administrator",
+      "info": "Will be used to do administrator tasks like creating rooms.<br>Input-Field will be cleared after saving the password!"
+    },
+    "loadLimit": {
+      "initial": {
+        "title": "Initial chat message load limit",
+        "info": "How many messages should be loaded when the chat is opened (newest x messages)"
+      },
+      "history": {
+        "title": "Old messages to load",
+        "info": "How many messages to load at the same time when the user scrolls up in the Chat-Window"
+      }
+    }
+  },
   "chat": "Chat",
   "matrix": {
     "server": {
@@ -23,16 +47,6 @@
     },
     "chat": {
       "loggedInAs": "Logged in as",
-      "loadLimit": {
-        "initial": {
-          "title": "Initial chat message load limit",
-          "info": "How many messages should be loaded when the chat is opened (newest x messages)"
-        },
-        "history": {
-          "title": "Old messages to load",
-          "info": "How many messages to load at the same time when the user scrolls up in the Chat-Window"
-        }
-      },
       "notifications": {
         "changedName": "User '%s' changed their name to '%s'"
       },
@@ -64,31 +78,20 @@
         "enable": "Activate Matrix-Chat integration for the Course"
       }
     },
+    "user": {
+      "register": {
+        "method": {
+          "title": "Matrix-User registration method",
+          "externalAccount": "Use external account entry",
+          "createFromNameScheme": "Create from name scheme"
+        },
+        "iliasAuthModeNotSupported": "The ILIAS authentication mode '%s' is not supported"
+      }
+    },
     "admin": {
       "loginInvalid": "Admin-Login invalid",
-      "username": {
-        "input": "Username of the Matrix-Server administrator",
-        "info": "Will be used to do administrator tasks like creating rooms."
-      },
-      "password": {
-        "input": "Password of the Matrix-Server administrator",
-        "info": "Will be used to do administrator tasks like creating rooms.<br>Input-Field will be cleared after saving the password!"
-      },
       "auth": {
-        "login": "Login into Matrix Chat",
-        "notConfigured": "Authentication is not (correctly) configured",
-        "method": "Authentication method",
-        "byLoginAndPassword": {
-            "title": "Authentication using Username and Password",
-          "missingUsernamePassword": "No Username or Password was configured. Please configure a username and password first."
-        },
-        "byLdap": {
-          "title": "Authentication using LDAP",
-          "autoLogin": {
-            "title": "Automatic ldap login",
-            "info": "If activated, the user will be automatically logged into the Matrix-Chat, once the user logins into ILIAS.<br><br><span style='color: red;'>For this the login even will be catched!</span>"
-          }
-        }
+        "login": "Login into Matrix Chat"
       }
     }
   }

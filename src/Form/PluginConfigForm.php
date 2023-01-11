@@ -63,33 +63,33 @@ class PluginConfigForm extends ilPropertyFormGUI
         $matrixServerUrl->setRequired(true);
 
         $matrixAdminUsername = new ilTextInputGUI(
-            $this->plugin->txt("matrix.admin.username.input"),
+            $this->plugin->txt("config.adminUsername.title"),
             "matrixAdminUsername"
         );
         $matrixAdminUsername->setRequired(true);
-        $matrixAdminUsername->setInfo($this->plugin->txt("matrix.admin.username.info"));
+        $matrixAdminUsername->setInfo($this->plugin->txt("config.adminUsername.info"));
 
         $matrixAdminPassword = new ilPasswordInputGUI(
-            $this->plugin->txt("matrix.admin.password.input"),
+            $this->plugin->txt("config.adminPassword.title"),
             "matrixAdminPassword"
         );
-        $matrixAdminPassword->setInfo($this->plugin->txt("matrix.admin.password.info"));
+        $matrixAdminPassword->setInfo($this->plugin->txt("config.adminPassword.info"));
         $matrixAdminPassword->setSkipSyntaxCheck(true);
         $matrixAdminPassword->setRetype(false);
 
         $chatInitialLoadLimit = new ilNumberInputGUI(
-            $this->plugin->txt("matrix.chat.loadLimit.initial.title"),
+            $this->plugin->txt("config.loadLimit.initial.title"),
             "chatInitialLoadLimit"
         );
         $chatInitialLoadLimit->setRequired(true);
-        $chatInitialLoadLimit->setInfo($this->plugin->txt("matrix.chat.loadLimit.initial.info"));
+        $chatInitialLoadLimit->setInfo($this->plugin->txt("config.loadLimit.initial.info"));
 
         $chatHistoryLoadLimit = new ilNumberInputGUI(
-            $this->plugin->txt("matrix.chat.loadLimit.history.title"),
+            $this->plugin->txt("config.loadLimit.history.title"),
             "chatHistoryLoadLimit"
         );
         $chatHistoryLoadLimit->setRequired(true);
-        $chatHistoryLoadLimit->setInfo($this->plugin->txt("matrix.chat.loadLimit.history.info"));
+        $chatHistoryLoadLimit->setInfo($this->plugin->txt("config.loadLimit.history.info"));
 
         $this->addItem($matrixServerUrl);
         $this->addItem($matrixAdminUsername);

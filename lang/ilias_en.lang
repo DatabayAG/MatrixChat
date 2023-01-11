@@ -7,15 +7,21 @@ general.update.failed#:#Update failed
 general.plugin.settings#:#Plugin Settings
 general.plugin.notActivated#:#Plugin is not active, yet. Please activate it.
 general.plugin.requiredParameterMissing#:#The required parameter '%s' could not be found.
+config.usernameScheme.title#:#Matrix-User naming scheme
+config.usernameScheme.info#:#Dieses Schema wird verwendet, um den Matrix-Benutzernamen zu erzeugen,<br>wenn ILIAS-Benutzer einem Matrix-Chat beitreten wollen, aber bisher keinen Benutzer haben.<br>Unterstützte Variablen: <br>%s
+config.adminUsername.title#:#Username of the Matrix-Server administrator
+config.adminUsername.info#:#Will be used to do administrator tasks like creating rooms.
+config.adminPassword.title#:#Password of the Matrix-Server administrator
+config.adminPassword.info#:#Will be used to do administrator tasks like creating rooms.<br>Input-Field will be cleared after saving the password!
+config.loadLimit.initial.title#:#Initial chat message load limit
+config.loadLimit.initial.info#:#How many messages should be loaded when the chat is opened (newest x messages)
+config.loadLimit.history.title#:#Old messages to load
+config.loadLimit.history.info#:#How many messages to load at the same time when the user scrolls up in the Chat-Window
 chat#:#Chat
 matrix.server.url#:#Matrix Server (Synapse) URL
 matrix.server.reachable#:#Server is reachable
 matrix.server.unreachable#:#Server is unreachable
 matrix.chat.loggedInAs#:#Logged in as
-matrix.chat.loadLimit.initial.title#:#Initial chat message load limit
-matrix.chat.loadLimit.initial.info#:#How many messages should be loaded when the chat is opened (newest x messages)
-matrix.chat.loadLimit.history.title#:#Old messages to load
-matrix.chat.loadLimit.history.info#:#How many messages to load at the same time when the user scrolls up in the Chat-Window
 matrix.chat.notifications.changedName#:#User '%s' changed their name to '%s'
 matrix.chat.send#:#Send
 matrix.chat.login.failed#:#Matrix login failed
@@ -32,16 +38,9 @@ matrix.chat.room.delete.success#:#Room deleted successfully
 matrix.chat.room.delete.failed#:#Room could not be deleted
 matrix.chat.course.settings#:#Chat settings
 matrix.chat.course.enable#:#Activate Matrix-Chat integration for the Course
+matrix.user.register.method.title#:#Matrix-User registration method
+matrix.user.register.method.externalAccount#:#Use external account entry
+matrix.user.register.method.createFromNameScheme#:#Create from name scheme
+matrix.user.register.iliasAuthModeNotSupported#:#The ILIAS authentication mode '%s' is not supported
 matrix.admin.loginInvalid#:#Admin-Login invalid
-matrix.admin.username.input#:#Username of the Matrix-Server administrator
-matrix.admin.username.info#:#Will be used to do administrator tasks like creating rooms.
-matrix.admin.password.input#:#Password of the Matrix-Server administrator
-matrix.admin.password.info#:#Will be used to do administrator tasks like creating rooms.<br>Input-Field will be cleared after saving the password!
 matrix.admin.auth.login#:#Login into Matrix Chat
-matrix.admin.auth.notConfigured#:#Authentication is not (correctly) configured
-matrix.admin.auth.method#:#Authentication method
-matrix.admin.auth.byLoginAndPassword.title#:#Authentication using Username and Password
-matrix.admin.auth.byLoginAndPassword.missingUsernamePassword#:#No Username or Password was configured. Please configure a username and password first.
-matrix.admin.auth.byLdap.title#:#Authentication using LDAP
-matrix.admin.auth.byLdap.autoLogin.title#:#Automatic ldap login
-matrix.admin.auth.byLdap.autoLogin.info#:#If activated, the user will be automatically logged into the Matrix-Chat, once the user logins into ILIAS.<br><br><span style='color: red;'>For this the login even will be catched!</span>
