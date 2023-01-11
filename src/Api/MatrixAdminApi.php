@@ -35,16 +35,6 @@ class MatrixAdminApi extends MatrixApiEndpointBase
      * @var MatrixUser|null
      */
     private $adminUser;
-    /**
-     * @var MatrixUserApi
-     */
-    private $userApi;
-
-    public function __construct(string $matrixServerUrl, HttpClientInterface $client, ilMatrixChatClientPlugin $plugin, MatrixUserApi $userApi)
-    {
-        $this->userApi = $userApi;
-        parent::__construct($matrixServerUrl, $client, $plugin);
-    }
 
     public function checkAdminUser() : bool
     {
@@ -80,20 +70,33 @@ class MatrixAdminApi extends MatrixApiEndpointBase
             ->setMatrixDisplayName($this->getMatrixUserDisplayName($userData->getMatrixUserId()))
             ->setAccessToken($response["access_token"])
             ->setDeviceId($userData->getDeviceId());
+    }
 
-        $matrixUser = $this->login($username, $password, $deviceId);
-
-        if (!$matrixUser) {
+    private function login(string $username, string $password, string $deviceId) : ?MatrixUser
+    {
+        try {
+            $response = $this->sendRequest("/_matrix/client/v3/login", "POST", [
+                "type" => "m.login.password",
+                "user" => $username,
+                "password" => $password,
+                "device_id" => $deviceId
+            ]);
+        } catch (MatrixApiException $e) {
             return null;
         }
-        $matrixUser->setIliasUserId($iliasUserId);
-        return $matrixUser;
+
+        return (new MatrixUser())
+            ->setMatrixUserId($response["user_id"])
+            ->setMatrixUsername($username)
+            ->setMatrixDisplayName($this->getMatrixUserDisplayName($response["user_id"]))
+            ->setAccessToken($response["access_token"])
+            ->setDeviceId($deviceId);
     }
 
     private function getUser() : MatrixUser
     {
         if ($this->adminUser === null) {
-            $this->adminUser = $this->userApi->login(
+            $this->adminUser = $this->login(
                 $this->plugin->getPluginConfig()->getMatrixAdminUsername(),
                 $this->plugin->getPluginConfig()->getMatrixAdminPassword(),
                 "ilias_matrix_chat_device_admin"
@@ -101,7 +104,7 @@ class MatrixAdminApi extends MatrixApiEndpointBase
         }
 
         if (!$this->adminUser) {
-            $this->adminUser = $this->userApi->login(
+            $this->adminUser = $this->login(
                 $this->plugin->getPluginConfig()->getMatrixAdminUsername(),
                 $this->plugin->getPluginConfig()->getMatrixAdminPassword(),
                 "ilias_matrix_chat_device_admin"
