@@ -42,10 +42,6 @@ class MatrixUser implements JsonSerializable
     /**
      * @var string
      */
-    private $homeServer;
-    /**
-     * @var string
-     */
     private $deviceId;
     /**
      * @var string
@@ -107,24 +103,6 @@ class MatrixUser implements JsonSerializable
     public function setAccessToken(string $accessToken) : MatrixUser
     {
         $this->accessToken = $accessToken;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getHomeServer() : string
-    {
-        return $this->homeServer;
-    }
-
-    /**
-     * @param string $homeServer
-     * @return MatrixUser
-     */
-    public function setHomeServer(string $homeServer) : MatrixUser
-    {
-        $this->homeServer = $homeServer;
         return $this;
     }
 

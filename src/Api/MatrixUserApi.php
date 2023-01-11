@@ -64,7 +64,6 @@ class MatrixUserApi extends MatrixApiEndpointBase
             ->setMatrixUsername($username)
             ->setMatrixDisplayName($this->getMatrixUserDisplayName($response["user_id"]))
             ->setAccessToken($response["access_token"])
-            ->setHomeServer($response["home_server"])
             ->setDeviceId($deviceId);
     }
 

@@ -20,6 +20,7 @@ declare(strict_types=1);
 namespace ILIAS\Plugin\MatrixChatClient\Repository;
 
 use ilDBInterface;
+use ILIAS\Plugin\MatrixChatClient\Model\UserData;
 
 /**
  * Class UserDeviceRepository
@@ -27,7 +28,7 @@ use ilDBInterface;
  * @package ILIAS\Plugin\MatrixChatClient\Repository
  * @author  Marvin Beym <mbeym@databay.de>
  */
-class UserDeviceRepository
+class UserDataRepository
 {
     /**
      * @var self|null
@@ -40,7 +41,7 @@ class UserDeviceRepository
     /**
      * @var string
      */
-    protected const TABLE_NAME = "mcc_user_device";
+    protected const TABLE_NAME = "mcc_user_data";
 
     public function __construct(?ilDBInterface $db = null)
     {
@@ -54,6 +55,7 @@ class UserDeviceRepository
 
     /**
      * Returns the instance of the repository to prevent recreation of the whole object.
+     *
      * @param ilDBInterface|null $db
      * @return self
      */
@@ -65,31 +67,35 @@ class UserDeviceRepository
         return self::$instance = new self($db);
     }
 
-    public function create(int $userId, string $deviceId) : bool
+    public function create(int $iliasUserId, string $matrixUserId, string $deviceId) : bool
     {
         $affectedRows = (int) $this->db->manipulateF(
-            "INSERT INTO " . self::TABLE_NAME . " (user_id, device_id) VALUES (%s, %s)",
-            ["integer", "text"],
-            [$userId, $deviceId]
+            "INSERT INTO " . self::TABLE_NAME . " (ilias_user_id, matrix_user_id, matrix_device_id) VALUES (%s, %s, %s)",
+            ["integer", "text", "text"],
+            [$iliasUserId, $matrixUserId, uniqid("ilias_matrix_chat_device_", true)]
         );
 
         return $affectedRows === 1;
     }
 
-    public function read(int $userId) : string
+    public function read(int $iliasUserId) : ?UserData
     {
         $result = $this->db->queryF(
-            "SELECT device_id FROM " . self::TABLE_NAME . " WHERE user_id = %s",
+            "SELECT * FROM " . self::TABLE_NAME . " WHERE ilias_user_id = %s",
             ["integer"],
-            [$userId]
+            [$iliasUserId]
         );
 
-        $deviceId = $this->db->fetchAssoc($result)["device_id"] ?? null;
+        $data = $this->db->fetchAssoc($result);
 
-        if (!$deviceId) {
-            $deviceId = uniqid("ilias_matrix_chat_device_", true);
-            $this->create($userId, $deviceId);
+        if (!$data) {
+            return null;
         }
-        return $deviceId;
+
+        return new UserData(
+            (int) $data["ilias_user_data"],
+            $data["matrix_user_id"],
+            $data["matrix_device_id"]
+        );
     }
 }
