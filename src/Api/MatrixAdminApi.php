@@ -19,9 +19,7 @@ namespace ILIAS\Plugin\MatrixChatClient\Api;
 use ILIAS\Plugin\MatrixChatClient\Model\MatrixUser;
 use ILIAS\Plugin\MatrixChatClient\Model\MatrixRoom;
 use Throwable;
-use ilMatrixChatClientPlugin;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
-use ILIAS\Plugin\MatrixChatClient\Repository\UserDataRepository;
+use ILIAS\Plugin\MatrixChatClient\Model\UserData;
 
 /**
  * Class MatrixAdminApi
@@ -45,13 +43,8 @@ class MatrixAdminApi extends MatrixApiEndpointBase
         }
     }
 
-    public function loginUserWithAdmin(int $iliasUserId) : ?MatrixUser
+    public function loginUserWithAdmin(UserData $userData) : ?MatrixUser
     {
-        $userData = UserDataRepository::getInstance()->read($iliasUserId);
-        if (!$userData) {
-            return null;
-        }
-
         try {
             $response = $this->sendRequest(
                 "/_synapse/admin/v1/users/{$userData->getMatrixUserId()}/login",

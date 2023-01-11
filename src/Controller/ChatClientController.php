@@ -33,6 +33,8 @@ use ReflectionMethod;
 use ilUIPluginRouterGUI;
 use ilMatrixChatClientUIHookGUI;
 use ilObjGroupGUI;
+use ILIAS\Plugin\MatrixChatClient\Repository\UserDataRepository;
+
 
 /**
  * Class ChatClientController
@@ -58,6 +60,10 @@ class ChatClientController extends BaseController
      * @var CourseSettingsRepository
      */
     private $courseSettingsRepo;
+    /**
+     * @var UserDataRepository
+     */
+    private $userDataRepo;
 
     public function __construct(Container $dic)
     {
@@ -71,6 +77,7 @@ class ChatClientController extends BaseController
         $this->courseId = (int) $courseId;
         $this->courseSettingsRepo = CourseSettingsRepository::getInstance();
         $this->courseSettings = $this->courseSettingsRepo->read((int) $this->courseId);
+        $this->userDataRepo = UserDataRepository::getInstance();
     }
 
     public function injectTabs(string $selectedTabId) : void
@@ -114,7 +121,6 @@ class ChatClientController extends BaseController
     public function showChat() : void
     {
         $this->injectTabs("matrix-chat");
-        $this->mainTpl->setTitle($this->plugin->txt("chat"));
         $this->mainTpl->loadStandardTemplate();
 
         $this->ctrl->setParameterByClass(ilObjCourseGUI::class, "ref_id", $this->courseId);
@@ -133,8 +139,14 @@ class ChatClientController extends BaseController
             );
         }
 
+        $userData = $this->userDataRepo->read($this->dic->user()->getId());
+        if (!$userData) {
+            $this->redirectToCommand("showRegisterAccount", ["ref_id" => $this->courseId]);
+            return;
+        }
+
         $matrixUser = $this->matrixApi->admin->loginUserWithAdmin(
-            $this->dic->user()->getId()
+            $userData
         );
         if (!$matrixUser) {
             ilUtil::sendFailure($this->plugin->txt("matrix.chat.login.failed"), true);
