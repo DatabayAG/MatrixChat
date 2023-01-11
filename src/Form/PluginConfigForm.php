@@ -77,22 +77,6 @@ class PluginConfigForm extends ilPropertyFormGUI
         $matrixAdminPassword->setSkipSyntaxCheck(true);
         $matrixAdminPassword->setRetype(false);
 
-        $loginMethod = new ilRadioGroupInputGUI($this->plugin->txt("matrix.admin.auth.method"), "loginMethod");
-        $loginMethod->setRequired(true);
-
-        $byLoginAndPassword = new ilRadioOption(
-            $this->plugin->txt("matrix.admin.auth.byLoginAndPassword.title"),
-            "byLoginAndPassword"
-        );
-        $byLdap = new ilRadioOption($this->plugin->txt("matrix.admin.auth.byLdap.title"), "byLdap");
-        $useLdapAutoLogin = new ilCheckboxInputGUI($this->plugin->txt("matrix.admin.auth.byLdap.autoLogin.title"), "useLdapAutoLogin");
-        $useLdapAutoLogin->setInfo($this->plugin->txt("matrix.admin.auth.byLdap.autoLogin.info"));
-        $byLdap->addSubItem($useLdapAutoLogin);
-
-
-        $loginMethod->addOption($byLoginAndPassword);
-        $loginMethod->addOption($byLdap);
-
         $chatInitialLoadLimit = new ilNumberInputGUI(
             $this->plugin->txt("matrix.chat.loadLimit.initial.title"),
             "chatInitialLoadLimit"
@@ -110,7 +94,6 @@ class PluginConfigForm extends ilPropertyFormGUI
         $this->addItem($matrixServerUrl);
         $this->addItem($matrixAdminUsername);
         $this->addItem($matrixAdminPassword);
-        $this->addItem($loginMethod);
         $this->addItem($chatInitialLoadLimit);
         $this->addItem($chatHistoryLoadLimit);
         $this->addCommandButton("saveSettings", $this->lng->txt("save"));

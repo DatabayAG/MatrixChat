@@ -49,15 +49,7 @@ class PluginConfig extends ConfigBase
      */
     private $chatHistoryLoadLimit = 20;
 
-    /**
-     * @var string
-     */
-    private $loginMethod = "byLoginAndPassword";
-
-    /**
-     * @var bool
-     */
-    private $useLdapAutoLogin = false;
+    private $usernameScheme = "";
 
     /**
      * @return string
@@ -152,36 +144,18 @@ class PluginConfig extends ConfigBase
     /**
      * @return string
      */
-    public function getLoginMethod() : string
+    public function getUsernameScheme() : string
     {
-        return $this->loginMethod;
+        return $this->usernameScheme;
     }
 
     /**
-     * @param string $loginMethod
+     * @param string $usernameScheme
      * @return PluginConfig
      */
-    public function setLoginMethod(string $loginMethod) : PluginConfig
+    public function setUsernameScheme(string $usernameScheme) : PluginConfig
     {
-        $this->loginMethod = $loginMethod;
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isUseLdapAutoLogin() : bool
-    {
-        return $this->useLdapAutoLogin;
-    }
-
-    /**
-     * @param bool $useLdapAutoLogin
-     * @return PluginConfig
-     */
-    public function setUseLdapAutoLogin(bool $useLdapAutoLogin) : PluginConfig
-    {
-        $this->useLdapAutoLogin = $useLdapAutoLogin;
+        $this->usernameScheme = $usernameScheme;
         return $this;
     }
 
