@@ -133,21 +133,15 @@ class ChatClientController extends BaseController
             );
         }
 
-        try {
-            $matrixUser = MatrixUser::createFromJson(
-                json_decode(
-                    ilSession::get("matrixUser") ?? "[]",
-                    true,
-                    512,
-                    JSON_THROW_ON_ERROR
-                )
-            );
-        } catch (Exception $ex) {
-            $matrixUser = null;
-        }
-
+        $matrixUser = $this->matrixApi->admin->loginUserWithAdmin(
+            $this->dic->user()->getId()
+        );
         if (!$matrixUser) {
-            $this->redirectToCommand("showChatLogin", ["ref_id" => $this->courseId]);
+            ilUtil::sendFailure($this->plugin->txt("matrix.chat.login.failed"), true);
+            $this->ctrl->redirectByClass(
+                ["ilRepositoryGUI", "ilObjCourseGUI"],
+                "view"
+            );
             return;
         }
 

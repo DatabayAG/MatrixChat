@@ -41,3 +41,29 @@ if (!$ilDB->tableExists("mcc_user_device")) {
     $ilDB->addPrimaryKey("mcc_user_device", ["user_id"]);
 }
 ?>
+<#3>
+<?php
+if ($ilDB->tableExists("mcc_user_device")) {
+    $ilDB->dropTable("mcc_user_device");
+}
+if (!$ilDB->tableExists("mcc_user_data")) {
+    $ilDB->createTable("mcc_user_data", [
+        'ilias_user_id' => [
+            'type' => 'integer',
+            'length' => 8,
+            'notnull' => true,
+        ],
+        "matrix_user_id" => [
+            "type" => "text",
+            "length" => 96,
+            "notnull" => true,
+        ],
+        "matrix_device_id" => [
+            "type" => "text",
+            "length" => 96,
+            "notnull" => true,
+        ],
+    ]);
+    $ilDB->addPrimaryKey("mcc_user_data", ["ilias_user_id"]);
+}
+?>

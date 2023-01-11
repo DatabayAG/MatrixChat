@@ -21,6 +21,7 @@ use ILIAS\Plugin\MatrixChatClient\Model\MatrixRoom;
 use Throwable;
 use ilMatrixChatClientPlugin;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use ILIAS\Plugin\MatrixChatClient\Repository\UserDataRepository;
 
 /**
  * Class MatrixAdminApi
@@ -52,6 +53,41 @@ class MatrixAdminApi extends MatrixApiEndpointBase
         } catch (Throwable $ex) {
             return false;
         }
+    }
+
+    public function loginUserWithAdmin(int $iliasUserId) : ?MatrixUser
+    {
+        $userData = UserDataRepository::getInstance()->read($iliasUserId);
+        if (!$userData) {
+            return null;
+        }
+
+        try {
+            $response = $this->sendRequest(
+                "/_synapse/admin/v1/users/{$userData->getMatrixUserId()}/login",
+                "POST",
+                [],
+                $this->getUser()->getAccessToken()
+            );
+        } catch (MatrixApiException $e) {
+            return null;
+        }
+
+        return (new MatrixUser())
+            ->setIliasUserId($userData->getIliasUserId())
+            ->setMatrixUserId($userData->getMatrixUserId())
+            ->setMatrixUsername($userData->getMatrixUserId())
+            ->setMatrixDisplayName($this->getMatrixUserDisplayName($userData->getMatrixUserId()))
+            ->setAccessToken($response["access_token"])
+            ->setDeviceId($userData->getDeviceId());
+
+        $matrixUser = $this->login($username, $password, $deviceId);
+
+        if (!$matrixUser) {
+            return null;
+        }
+        $matrixUser->setIliasUserId($iliasUserId);
+        return $matrixUser;
     }
 
     private function getUser() : MatrixUser

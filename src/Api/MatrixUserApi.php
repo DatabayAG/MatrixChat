@@ -20,8 +20,6 @@ use ILIAS\Plugin\MatrixChatClient\Model\Room\RoomInvite;
 use ILIAS\Plugin\MatrixChatClient\Model\Room\RoomJoined;
 use ILIAS\Plugin\MatrixChatClient\Model\Room\RoomModel;
 use ILIAS\Plugin\MatrixChatClient\Model\MatrixUser;
-use ILIAS\Plugin\MatrixChatClient\Repository\UserDeviceRepository;
-use Exception;
 
 /**
  * Class MatrixUserApi
@@ -31,21 +29,6 @@ use Exception;
  */
 class MatrixUserApi extends MatrixApiEndpointBase
 {
-    /**
-     * @throws Exception
-     */
-    public function loginUser(int $iliasUserId, string $username, string $password) : ?MatrixUser
-    {
-        $deviceId = UserDeviceRepository::getInstance()->read($iliasUserId);
-        $matrixUser = $this->login($username, $password, $deviceId);
-
-        if (!$matrixUser) {
-            return null;
-        }
-        $matrixUser->setIliasUserId($iliasUserId);
-        return $matrixUser;
-    }
-
     public function login(string $username, string $password, string $deviceId) : ?MatrixUser
     {
         try {
