@@ -24,9 +24,6 @@ use ilMatrixChatClientConfigGUI;
 use ilUriInputGUI;
 use ilUtil;
 use ilNumberInputGUI;
-use ilRadioGroupInputGUI;
-use ilRadioOption;
-use ilCheckboxInputGUI;
 
 /**
  * Class PluginConfigForm
@@ -91,11 +88,25 @@ class PluginConfigForm extends ilPropertyFormGUI
         $chatHistoryLoadLimit->setRequired(true);
         $chatHistoryLoadLimit->setInfo($this->plugin->txt("config.loadLimit.history.info"));
 
+        $usernameScheme = new ilTextInputGUI(
+            $this->plugin->txt("config.usernameScheme.title"),
+            "usernameScheme"
+        );
+        $usernameScheme->setRequired(true);
+
+        $usernameScheme->setInfo(sprintf(
+            $this->plugin->txt("config.usernameScheme.info"),
+            "- " . implode("<br>- ", array_map(static function ($variable) : string {
+                return "<span>{</span>$variable<span>}</span>";
+            }, array_keys($this->plugin->getUsernameSchemeVariables())))
+        ));
+
         $this->addItem($matrixServerUrl);
         $this->addItem($matrixAdminUsername);
         $this->addItem($matrixAdminPassword);
         $this->addItem($chatInitialLoadLimit);
         $this->addItem($chatHistoryLoadLimit);
+        $this->addItem($usernameScheme);
         $this->addCommandButton("saveSettings", $this->lng->txt("save"));
     }
 }

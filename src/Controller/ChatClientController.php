@@ -214,6 +214,7 @@ class ChatClientController extends BaseController
                 "roomId" => $room->getId(),
                 "chatInitialLoadLimit" => $this->plugin->getPluginConfig()->getChatInitialLoadLimit(),
                 "chatHistoryLoadLimit" => $this->plugin->getPluginConfig()->getChatHistoryLoadLimit(),
+                "usernameScheme" => $this->plugin->getPluginConfig()->getUsernameScheme()
             ], JSON_THROW_ON_ERROR)
         );
 

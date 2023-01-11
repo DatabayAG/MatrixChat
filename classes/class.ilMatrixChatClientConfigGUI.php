@@ -113,7 +113,8 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
                      ->setMatrixServerUrl($matrixServerUrl)
                      ->setMatrixAdminUsername($form->getInput("matrixAdminUsername"))
                      ->setChatInitialLoadLimit((int) $form->getInput("chatInitialLoadLimit"))
-                     ->setChatHistoryLoadLimit((int) $form->getInput("chatHistoryLoadLimit"));
+                     ->setChatHistoryLoadLimit((int) $form->getInput("chatHistoryLoadLimit"))
+                     ->setUsernameScheme($form->getInput("usernameScheme"));
 
         $matrixAdminPassword = $form->getInput("matrixAdminPassword");
         if ($matrixAdminPassword !== "") {

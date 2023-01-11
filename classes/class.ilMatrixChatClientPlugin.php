@@ -124,6 +124,15 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
         return $this->assetsFolder("js/$file");
     }
 
+    public function getUsernameSchemeVariables() : array
+    {
+        return [
+            "CLIENT_ID" => CLIENT_ID,
+            "LOGIN" => $this->dic->user()->getLogin(),
+            "EXTERNAL_ACCOUNT" => $this->dic->user()->getExternalAccount()
+        ];
+    }
+
     public function getObjGUIClassByType(string $type) : ?string
     {
         switch ($type) {
