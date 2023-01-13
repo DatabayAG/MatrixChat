@@ -15,26 +15,37 @@
     }
   },
   "config": {
-    "usernameScheme": {
-      "title": "Matrix-User naming scheme",
-      "info": "Dieses Schema wird verwendet, um den Matrix-Benutzernamen zu erzeugen,<br>wenn ILIAS-Benutzer einem Matrix-Chat beitreten wollen, aber bisher keinen Benutzer haben.<br>Unterstützte Variablen: <br>%s"
-    },
-    "adminUsername": {
-      "title": "Username of the Matrix-Server administrator",
-      "info": "Will be used to do administrator tasks like creating rooms."
-    },
-    "adminPassword": {
-      "title": "Password of the Matrix-Server administrator",
-      "info": "Will be used to do administrator tasks like creating rooms.<br>Input-Field will be cleared after saving the password!"
-    },
-    "loadLimit": {
-      "initial": {
-        "title": "Initial chat message load limit",
-        "info": "How many messages should be loaded when the chat is opened (newest x messages)"
+    "plugin": {
+      "usernameScheme": {
+        "title": "Matrix-User naming scheme",
+        "info": "Dieses Schema wird verwendet, um den Matrix-Benutzernamen zu erzeugen,<br>wenn ILIAS-Benutzer einem Matrix-Chat beitreten wollen, aber bisher keinen Benutzer haben.<br>Unterstützte Variablen: <br>%s"
       },
-      "history": {
-        "title": "Old messages to load",
-        "info": "How many messages to load at the same time when the user scrolls up in the Chat-Window"
+      "admin": {
+        "username": {
+          "title": "Username of the Matrix-Server administrator",
+          "info": "Will be used to do administrator tasks like creating rooms."
+        },
+        "password": {
+          "title": "Password of the Matrix-Server administrator",
+          "info": "Will be used to do administrator tasks like creating rooms.<br>Input-Field will be cleared after saving the password!"
+        }
+      },
+      "user": {
+        "method": {
+          "title": "Matrix-User registration method",
+          "externalAccount": "Use external account entry",
+          "fromNameScheme": "Based on name scheme"
+        }
+      },
+      "loadLimit": {
+        "initial": {
+          "title": "Initial chat message load limit",
+          "info": "How many messages should be loaded when the chat is opened (newest x messages)"
+        },
+        "history": {
+          "title": "Old messages to load",
+          "info": "How many messages to load at the same time when the user scrolls up in the Chat-Window"
+        }
       }
     }
   },
@@ -80,11 +91,6 @@
     },
     "user": {
       "register": {
-        "method": {
-          "title": "Matrix-User registration method",
-          "externalAccount": "Use external account entry",
-          "createFromNameScheme": "Create from name scheme"
-        },
         "iliasAuthModeNotSupported": "The ILIAS authentication mode '%s' is not supported"
       }
     },

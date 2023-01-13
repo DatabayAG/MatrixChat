@@ -7,16 +7,19 @@ general.update.failed#:#Update failed
 general.plugin.settings#:#Plugin Settings
 general.plugin.notActivated#:#Plugin is not active, yet. Please activate it.
 general.plugin.requiredParameterMissing#:#The required parameter '%s' could not be found.
-config.usernameScheme.title#:#Matrix-User naming scheme
-config.usernameScheme.info#:#Dieses Schema wird verwendet, um den Matrix-Benutzernamen zu erzeugen,<br>wenn ILIAS-Benutzer einem Matrix-Chat beitreten wollen, aber bisher keinen Benutzer haben.<br>Unterstützte Variablen: <br>%s
-config.adminUsername.title#:#Username of the Matrix-Server administrator
-config.adminUsername.info#:#Will be used to do administrator tasks like creating rooms.
-config.adminPassword.title#:#Password of the Matrix-Server administrator
-config.adminPassword.info#:#Will be used to do administrator tasks like creating rooms.<br>Input-Field will be cleared after saving the password!
-config.loadLimit.initial.title#:#Initial chat message load limit
-config.loadLimit.initial.info#:#How many messages should be loaded when the chat is opened (newest x messages)
-config.loadLimit.history.title#:#Old messages to load
-config.loadLimit.history.info#:#How many messages to load at the same time when the user scrolls up in the Chat-Window
+config.plugin.usernameScheme.title#:#Matrix-User naming scheme
+config.plugin.usernameScheme.info#:#Dieses Schema wird verwendet, um den Matrix-Benutzernamen zu erzeugen,<br>wenn ILIAS-Benutzer einem Matrix-Chat beitreten wollen, aber bisher keinen Benutzer haben.<br>Unterstützte Variablen: <br>%s
+config.plugin.admin.username.title#:#Username of the Matrix-Server administrator
+config.plugin.admin.username.info#:#Will be used to do administrator tasks like creating rooms.
+config.plugin.admin.password.title#:#Password of the Matrix-Server administrator
+config.plugin.admin.password.info#:#Will be used to do administrator tasks like creating rooms.<br>Input-Field will be cleared after saving the password!
+config.plugin.user.method.title#:#Matrix-User registration method
+config.plugin.user.method.externalAccount#:#Use external account entry
+config.plugin.user.method.fromNameScheme#:#Based on name scheme
+config.plugin.loadLimit.initial.title#:#Initial chat message load limit
+config.plugin.loadLimit.initial.info#:#How many messages should be loaded when the chat is opened (newest x messages)
+config.plugin.loadLimit.history.title#:#Old messages to load
+config.plugin.loadLimit.history.info#:#How many messages to load at the same time when the user scrolls up in the Chat-Window
 chat#:#Chat
 matrix.server.url#:#Matrix Server (Synapse) URL
 matrix.server.reachable#:#Server is reachable
@@ -38,9 +41,6 @@ matrix.chat.room.delete.success#:#Room deleted successfully
 matrix.chat.room.delete.failed#:#Room could not be deleted
 matrix.chat.course.settings#:#Chat settings
 matrix.chat.course.enable#:#Activate Matrix-Chat integration for the Course
-matrix.user.register.method.title#:#Matrix-User registration method
-matrix.user.register.method.externalAccount#:#Use external account entry
-matrix.user.register.method.createFromNameScheme#:#Create from name scheme
 matrix.user.register.iliasAuthModeNotSupported#:#The ILIAS authentication mode '%s' is not supported
 matrix.admin.loginInvalid#:#Admin-Login invalid
 matrix.admin.auth.login#:#Login into Matrix Chat

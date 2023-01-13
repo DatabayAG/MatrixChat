@@ -60,42 +60,42 @@ class PluginConfigForm extends ilPropertyFormGUI
         $matrixServerUrl->setRequired(true);
 
         $matrixAdminUsername = new ilTextInputGUI(
-            $this->plugin->txt("config.adminUsername.title"),
+            $this->plugin->txt("config.plugin.admin.username.title"),
             "matrixAdminUsername"
         );
         $matrixAdminUsername->setRequired(true);
-        $matrixAdminUsername->setInfo($this->plugin->txt("config.adminUsername.info"));
+        $matrixAdminUsername->setInfo($this->plugin->txt("config.plugin.admin.username.info"));
 
         $matrixAdminPassword = new ilPasswordInputGUI(
-            $this->plugin->txt("config.adminPassword.title"),
+            $this->plugin->txt("config.plugin.admin.password.title"),
             "matrixAdminPassword"
         );
-        $matrixAdminPassword->setInfo($this->plugin->txt("config.adminPassword.info"));
+        $matrixAdminPassword->setInfo($this->plugin->txt("config.plugin.admin.password.info"));
         $matrixAdminPassword->setSkipSyntaxCheck(true);
         $matrixAdminPassword->setRetype(false);
 
         $chatInitialLoadLimit = new ilNumberInputGUI(
-            $this->plugin->txt("config.loadLimit.initial.title"),
+            $this->plugin->txt("config.plugin.loadLimit.initial.title"),
             "chatInitialLoadLimit"
         );
         $chatInitialLoadLimit->setRequired(true);
-        $chatInitialLoadLimit->setInfo($this->plugin->txt("config.loadLimit.initial.info"));
+        $chatInitialLoadLimit->setInfo($this->plugin->txt("config.plugin.loadLimit.initial.info"));
 
         $chatHistoryLoadLimit = new ilNumberInputGUI(
-            $this->plugin->txt("config.loadLimit.history.title"),
+            $this->plugin->txt("config.plugin.loadLimit.history.title"),
             "chatHistoryLoadLimit"
         );
         $chatHistoryLoadLimit->setRequired(true);
-        $chatHistoryLoadLimit->setInfo($this->plugin->txt("config.loadLimit.history.info"));
+        $chatHistoryLoadLimit->setInfo($this->plugin->txt("config.plugin.loadLimit.history.info"));
 
         $usernameScheme = new ilTextInputGUI(
-            $this->plugin->txt("config.usernameScheme.title"),
+            $this->plugin->txt("config.plugin.usernameScheme.title"),
             "usernameScheme"
         );
         $usernameScheme->setRequired(true);
 
         $usernameScheme->setInfo(sprintf(
-            $this->plugin->txt("config.usernameScheme.info"),
+            $this->plugin->txt("config.plugin.usernameScheme.info"),
             "- " . implode("<br>- ", array_map(static function ($variable) : string {
                 return "<span>{</span>$variable<span>}</span>";
             }, array_keys($this->plugin->getUsernameSchemeVariables())))
