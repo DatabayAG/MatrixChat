@@ -67,12 +67,25 @@ class UserDataRepository
         return self::$instance = new self($db);
     }
 
-    public function create(int $iliasUserId, string $matrixUserId, string $deviceId) : bool
+    public function create(UserData $userData) : bool
     {
         $affectedRows = (int) $this->db->manipulateF(
             "INSERT INTO " . self::TABLE_NAME . " (ilias_user_id, matrix_user_id, matrix_device_id) VALUES (%s, %s, %s)",
             ["integer", "text", "text"],
-            [$iliasUserId, $matrixUserId, uniqid("ilias_matrix_chat_device_", true)]
+            [$userData->getIliasUserId(), $userData->getMatrixUserId(), $userData->getDeviceId()]
+        );
+
+        //uniqid("ilias_matrix_chat_device_", true) => Maybe useful in the future
+
+        return $affectedRows === 1;
+    }
+
+    public function update(UserData $userData) : bool
+    {
+        $affectedRows = (int) $this->db->manipulateF(
+            "UPDATE " . self::TABLE_NAME . " SET matrix_user_id = %s, matrix_device_id = %s WHERE ilias_user_id = %s",
+            ["text", "text", "integer"],
+            [$userData->getMatrixUserId(), $userData->getDeviceId(), $userData->getIliasUserId()]
         );
 
         return $affectedRows === 1;
