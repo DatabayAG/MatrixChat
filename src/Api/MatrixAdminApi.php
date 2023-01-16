@@ -221,4 +221,20 @@ class MatrixAdminApi extends MatrixApiEndpointBase
     {
         return in_array($matrixUser->getMatrixUserId(), $this->getRoomMembers($matrixRoomId), true);
     }
+
+    public function userExists(string $matrixUserId) : bool
+    {
+        try {
+            return $this->sendRequest(
+                "/_synapse/admin/v2/users/$matrixUserId",
+                "GET",
+                [],
+                $this->getUser()->getAccessToken()
+            ) !== [];
+        } catch (MatrixApiException $e) {
+            return false;
+        }
+    }
+
+
 }
