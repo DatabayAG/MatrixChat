@@ -81,6 +81,8 @@ abstract class ConfigBase
     protected function checkPropertyType(string $type, array $typesToCheck) : ?string
     {
         //convert
+
+        $type = $type === "NULL" ? "null" : $type;
         $type = $type === "integer" ? "int" : $type;
         $type = $type === "boolean" ? "bool" : $type;
 
