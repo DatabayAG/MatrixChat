@@ -17,8 +17,8 @@ declare(strict_types=1);
 namespace ILIAS\Plugin\MatrixChatClient\Model;
 
 use Exception;
-use ILIAS\Plugin\MatrixChatClient\Libs\IliasConfigLoader\Model\ConfigBase;
 use ILIAS\Plugin\MatrixChatClient\Libs\IliasConfigLoader\Exception\ConfigLoadException;
+use ILIAS\Plugin\MatrixChatClient\Libs\IliasConfigLoader\Model\SettingsConfig;
 
 /**
  * Class PluginConfig
@@ -26,7 +26,7 @@ use ILIAS\Plugin\MatrixChatClient\Libs\IliasConfigLoader\Exception\ConfigLoadExc
  * @package ILIAS\Plugin\MatrixChatClient\Model
  * @author  Marvin Beym <mbeym@databay.de>
  */
-class PluginConfig extends ConfigBase
+class PluginConfig extends SettingsConfig
 {
     /**
      * @var string
