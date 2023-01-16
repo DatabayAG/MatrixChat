@@ -65,7 +65,7 @@ class MatrixAdminApi extends MatrixApiEndpointBase
             ->setDeviceId($userData->getDeviceId());
     }
 
-    private function login(string $username, string $password, string $deviceId) : ?MatrixUser
+    public function login(string $username, string $password, string $deviceId) : ?MatrixUser
     {
         try {
             $response = $this->sendRequest("/_matrix/client/v3/login", "POST", [
