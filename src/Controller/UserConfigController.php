@@ -257,7 +257,7 @@ class UserConfigController extends BaseController
         if ($selectedTabId === "chat-user-config") {
             $this->tabs->addSubTab(
                 "chat-user-config-general",
-                $this->plugin->txt("config.user.general.title"),
+                $this->plugin->txt("config.user.generalSettings"),
                 $this->getCommandLink("showGeneralConfig")
             );
 

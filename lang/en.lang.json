@@ -37,6 +37,7 @@
       }
     },
     "user": {
+      "generalSettings": "General settings",
       "title": "Chat Settings",
       "authMethod": "Matrix Authentication Method",
       "useExternalAccount": "Use external account",

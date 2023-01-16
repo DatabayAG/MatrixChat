@@ -17,6 +17,7 @@ config.admin.username.title#:#Benutzername des Matrix-Server Administrators
 config.admin.username.info#:#Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen.
 config.admin.password.title#:#Passwort des Matrix-Server Administrators
 config.admin.password.info#:#Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen.<br>Eingabefeld wird nach abspeichern des Passwortes geleert!
+config.user.generalSettings#:#Allgemeine Einstellungen
 config.user.title#:#Chat Einstellungen
 config.user.authMethod#:#Matrix-Authentifizierungsmethode
 config.user.useExternalAccount#:#Externes Konto verwenden

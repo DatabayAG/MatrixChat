@@ -36,6 +36,7 @@
       }
     },
     "user": {
+      "generalSettings": "Allgemeine Einstellungen",
       "title": "Chat Einstellungen",
       "authMethod": "Matrix-Authentifizierungsmethode",
       "useExternalAccount": "Externes Konto verwenden",

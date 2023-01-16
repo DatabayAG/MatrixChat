@@ -17,6 +17,7 @@ config.admin.username.title#:#Username of the Matrix-Server administrator
 config.admin.username.info#:#Will be used to do administrator tasks like creating rooms.
 config.admin.password.title#:#Password of the Matrix-Server administrator
 config.admin.password.info#:#Will be used to do administrator tasks like creating rooms.<br>Input-Field will be cleared after saving the password!
+config.user.generalSettings#:#General settings
 config.user.title#:#Chat Settings
 config.user.authMethod#:#Matrix Authentication Method
 config.user.useExternalAccount#:#Use external account
