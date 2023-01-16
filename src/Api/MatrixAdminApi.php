@@ -265,4 +265,42 @@ class MatrixAdminApi extends MatrixApiEndpointBase
             return null;
         }
     }
+
+    public function createUser(string $username, string $password, string $displayName) : ?MatrixUser
+    {
+        $nonce = $this->retrieveNonce();
+        if (!$nonce) {
+            return null;
+        }
+
+        if (!$this->plugin->getPluginConfig()->getSharedSecret()) {
+            return null;
+        }
+
+        $hmac = hash_hmac(
+            "sha1",
+            "$nonce\0$username\0$password\0notadmin",
+            $this->plugin->getPluginConfig()->getSharedSecret()
+        );
+
+        try {
+            $response = $this->sendRequest(
+                "/_synapse/admin/v1/register",
+                "POST",
+                [
+                    "nonce" => $nonce,
+                    "username" => $username,
+                    "password" => $password,
+                    "displayname" => $displayName,
+                    "admin" => false,
+                    "mac" => $hmac
+                ],
+                $this->getUser()->getAccessToken()
+            );
+        } catch (MatrixApiException $e) {
+            return null;
+        }
+
+        return $this->login($username, $password, "ilias_auth_verification");
+    }
 }
