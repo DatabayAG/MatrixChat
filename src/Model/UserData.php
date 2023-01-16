@@ -57,6 +57,12 @@ class UserData
         return $this->matrixUserId;
     }
 
+    public function setMatrixUserId(string $matrixUserId) : self
+    {
+        $this->matrixUserId = $matrixUserId;
+        return $this;
+    }
+
     public function getDeviceId() : string
     {
         return $this->deviceId;
