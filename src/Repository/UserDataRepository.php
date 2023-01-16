@@ -93,7 +93,7 @@ class UserDataRepository
         }
 
         return new UserData(
-            (int) $data["ilias_user_data"],
+            (int) $data["ilias_user_id"],
             $data["matrix_user_id"],
             $data["matrix_device_id"]
         );
