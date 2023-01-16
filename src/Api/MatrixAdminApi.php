@@ -236,5 +236,20 @@ class MatrixAdminApi extends MatrixApiEndpointBase
         }
     }
 
+    public function usernameAvailable(string $username) : bool
+    {
+        try {
+            $response = $this->sendRequest(
+                "/_synapse/admin/v1/username_available?username=$username",
+                "GET",
+                [],
+                $this->getUser()->getAccessToken()
+            );
+            return $response["available"];
+        } catch (MatrixApiException $e) {
+            return false;
+        }
+    }
+
 
 }
