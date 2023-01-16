@@ -7,19 +7,29 @@ general.update.failed#:#Aktualisierung fehlgeschlagen
 general.plugin.settings#:#Plugin-Einstellungen
 general.plugin.notActivated#:#Das Plugin ist nicht aktiviert. Bitte aktivieren Sie dieses zunächst.
 general.plugin.requiredParameterMissing#:#Der benötigte Parameter '%s' konnte nicht gefunden werden.
-config.plugin.usernameScheme.title#:#Matrix-Benutzer-Namensschema
-config.plugin.usernameScheme.info#:#Dieses Schema wird verwendet, um den Matrix-Benutzernamen zu erzeugen,<br>wenn ILIAS-Benutzer einem Matrix-Chat beitreten wollen, aber bisher keinen Benutzer haben.<br>Unterstützte Variablen: <br>%s
-config.plugin.admin.username.title#:#Benutzername des Matrix-Server Administrators
-config.plugin.admin.username.info#:#Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen.
-config.plugin.admin.password.title#:#Passwort des Matrix-Server Administrators
-config.plugin.admin.password.info#:#Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen.<br>Eingabefeld wird nach abspeichern des Passwortes geleert!
-config.plugin.user.method.title#:#Matrix-Benutzer Registrierungsmethode
-config.plugin.user.method.externalAccount#:#Verwende Externen-Account Eintrag
-config.plugin.user.method.fromNameScheme#:#Benutzer basierend auf Namensschema
-config.plugin.loadLimit.initial.title#:#Initiales Chat-Nachrichten Limit
-config.plugin.loadLimit.initial.info#:#Wie viele Nachrichten sollen beim Laden des Chats initial geladen werden (neusten x Nachrichten)
-config.plugin.loadLimit.history.title#:#Alte Nachrichten nachlade Limit
-config.plugin.loadLimit.history.info#:#Wie viele Nachrichten gleichzeitig sollen nachgeladen werden, wenn der Benutzer im Chat-Fenster nach oben scrollt
+authenticate#:#Authentifizieren
+config.usernameScheme.title#:#Matrix-Benutzer-Namensschema
+config.usernameScheme.info#:#Dieses Schema wird verwendet, um den Matrix-Benutzernamen zu erzeugen,<br>wenn ILIAS-Benutzer einem Matrix-Chat beitreten wollen, aber bisher keinen Benutzer haben.<br>Unterstützte Variablen: <br>%s
+config.sharedSecret.title#:#Gemeinsames Geheimnis
+config.sharedSecret.info#:#'registration_shared_secret' aus der Synapse homeserver konfiguration (homeserver.yaml)<br><br>Dieses Feld wird nach dem Absenden des Formulars wieder gelöscht.
+config.sharedSecret.empty#:#Dieses Feld ist erforderlich, wenn es noch nicht gespeichert wurde!
+config.admin.username.title#:#Benutzername des Matrix-Server Administrators
+config.admin.username.info#:#Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen.
+config.admin.password.title#:#Passwort des Matrix-Server Administrators
+config.admin.password.info#:#Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen.<br>Eingabefeld wird nach abspeichern des Passwortes geleert!
+config.user.title#:#Chat Einstellungen
+config.user.authMethod#:#Matrix-Authentifizierungsmethode
+config.user.useExternalAccount#:#Externes Konto verwenden
+config.user.loginOrCreate.title#:#Authentifizierung mit bestehendem Konto oder Erstellen eines neuen Kontos mit Namensschema
+config.user.loginOrCreate.login#:#Mit bestehendem Konto authentifizieren
+config.user.loginOrCreate.create#:#Konto mit Namensschema erstellen
+config.user.method.title#:#Matrix-Benutzer Registrierungsmethode
+config.user.method.externalAccount#:#Verwende Externen-Account Eintrag
+config.user.method.fromNameScheme#:#Benutzer basierend auf Namensschema
+config.loadLimit.initial.title#:#Initiales Chat-Nachrichten Limit
+config.loadLimit.initial.info#:#Wie viele Nachrichten sollen beim Laden des Chats initial geladen werden (neusten x Nachrichten)
+config.loadLimit.history.title#:#Alte Nachrichten nachlade Limit
+config.loadLimit.history.info#:#Wie viele Nachrichten gleichzeitig sollen nachgeladen werden, wenn der Benutzer im Chat-Fenster nach oben scrollt
 chat#:#Chat
 matrix.server.url#:#Matrix Server (Synapse) URL
 matrix.server.reachable#:#Server erreichbar
@@ -41,6 +51,10 @@ matrix.chat.room.delete.success#:#Chatraum erfolgreich gelöscht
 matrix.chat.room.delete.failed#:#Chatraum konnte nicht gelöscht werden
 matrix.chat.course.settings#:#Chat-Einstellungen
 matrix.chat.course.enable#:#Aktiviere Matrix-Chat Integration für den Kurs
-matrix.user.register.iliasAuthModeNotSupported#:#Die ILIAS-Authentifizierungsmethode '%s' wird nicht unterstützt.
+matrix.user.authentication.failed.authFailed#:#Authentifizierung mit Benutzername %s fehlgeschlagen
+matrix.user.authentication.failed.unConfigured#:#Keine Authentifizierung konfiguriert
+matrix.user.authentication.failed.usernameTaken#:#Benutzername '%s' ist bereits vergeben
+matrix.user.authentication.failed.userCreation#:#An error occurred while creating the user
+matrix.user.authentication.success#:#Authentifizierung erfolgreich (matrix-user-id: %s)
 matrix.admin.loginInvalid#:#Admin-Login ungültig
 matrix.admin.auth.login#:#In Matrix-Chat einloggen

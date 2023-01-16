@@ -14,38 +14,50 @@
       "requiredParameterMissing": "Der benötigte Parameter '%s' konnte nicht gefunden werden."
     }
   },
+  "authenticate": "Authentifizieren",
   "config": {
-    "plugin": {
-      "usernameScheme": {
-        "title": "Matrix-Benutzer-Namensschema",
-        "info": "Dieses Schema wird verwendet, um den Matrix-Benutzernamen zu erzeugen,<br>wenn ILIAS-Benutzer einem Matrix-Chat beitreten wollen, aber bisher keinen Benutzer haben.<br>Unterstützte Variablen: <br>%s"
+    "usernameScheme": {
+      "title": "Matrix-Benutzer-Namensschema",
+      "info": "Dieses Schema wird verwendet, um den Matrix-Benutzernamen zu erzeugen,<br>wenn ILIAS-Benutzer einem Matrix-Chat beitreten wollen, aber bisher keinen Benutzer haben.<br>Unterstützte Variablen: <br>%s"
+    },
+    "sharedSecret": {
+      "title": "Gemeinsames Geheimnis",
+      "info": "'registration_shared_secret' aus der Synapse homeserver konfiguration (homeserver.yaml)<br><br>Dieses Feld wird nach dem Absenden des Formulars wieder gelöscht.",
+      "empty": "Dieses Feld ist erforderlich, wenn es noch nicht gespeichert wurde!"
+    },
+    "admin": {
+      "username": {
+        "title": "Benutzername des Matrix-Server Administrators",
+        "info": "Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen."
       },
-      "admin": {
-        "username": {
-          "title": "Benutzername des Matrix-Server Administrators",
-          "info": "Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen."
-        },
-        "password": {
-          "title": "Passwort des Matrix-Server Administrators",
-          "info": "Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen.<br>Eingabefeld wird nach abspeichern des Passwortes geleert!"
-        }
+      "password": {
+        "title": "Passwort des Matrix-Server Administrators",
+        "info": "Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen.<br>Eingabefeld wird nach abspeichern des Passwortes geleert!"
+      }
+    },
+    "user": {
+      "title": "Chat Einstellungen",
+      "authMethod": "Matrix-Authentifizierungsmethode",
+      "useExternalAccount": "Externes Konto verwenden",
+      "loginOrCreate": {
+        "title": "Authentifizierung mit bestehendem Konto oder Erstellen eines neuen Kontos mit Namensschema",
+        "login": "Mit bestehendem Konto authentifizieren",
+        "create": "Konto mit Namensschema erstellen"
       },
-      "user": {
-        "method": {
-          "title": "Matrix-Benutzer Registrierungsmethode",
-          "externalAccount": "Verwende Externen-Account Eintrag",
-          "fromNameScheme": "Benutzer basierend auf Namensschema"
-        }
+      "method": {
+        "title": "Matrix-Benutzer Registrierungsmethode",
+        "externalAccount": "Verwende Externen-Account Eintrag",
+        "fromNameScheme": "Benutzer basierend auf Namensschema"
+      }
+    },
+    "loadLimit": {
+      "initial": {
+        "title": "Initiales Chat-Nachrichten Limit",
+        "info": "Wie viele Nachrichten sollen beim Laden des Chats initial geladen werden (neusten x Nachrichten)"
       },
-      "loadLimit": {
-        "initial": {
-          "title": "Initiales Chat-Nachrichten Limit",
-          "info": "Wie viele Nachrichten sollen beim Laden des Chats initial geladen werden (neusten x Nachrichten)"
-        },
-        "history": {
-          "title": "Alte Nachrichten nachlade Limit",
-          "info": "Wie viele Nachrichten gleichzeitig sollen nachgeladen werden, wenn der Benutzer im Chat-Fenster nach oben scrollt"
-        }
+      "history": {
+        "title": "Alte Nachrichten nachlade Limit",
+        "info": "Wie viele Nachrichten gleichzeitig sollen nachgeladen werden, wenn der Benutzer im Chat-Fenster nach oben scrollt"
       }
     }
   },
@@ -90,8 +102,14 @@
       }
     },
     "user": {
-      "register": {
-        "iliasAuthModeNotSupported": "Die ILIAS-Authentifizierungsmethode '%s' wird nicht unterstützt."
+      "authentication": {
+        "failed": {
+          "authFailed": "Authentifizierung mit Benutzername %s fehlgeschlagen",
+          "unConfigured": "Keine Authentifizierung konfiguriert",
+          "usernameTaken": "Benutzername '%s' ist bereits vergeben",
+          "userCreation": "An error occurred while creating the user"
+        },
+        "success": "Authentifizierung erfolgreich (matrix-user-id: %s)"
       }
     },
     "admin": {
