@@ -21,14 +21,17 @@ namespace ILIAS\Plugin\MatrixChatClient\Controller;
 
 use ilUIPluginRouterGUI;
 use ilPersonalSettingsGUI;
-use ReflectionMethod;
-use ReflectionException;
 use ilMatrixChatClientUIHookGUI;
 use ILIAS\Plugin\MatrixChatClient\Form\UserConfigForm;
 use ilUtil;
 use ILIAS\DI\Container;
 use ILIAS\Plugin\MatrixChatClient\Model\UserConfig;
 use ILIAS\Plugin\MatrixChatClient\Libs\IliasConfigLoader\Exception\ConfigLoadException;
+use ILIAS\Plugin\MatrixChatClient\Form\UserAuthenticateAccountForm;
+use ILIAS\Plugin\MatrixChatClient\Form\UserRegisterAccountForm;
+use ILIAS\Plugin\MatrixChatClient\Repository\UserDataRepository;
+use ILIAS\Plugin\MatrixChatClient\Model\UserData;
+use ilTextInputGUI;
 
 /**
  * Class UserConfigController
@@ -42,17 +45,43 @@ class UserConfigController extends BaseController
      * @var UserConfig
      */
     private $userConfig;
+    /**
+     * @var UserDataRepository
+     */
+    private $userDataRepo;
+
     public function __construct(Container $dic)
     {
         parent::__construct($dic);
 
         $this->userConfig = (new UserConfig($this->dic->user()))->load();
+        $this->userDataRepo = UserDataRepository::getInstance($this->dic->database());
+    }
+
+    private function showUserAuthenticatedNotification() : bool
+    {
+        $userData = $this->userDataRepo->read($this->dic->user()->getId());
+        if ($userData) {
+            if (!$this->matrixApi->admin->userExists($userData->getMatrixUserId())) {
+                ilUtil::sendFailure($this->plugin->txt("matrix.user.authentication.failed.authFailed"), true);
+            }
+            ilUtil::sendSuccess(sprintf(
+                $this->plugin->txt("matrix.user.authentication.success"),
+                $userData->getMatrixUserId()
+            ), true);
+            return true;
+        }
+
+        ilUtil::sendFailure($this->plugin->txt("matrix.user.authentication.failed.unConfigured"), true);
+
+        return false;
     }
 
     public function showGeneralConfig(?UserConfigForm $form = null) : void
     {
         $this->injectTabs("chat-user-config");
         $this->tabs->activateSubTab("chat-user-config-general");
+        $this->showUserAuthenticatedNotification();
 
         $this->mainTpl->loadStandardTemplate();
 
@@ -87,6 +116,125 @@ class UserConfigController extends BaseController
         $this->redirectToCommand("showGeneralConfig");
     }
 
+    public function showLoginOrCreate(
+        ?UserAuthenticateAccountForm $loginForm = null,
+        ?UserRegisterAccountForm $registerForm = null
+    ) : void {
+        $this->injectTabs("chat-user-config");
+        $this->tabs->activateSubTab("chat-user-config-loginOrCreate");
+        $this->showUserAuthenticatedNotification();
+
+        $this->mainTpl->loadStandardTemplate();
+
+        if (!$loginForm) {
+            $loginForm = new UserAuthenticateAccountForm();
+        }
+
+        if (!$registerForm) {
+            $registerForm = new UserRegisterAccountForm();
+        }
+
+        $this->mainTpl->setContent($loginForm->getHTML() . $registerForm->getHTML());
+        $this->mainTpl->printToStdOut();
+    }
+
+    public function saveLogin() : void
+    {
+        $form = new UserAuthenticateAccountForm();
+
+        if (!$form->checkInput()) {
+            $form->setValuesByPost();
+            $this->showLoginOrCreate($form);
+            return;
+        }
+
+        $form->setValuesByPost();
+
+        $username = $form->getInput("loginUsername");
+        $password = $form->getInput("loginPassword");
+
+        $matrixUser = $this->matrixApi->admin->login($username, $password, "ilias_auth_verification");
+        if (!$matrixUser) {
+            ilUtil::sendFailure($this->plugin->txt("matrix.user.authentication.failed.authFailed"), true);
+            $this->showLoginOrCreate($form);
+            return;
+        }
+
+        $userData = $this->userDataRepo->read($this->dic->user()->getId());
+        if ($userData) {
+            $userData->setMatrixUserId($matrixUser->getMatrixUserId());
+            $this->userDataRepo->update($userData);
+        } else {
+            $userData = new UserData(
+                $this->dic->user()->getId(),
+                $matrixUser->getMatrixUserId(),
+                "ilias_auth_verification"
+            );
+            $this->userDataRepo->create($userData);
+        }
+
+        $this->redirectToCommand("showLoginOrCreate");
+    }
+
+    public function saveCreate() : void
+    {
+        $form = new UserRegisterAccountForm();
+
+        if (!$form->checkInput()) {
+            $form->setValuesByPost();
+            $this->showLoginOrCreate(null, $form);
+            return;
+        }
+
+        $form->setValuesByPost();
+
+        $username = $form->getInput("registerUsername");
+        $password = $form->getInput("registerPassword");
+
+        if (!$this->matrixApi->admin->usernameAvailable($username)) {
+            ilUtil::sendFailure(sprintf(
+                $this->plugin->txt("matrix.user.authentication.failed.usernameTaken"),
+                $username
+            ), true);
+            /**
+             * @var ilTextInputGUI $password
+             */
+            $password = $form->getItemByPostVar("registerUsername");
+            $form->setValuesByArray([
+                "registerPassword" => ""
+            ], true);
+            $password->setAlert(sprintf(
+                $this->plugin->txt("matrix.user.authentication.failed.usernameTaken"),
+                $username
+            ));
+            $this->showLoginOrCreate(null, $form);
+            return;
+        }
+
+        $matrixUser = $this->matrixApi->admin->createUser($username, $password, $this->dic->user()->getFullname());
+
+        if (!$matrixUser) {
+            ilUtil::sendFailure($this->plugin->txt("matrix.user.authentication.failed.userCreation"), true);
+            $this->showLoginOrCreate(null, $form);
+            return;
+        }
+
+        $userData = $this->userDataRepo->read($this->dic->user()->getId());
+        if ($userData) {
+            $userData->setMatrixUserId($matrixUser->getMatrixUserId());
+            $this->userDataRepo->update($userData);
+        } else {
+            $userData = new UserData(
+                $this->dic->user()->getId(),
+                $matrixUser->getMatrixUserId(),
+                "ilias_auth_verification"
+            );
+            $this->userDataRepo->create($userData);
+        }
+
+        $this->redirectToCommand("showLoginOrCreate");
+    }
+
     public function injectTabs(string $selectedTabId) : void
     {
         $gui = new ilPersonalSettingsGUI();
@@ -112,6 +260,14 @@ class UserConfigController extends BaseController
                 $this->plugin->txt("config.user.general.title"),
                 $this->getCommandLink("showGeneralConfig")
             );
+
+            if ($this->userConfig->getAuthMethod() === "loginOrCreate") {
+                $this->tabs->addSubTab(
+                    "chat-user-config-loginOrCreate",
+                    $this->plugin->txt("config.user.loginOrCreate.title"),
+                    $this->getCommandLink("showLoginOrCreate")
+                );
+            }
         }
     }
 }
