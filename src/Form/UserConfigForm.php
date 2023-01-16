@@ -58,7 +58,7 @@ class UserConfigForm extends ilPropertyFormGUI
         $this->setTitle("REPLACE ME");
         $this->setFormAction(UserConfigController::getInstance()->getCommandLink("showGeneralConfig", [], true));
 
-        $matrixAuthMethod = new ilRadioGroupInputGUI("config.user.authMethod", "authMethod");
+        $matrixAuthMethod = new ilRadioGroupInputGUI($this->plugin->txt("config.user.authMethod"), "authMethod");
 
         $usingExternalAccount = new ilRadioOption(
             $this->plugin->txt("config.user.useExternalAccount"),
