@@ -251,5 +251,18 @@ class MatrixAdminApi extends MatrixApiEndpointBase
         }
     }
 
-
+    public function retrieveNonce() : ?string
+    {
+        try {
+            $response = $this->sendRequest(
+                "/_synapse/admin/v1/register",
+                "GET",
+                [],
+                $this->getUser()->getAccessToken()
+            );
+            return $response["nonce"];
+        } catch (MatrixApiException $e) {
+            return null;
+        }
+    }
 }
