@@ -35,7 +35,6 @@ use ilMatrixChatClientUIHookGUI;
 use ilObjGroupGUI;
 use ILIAS\Plugin\MatrixChatClient\Repository\UserDataRepository;
 
-
 /**
  * Class ChatClientController
  *
