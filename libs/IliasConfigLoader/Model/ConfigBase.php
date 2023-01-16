@@ -17,12 +17,11 @@ declare(strict_types=1);
 namespace ILIAS\Plugin\MatrixChatClient\Libs\IliasConfigLoader\Model;
 
 use ReflectionClass;
-use ilSetting;
 use ILIAS\Plugin\MatrixChatClient\Libs\IliasConfigLoader\Exception\ConfigLoadException;
 use ReflectionException;
-use ILIAS\Plugin\MatrixChatClient\Libs\IliasConfigLoader\Exception\ConfigLoadInvalidTypeException;
 use ILIAS\Plugin\MatrixChatClient\Libs\IliasConfigLoader\Exception\ConfigLoadNonPrimitiveDataTypeDetected;
 use TypeError;
+use ILIAS\Plugin\MatrixChatClient\Libs\IliasConfigLoader\Exception\ConfigLoadInvalidTypeException;
 
 /**
  * Class ConfigBase
@@ -30,24 +29,18 @@ use TypeError;
  * @package ILIAS\Plugin\MatrixChatClient\Model
  * @author  Marvin Beym <mbeym@databay.de>
  */
-class ConfigBase
+abstract class ConfigBase
 {
     //Required in >= ILIAS 8 because default value is only allowed to be string or null. Handle default value using manually.
-    private const DEFAULT_VALUE = "configBase_default_value";
-
+    protected const DEFAULT_VALUE = "configBase_default_value";
     /**
      * @var string
      */
-    private $settingsPrefix;
-    /**
-     * @var ilSetting
-     */
-    private $settings;
+    protected $settingsPrefix;
 
-    public function __construct(ilSetting $settings, string $settingsPrefix = "config_")
+    public function __construct(string $settingsPrefix)
     {
         $this->settingsPrefix = $settingsPrefix;
-        $this->settings = $settings;
     }
 
     public function toArray($blacklist = []) : array
@@ -65,36 +58,16 @@ class ConfigBase
     }
 
     /**
-     * @throws ConfigLoadException
-     */
-    public function save() : void
-    {
-        $properties = $this->getProperties(new ReflectionClass($this));
-        foreach ($properties->getLoadable() as $loadable) {
-            $property = $loadable->getProperty();
-            $property->setAccessible(true);
-            $value = $property->getValue($this);
-
-            if (is_array($value)) {
-                $value = serialize($value);
-            }
-
-            $this->settings->set($this->settingsPrefix . $property->getName(), $value);
-        }
-
-        if ($properties->hasUnloadable()) {
-            throw new ConfigLoadException($properties->getUnloadable());
-        }
-    }
-
-    /**
      * @return array<string, mixed>
      * @throws ReflectionException
      */
-    private function getDefaultValues() : array
+    protected function getDefaultValues() : array
     {
+        //ToDo: passing ConfigBase may not be needed => investigate.
         $defaultValues = [];
-        $tmpEmptyObjectReflection = new ReflectionClass(new $this($this->settings, $this->settingsPrefix));
+        $tmpConfigObject = new ReflectionClass($this);
+
+        $tmpEmptyObjectReflection = new ReflectionClass($tmpConfigObject->newInstanceWithoutConstructor());
         $tmpEmptyObjectReflectionProps = $tmpEmptyObjectReflection->getDefaultProperties();
 
         foreach ($tmpEmptyObjectReflection->getProperties() as $property) {
@@ -105,80 +78,12 @@ class ConfigBase
         return $defaultValues;
     }
 
-    /**
-     * @throws ConfigLoadException
-     */
-    public function load() : self
+    protected function checkPropertyType(string $type, array $typesToCheck) : ?string
     {
-        $properties = $this->getProperties(new ReflectionClass($this));
+        //convert
+        $type = $type === "integer" ? "int" : $type;
+        $type = $type === "boolean" ? "bool" : $type;
 
-        try {
-            $defaultValues = $this->getDefaultValues();
-        } catch (ReflectionException $e) {
-            return $this;
-        }
-
-        foreach ($properties->getLoadable() as $loadableProperty) {
-            $property = $loadableProperty->getProperty();
-            $propertyTypes = $loadableProperty->getTypes();
-
-            $value = $this->settings->get(
-                $this->settingsPrefix . $property->getName(),
-                self::DEFAULT_VALUE
-            );
-
-            if ($value === self::DEFAULT_VALUE) {
-                $value = $defaultValues[$property->getName()];
-            }
-
-            $valueType = gettype($value);
-            //convert
-            $valueType = $valueType === "integer" ? "int" : $valueType;
-            $valueType = $valueType === "boolean" ? "bool" : $valueType;
-
-            if (!$this->checkPropertyType($valueType, $propertyTypes)) {
-                if (is_string($value)) {
-                    if (in_array("array", $propertyTypes, true)) {
-                        try {
-                            $value = @unserialize($value, ['allowed_classes' => false]);
-                        } catch (TypeError $e) {
-                            $value = false;
-                        }
-                    }
-
-                    $failedTypeConvertCount = 0;
-                    foreach ($propertyTypes as $propertyType) {
-                        if (!settype($value, $propertyType)) {
-                            $failedTypeConvertCount++;
-                        }
-                    }
-
-                    if ($failedTypeConvertCount === count($propertyTypes)) {
-                        $value = false;
-                    }
-                }
-
-                if (!$this->checkPropertyType(gettype($value), $propertyTypes)) {
-                    $properties->addUnloadable((new UnloadableProperty())
-                        ->setProperty($property)
-                        ->setTypes($propertyTypes)
-                        ->setException(new ConfigLoadInvalidTypeException(gettype($value), $valueType)));
-                    continue;
-                }
-            }
-            $property->setAccessible(true);
-            $property->setValue($this, $value);
-        }
-
-        if ($properties->hasUnloadable()) {
-            throw new ConfigLoadException($properties->getUnloadable());
-        }
-
-        return $this;
-    }
-
-    private function checkPropertyType(string $type, array $typesToCheck) : ?string
-    {
         foreach ($typesToCheck as $typeToCheck) {
             if ($type === $typeToCheck) {
                 return $typeToCheck;
@@ -188,7 +93,7 @@ class ConfigBase
         return null;
     }
 
-    private function getSupportedPrimitivePropertyTypes() : array
+    protected function getSupportedPrimitivePropertyTypes() : array
     {
         return [
             "string",
@@ -206,14 +111,25 @@ class ConfigBase
      * @param ReflectionClass $refClass
      * @return Properties
      * @throws ReflectionException
+     * @noinspection PhpElementIsNotAvailableInCurrentPhpVersionInspection
      */
-    private function getProperties(ReflectionClass $refClass) : Properties
+    protected function getProperties(ReflectionClass $refClass) : Properties
     {
         $properties = new Properties();
         $defaultProperties = $this->getDefaultValues();
 
         foreach ($refClass->getProperties() as $property) {
-            $foundTypes = [];
+            if (in_array(
+                $property->getName(),
+                array_merge(
+                    $this->getIgnoredPropertyNames(),
+                    ["settingsPrefix"]
+                ),
+                true
+            )
+            ) {
+                continue;
+            }
             if (version_compare(PHP_VERSION, '7.4.0') >= 0 && $property->getType() !== null) {
                 $typeReflection = $property->getType();
                 $foundTypes[] = $typeReflection->getName();
@@ -269,8 +185,117 @@ class ConfigBase
         return $properties;
     }
 
-    public function clean(UnloadableProperty $unloadableProperty) : bool
+    /**
+     * @param string $key
+     * @param mixed  $value
+     * @return void
+     */
+    abstract protected function saveSingleValue(string $key, $value) : void;
+
+    abstract protected function loadSingleValue(string $key, ?string $defaultValue) : ?string;
+
+    abstract protected function cleanSingleValue(string $key) : bool;
+
+    /**
+     * @return string[]
+     */
+    abstract protected function getIgnoredPropertyNames() : array;
+
+    /**
+     * @throws ConfigLoadException
+     * @throws ReflectionException
+     */
+    public function load() : self
     {
-        return (bool) $this->settings->delete($this->settingsPrefix . $unloadableProperty->getProperty()->getName());
+        $properties = $this->getProperties(new ReflectionClass($this));
+
+        try {
+            $defaultValues = $this->getDefaultValues();
+        } catch (ReflectionException $e) {
+            return $this;
+        }
+
+        foreach ($properties->getLoadable() as $loadableProperty) {
+            $property = $loadableProperty->getProperty();
+            $propertyTypes = $loadableProperty->getTypes();
+
+            $value = $this->loadSingleValue($this->settingsPrefix . $property->getName(), self::DEFAULT_VALUE);
+
+            if ($value === self::DEFAULT_VALUE) {
+                $value = $defaultValues[$property->getName()];
+            }
+
+            $valueType = gettype($value);
+            //convert
+            $valueType = $valueType === "integer" ? "int" : $valueType;
+            $valueType = $valueType === "boolean" ? "bool" : $valueType;
+
+            if (!$this->checkPropertyType($valueType, $propertyTypes)) {
+                if (is_string($value)) {
+                    if (in_array("array", $propertyTypes, true)) {
+                        try {
+                            $value = @unserialize($value, ['allowed_classes' => false]);
+                        } catch (TypeError $e) {
+                            $value = false;
+                        }
+                    }
+
+                    $failedTypeConvertCount = 0;
+                    foreach ($propertyTypes as $propertyType) {
+                        if (!settype($value, $propertyType)) {
+                            $failedTypeConvertCount++;
+                        }
+                    }
+
+                    if ($failedTypeConvertCount === count($propertyTypes)) {
+                        $value = false;
+                    }
+                }
+
+                if (!$this->checkPropertyType(gettype($value), $propertyTypes)) {
+                    $properties->addUnloadable((new UnloadableProperty())
+                        ->setProperty($property)
+                        ->setTypes($propertyTypes)
+                        ->setException(new ConfigLoadInvalidTypeException(gettype($value), $valueType)));
+                    continue;
+                }
+            }
+            $property->setAccessible(true);
+            $property->setValue($this, $value);
+        }
+
+        if ($properties->hasUnloadable()) {
+            throw new ConfigLoadException($properties->getUnloadable());
+        }
+
+        return $this;
+    }
+
+    public function cleanValue(string $key) : bool
+    {
+        return $this->cleanSingleValue($this->settingsPrefix . $key);
+    }
+
+    /**
+     * @throws ConfigLoadException
+     */
+    public function save() : void
+    {
+        $properties = $this->getProperties(new ReflectionClass($this));
+        foreach ($properties->getLoadable() as $loadable) {
+            $property = $loadable->getProperty();
+            $property->setAccessible(true);
+            $value = $property->getValue($this);
+
+            if (is_array($value)) {
+                $value = serialize($value);
+            }
+
+            $this->saveSingleValue($this->settingsPrefix . $property->getName(), $value);
+        }
+
+        if ($properties->hasUnloadable()) {
+            throw new ConfigLoadException($properties->getUnloadable());
+        }
     }
 }
