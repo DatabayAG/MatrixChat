@@ -26,11 +26,15 @@ use TypeError;
 
 /**
  * Class ConfigBase
+ *
  * @package ILIAS\Plugin\MatrixChatClient\Model
  * @author  Marvin Beym <mbeym@databay.de>
  */
 class ConfigBase
 {
+    //Required in >= ILIAS 8 because default value is only allowed to be string or null. Handle default value using manually.
+    private const DEFAULT_VALUE = "configBase_default_value";
+
     /**
      * @var string
      */
@@ -116,33 +120,49 @@ class ConfigBase
 
         foreach ($properties->getLoadable() as $loadableProperty) {
             $property = $loadableProperty->getProperty();
-            $propertyType = $loadableProperty->getType();
+            $propertyTypes = $loadableProperty->getTypes();
 
             $value = $this->settings->get(
                 $this->settingsPrefix . $property->getName(),
-                $defaultValues[$property->getName()]
+                self::DEFAULT_VALUE
             );
 
-            $valueType = gettype($value);
+            if ($value === self::DEFAULT_VALUE) {
+                $value = $defaultValues[$property->getName()];
+            }
 
-            if (!$this->checkPropertyType($valueType, $propertyType)) {
+            $valueType = gettype($value);
+            //convert
+            $valueType = $valueType === "integer" ? "int" : $valueType;
+            $valueType = $valueType === "boolean" ? "bool" : $valueType;
+
+            if (!$this->checkPropertyType($valueType, $propertyTypes)) {
                 if (is_string($value)) {
-                    if ($this->checkPropertyType($propertyType, "array")) {
+                    if (in_array("array", $propertyTypes, true)) {
                         try {
                             $value = @unserialize($value, ['allowed_classes' => false]);
                         } catch (TypeError $e) {
                             $value = false;
                         }
-                    } elseif (!settype($value, $propertyType)) {
+                    }
+
+                    $failedTypeConvertCount = 0;
+                    foreach ($propertyTypes as $propertyType) {
+                        if (!settype($value, $propertyType)) {
+                            $failedTypeConvertCount++;
+                        }
+                    }
+
+                    if ($failedTypeConvertCount === count($propertyTypes)) {
                         $value = false;
                     }
                 }
 
-                if (!$this->checkPropertyType(gettype($value), $propertyType)) {
+                if (!$this->checkPropertyType(gettype($value), $propertyTypes)) {
                     $properties->addUnloadable((new UnloadableProperty())
                         ->setProperty($property)
-                        ->setType($propertyType)
-                        ->setException(new ConfigLoadInvalidTypeException($propertyType, $valueType)));
+                        ->setTypes($propertyTypes)
+                        ->setException(new ConfigLoadInvalidTypeException(gettype($value), $valueType)));
                     continue;
                 }
             }
@@ -157,19 +177,15 @@ class ConfigBase
         return $this;
     }
 
-    private function checkPropertyType(string $type, string $typeToCheck) : bool
+    private function checkPropertyType(string $type, array $typesToCheck) : ?string
     {
-        $intTypes = ["int", "integer"];
-        $boolTypes = ["bool", "boolean"];
-
-        if (in_array($typeToCheck, $intTypes, true) && in_array($type, $intTypes, true)) {
-            return true;
-        }
-        if (in_array($typeToCheck, $boolTypes, true) && in_array($type, $boolTypes, true)) {
-            return true;
+        foreach ($typesToCheck as $typeToCheck) {
+            if ($type === $typeToCheck) {
+                return $typeToCheck;
+            }
         }
 
-        return $type === $typeToCheck;
+        return null;
     }
 
     private function getSupportedPrimitivePropertyTypes() : array
@@ -189,6 +205,7 @@ class ConfigBase
     /**
      * @param ReflectionClass $refClass
      * @return Properties
+     * @throws ReflectionException
      */
     private function getProperties(ReflectionClass $refClass) : Properties
     {
@@ -196,25 +213,58 @@ class ConfigBase
         $defaultProperties = $this->getDefaultValues();
 
         foreach ($refClass->getProperties() as $property) {
-            $docComment = $property->getDocComment();
-            if ($docComment) {
-                preg_match("/@var ([a-zA-Z0-9, ()_].*)/", $property->getDocComment(), $docComments);
-                $type = $docComments[1];
+            $foundTypes = [];
+            if (version_compare(PHP_VERSION, '7.4.0') >= 0 && $property->getType() !== null) {
+                $typeReflection = $property->getType();
+                $foundTypes[] = $typeReflection->getName();
+                if ($typeReflection->allowsNull()) {
+                    $foundTypes[] = "null";
+                }
             } else {
-                $type = gettype($defaultProperties[$property->getName()]);
+                $docComment = $property->getDocComment();
+                if ($docComment) {
+                    preg_match("/@var ([a-zA-Z0-9, ()_].*)/", $property->getDocComment(), $docComments);
+                    foreach (explode("|", $docComments[1]) as $type) {
+                        $foundTypes[] = $type;
+                    }
+                } else {
+                    $foundTypes[] = gettype($defaultProperties[$property->getName()]);
+                }
             }
 
-            if (!$type || !in_array($type, $this->getSupportedPrimitivePropertyTypes(), true)) {
+            $isNotLoadable = false;
+
+            if ($foundTypes === []) {
+                $isNotLoadable = true;
+            }
+
+            $convertedTypes = [];
+            foreach ($foundTypes as $type) {
+                $type = $type === "integer" ? "int" : $type;
+                $type = $type === "boolean" ? "bool" : $type;
+                $convertedTypes[] = $type;
+            }
+            $foundTypes = $convertedTypes;
+
+            $supportedTypes = $this->getSupportedPrimitivePropertyTypes();
+
+            foreach ($foundTypes as $type) {
+                if (!in_array($type, $supportedTypes, true)) {
+                    $isNotLoadable = true;
+                    break;
+                }
+            }
+
+            if ($isNotLoadable) {
                 $properties->addUnloadable((new UnloadableProperty())
                     ->setProperty($property)
-                    ->setType($type)
+                    ->setTypes($foundTypes)
                     ->setException(new ConfigLoadNonPrimitiveDataTypeDetected()));
-                continue;
             }
 
             $properties->addLoadable((new LoadableProperty())
                 ->setProperty($property)
-                ->setType($type));
+                ->setTypes($foundTypes));
         }
         return $properties;
     }

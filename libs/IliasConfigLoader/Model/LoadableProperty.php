@@ -30,9 +30,9 @@ class LoadableProperty
      */
     private $property;
     /**
-     * @var string
+     * @var string[]
      */
-    private $type;
+    private $types;
 
     public function getProperty() : ReflectionProperty
     {
@@ -45,14 +45,21 @@ class LoadableProperty
         return $this;
     }
 
-    public function getType() : string
+    /**
+     * @return string[]
+     */
+    public function getTypes() : array
     {
-        return $this->type;
+        return $this->types;
     }
 
-    public function setType(string $type) : self
+    /**
+     * @param string[] $types
+     * @return $this
+     */
+    public function setTypes(array $types) : self
     {
-        $this->type = $type;
+        $this->types = $types;
         return $this;
     }
 }
