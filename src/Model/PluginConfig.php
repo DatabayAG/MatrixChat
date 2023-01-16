@@ -41,6 +41,10 @@ class PluginConfig extends SettingsConfig
      */
     private $matrixAdminPassword = "";
     /**
+     * @var string
+     */
+    private $sharedSecret = "";
+    /**
      * @var int
      */
     private $chatInitialLoadLimit = 20;
@@ -102,6 +106,24 @@ class PluginConfig extends SettingsConfig
     public function setMatrixAdminPassword(string $matrixAdminPassword) : PluginConfig
     {
         $this->matrixAdminPassword = $matrixAdminPassword;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSharedSecret() : string
+    {
+        return $this->sharedSecret;
+    }
+
+    /**
+     * @param string $sharedSecret
+     * @return PluginConfig
+     */
+    public function setSharedSecret(string $sharedSecret) : PluginConfig
+    {
+        $this->sharedSecret = $sharedSecret;
         return $this;
     }
 

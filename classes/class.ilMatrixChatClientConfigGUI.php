@@ -86,7 +86,7 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
         if ($form === null) {
             $form = new PluginConfigForm();
             $form->setValuesByArray(
-                $this->plugin->getPluginConfig()->toArray(["matrixAdminPassword"]),
+                $this->plugin->getPluginConfig()->toArray(["matrixAdminPassword", "sharedSecret"]),
                 true
             );
         }
@@ -107,6 +107,21 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
 
         $form->setValuesByPost();
 
+        $sharedSecretValue = $form->getInput("sharedSecret");
+
+        if (!$sharedSecretValue && !$this->plugin->getPluginConfig()->getSharedSecret()) {
+            /**
+             * @var ilPasswordInputGUI $sharedSecret
+             */
+            $sharedSecret = $form->getItemByPostVar("sharedSecret");
+            $sharedSecret->setRequired(true);
+            ilUtil::sendFailure($this->lng->txt("form_input_not_valid"), true);
+            $sharedSecret->setAlert($this->plugin->txt("config.sharedSecret.empty"));
+            $this->showSettings($form);
+            return;
+        }
+
+
         $matrixServerUrl = rtrim($form->getInput("matrixServerUrl"), "/");
 
         $this->plugin->getPluginConfig()
@@ -114,7 +129,8 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
                      ->setMatrixAdminUsername($form->getInput("matrixAdminUsername"))
                      ->setChatInitialLoadLimit((int) $form->getInput("chatInitialLoadLimit"))
                      ->setChatHistoryLoadLimit((int) $form->getInput("chatHistoryLoadLimit"))
-                     ->setUsernameScheme($form->getInput("usernameScheme"));
+                     ->setUsernameScheme($form->getInput("usernameScheme"))
+                     ->setSharedSecret($sharedSecretValue);
 
         $matrixAdminPassword = $form->getInput("matrixAdminPassword");
         if ($matrixAdminPassword !== "") {
