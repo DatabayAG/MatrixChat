@@ -181,7 +181,7 @@ class UserConfigController extends BaseController
 
         if (!$form->checkInput()) {
             $form->setValuesByPost();
-            $this->showCreate(null, $form);
+            $this->showCreate($form);
             return;
         }
 
