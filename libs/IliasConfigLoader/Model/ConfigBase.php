@@ -121,6 +121,7 @@ abstract class ConfigBase
         $defaultProperties = $this->getDefaultValues();
 
         foreach ($refClass->getProperties() as $property) {
+            $foundTypes = [];
             if (in_array(
                 $property->getName(),
                 array_merge(
