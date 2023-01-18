@@ -43,12 +43,17 @@ class UserRegisterAccountForm extends ilPropertyFormGUI
      * @var Container
      */
     private $dic;
+    /**
+     * @var ilGlobalPageTemplate
+     */
+    private $mainTpl;
 
     public function __construct()
     {
         global $DIC;
         parent::__construct();
         $this->dic = $DIC;
+        $this->mainTpl = $this->dic->ui()->mainTemplate();
         $this->plugin = ilMatrixChatClientPlugin::getInstance();
         $this->setTitle($this->plugin->txt("config.user.create"));
         $this->setFormAction(UserConfigController::getInstance()->getCommandLink("showCreate", [], true));
@@ -63,6 +68,7 @@ class UserRegisterAccountForm extends ilPropertyFormGUI
         $this->addItem($username);
         $this->addItem($password);
 
+        $this->mainTpl->addInlineCss("#il_prop_cont_{$username->getPostVar()} > div {display: flex;}");
         $this->addCommandButton(UserConfigController::getCommand("saveCreate"), $this->lng->txt("register"));
     }
 }
