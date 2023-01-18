@@ -86,10 +86,6 @@
         "success": "Matrix-Logout erfolgreich"
       },
       "room": {
-        "encryption": {
-          "encrypted": "Verschlüsselt",
-          "unencrypted": "Unverschlüsselt"
-        },
         "notFoundEvenThoughEnabled": "Der Raum wurde nicht gefunden, obwohl diese Integration aktiviert ist.<br>Wahrscheinlich wurde der Raum durch einen externen Client gelöscht oder der genutzte Administrator kann nicht mehr auf diesen zugreifen!<br><br>Die Integration muss wahrscheinlich deaktiviert (und dabei der Raum gelöscht werden, falls möglich) und dann wieder aktiviert werden.",
         "notFound": "Raum konnte nicht gefunden werden.",
         "memberAssignFailed": "Benutzer konnte nicht zum Raum hinzugefügt werden.",
