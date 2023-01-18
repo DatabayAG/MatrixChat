@@ -186,8 +186,6 @@ class ChatClientController extends BaseController
         $this->mainTpl->addCss($this->plugin->cssFolder("easymde.min.css"));
 
         $tpl = new ilTemplate($this->plugin->templatesFolder("tpl.chat-integration.html"), true, true);
-        $tpl->setVariable("LOGOUT_URL", $this->getCommandLink("chatLogout", ["ref_id" => $this->courseId]));
-        $tpl->setVariable("LOGOUT_TEXT", $this->lng->txt("logout"));
         $tpl->setVariable("LOGGED_IN_AS_TEXT", $this->plugin->txt("matrix.chat.loggedInAs"));
         $tpl->setVariable("LOGGED_IN_AS_DISPLAY_NAME", $matrixUser->getMatrixDisplayName());
         $tpl->setVariable("LOGGED_IN_AS_USER", $matrixUser->getMatrixUsername());
@@ -223,16 +221,6 @@ class ChatClientController extends BaseController
 
         $this->mainTpl->setContent($tpl->get());
         $this->mainTpl->printToStdOut();
-    }
-
-    public function chatLogout() : void
-    {
-        ilUtil::sendSuccess($this->plugin->txt("matrix.chat.logout.success"), true);
-
-        $this->ctrl->redirectByClass(
-            ["ilRepositoryGUI", "ilObjCourseGUI"],
-            "view"
-        );
     }
 
     public function getTemplateAjax() : void
