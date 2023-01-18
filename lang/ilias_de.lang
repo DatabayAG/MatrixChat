@@ -56,6 +56,6 @@ matrix.user.authentication.failed.authFailed#:#Authentifizierung mit Benutzernam
 matrix.user.authentication.failed.unConfigured#:#Keine Authentifizierung konfiguriert
 matrix.user.authentication.failed.usernameTaken#:#Benutzername '%s' ist bereits vergeben
 matrix.user.authentication.failed.userCreation#:#An error occurred while creating the user
-matrix.user.authentication.success#:#Authentifizierung erfolgreich (matrix-user-id: %s)
+matrix.user.authentication.success#:#Authentifizierung erfolgreich mit Benutzername '%s' (matrix-user-id: %s)
 matrix.admin.loginInvalid#:#Admin-Login ungültig
 matrix.admin.auth.login#:#In Matrix-Chat einloggen

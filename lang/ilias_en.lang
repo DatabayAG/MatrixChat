@@ -55,6 +55,6 @@ matrix.chat.course.enable#:#Activate Matrix-Chat integration for the Course
 matrix.user.authentication.failed.authFailed#:#Authentication with username %s failed
 matrix.user.authentication.failed.unConfigured#:#No authentication configured
 matrix.user.authentication.failed.usernameTaken#:#Username '%s' is already taken
-matrix.user.authentication.success#:#Authentication successful (matrix-user-id: %s)
+matrix.user.authentication.success#:#Authentication successful with username '%s' (matrix-user-id: %s)
 matrix.admin.loginInvalid#:#Admin-Login invalid
 matrix.admin.auth.login#:#Login into Matrix Chat

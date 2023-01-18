@@ -67,6 +67,7 @@ class UserConfigController extends BaseController
             }
             ilUtil::sendSuccess(sprintf(
                 $this->plugin->txt("matrix.user.authentication.success"),
+                $this->userConfig->getMatrixUsername(),
                 $userData->getMatrixUserId()
             ), true);
             return true;
@@ -126,6 +127,9 @@ class UserConfigController extends BaseController
 
         if (!$form) {
             $form = new UserAuthenticateAccountForm();
+            $form->setValuesByArray([
+                "username" => $this->userConfig->getMatrixUsername()
+            ], true);
         }
 
         $this->mainTpl->setContent($form->getHTML());
@@ -182,6 +186,10 @@ class UserConfigController extends BaseController
             );
             $this->userDataRepo->create($userData);
         }
+
+        $this->userConfig
+            ->setMatrixUsername($username)
+            ->save();
 
         $this->redirectToCommand("showLogin");
     }

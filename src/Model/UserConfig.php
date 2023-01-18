@@ -35,6 +35,11 @@ class UserConfig extends UserPrefConfig
      */
     private $authMethod = "usingExternal";
 
+    /**
+     * @var string
+     */
+    private $matrixUsername = "";
+
     public function __construct(ilObjUser $user)
     {
         parent::__construct($user, "mcc_");
@@ -55,6 +60,24 @@ class UserConfig extends UserPrefConfig
     public function setAuthMethod(string $authMethod) : UserConfig
     {
         $this->authMethod = $authMethod;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMatrixUsername() : string
+    {
+        return $this->matrixUsername;
+    }
+
+    /**
+     * @param string $matrixUsername
+     * @return UserConfig
+     */
+    public function setMatrixUsername(string $matrixUsername) : UserConfig
+    {
+        $this->matrixUsername = $matrixUsername;
         return $this;
     }
 }

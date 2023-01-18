@@ -59,6 +59,7 @@ class UserRegisterAccountForm extends ilPropertyFormGUI
         $this->setFormAction(UserConfigController::getInstance()->getCommandLink("showCreate", [], true));
 
         $username = new ilTextInputGUI($this->lng->txt("username"), "username");
+        $username->setSuffix("AAA");
         $username->setRequired(true);
 
         $password = new ilPasswordInputGUI($this->lng->txt("password"), "password");

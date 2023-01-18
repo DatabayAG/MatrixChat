@@ -108,7 +108,7 @@
           "usernameTaken": "Username '%s' is already taken",
           "userCreation": ""
         },
-        "success": "Authentication successful (matrix-user-id: %s)"
+        "success": "Authentication successful with username '%s' (matrix-user-id: %s)"
       }
     },
     "admin": {

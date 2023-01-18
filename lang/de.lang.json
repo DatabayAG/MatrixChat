@@ -108,7 +108,7 @@
           "usernameTaken": "Benutzername '%s' ist bereits vergeben",
           "userCreation": "An error occurred while creating the user"
         },
-        "success": "Authentifizierung erfolgreich (matrix-user-id: %s)"
+        "success": "Authentifizierung erfolgreich mit Benutzername '%s' (matrix-user-id: %s)"
       }
     },
     "admin": {
