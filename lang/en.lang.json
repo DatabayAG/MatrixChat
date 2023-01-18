@@ -24,7 +24,6 @@
       "title": "Shared Secret",
       "info": "'registration_shared_secret' from the Synapse homeserver configuration (homeserver.yaml)<br><br>This field will be cleared after the form submission.",
       "empty": "This field is required if it has not been saved yet!"
-
     },
     "admin": {
       "username": {
@@ -41,11 +40,9 @@
       "title": "Chat Settings",
       "authMethod": "Matrix Authentication Method",
       "useExternalAccount": "Use external account",
-      "loginOrCreate": {
-        "title": "Authenticate with existing account or create new one with naming scheme",
-        "login": "Authenticate with existing account",
-        "create": "Create Account using naming scheme"
-      },
+      "loginOrCreate": "Authenticate with existing account or create new one with naming scheme",
+      "login": "Authenticate with existing account",
+      "create": "Create Account using naming scheme",
       "method": {
         "title": "Matrix-User registration method",
         "externalAccount": "Use external account entry",

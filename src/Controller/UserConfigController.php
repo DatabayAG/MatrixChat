@@ -116,25 +116,35 @@ class UserConfigController extends BaseController
         $this->redirectToCommand("showGeneralConfig");
     }
 
-    public function showLoginOrCreate(
-        ?UserAuthenticateAccountForm $loginForm = null,
-        ?UserRegisterAccountForm $registerForm = null
-    ) : void {
+    public function showLogin(?UserAuthenticateAccountForm $form = null) : void
+    {
         $this->injectTabs("chat-user-config");
-        $this->tabs->activateSubTab("chat-user-config-loginOrCreate");
+        $this->tabs->activateSubTab("chat-user-config-login");
         $this->showUserAuthenticatedNotification();
 
         $this->mainTpl->loadStandardTemplate();
 
-        if (!$loginForm) {
-            $loginForm = new UserAuthenticateAccountForm();
+        if (!$form) {
+            $form = new UserAuthenticateAccountForm();
         }
 
-        if (!$registerForm) {
-            $registerForm = new UserRegisterAccountForm();
+        $this->mainTpl->setContent($form->getHTML());
+        $this->mainTpl->printToStdOut();
+    }
+
+    public function showCreate(?UserRegisterAccountForm $form = null) : void
+    {
+        $this->injectTabs("chat-user-config");
+        $this->tabs->activateSubTab("chat-user-config-create");
+        $this->showUserAuthenticatedNotification();
+
+        $this->mainTpl->loadStandardTemplate();
+
+        if (!$form) {
+            $form = new UserRegisterAccountForm();
         }
 
-        $this->mainTpl->setContent($loginForm->getHTML() . $registerForm->getHTML());
+        $this->mainTpl->setContent($form->getHTML());
         $this->mainTpl->printToStdOut();
     }
 
@@ -144,19 +154,19 @@ class UserConfigController extends BaseController
 
         if (!$form->checkInput()) {
             $form->setValuesByPost();
-            $this->showLoginOrCreate($form);
+            $this->showLogin($form);
             return;
         }
 
         $form->setValuesByPost();
 
-        $username = $form->getInput("loginUsername");
-        $password = $form->getInput("loginPassword");
+        $username = $form->getInput("username");
+        $password = $form->getInput("password");
 
         $matrixUser = $this->matrixApi->admin->login($username, $password, "ilias_auth_verification");
         if (!$matrixUser) {
             ilUtil::sendFailure($this->plugin->txt("matrix.user.authentication.failed.authFailed"), true);
-            $this->showLoginOrCreate($form);
+            $this->showLogin($form);
             return;
         }
 
@@ -173,7 +183,7 @@ class UserConfigController extends BaseController
             $this->userDataRepo->create($userData);
         }
 
-        $this->redirectToCommand("showLoginOrCreate");
+        $this->redirectToCommand("showLogin");
     }
 
     public function saveCreate() : void
@@ -182,14 +192,14 @@ class UserConfigController extends BaseController
 
         if (!$form->checkInput()) {
             $form->setValuesByPost();
-            $this->showLoginOrCreate(null, $form);
+            $this->showCreate(null, $form);
             return;
         }
 
         $form->setValuesByPost();
 
-        $username = $form->getInput("registerUsername");
-        $password = $form->getInput("registerPassword");
+        $username = $form->getInput("username");
+        $password = $form->getInput("password");
 
         if (!$this->matrixApi->admin->usernameAvailable($username)) {
             ilUtil::sendFailure(sprintf(
@@ -207,7 +217,7 @@ class UserConfigController extends BaseController
                 $this->plugin->txt("matrix.user.authentication.failed.usernameTaken"),
                 $username
             ));
-            $this->showLoginOrCreate(null, $form);
+            $this->showCreate($form);
             return;
         }
 
@@ -215,7 +225,7 @@ class UserConfigController extends BaseController
 
         if (!$matrixUser) {
             ilUtil::sendFailure($this->plugin->txt("matrix.user.authentication.failed.userCreation"), true);
-            $this->showLoginOrCreate(null, $form);
+            $this->showCreate($form);
             return;
         }
 
@@ -232,7 +242,7 @@ class UserConfigController extends BaseController
             $this->userDataRepo->create($userData);
         }
 
-        $this->redirectToCommand("showLoginOrCreate");
+        $this->redirectToCommand("showCreate");
     }
 
     public function injectTabs(string $selectedTabId) : void
@@ -263,9 +273,15 @@ class UserConfigController extends BaseController
 
             if ($this->userConfig->getAuthMethod() === "loginOrCreate") {
                 $this->tabs->addSubTab(
-                    "chat-user-config-loginOrCreate",
-                    $this->plugin->txt("config.user.loginOrCreate.title"),
-                    $this->getCommandLink("showLoginOrCreate")
+                    "chat-user-config-login",
+                    $this->plugin->txt("config.user.login"),
+                    $this->getCommandLink("showLogin")
+                );
+
+                $this->tabs->addSubTab(
+                    "chat-user-config-create",
+                    $this->plugin->txt("config.user.create"),
+                    $this->getCommandLink("showCreate")
                 );
             }
         }

@@ -64,7 +64,7 @@ class UserConfigForm extends ilPropertyFormGUI
             $this->plugin->txt("config.user.useExternalAccount"),
             "usingExternal"
         );
-        $loginOrCreate = new ilRadioOption($this->plugin->txt("config.user.loginOrCreate.title"), "loginOrCreate");
+        $loginOrCreate = new ilRadioOption($this->plugin->txt("config.user.loginOrCreate"), "loginOrCreate");
 
         $matrixAuthMethod->addOption($usingExternalAccount);
         $matrixAuthMethod->addOption($loginOrCreate);

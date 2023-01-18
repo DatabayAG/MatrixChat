@@ -50,13 +50,13 @@ class UserAuthenticateAccountForm extends ilPropertyFormGUI
         parent::__construct();
         $this->dic = $DIC;
         $this->plugin = ilMatrixChatClientPlugin::getInstance();
-        $this->setTitle($this->plugin->txt("config.user.loginOrCreate.login"));
-        $this->setFormAction(UserConfigController::getInstance()->getCommandLink("showLoginOrCreate", [], true));
+        $this->setTitle($this->plugin->txt("config.user.login"));
+        $this->setFormAction(UserConfigController::getInstance()->getCommandLink("showLogin", [], true));
 
-        $username = new ilTextInputGUI($this->lng->txt("username"), "loginUsername");
+        $username = new ilTextInputGUI($this->lng->txt("username"), "username");
         $username->setRequired(true);
 
-        $password = new ilPasswordInputGUI($this->lng->txt("password"), "loginPassword");
+        $password = new ilPasswordInputGUI($this->lng->txt("password"), "password");
         $password->setSkipSyntaxCheck(true);
         $password->setRetype(false);
         $password->setRequired(true);
