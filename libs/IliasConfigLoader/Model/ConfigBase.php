@@ -63,7 +63,6 @@ abstract class ConfigBase
      */
     protected function getDefaultValues() : array
     {
-        //ToDo: passing ConfigBase may not be needed => investigate.
         $defaultValues = [];
         $tmpConfigObject = new ReflectionClass($this);
 
