@@ -108,10 +108,10 @@
     "user": {
       "authentication": {
         "failed": {
-          "authFailed": "Authentication with username %s failed",
+          "authFailed": "Authentication with Matrix-User '%s' failed",
           "unConfigured": "No authentication configured",
           "usernameTaken": "Username '%s' is already taken",
-          "userCreation": ""
+          "userCreation": "Beim Anlegen des Benutzers ist ein Fehler aufgetreten"
         },
         "success": "Authentication successful with username '%s' (matrix-user-id: %s)"
       }

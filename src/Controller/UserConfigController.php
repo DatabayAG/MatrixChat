@@ -56,11 +56,25 @@ class UserConfigController extends BaseController
         $matrixUserId = $this->userConfig->getMatrixUserId();
         if ($matrixUserId) {
             if (!$this->matrixApi->admin->userExists($matrixUserId)) {
-                ilUtil::sendFailure($this->plugin->txt("matrix.user.authentication.failed.authFailed"), true);
+                ilUtil::sendFailure(
+                    sprintf(
+                        $this->plugin->txt("matrix.user.authentication.failed.authFailed"),
+                        $matrixUserId
+                    ),
+                    true
+                );
             }
             ilUtil::sendSuccess(sprintf(
                 $this->plugin->txt("matrix.user.authentication.success"),
                 $this->userConfig->getMatrixUsername(),
+                $matrixUserId
+            ), true);
+            return true;
+        }
+
+        if ($this->userConfig->getAuthMethod() === "usingExternal") {
+            ilUtil::sendFailure(sprintf(
+                $this->plugin->txt("matrix.user.authentication.failed.authFailed"),
                 $matrixUserId
             ), true);
             return true;

@@ -53,9 +53,10 @@ matrix.chat.room.delete.success#:#Room deleted successfully
 matrix.chat.room.delete.failed#:#Room could not be deleted
 matrix.chat.course.settings#:#Chat settings
 matrix.chat.course.enable#:#Activate Matrix-Chat integration for the Course
-matrix.user.authentication.failed.authFailed#:#Authentication with username %s failed
+matrix.user.authentication.failed.authFailed#:#Authentication with Matrix-User '%s' failed
 matrix.user.authentication.failed.unConfigured#:#No authentication configured
 matrix.user.authentication.failed.usernameTaken#:#Username '%s' is already taken
+matrix.user.authentication.failed.userCreation#:#Beim Anlegen des Benutzers ist ein Fehler aufgetreten
 matrix.user.authentication.success#:#Authentication successful with username '%s' (matrix-user-id: %s)
 matrix.admin.loginInvalid#:#Admin-Login invalid
 matrix.admin.auth.login#:#Login into Matrix Chat

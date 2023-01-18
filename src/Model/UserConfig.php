@@ -90,7 +90,7 @@ class UserConfig extends UserPrefConfig
      */
     public function getMatrixUserId() : string
     {
-        return $this->matrixUserId;
+        return $this->getAuthMethod() === "loginOrCreate" ? $this->matrixUserId : $this->user->getExternalAccount();
     }
 
     /**

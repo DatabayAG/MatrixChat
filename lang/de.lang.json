@@ -108,7 +108,7 @@
     "user": {
       "authentication": {
         "failed": {
-          "authFailed": "Authentifizierung mit Benutzername %s fehlgeschlagen",
+          "authFailed": "Authentifizierung mit Matrix-Benutzer '%s' fehlgeschlagen",
           "unConfigured": "Keine Authentifizierung konfiguriert",
           "usernameTaken": "Benutzername '%s' ist bereits vergeben",
           "userCreation": "An error occurred while creating the user"

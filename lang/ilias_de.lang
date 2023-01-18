@@ -53,7 +53,7 @@ matrix.chat.room.delete.success#:#Chatraum erfolgreich gelöscht
 matrix.chat.room.delete.failed#:#Chatraum konnte nicht gelöscht werden
 matrix.chat.course.settings#:#Chat-Einstellungen
 matrix.chat.course.enable#:#Aktiviere Matrix-Chat Integration für den Kurs
-matrix.user.authentication.failed.authFailed#:#Authentifizierung mit Benutzername %s fehlgeschlagen
+matrix.user.authentication.failed.authFailed#:#Authentifizierung mit Matrix-Benutzer '%s' fehlgeschlagen
 matrix.user.authentication.failed.unConfigured#:#Keine Authentifizierung konfiguriert
 matrix.user.authentication.failed.usernameTaken#:#Benutzername '%s' ist bereits vergeben
 matrix.user.authentication.failed.userCreation#:#An error occurred while creating the user
