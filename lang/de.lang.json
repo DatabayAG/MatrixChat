@@ -42,7 +42,12 @@
       "useExternalAccount": "Externes Konto verwenden",
       "loginOrCreate": "Authentifizierung mit bestehendem Konto oder Erstellen eines neuen Kontos mit Namensschema",
       "login": "Mit bestehendem Konto authentifizieren",
-      "create": "Konto mit Namensschema erstellen",
+      "create": {
+        "title": "Konto mit Namensschema erstellen",
+        "username": {
+          "info": "Um Konflikte zu vermeiden, wird dem eingegebenen Benutzernamen ein Suffix \"%s\" hinzugefügt."
+        }
+      },
       "method": {
         "title": "Matrix-Benutzer Registrierungsmethode",
         "externalAccount": "Verwende Externen-Account Eintrag",

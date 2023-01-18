@@ -23,7 +23,8 @@ config.user.authMethod#:#Matrix Authentication Method
 config.user.useExternalAccount#:#Use external account
 config.user.loginOrCreate#:#Authenticate with existing account or create new one with naming scheme
 config.user.login#:#Authenticate with existing account
-config.user.create#:#Create Account using naming scheme
+config.user.create.title#:#Create Account using naming scheme
+config.user.create.username.info#:#To avoid conflicts a suffix '%s' is added to the entered username.
 config.user.method.title#:#Matrix-User registration method
 config.user.method.externalAccount#:#Use external account entry
 config.user.method.fromNameScheme#:#Based on name scheme

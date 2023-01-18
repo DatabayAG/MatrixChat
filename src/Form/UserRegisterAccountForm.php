@@ -26,6 +26,7 @@ use ILIAS\DI\Container;
 use ILIAS\Plugin\MatrixChatClient\Controller\UserConfigController;
 use ilTextInputGUI;
 use ilPasswordInputGUI;
+use ILIAS\Plugin\MatrixChatClient\Form\Input\SuffixedTextInput;
 
 /**
  * Class UserRegisterAccountForm
@@ -55,11 +56,22 @@ class UserRegisterAccountForm extends ilPropertyFormGUI
         $this->dic = $DIC;
         $this->mainTpl = $this->dic->ui()->mainTemplate();
         $this->plugin = ilMatrixChatClientPlugin::getInstance();
-        $this->setTitle($this->plugin->txt("config.user.create"));
+        $this->setTitle($this->plugin->txt("config.user.create.title"));
         $this->setFormAction(UserConfigController::getInstance()->getCommandLink("showCreate", [], true));
 
-        $username = new ilTextInputGUI($this->lng->txt("username"), "username");
-        $username->setSuffix("AAA");
+        $username = new SuffixedTextInput($this->lng->txt("username"), "username");
+
+        $usernameSuffix = "_" . $this->plugin->getPluginConfig()->getUsernameScheme();
+        foreach ($this->plugin->getUsernameSchemeVariables() as $key => $value) {
+            $usernameSuffix = str_replace("{" . $key . "}", $value, $usernameSuffix);
+        }
+
+
+        $username->setSuffix($usernameSuffix);
+        $username->setInfo(sprintf(
+            $this->plugin->txt("config.user.create.username.info"),
+            $usernameSuffix
+        ));
         $username->setRequired(true);
 
         $password = new ilPasswordInputGUI($this->lng->txt("password"), "password");
@@ -69,7 +81,6 @@ class UserRegisterAccountForm extends ilPropertyFormGUI
         $this->addItem($username);
         $this->addItem($password);
 
-        $this->mainTpl->addInlineCss("#il_prop_cont_{$username->getPostVar()} > div {display: flex;}");
         $this->addCommandButton(UserConfigController::getCommand("saveCreate"), $this->lng->txt("register"));
     }
 }

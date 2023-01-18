@@ -190,6 +190,13 @@ class UserConfigController extends BaseController
         $username = $form->getInput("username");
         $password = $form->getInput("password");
 
+        $usernameSuffix = "_" . $this->plugin->getPluginConfig()->getUsernameScheme();
+        foreach ($this->plugin->getUsernameSchemeVariables() as $key => $value) {
+            $usernameSuffix = str_replace("{" . $key . "}", $value, $usernameSuffix);
+        }
+
+        $username .= $usernameSuffix;
+
         if (!$this->matrixApi->admin->usernameAvailable($username)) {
             ilUtil::sendFailure(sprintf(
                 $this->plugin->txt("matrix.user.authentication.failed.usernameTaken"),
@@ -261,7 +268,7 @@ class UserConfigController extends BaseController
 
                 $this->tabs->addSubTab(
                     "chat-user-config-create",
-                    $this->plugin->txt("config.user.create"),
+                    $this->plugin->txt("config.user.create.title"),
                     $this->getCommandLink("showCreate")
                 );
             }

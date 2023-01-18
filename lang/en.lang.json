@@ -42,7 +42,12 @@
       "useExternalAccount": "Use external account",
       "loginOrCreate": "Authenticate with existing account or create new one with naming scheme",
       "login": "Authenticate with existing account",
-      "create": "Create Account using naming scheme",
+      "create": {
+        "title": "Create Account using naming scheme",
+        "username": {
+          "info": "To avoid conflicts a suffix '%s' is added to the entered username."
+        }
+      },
       "method": {
         "title": "Matrix-User registration method",
         "externalAccount": "Use external account entry",
