@@ -32,7 +32,7 @@ class UserPrefConfig extends ConfigBase
     /**
      * @var ilObjUser
      */
-    private $user;
+    protected $user;
 
     public function __construct(ilObjUser $user, string $settingsPrefix)
     {
