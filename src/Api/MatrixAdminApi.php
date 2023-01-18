@@ -19,7 +19,6 @@ namespace ILIAS\Plugin\MatrixChatClient\Api;
 use ILIAS\Plugin\MatrixChatClient\Model\MatrixUser;
 use ILIAS\Plugin\MatrixChatClient\Model\MatrixRoom;
 use Throwable;
-use ILIAS\Plugin\MatrixChatClient\Model\UserData;
 
 /**
  * Class MatrixAdminApi
@@ -43,11 +42,11 @@ class MatrixAdminApi extends MatrixApiEndpointBase
         }
     }
 
-    public function loginUserWithAdmin(UserData $userData) : ?MatrixUser
+    public function loginUserWithAdmin(int $iliasUserId, string $matrixUserId) : ?MatrixUser
     {
         try {
             $response = $this->sendRequest(
-                "/_synapse/admin/v1/users/{$userData->getMatrixUserId()}/login",
+                "/_synapse/admin/v1/users/{$matrixUserId}/login",
                 "POST",
                 [],
                 $this->getUser()->getAccessToken()
@@ -57,12 +56,12 @@ class MatrixAdminApi extends MatrixApiEndpointBase
         }
 
         return (new MatrixUser())
-            ->setIliasUserId($userData->getIliasUserId())
-            ->setMatrixUserId($userData->getMatrixUserId())
-            ->setMatrixUsername($userData->getMatrixUserId())
-            ->setMatrixDisplayName($this->getMatrixUserDisplayName($userData->getMatrixUserId()))
+            ->setIliasUserId($iliasUserId)
+            ->setMatrixUserId($matrixUserId)
+            ->setMatrixUsername($matrixUserId) //ToDo: maybe can be removed/replaced with matrixUserId
+            ->setMatrixDisplayName($this->getMatrixUserDisplayName($matrixUserId))
             ->setAccessToken($response["access_token"])
-            ->setDeviceId($userData->getDeviceId());
+            ->setDeviceId("ilias_auth_verification");
     }
 
     public function login(string $username, string $password, string $deviceId) : ?MatrixUser

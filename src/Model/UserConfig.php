@@ -39,6 +39,10 @@ class UserConfig extends UserPrefConfig
      * @var string
      */
     private $matrixUsername = "";
+    /**
+     * @var string
+     */
+    private $matrixUserId = "";
 
     public function __construct(ilObjUser $user)
     {
@@ -78,6 +82,24 @@ class UserConfig extends UserPrefConfig
     public function setMatrixUsername(string $matrixUsername) : UserConfig
     {
         $this->matrixUsername = $matrixUsername;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMatrixUserId() : string
+    {
+        return $this->matrixUserId;
+    }
+
+    /**
+     * @param string $matrixUserId
+     * @return UserConfig
+     */
+    public function setMatrixUserId(string $matrixUserId) : UserConfig
+    {
+        $this->matrixUserId = $matrixUserId;
         return $this;
     }
 }

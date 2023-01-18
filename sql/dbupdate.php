@@ -67,3 +67,9 @@ if (!$ilDB->tableExists("mcc_user_data")) {
     $ilDB->addPrimaryKey("mcc_user_data", ["ilias_user_id"]);
 }
 ?>
+<#4>
+<?php
+if ($ilDB->tableExists("mcc_user_data")) {
+    $ilDB->dropTable("mcc_user_data");
+}
+?>

@@ -29,8 +29,6 @@ use ILIAS\Plugin\MatrixChatClient\Model\UserConfig;
 use ILIAS\Plugin\MatrixChatClient\Libs\IliasConfigLoader\Exception\ConfigLoadException;
 use ILIAS\Plugin\MatrixChatClient\Form\UserAuthenticateAccountForm;
 use ILIAS\Plugin\MatrixChatClient\Form\UserRegisterAccountForm;
-use ILIAS\Plugin\MatrixChatClient\Repository\UserDataRepository;
-use ILIAS\Plugin\MatrixChatClient\Model\UserData;
 use ilTextInputGUI;
 
 /**
@@ -45,30 +43,25 @@ class UserConfigController extends BaseController
      * @var UserConfig
      */
     private $userConfig;
-    /**
-     * @var UserDataRepository
-     */
-    private $userDataRepo;
 
     public function __construct(Container $dic)
     {
         parent::__construct($dic);
 
         $this->userConfig = (new UserConfig($this->dic->user()))->load();
-        $this->userDataRepo = UserDataRepository::getInstance($this->dic->database());
     }
 
     private function showUserAuthenticatedNotification() : bool
     {
-        $userData = $this->userDataRepo->read($this->dic->user()->getId());
-        if ($userData) {
-            if (!$this->matrixApi->admin->userExists($userData->getMatrixUserId())) {
+        $matrixUserId = $this->userConfig->getMatrixUserId();
+        if ($matrixUserId) {
+            if (!$this->matrixApi->admin->userExists($matrixUserId)) {
                 ilUtil::sendFailure($this->plugin->txt("matrix.user.authentication.failed.authFailed"), true);
             }
             ilUtil::sendSuccess(sprintf(
                 $this->plugin->txt("matrix.user.authentication.success"),
                 $this->userConfig->getMatrixUsername(),
-                $userData->getMatrixUserId()
+                $matrixUserId
             ), true);
             return true;
         }
@@ -174,21 +167,9 @@ class UserConfigController extends BaseController
             return;
         }
 
-        $userData = $this->userDataRepo->read($this->dic->user()->getId());
-        if ($userData) {
-            $userData->setMatrixUserId($matrixUser->getMatrixUserId());
-            $this->userDataRepo->update($userData);
-        } else {
-            $userData = new UserData(
-                $this->dic->user()->getId(),
-                $matrixUser->getMatrixUserId(),
-                "ilias_auth_verification"
-            );
-            $this->userDataRepo->create($userData);
-        }
-
         $this->userConfig
             ->setMatrixUsername($username)
+            ->setMatrixUserId($matrixUser->getMatrixUserId())
             ->save();
 
         $this->redirectToCommand("showLogin");
@@ -237,18 +218,10 @@ class UserConfigController extends BaseController
             return;
         }
 
-        $userData = $this->userDataRepo->read($this->dic->user()->getId());
-        if ($userData) {
-            $userData->setMatrixUserId($matrixUser->getMatrixUserId());
-            $this->userDataRepo->update($userData);
-        } else {
-            $userData = new UserData(
-                $this->dic->user()->getId(),
-                $matrixUser->getMatrixUserId(),
-                "ilias_auth_verification"
-            );
-            $this->userDataRepo->create($userData);
-        }
+        $this->userConfig
+            ->setMatrixUsername($username)
+            ->setMatrixUserId($matrixUser->getMatrixUserId())
+            ->save();
 
         $this->redirectToCommand("showCreate");
     }
