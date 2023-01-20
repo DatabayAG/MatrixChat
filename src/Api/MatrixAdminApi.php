@@ -302,4 +302,22 @@ class MatrixAdminApi extends MatrixApiEndpointBase
 
         return $this->login($username, $password, "ilias_auth_verification");
     }
+
+    public function removeUserFromRoom(MatrixUser $matrixUser, MatrixRoom $room, string $reason) : bool
+    {
+        try {
+            $response = $this->sendRequest(
+                "/_matrix/client/v3/rooms/{$room->getId()}/kick",
+                "POST",
+                [
+                    "reason" => $reason,
+                    "user_id" => $matrixUser->getMatrixUserId(),
+                ],
+                $this->getUser()->getAccessToken()
+            );
+            return true;
+        } catch (MatrixApiException $e) {
+            return false;
+        }
+    }
 }
