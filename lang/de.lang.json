@@ -18,7 +18,7 @@
   "config": {
     "usernameScheme": {
       "title": "Matrix-Benutzer-Namensschema",
-      "info": "Dieses Schema wird verwendet, um den Matrix-Benutzernamen zu erzeugen,<br>wenn ILIAS-Benutzer einem Matrix-Chat beitreten wollen, aber bisher keinen Benutzer haben.<br>Unterstützte Variablen: <br>%s"
+      "info": "Dieses Schema wird verwendet, um den Matrix-Benutzernamen zu erzeugen,<br>wenn ILIAS-Benutzer einem Matrix-Chat beitreten wollen, aber bisher keinen Benutzer haben. <br><br>Das Schema darf nur die folgenden Zeichen enthalten %s.<br>Großbuchstaben werden in Kleinbuchstaben umgewandelt!<br><br>Unterstützte Variablen: <br>%s"
     },
     "sharedSecret": {
       "title": "Gemeinsames Geheimnis",
@@ -45,7 +45,8 @@
       "create": {
         "title": "Konto mit Namensschema erstellen",
         "username": {
-          "info": "Um Konflikte zu vermeiden, wird dem eingegebenen Benutzernamen ein Suffix \"%s\" hinzugefügt."
+          "info": "Um Konflikte zu vermeiden, wird dem eingegebenen Benutzernamen ein Suffix \"%s\" hinzugefügt.<br><br> Der Benutzername (inklusive Suffix) darf nur die Zeichen %s enthalten. <br>Großbuchstaben werden in Kleinbuchstaben umgewandelt!",
+          "illegalCharactersUsed": "Nur \"a-z, 0-9, =, _, -, ., /, '\" sind erlaubt"
         }
       },
       "method": {

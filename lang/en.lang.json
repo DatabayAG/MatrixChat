@@ -18,7 +18,7 @@
   "config": {
     "usernameScheme": {
       "title": "Matrix-User naming scheme",
-      "info": "Dieses Schema wird verwendet, um den Matrix-Benutzernamen zu erzeugen,<br>wenn ILIAS-Benutzer einem Matrix-Chat beitreten wollen, aber bisher keinen Benutzer haben.<br>Unterstützte Variablen: <br>%s"
+      "info": "This scheme is used to create the matrix username,<br>when ILIAS users want to join a Matrix chat but do not have a user yet.<br><br>The scheme may only contain the characters %s.<br>Uppercase letters are converted to lowercase!<br><br>Supported variables: <br>%s"
     },
     "sharedSecret": {
       "title": "Shared Secret",
@@ -45,7 +45,8 @@
       "create": {
         "title": "Create Account using naming scheme",
         "username": {
-          "info": "To avoid conflicts a suffix '%s' is added to the entered username."
+          "info": "To avoid conflicts a suffix '%s' is added to the entered username.<br><br>The username (including suffix) may only contain the characters %s.<br>Uppercase letters are converted to lowercase!",
+          "illegalCharactersUsed": "Only \"a-z, 0-9, =, _, -, ., /, '\" are allowed"
         }
       },
       "method": {

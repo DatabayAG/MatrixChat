@@ -9,7 +9,7 @@ general.plugin.notActivated#:#Das Plugin ist nicht aktiviert. Bitte aktivieren S
 general.plugin.requiredParameterMissing#:#Der benötigte Parameter '%s' konnte nicht gefunden werden.
 authenticate#:#Authentifizieren
 config.usernameScheme.title#:#Matrix-Benutzer-Namensschema
-config.usernameScheme.info#:#Dieses Schema wird verwendet, um den Matrix-Benutzernamen zu erzeugen,<br>wenn ILIAS-Benutzer einem Matrix-Chat beitreten wollen, aber bisher keinen Benutzer haben.<br>Unterstützte Variablen: <br>%s
+config.usernameScheme.info#:#Dieses Schema wird verwendet, um den Matrix-Benutzernamen zu erzeugen,<br>wenn ILIAS-Benutzer einem Matrix-Chat beitreten wollen, aber bisher keinen Benutzer haben. <br><br>Das Schema darf nur die folgenden Zeichen enthalten %s.<br>Großbuchstaben werden in Kleinbuchstaben umgewandelt!<br><br>Unterstützte Variablen: <br>%s
 config.sharedSecret.title#:#Gemeinsames Geheimnis
 config.sharedSecret.info#:#'registration_shared_secret' aus der Synapse homeserver konfiguration (homeserver.yaml)<br><br>Dieses Feld wird nach dem Absenden des Formulars wieder gelöscht.
 config.sharedSecret.empty#:#Dieses Feld ist erforderlich, wenn es noch nicht gespeichert wurde!
@@ -24,7 +24,8 @@ config.user.useExternalAccount#:#Externes Konto verwenden
 config.user.loginOrCreate#:#Authentifizierung mit bestehendem Konto oder Erstellen eines neuen Kontos mit Namensschema
 config.user.login#:#Mit bestehendem Konto authentifizieren
 config.user.create.title#:#Konto mit Namensschema erstellen
-config.user.create.username.info#:#Um Konflikte zu vermeiden, wird dem eingegebenen Benutzernamen ein Suffix "%s" hinzugefügt.
+config.user.create.username.info#:#Um Konflikte zu vermeiden, wird dem eingegebenen Benutzernamen ein Suffix "%s" hinzugefügt.<br><br> Der Benutzername (inklusive Suffix) darf nur die Zeichen %s enthalten. <br>Großbuchstaben werden in Kleinbuchstaben umgewandelt!
+config.user.create.username.illegalCharactersUsed#:#Nur "a-z, 0-9, =, _, -, ., /, '" sind erlaubt
 config.user.method.title#:#Matrix-Benutzer Registrierungsmethode
 config.user.method.externalAccount#:#Verwende Externen-Account Eintrag
 config.user.method.fromNameScheme#:#Benutzer basierend auf Namensschema

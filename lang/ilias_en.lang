@@ -9,7 +9,7 @@ general.plugin.notActivated#:#Plugin is not active, yet. Please activate it.
 general.plugin.requiredParameterMissing#:#The required parameter '%s' could not be found.
 authenticate#:#Authenticate
 config.usernameScheme.title#:#Matrix-User naming scheme
-config.usernameScheme.info#:#Dieses Schema wird verwendet, um den Matrix-Benutzernamen zu erzeugen,<br>wenn ILIAS-Benutzer einem Matrix-Chat beitreten wollen, aber bisher keinen Benutzer haben.<br>Unterstützte Variablen: <br>%s
+config.usernameScheme.info#:#This scheme is used to create the matrix username,<br>when ILIAS users want to join a Matrix chat but do not have a user yet.<br><br>The scheme may only contain the characters %s.<br>Uppercase letters are converted to lowercase!<br><br>Supported variables: <br>%s
 config.sharedSecret.title#:#Shared Secret
 config.sharedSecret.info#:#'registration_shared_secret' from the Synapse homeserver configuration (homeserver.yaml)<br><br>This field will be cleared after the form submission.
 config.sharedSecret.empty#:#This field is required if it has not been saved yet!
@@ -24,7 +24,8 @@ config.user.useExternalAccount#:#Use external account
 config.user.loginOrCreate#:#Authenticate with existing account or create new one with naming scheme
 config.user.login#:#Authenticate with existing account
 config.user.create.title#:#Create Account using naming scheme
-config.user.create.username.info#:#To avoid conflicts a suffix '%s' is added to the entered username.
+config.user.create.username.info#:#To avoid conflicts a suffix '%s' is added to the entered username.<br><br>The username (including suffix) may only contain the characters %s.<br>Uppercase letters are converted to lowercase!
+config.user.create.username.illegalCharactersUsed#:#Only "a-z, 0-9, =, _, -, ., /, '" are allowed
 config.user.method.title#:#Matrix-User registration method
 config.user.method.externalAccount#:#Use external account entry
 config.user.method.fromNameScheme#:#Based on name scheme
