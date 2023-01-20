@@ -20,13 +20,15 @@ use ILIAS\Plugin\MatrixChatClient\Form\ChatCourseSettingsForm;
 use ilRepositoryGUI;
 use ilObjCourseGUI;
 use ilUtil;
-use ILIAS\Plugin\MatrixChatClient\Model\CourseSettings;
 use Exception;
 use ILIAS\DI\Container;
 use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
 use ilObjCourse;
-use ilConfirmationGUI;
 use ILIAS\Plugin\MatrixChatClient\Form\DisableCourseChatIntegrationForm;
+use ilCourseParticipants;
+use ILIAS\Plugin\MatrixChatClient\Model\UserConfig;
+use ilObjUser;
+use ILIAS\Plugin\MatrixChatClient\Repository\UserRoomAddQueueRepository;
 
 /**
  * Class ChatCourseSettingsController
@@ -40,11 +42,16 @@ class ChatCourseSettingsController extends BaseController
      * @var CourseSettingsRepository
      */
     private $courseSettingsRepo;
+    /**
+     * @var UserRoomAddQueueRepository
+     */
+    private $userRoomAddQueueRepo;
 
     public function __construct(Container $dic)
     {
         parent::__construct($dic);
         $this->courseSettingsRepo = CourseSettingsRepository::getInstance($dic->database());
+        $this->userRoomAddQueueRepo = UserRoomAddQueueRepository::getInstance($dic->database());
     }
 
     public function showSettings(?ChatCourseSettingsForm $form = null) : void
@@ -111,6 +118,37 @@ class ChatCourseSettingsController extends BaseController
             $courseSettings->setMatrixRoomId($room->getId());
         }
 
+        if ($enableChatIntegration) {
+            $room = $this->matrixApi->admin->getRoom($courseSettings->getMatrixRoomId());
+            if ($room) {
+                foreach ((ilCourseParticipants::getInstance($courseId))->getParticipants() as $participantId) {
+                    $participantId = (int) $participantId;
+                    $userConfig = (new UserConfig(new ilObjUser($participantId)))->load();
+
+                    if (!$userConfig->getMatrixUserId()) {
+                        continue;
+                    }
+
+                    $matrixUser = $this->matrixApi->admin->loginUserWithAdmin(
+                        $participantId,
+                        $userConfig->getMatrixUserId()
+                    );
+                    if (!$matrixUser) {
+                        continue;
+                    }
+
+                    if (!$this->matrixApi->admin->isUserMemberOfRoom($matrixUser, $room->getId())) {
+                        $this->matrixApi->admin->addUserToRoom($matrixUser, $room);
+                    }
+
+                    $userRoomAddQueue = $this->userRoomAddQueueRepo->read($participantId, $courseId);
+                    if ($userRoomAddQueue) {
+                        $this->userRoomAddQueueRepo->delete($userRoomAddQueue);
+                    }
+                }
+            }
+        }
+
         try {
             $this->courseSettingsRepo->save($courseSettings);
         } catch (Exception $ex) {
@@ -119,7 +157,10 @@ class ChatCourseSettingsController extends BaseController
         }
 
         if (!$enableChatIntegration && $roomExists) {
-            $this->redirectToCommand("confirmDisableCourseChatIntegration", ["ref_id" => $courseSettings->getCourseId()]);
+            $this->redirectToCommand(
+                "confirmDisableCourseChatIntegration",
+                ["ref_id" => $courseSettings->getCourseId()]
+            );
         }
 
         ilUtil::sendSuccess($this->plugin->txt("general.update.success"), true);

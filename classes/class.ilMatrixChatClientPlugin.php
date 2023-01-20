@@ -23,6 +23,11 @@ use ILIAS\Plugin\MatrixChatClient\Libs\JsonTranslationLoader\JsonTranslationLoad
 use ILIAS\Plugin\MatrixChatClient\Model\PluginConfig;
 use ILIAS\Plugin\MatrixChatClient\Api\MatrixApiCommunicator;
 use ILIAS\Plugin\MatrixChatClient\Libs\IliasConfigLoader\Exception\ConfigLoadException;
+use ILIAS\Plugin\MatrixChatClient\Model\UserConfig;
+use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
+use ILIAS\Plugin\MatrixChatClient\Repository\UserRoomAddQueueRepository;
+use ILIAS\Plugin\MatrixChatClient\Model\UserRoomAddQueue;
+use ILIAS\Plugin\MatrixChatClient\Model\CourseSettings;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -49,6 +54,14 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
      * @var PluginConfig
      */
     private $pluginConfig;
+    /**
+     * @var UserRoomAddQueueRepository
+     */
+    private $userRoomAddQueueRepo;
+    /**
+     * @var CourseSettingsRepository
+     */
+    private $courseSettingsRepo;
     /**
      * @var MatrixApiCommunicator
      */
@@ -77,6 +90,9 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
         $this->settings = new ilSetting(self::class);
         $this->pluginConfig = (new PluginConfig($this->settings))->load();
         $this->matrixApi = new MatrixApiCommunicator($this, $this->pluginConfig->getmatrixServerUrl());
+        $this->userRoomAddQueueRepo = UserRoomAddQueueRepository::getInstance($this->dic->database());
+        $this->courseSettingsRepo = CourseSettingsRepository::getInstance($this->dic->database());
+
         parent::__construct();
     }
 
@@ -209,5 +225,149 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
     public function getPluginConfig() : PluginConfig
     {
         return $this->pluginConfig;
+    }
+
+    public function processUserRoomAddQueue(ilObjUser $user) : void
+    {
+        $userConfig = (new UserConfig($user))->load();
+
+        $matrixUser = $this->matrixApi->admin->loginUserWithAdmin($user->getId(), $userConfig->getMatrixUserId());
+        if (!$matrixUser) {
+            return;
+        }
+
+        /**
+         * @var array<int, CourseSettings> $courseSettingsCache
+         */
+        $courseSettingsCache = [];
+
+        foreach ($this->userRoomAddQueueRepo->readAllByUserId($user->getId()) as $userRoomAddQueue) {
+            if (!array_key_exists($userRoomAddQueue->getRefId(), $courseSettingsCache)) {
+                $courseSettingsCache[$userRoomAddQueue->getRefId()] = $this->courseSettingsRepo->read($userRoomAddQueue->getRefId());
+            }
+
+            $courseSettings = $courseSettingsCache[$userRoomAddQueue->getRefId()];
+
+            if ($courseSettings->isChatIntegrationEnabled() && $courseSettings->getMatrixRoomId()) {
+                $room = $this->matrixApi->admin->getRoom($courseSettings->getMatrixRoomId());
+
+                if (!$room) {
+                    continue;
+                }
+
+                if (!$this->matrixApi->admin->isUserMemberOfRoom($matrixUser, $room->getId())) {
+                    if ($this->matrixApi->admin->addUserToRoom($matrixUser, $room)) {
+                        $this->userRoomAddQueueRepo->delete($userRoomAddQueue);
+                    }
+                } else {
+                    $this->userRoomAddQueueRepo->delete($userRoomAddQueue);
+                }
+            }
+        }
+    }
+
+    /**
+     * Called by ilias event system to hook into afterLogin event.
+     *
+     * @param string $a_component
+     * @param string $a_event
+     * @param mixed  $a_parameter
+     * @return void
+     * @throws ConfigLoadException
+     * @throws ReflectionException
+     */
+    public function handleEvent($a_component, $a_event, $a_parameter) : void
+    {
+        if (!in_array($a_event, ["addParticipant", "deleteParticipant"], true)) {
+            return;
+        }
+
+        $objId = $a_parameter["obj_id"];
+        $user = new ilObjUser($a_parameter["usr_id"]);
+        if ($a_event === "addParticipant") {
+            $roleId = $a_parameter["role_id"];
+        }
+
+        $userConfig = (new UserConfig($user))->load();
+
+        $addToQueue = false;
+
+        $matrixUser = null;
+        if (!$userConfig->getMatrixUserId()) {
+            $addToQueue = true;
+        } else {
+            $matrixUser = $this->matrixApi->admin->loginUserWithAdmin(
+                $user->getId(),
+                $userConfig->getMatrixUserId(),
+            );
+
+            if (!$matrixUser) {
+                $addToQueue = true;
+            }
+        }
+
+        /**
+         * @var array<int, CourseSettings> $courseSettingsCache
+         */
+        $courseSettingsCache = [];
+
+        foreach (ilObjCourse::_getAllReferences($objId) as $objRefId) {
+            $objRefId = (int) $objRefId;
+
+            if (!array_key_exists($objRefId, $courseSettingsCache)) {
+                $courseSettingsCache[$objRefId] = $this->courseSettingsRepo->read($objRefId);
+            }
+
+            $courseSettings = $courseSettingsCache[$objRefId];
+
+            if ($a_event === "addParticipant") {
+                //Add participant
+                if (
+                    !$courseSettings->isChatIntegrationEnabled()
+                    || !$courseSettings->getMatrixRoomId()
+                ) {
+                    continue;
+                }
+
+                $room = $this->matrixApi->admin->getRoom($courseSettings->getMatrixRoomId());
+
+                if (!$room) {
+                    continue;
+                }
+
+                if ($addToQueue) {
+                    $this->userRoomAddQueueRepo->create(new UserRoomAddQueue($user->getId(), $objRefId));
+                } elseif (
+                    $matrixUser
+                    && !$this->matrixApi->admin->isUserMemberOfRoom($matrixUser, $courseSettings->getMatrixRoomId())
+                ) {
+                    if ($this->matrixApi->admin->addUserToRoom($matrixUser, $room)) {
+                        $this->userRoomAddQueueRepo->delete(new UserRoomAddQueue($user->getId(), $objRefId));
+                    }
+                }
+            } else {
+                //Remove participant
+                $userRoomAddQueue = $this->userRoomAddQueueRepo->read($user->getId(), $objRefId);
+
+                if ($userRoomAddQueue) {
+                    $this->userRoomAddQueueRepo->delete($userRoomAddQueue);
+                }
+
+                if (
+                    $courseSettings->getMatrixRoomId()
+                    && $matrixUser
+                ) {
+                    $room = $this->matrixApi->admin->getRoom($courseSettings->getMatrixRoomId());
+
+                    if ($room) {
+                        $this->matrixApi->admin->removeUserFromRoom(
+                            $matrixUser,
+                            $room,
+                            "Removed from course/group"
+                        );
+                    }
+                }
+            }
+        }
     }
 }

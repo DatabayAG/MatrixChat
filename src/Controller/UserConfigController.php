@@ -189,6 +189,8 @@ class UserConfigController extends BaseController
             ->setMatrixUserId($matrixUser->getMatrixUserId())
             ->save();
 
+        $this->plugin->processUserRoomAddQueue($this->dic->user());
+
         $this->redirectToCommand("showLogin");
     }
 
@@ -260,6 +262,8 @@ class UserConfigController extends BaseController
             ->setMatrixUsername($username)
             ->setMatrixUserId($matrixUser->getMatrixUserId())
             ->save();
+
+        $this->plugin->processUserRoomAddQueue($this->dic->user());
 
         $this->redirectToCommand("showCreate");
     }
