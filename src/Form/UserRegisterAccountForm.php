@@ -24,7 +24,6 @@ use ilMatrixChatClientPlugin;
 use ilGlobalPageTemplate;
 use ILIAS\DI\Container;
 use ILIAS\Plugin\MatrixChatClient\Controller\UserConfigController;
-use ilTextInputGUI;
 use ilPasswordInputGUI;
 use ILIAS\Plugin\MatrixChatClient\Form\Input\SuffixedTextInput;
 

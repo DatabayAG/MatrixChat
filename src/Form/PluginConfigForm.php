@@ -79,7 +79,6 @@ class PluginConfigForm extends ilPropertyFormGUI
         $sharedSecret->setSkipSyntaxCheck(true);
         $sharedSecret->setRetype(false);
 
-
         $chatInitialLoadLimit = new ilNumberInputGUI(
             $this->plugin->txt("config.loadLimit.initial.title"),
             "chatInitialLoadLimit"

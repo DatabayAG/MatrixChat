@@ -17,7 +17,6 @@ declare(strict_types=1);
 namespace ILIAS\Plugin\MatrixChatClient\Repository;
 
 use ilDBInterface;
-use ILIAS\Plugin\MatrixChatClient\Model\CourseSettings;
 use ILIAS\Plugin\MatrixChatClient\Model\UserRoomAddQueue;
 
 /**

@@ -18,6 +18,7 @@ namespace ILIAS\Plugin\MatrixChatClient\Model\Room;
 
 /**
  * Class RoomJoined
+ *
  * @package ILIAS\Plugin\MatrixChatClient\Model
  * @author  Marvin Beym <mbeym@databay.de>
  */

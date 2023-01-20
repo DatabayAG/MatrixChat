@@ -121,7 +121,6 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
             return;
         }
 
-
         $matrixServerUrl = rtrim($form->getInput("matrixServerUrl"), "/");
 
         $this->plugin->getPluginConfig()

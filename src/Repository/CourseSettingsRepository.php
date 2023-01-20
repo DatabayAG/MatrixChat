@@ -52,6 +52,7 @@ class CourseSettingsRepository
 
     /**
      * Returns the instance of the repository to prevent recreation of the whole object.
+     *
      * @param ilDBInterface|null $db
      * @return self
      */

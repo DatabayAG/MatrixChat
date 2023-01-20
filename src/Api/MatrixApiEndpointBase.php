@@ -18,12 +18,7 @@ namespace ILIAS\Plugin\MatrixChatClient\Api;
 
 use ilMatrixChatClientPlugin;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use JsonException;
-use ILIAS\Plugin\MatrixChatClient\Model\MatrixUser;
 use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
 use Throwable;
 

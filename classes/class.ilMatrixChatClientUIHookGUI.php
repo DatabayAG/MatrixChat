@@ -160,18 +160,18 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
             !in_array(
                 $this->ctrl->getCmdClass(),
                 [
-                ilPersonalSettingsGUI::class,
-                strtolower(ilPersonalSettingsGUI::class),
-            ],
+                    ilPersonalSettingsGUI::class,
+                    strtolower(ilPersonalSettingsGUI::class),
+                ],
                 true
             )
             && !isset($query["referrer"])
             && !in_array(
                 $query["referrer"],
                 [
-                ilPersonalSettingsGUI::class,
-                strtolower(ilPersonalSettingsGUI::class)
-            ],
+                    ilPersonalSettingsGUI::class,
+                    strtolower(ilPersonalSettingsGUI::class)
+                ],
                 true
             )
         ) {

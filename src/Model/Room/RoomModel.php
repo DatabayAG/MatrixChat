@@ -18,12 +18,14 @@ namespace ILIAS\Plugin\MatrixChatClient\Model\Room;
 
 /**
  * Class RoomModel
+ *
  * @package ILIAS\Plugin\MatrixChatClient\Model\Room
  * @author  Marvin Beym <mbeym@databay.de>
  */
 class RoomModel
 {
     private $roomId;
+
     public function __construct(string $roomId)
     {
         $this->roomId = $roomId;

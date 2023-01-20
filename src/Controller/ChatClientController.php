@@ -60,7 +60,6 @@ class ChatClientController extends BaseController
      */
     private $courseSettingsRepo;
 
-
     public function __construct(Container $dic)
     {
         parent::__construct($dic);

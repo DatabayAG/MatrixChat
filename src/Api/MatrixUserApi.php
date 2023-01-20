@@ -16,9 +16,6 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChatClient\Api;
 
-use ILIAS\Plugin\MatrixChatClient\Model\Room\RoomInvite;
-use ILIAS\Plugin\MatrixChatClient\Model\Room\RoomJoined;
-use ILIAS\Plugin\MatrixChatClient\Model\Room\RoomModel;
 use ILIAS\Plugin\MatrixChatClient\Model\MatrixUser;
 
 /**
