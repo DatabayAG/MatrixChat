@@ -125,10 +125,12 @@ class MatrixAdminApi extends MatrixApiEndpointBase
         }
 
         try {
-            return (new MatrixRoom())
-                ->setId($response["room_id"])
-                ->setName($response["name"])
-                ->setEncrypted($response["encryption"] !== null);
+            return new MatrixRoom(
+                $response["room_id"],
+                $response["name"],
+                $response["encryption"] !== null,
+                $this->getRoomMembers($matrixRoomId)
+            );
         } catch (Throwable $e) {
             $this->plugin->dic->logger()->root()->error($e->getMessage());
             return null;
@@ -150,9 +152,12 @@ class MatrixAdminApi extends MatrixApiEndpointBase
             $this->getUser()->getAccessToken()
         );
 
-        $matrixRoom = (new MatrixRoom())
-            ->setId($response["room_id"])
-            ->setName($name);
+        $matrixRoom = new MatrixRoom(
+            $response["room_id"],
+            $name,
+            false,
+            $this->getRoomMembers($response["room_id"])
+        );
 
         $this->addUserToRoom($this->getUser(), $matrixRoom);
         return $matrixRoom;
@@ -216,9 +221,9 @@ class MatrixAdminApi extends MatrixApiEndpointBase
         return true;
     }
 
-    public function isUserMemberOfRoom(MatrixUser $matrixUser, string $matrixRoomId) : bool
+    public function isUserMemberOfRoom(MatrixUser $matrixUser, MatrixRoom $room) : bool
     {
-        return in_array($matrixUser->getMatrixUserId(), $this->getRoomMembers($matrixRoomId), true);
+        return $room->isMember($matrixUser);
     }
 
     public function userExists(string $matrixUserId) : bool

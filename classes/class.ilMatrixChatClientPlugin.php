@@ -255,7 +255,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
                     continue;
                 }
 
-                if (!$this->matrixApi->admin->isUserMemberOfRoom($matrixUser, $room->getId())) {
+                if (!$room->isMember($matrixUser)) {
                     if ($this->matrixApi->admin->addUserToRoom($matrixUser, $room)) {
                         $this->userRoomAddQueueRepo->delete($userRoomAddQueue);
                     }
@@ -339,7 +339,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
                     $this->userRoomAddQueueRepo->create(new UserRoomAddQueue($user->getId(), $objRefId));
                 } elseif (
                     $matrixUser
-                    && !$this->matrixApi->admin->isUserMemberOfRoom($matrixUser, $courseSettings->getMatrixRoomId())
+                    && !$room->isMember($matrixUser)
                 ) {
                     if ($this->matrixApi->admin->addUserToRoom($matrixUser, $room)) {
                         $this->userRoomAddQueueRepo->delete(new UserRoomAddQueue($user->getId(), $objRefId));
