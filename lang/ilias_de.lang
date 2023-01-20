@@ -42,8 +42,6 @@ matrix.chat.send#:#Senden
 matrix.chat.login.failed#:#Matrix-Login fehlgeschlagen
 matrix.chat.login.success#:#Matrix-Login erfolgreich
 matrix.chat.logout.success#:#Matrix-Logout erfolgreich
-matrix.chat.room.encryption.encrypted#:#Verschlüsselt
-matrix.chat.room.encryption.unencrypted#:#Unverschlüsselt
 matrix.chat.room.notFoundEvenThoughEnabled#:#Der Raum wurde nicht gefunden, obwohl diese Integration aktiviert ist.<br>Wahrscheinlich wurde der Raum durch einen externen Client gelöscht oder der genutzte Administrator kann nicht mehr auf diesen zugreifen!<br><br>Die Integration muss wahrscheinlich deaktiviert (und dabei der Raum gelöscht werden, falls möglich) und dann wieder aktiviert werden.
 matrix.chat.room.notFound#:#Raum konnte nicht gefunden werden.
 matrix.chat.room.memberAssignFailed#:#Benutzer konnte nicht zum Raum hinzugefügt werden.
