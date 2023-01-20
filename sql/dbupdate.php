@@ -73,3 +73,21 @@ if ($ilDB->tableExists("mcc_user_data")) {
     $ilDB->dropTable("mcc_user_data");
 }
 ?>
+<#5>
+<?php
+if (!$ilDB->tableExists("mcc_usr_room_add_queue")) {
+    $ilDB->createTable("mcc_usr_room_add_queue", [
+        'user_id' => [
+            'type' => 'integer',
+            'length' => 8,
+            'notnull' => true,
+        ],
+        "ref_id" => [
+            "type" => "integer",
+            "length" => 8,
+            "notnull" => true,
+        ],
+    ]);
+    $ilDB->addPrimaryKey("mcc_usr_room_add_queue", ["user_id", "ref_id"]);
+}
+?>
