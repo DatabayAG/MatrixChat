@@ -117,8 +117,11 @@ class UserConfigController extends BaseController
 
         $form->setValuesByPost();
 
-        $this->userConfig->setAuthMethod($form->getInput("authMethod"));
-        $this->userConfig->save();
+        $this->userConfig
+            ->setAuthMethod($form->getInput("authMethod"))
+            ->setMatrixUserId("")
+            ->setMatrixUsername("")
+            ->save();
 
         ilUtil::sendSuccess($this->plugin->txt("general.update.success"), true);
         $this->redirectToCommand("showGeneralConfig");
