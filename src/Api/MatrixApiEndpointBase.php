@@ -25,6 +25,7 @@ use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use JsonException;
 use ILIAS\Plugin\MatrixChatClient\Model\MatrixUser;
 use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
+use Throwable;
 
 /**
  * Class MatrixApiEndpointBase
@@ -98,8 +99,8 @@ abstract class MatrixApiEndpointBase
 
         try {
             $request = $this->client->request($method, $this->getApiUrl($apiCall), $options);
-            $content = $request->getContent();
-        } catch (TransportExceptionInterface|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface $e) {
+            $content = $request->getContent(false);
+        } catch (Throwable $e) {
             throw new MatrixApiException("REQUEST_ERROR", $e->getMessage(), $e->getCode());
         }
 
