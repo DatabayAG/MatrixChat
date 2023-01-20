@@ -100,8 +100,13 @@ class PluginConfigForm extends ilPropertyFormGUI
         );
         $usernameScheme->setRequired(true);
 
+        $allowedCharacters = array_map(static function ($char) {
+            return "<span style='color: blue; font-weight: bold'>$char</span>";
+        }, ["a-z", "0-9", "=", "_", "-", ".", "/", "'"]);
+
         $usernameScheme->setInfo(sprintf(
             $this->plugin->txt("config.usernameScheme.info"),
+            implode(", ", $allowedCharacters),
             "- " . implode("<br>- ", array_map(static function ($variable) : string {
                 return "<span>{</span>$variable<span>}</span>";
             }, array_keys($this->plugin->getUsernameSchemeVariables())))

@@ -66,11 +66,15 @@ class UserRegisterAccountForm extends ilPropertyFormGUI
             $usernameSuffix = str_replace("{" . $key . "}", $value, $usernameSuffix);
         }
 
+        $allowedCharacters = array_map(static function ($char) : string {
+            return "<span style='color: blue; font-weight: bold'>$char</span>";
+        }, ["a-z", "0-9", "=", "_", "-", ".", "/", "'"]);
 
         $username->setSuffix($usernameSuffix);
         $username->setInfo(sprintf(
             $this->plugin->txt("config.user.create.username.info"),
-            $usernameSuffix
+            $usernameSuffix,
+            implode(", ", $allowedCharacters),
         ));
         $username->setRequired(true);
 

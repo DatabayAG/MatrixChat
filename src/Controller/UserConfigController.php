@@ -211,22 +211,36 @@ class UserConfigController extends BaseController
         foreach ($this->plugin->getUsernameSchemeVariables() as $key => $value) {
             $usernameSuffix = str_replace("{" . $key . "}", $value, $usernameSuffix);
         }
+        /**
+         * @var ilTextInputGUI $usernameInput
+         */
+        $usernameInput = $form->getItemByPostVar("username");
 
         $username .= $usernameSuffix;
+        $username = strtolower($username);
+        if (preg_match("/[^a-z0-9=_\-.\/']/i", $username)) {
+            ilUtil::sendFailure($this->lng->txt("form_input_not_valid"), true);
+            $usernameInput->setAlert(
+                $this->plugin->txt("config.user.create.username.illegalCharactersUsed")
+            );
+
+            $form->setValuesByArray([
+                "registerPassword" => ""
+            ], true);
+            $this->showCreate($form);
+            return;
+        }
 
         if (!$this->matrixApi->admin->usernameAvailable($username)) {
             ilUtil::sendFailure(sprintf(
                 $this->plugin->txt("matrix.user.authentication.failed.usernameTaken"),
                 $username
             ), true);
-            /**
-             * @var ilTextInputGUI $password
-             */
-            $password = $form->getItemByPostVar("registerUsername");
+
             $form->setValuesByArray([
                 "registerPassword" => ""
             ], true);
-            $password->setAlert(sprintf(
+            $usernameInput->setAlert(sprintf(
                 $this->plugin->txt("matrix.user.authentication.failed.usernameTaken"),
                 $username
             ));
