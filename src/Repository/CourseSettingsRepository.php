@@ -21,7 +21,8 @@ use ILIAS\Plugin\MatrixChatClient\Model\CourseSettings;
 
 /**
  * Class CourseSettingsRepository
- * @package ILIAS\Plugin\DawUserInterface\Repository
+ *
+ * @package ILIAS\Plugin\MatrixChatClient\Repository
  * @author  Marvin Beym <mbeym@databay.de>
  */
 class CourseSettingsRepository
@@ -67,7 +68,7 @@ class CourseSettingsRepository
      */
     public function readAll() : array
     {
-        $result = $this->db->query("SELECT * FROM " . self::TABLE_NAME, );
+        $result = $this->db->query("SELECT * FROM " . self::TABLE_NAME);
 
         $data = [];
 
