@@ -34,6 +34,8 @@ use ILIAS\Plugin\MatrixChatClient\Model\CourseSettings;
 use ilObjGroupGUI;
 use ilUIPluginRouterGUI;
 use ilMatrixChatClientUIHookGUI;
+use ReflectionClass;
+use ReflectionMethod;
 
 /**
  * Class ChatCourseSettingsController
@@ -65,8 +67,52 @@ class ChatCourseSettingsController extends BaseController
         $this->courseSettings = $this->courseSettingsRepo->read((int) $this->verifyQueryParameter("ref_id"));
     }
 
+    private function injectTabs() : void
+    {
+        $this->ctrl->setParameterByClass(ilUIPluginRouterGUI::class, "ref_id", $this->courseSettings->getCourseId());
+        $gui = null;
+        switch (ilObject::_lookupType($this->courseSettings->getCourseId(), true)) {
+            case "crs":
+                $gui = new ilObjCourseGUI();
+                $gui->prepareOutput();
+                $gui->setSubTabs("properties");
+                break;
+            case "grp":
+                $gui = new ilObjGroupGUI([], $this->courseSettings->getCourseId(), true);
+                $gui->prepareOutput();
+                $guiRefClass = new ReflectionClass($gui);
+                $setSubTabsMethod = $guiRefClass->getMethod("setSubTabs");
+                $setSubTabsMethod->setAccessible(true);
+                $setSubTabsMethod->invoke($gui, "settings");
+                break;
+        }
+
+        if ($gui) {
+            $reflectionMethod = new ReflectionMethod($gui, 'setTitleAndDescription');
+            $reflectionMethod->setAccessible(true);
+            $reflectionMethod->invoke($gui);
+
+            $this->dic['ilLocator']->addRepositoryItems($this->courseSettings->getCourseId());
+        }
+
+        $this->tabs->addSubTab(
+            "matrix-chat-course-settings",
+            $this->plugin->txt("matrix.chat.course.settings"),
+            $this->ctrl->getLinkTargetByClass([
+                ilUIPluginRouterGUI::class,
+                ilMatrixChatClientUIHookGUI::class,
+            ], self::getCommand("showSettings"))
+        );
+
+        $this->tabs->setForcePresentationOfSingleTab(true);
+        $this->tabs->activateTab("settings");
+        $this->tabs->activateSubTab("matrix-chat-course-settings");
+    }
+
     public function showSettings(?ChatCourseSettingsForm $form = null) : void
     {
+        $this->injectTabs();
+
         $courseSettings = $this->courseSettings;
         if (!$form) {
             $form = new ChatCourseSettingsForm();
@@ -83,29 +129,7 @@ class ChatCourseSettingsController extends BaseController
             ], true);
         }
 
-        $this->mainTpl->setTitle($this->plugin->txt("matrix.chat.course.settings"));
         $this->mainTpl->loadStandardTemplate();
-
-        $guiClass = $this->plugin->getObjGUIClassByType(ilObject::_lookupType(
-            $courseSettings->getCourseId(),
-            true
-        ));
-
-        $this->ctrl->setParameterByClass(
-            $guiClass,
-            "ref_id",
-            $courseSettings->getCourseId()
-        );
-        $this->tabs->setBackTarget(
-            $this->lng->txt("crs_settings"),
-            $this->ctrl->getLinkTargetByClass(
-                [
-                    ilRepositoryGUI::class,
-                    $guiClass
-                ],
-                "edit"
-            )
-        );
 
         $this->mainTpl->setContent($form->getHTML());
         $this->mainTpl->printToStdOut();
