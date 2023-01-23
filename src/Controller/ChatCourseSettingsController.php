@@ -76,13 +76,22 @@ class ChatCourseSettingsController extends BaseController
         $this->mainTpl->setTitle($this->plugin->txt("matrix.chat.course.settings"));
         $this->mainTpl->loadStandardTemplate();
 
-        $this->ctrl->setParameterByClass(ilObjCourseGUI::class, "ref_id", $refId);
+        $guiClass = $this->plugin->getObjGUIClassByType(ilObject::_lookupType(
+            $this->courseSettings->getCourseId(),
+            true
+        ));
+
+        $this->ctrl->setParameterByClass(
+            $guiClass,
+            "ref_id",
+            $this->courseSettings->getCourseId()
+        );
         $this->tabs->setBackTarget(
             $this->lng->txt("crs_settings"),
             $this->ctrl->getLinkTargetByClass(
                 [
                     ilRepositoryGUI::class,
-                    ilObjCourseGUI::class
+                    $guiClass
                 ],
                 "edit"
             )
@@ -113,7 +122,7 @@ class ChatCourseSettingsController extends BaseController
         $room = $courseSettings->getMatrixRoom();
 
         if ($enableChatIntegration && (!$room || !$room->exists())) {
-            $room = $this->matrixApi->admin->createRoom(ilObjCourse::_lookupTitle(ilObjCourse::_lookupObjId($courseId)));
+            $room = $this->matrixApi->admin->createRoom(ilObject::_lookupTitle(ilObject::_lookupObjId($courseId)));
             $courseSettings->setMatrixRoom($room);
         }
 
