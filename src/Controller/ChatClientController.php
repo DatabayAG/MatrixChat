@@ -81,11 +81,11 @@ class ChatClientController extends BaseController
         switch (ilObject::_lookupType($this->courseId, true)) {
             case "crs":
                 $gui = new ilObjCourseGUI();
-                $gui->getTabs();
+                $gui->prepareOutput();
                 break;
             case "grp":
                 $gui = new ilObjGroupGUI([], $this->courseId, true);
-                $gui->getTabs();
+                $gui->prepareOutput();
                 break;
         }
 
