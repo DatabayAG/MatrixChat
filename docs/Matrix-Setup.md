@@ -74,6 +74,15 @@ sudo apt install matrix-synapse-py3
       registration_shared_secret: "sharedsecret"
       ```
       Replace ``sharedsecret`` with your randomly chosen string (<span style="color: red; font-weight: bold">Keep it secret</span>)
+   - Increase the login ratelimit by adding 
+   - ```yaml
+      rc_login:
+        account:
+          per_second: 100
+          burst_count: 100
+     ```
+     * value is per second
+     * Required because admin account takes over signing in all users so will reach the default limit very fast.
 3. Restart matrix server
 ```bash
 sudo service matrix-synapse restart
