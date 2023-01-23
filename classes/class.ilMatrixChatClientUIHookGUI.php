@@ -203,8 +203,17 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
 
         $courseSettings = CourseSettingsRepository::getInstance($this->dic->database())->read((int) $query["ref_id"]);
 
+        $viewTabFound = false;
+        foreach ($tabs->target as $target) {
+            if ($target["id"] === "view_content") {
+                $viewTabFound = true;
+                break;
+            }
+        }
+
         if (
-            $this->plugin->matrixApi->general->serverReachable()
+            $viewTabFound
+            && $this->plugin->matrixApi->general->serverReachable()
             && $courseSettings->isChatIntegrationEnabled()
             && $this->ctrl->getCmd() !== ChatClientController::getCommand("showChat")
         ) {
