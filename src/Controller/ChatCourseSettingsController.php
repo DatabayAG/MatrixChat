@@ -61,7 +61,10 @@ class ChatCourseSettingsController extends BaseController
             $form = new ChatCourseSettingsForm();
             $courseSettings = $this->courseSettingsRepo->read($refId);
 
-            if ($courseSettings->isChatIntegrationEnabled() && !$this->matrixApi->admin->getRoom($courseSettings->getMatrixRoomId())) {
+            if (
+                $courseSettings->isChatIntegrationEnabled()
+                && !$courseSettings->getMatrixRoom()
+            ) {
                 ilUtil::sendFailure($this->plugin->txt("matrix.chat.room.notFoundEvenThoughEnabled"), true);
             }
 
@@ -107,19 +110,14 @@ class ChatCourseSettingsController extends BaseController
 
         $courseSettings->setChatIntegrationEnabled($enableChatIntegration);
 
-        if (!$courseSettings->getMatrixRoomId()) {
-            $roomExists = false;
-        } else {
-            $roomExists = $this->matrixApi->admin->roomExists($courseSettings->getMatrixRoomId());
-        }
+        $room = $courseSettings->getMatrixRoom();
 
-        if ($enableChatIntegration && !$roomExists) {
+        if ($enableChatIntegration && (!$room || !$room->exists())) {
             $room = $this->matrixApi->admin->createRoom(ilObjCourse::_lookupTitle(ilObjCourse::_lookupObjId($courseId)));
-            $courseSettings->setMatrixRoomId($room->getId());
+            $courseSettings->setMatrixRoom($room);
         }
 
         if ($enableChatIntegration) {
-            $room = $this->matrixApi->admin->getRoom($courseSettings->getMatrixRoomId());
             if ($room) {
                 foreach ((ilCourseParticipants::getInstance($courseId))->getParticipants() as $participantId) {
                     $participantId = (int) $participantId;
@@ -137,7 +135,7 @@ class ChatCourseSettingsController extends BaseController
                         continue;
                     }
 
-                    if (!$this->matrixApi->admin->isUserMemberOfRoom($matrixUser, $room->getId())) {
+                    if (!$this->matrixApi->admin->isUserMemberOfRoom($matrixUser, $room)) {
                         $this->matrixApi->admin->addUserToRoom($matrixUser, $room);
                     }
 
@@ -156,7 +154,7 @@ class ChatCourseSettingsController extends BaseController
             $this->redirectToCommand("showSettings");
         }
 
-        if (!$enableChatIntegration && $roomExists) {
+        if (!$enableChatIntegration && $room->exists()) {
             $this->redirectToCommand(
                 "confirmDisableCourseChatIntegration",
                 ["ref_id" => $courseSettings->getCourseId()]
@@ -201,8 +199,12 @@ class ChatCourseSettingsController extends BaseController
             $this->redirectToCommand("showSettings", ["ref_id" => $courseId]);
         }
 
-        if ($this->matrixApi->admin->roomExists($courseSettings->getMatrixRoomId()) && $this->matrixApi->admin->deleteRoom($courseSettings->getMatrixRoomId())) {
-            $courseSettings->setMatrixRoomId(null);
+        if (
+            $courseSettings->getMatrixRoom()
+            && $courseSettings->getMatrixRoom()->exists()
+            && $this->matrixApi->admin->deleteRoom($courseSettings->getMatrixRoom())
+        ) {
+            $courseSettings->setMatrixRoom(null);
             if ($this->courseSettingsRepo->save($courseSettings)) {
                 ilUtil::sendSuccess($this->plugin->txt("matrix.chat.room.delete.success"), true);
                 $this->redirectToCommand("showSettings", ["ref_id" => $courseId]);

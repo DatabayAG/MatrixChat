@@ -163,11 +163,11 @@ class MatrixAdminApi extends MatrixApiEndpointBase
         return $matrixRoom;
     }
 
-    public function deleteRoom(string $roomId) : bool
+    public function deleteRoom(MatrixRoom $room) : bool
     {
         try {
             $response = $this->sendRequest(
-                "/_synapse/admin/v1/rooms/$roomId",
+                "/_synapse/admin/v1/rooms/{$room->getId()}",
                 "DELETE",
                 ["message" => "Deleted because course chat integration was disabled", "purge" => true, "block" => true],
                 $this->getUser()->getAccessToken()

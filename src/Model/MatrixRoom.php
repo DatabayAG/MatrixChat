@@ -19,6 +19,8 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChatClient\Model;
 
+use ilMatrixChatClientPlugin;
+
 /**
  * Class MatrixRoom
  *
@@ -43,6 +45,10 @@ class MatrixRoom
      * @var string[]
      */
     private $members;
+    /**
+     * @var ilMatrixChatClientPlugin
+     */
+    private $plugin;
 
     /**
      * @param string   $id
@@ -56,6 +62,7 @@ class MatrixRoom
         $this->name = $name;
         $this->encrypted = $encrypted;
         $this->members = $members;
+        $this->plugin = ilMatrixChatClientPlugin::getInstance();
     }
 
     /**
@@ -103,5 +110,10 @@ class MatrixRoom
     public function isMember(MatrixUser $matrixUser) : bool
     {
         return in_array($matrixUser->getMatrixUserId(), $this->getMembers(), true);
+    }
+
+    public function exists() : bool
+    {
+        return $this->plugin->matrixApi->admin->roomExists($this->getId());
     }
 }

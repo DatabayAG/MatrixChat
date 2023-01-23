@@ -154,7 +154,7 @@ class ChatClientController extends BaseController
             return;
         }
 
-        $room = $this->matrixApi->admin->getRoom($this->courseSettings->getMatrixRoomId());
+        $room = $this->courseSettings->getMatrixRoom();
 
         if (!$room) {
             ilUtil::sendFailure($this->plugin->txt("matrix.chat.room.notFound"), true);
@@ -166,7 +166,7 @@ class ChatClientController extends BaseController
         }
 
         if (
-            !$this->matrixApi->admin->isUserMemberOfRoom($matrixUser, $this->courseSettings->getMatrixRoomId())
+            !$this->matrixApi->admin->isUserMemberOfRoom($matrixUser, $room)
             && !$this->matrixApi->admin->addUserToRoom($matrixUser, $room)
         ) {
             ilUtil::sendFailure($this->plugin->txt("matrix.chat.room.memberAssignFailed"), true);
