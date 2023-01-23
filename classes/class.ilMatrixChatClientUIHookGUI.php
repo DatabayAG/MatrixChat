@@ -239,15 +239,17 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
             return;
         }
 
+        $chatSettingsTabFound = false;
+        foreach ($tabs->sub_target as $target) {
+            if ($target["id"] === "matrix-chat-course-settings") {
+                $chatSettingsTabFound = true;
+                break;
+            }
+        }
+
         $guiClass = $this->plugin->getObjGUIClassByType(ilObject::_lookupType($query["ref_id"], true));
 
-        if (
-            !$guiClass
-            || !in_array($this->ctrl->getCmdClass(), [
-                $guiClass,
-                strtolower($guiClass),
-            ], true)
-        ) {
+        if (!$guiClass || $chatSettingsTabFound) {
             return;
         }
 
