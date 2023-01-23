@@ -60,6 +60,12 @@ class UserRegisterAccountForm extends ilPropertyFormGUI
 
         $username = new SuffixedTextInput($this->lng->txt("username"), "username");
 
+        if ($this->user->getAuthMode() !== "local") {
+            $username->setValue($this->user->getLogin());
+            $username->setDisabled(true);
+            $username->setInfo($this->plugin->txt("config.user.create.username.idm_info"));
+        }
+
         $usernameSuffix = "_" . $this->plugin->getPluginConfig()->getUsernameScheme();
         foreach ($this->plugin->getUsernameSchemeVariables() as $key => $value) {
             $usernameSuffix = str_replace("{" . $key . "}", $value, $usernameSuffix);
@@ -70,7 +76,8 @@ class UserRegisterAccountForm extends ilPropertyFormGUI
         }, ["a-z", "0-9", "=", "_", "-", ".", "/", "'"]);
 
         $username->setSuffix($usernameSuffix);
-        $username->setInfo(sprintf(
+
+        $username->setInfo($username->getInfo() . sprintf(
             $this->plugin->txt("config.user.create.username.info"),
             $usernameSuffix,
             implode(", ", $allowedCharacters),

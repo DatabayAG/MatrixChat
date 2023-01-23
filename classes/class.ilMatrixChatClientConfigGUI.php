@@ -121,6 +121,7 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
             return;
         }
 
+        $sharedSecretValue = $this->plugin->getPluginConfig()->getSharedSecret();
         $matrixServerUrl = rtrim($form->getInput("matrixServerUrl"), "/");
 
         $this->plugin->getPluginConfig()

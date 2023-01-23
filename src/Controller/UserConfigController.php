@@ -30,6 +30,7 @@ use ILIAS\Plugin\MatrixChatClient\Libs\IliasConfigLoader\Exception\ConfigLoadExc
 use ILIAS\Plugin\MatrixChatClient\Form\UserAuthenticateAccountForm;
 use ILIAS\Plugin\MatrixChatClient\Form\UserRegisterAccountForm;
 use ilTextInputGUI;
+use ilObjUser;
 
 /**
  * Class UserConfigController
@@ -43,12 +44,17 @@ class UserConfigController extends BaseController
      * @var UserConfig
      */
     private $userConfig;
+    /**
+     * @var ilObjUser
+     */
+    private $user;
 
     public function __construct(Container $dic)
     {
         parent::__construct($dic);
 
-        $this->userConfig = (new UserConfig($this->dic->user()))->load();
+        $this->user = $this->dic->user();
+        $this->userConfig = (new UserConfig($this->user))->load();
     }
 
     private function showUserAuthenticatedNotification() : bool
@@ -189,7 +195,7 @@ class UserConfigController extends BaseController
             ->setMatrixUserId($matrixUser->getMatrixUserId())
             ->save();
 
-        $this->plugin->processUserRoomAddQueue($this->dic->user());
+        $this->plugin->processUserRoomAddQueue($this->user);
 
         $this->redirectToCommand("showLogin");
     }
@@ -206,7 +212,11 @@ class UserConfigController extends BaseController
 
         $form->setValuesByPost();
 
-        $username = $form->getInput("username");
+        if ($this->user->getAuthMode() !== "local") {
+            $username = $this->user->getLogin();
+        } else {
+            $username = $form->getInput("username");
+        }
         $password = $form->getInput("password");
 
         $usernameSuffix = "_" . $this->plugin->getPluginConfig()->getUsernameScheme();
@@ -250,7 +260,7 @@ class UserConfigController extends BaseController
             return;
         }
 
-        $matrixUser = $this->matrixApi->admin->createUser($username, $password, $this->dic->user()->getFullname());
+        $matrixUser = $this->matrixApi->admin->createUser($username, $password, $this->user->getFullname());
 
         if (!$matrixUser) {
             ilUtil::sendFailure($this->plugin->txt("matrix.user.authentication.failed.userCreation"), true);
@@ -263,7 +273,7 @@ class UserConfigController extends BaseController
             ->setMatrixUserId($matrixUser->getMatrixUserId())
             ->save();
 
-        $this->plugin->processUserRoomAddQueue($this->dic->user());
+        $this->plugin->processUserRoomAddQueue($this->user);
 
         $this->redirectToCommand("showCreate");
     }

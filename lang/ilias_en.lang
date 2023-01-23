@@ -26,6 +26,7 @@ config.user.login#:#Authenticate with existing account
 config.user.create.title#:#Create Account using naming scheme
 config.user.create.username.info#:#To avoid conflicts a suffix '%s' is added to the entered username.<br><br>The username (including suffix) may only contain the characters %s.<br>Uppercase letters are converted to lowercase!
 config.user.create.username.illegalCharactersUsed#:#Only "a-z, 0-9, =, _, -, ., /, '" are allowed
+config.user.create.username.idm_info#:#You are authenticated by an IDM server. The username is set automatically.<br><br>
 config.user.method.title#:#Matrix-User registration method
 config.user.method.externalAccount#:#Use external account entry
 config.user.method.fromNameScheme#:#Based on name scheme

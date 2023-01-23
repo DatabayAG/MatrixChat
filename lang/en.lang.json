@@ -46,7 +46,8 @@
         "title": "Create Account using naming scheme",
         "username": {
           "info": "To avoid conflicts a suffix '%s' is added to the entered username.<br><br>The username (including suffix) may only contain the characters %s.<br>Uppercase letters are converted to lowercase!",
-          "illegalCharactersUsed": "Only \"a-z, 0-9, =, _, -, ., /, '\" are allowed"
+          "illegalCharactersUsed": "Only \"a-z, 0-9, =, _, -, ., /, '\" are allowed",
+          "idm_info": "You are authenticated by an IDM server. The username is set automatically.<br><br>"
         }
       },
       "method": {

@@ -46,7 +46,8 @@
         "title": "Konto mit Namensschema erstellen",
         "username": {
           "info": "Um Konflikte zu vermeiden, wird dem eingegebenen Benutzernamen ein Suffix \"%s\" hinzugefügt.<br><br> Der Benutzername (inklusive Suffix) darf nur die Zeichen %s enthalten. <br>Großbuchstaben werden in Kleinbuchstaben umgewandelt!",
-          "illegalCharactersUsed": "Nur \"a-z, 0-9, =, _, -, ., /, '\" sind erlaubt"
+          "illegalCharactersUsed": "Nur \"a-z, 0-9, =, _, -, ., /, '\" sind erlaubt",
+          "idm_info": "Sie sind durch einen IDM-Server authentifiziert. Der Benutzername wird automatisch festgelegt.<br><br>"
         }
       },
       "method": {

@@ -26,6 +26,7 @@ config.user.login#:#Mit bestehendem Konto authentifizieren
 config.user.create.title#:#Konto mit Namensschema erstellen
 config.user.create.username.info#:#Um Konflikte zu vermeiden, wird dem eingegebenen Benutzernamen ein Suffix "%s" hinzugefügt.<br><br> Der Benutzername (inklusive Suffix) darf nur die Zeichen %s enthalten. <br>Großbuchstaben werden in Kleinbuchstaben umgewandelt!
 config.user.create.username.illegalCharactersUsed#:#Nur "a-z, 0-9, =, _, -, ., /, '" sind erlaubt
+config.user.create.username.idm_info#:#Sie sind durch einen IDM-Server authentifiziert. Der Benutzername wird automatisch festgelegt.<br><br>
 config.user.method.title#:#Matrix-Benutzer Registrierungsmethode
 config.user.method.externalAccount#:#Verwende Externen-Account Eintrag
 config.user.method.fromNameScheme#:#Benutzer basierend auf Namensschema
