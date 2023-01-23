@@ -95,14 +95,6 @@ class MatrixAdminApi extends MatrixApiEndpointBase
             );
         }
 
-        if (!$this->adminUser) {
-            $this->adminUser = $this->login(
-                $this->plugin->getPluginConfig()->getMatrixAdminUsername(),
-                $this->plugin->getPluginConfig()->getMatrixAdminPassword(),
-                "ilias_matrix_chat_device_admin"
-            );
-        }
-
         return $this->adminUser;
     }
 
