@@ -106,6 +106,11 @@ abstract class MatrixApiEndpointBase
         }
 
         if (isset($responseData["errcode"])) {
+            if ($responseData["errcode"] === "M_LIMIT_EXCEEDED") {
+                $this->plugin->dic->logger()->root()->error(
+                    "matrix api request limit reached. Request call: '{$this->getApiUrl($apiCall)}'"
+                );
+            }
             throw new MatrixApiException($responseData["errcode"], $responseData["error"]);
         }
         return $responseData;
