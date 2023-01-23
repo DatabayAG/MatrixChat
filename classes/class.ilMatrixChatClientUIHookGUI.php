@@ -234,9 +234,19 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
     {
         $tabs = $dic->tabs();
         $query = $dic->http()->request()->getQueryParams();
+
+        if ($tabs->getActiveTab() !== "settings") {
+            return;
+        }
+
+        $guiClass = $this->plugin->getObjGUIClassByType(ilObject::_lookupType($query["ref_id"], true));
+
         if (
-            $tabs->getActiveTab() !== "settings"
-            || !$this->plugin->getObjGUIClassByType(ilObject::_lookupType($query["ref_id"], true))
+            !$guiClass
+            || !in_array($this->ctrl->getCmdClass(), [
+                $guiClass,
+                strtolower($guiClass),
+            ], true)
         ) {
             return;
         }
