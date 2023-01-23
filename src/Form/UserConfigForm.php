@@ -60,14 +60,16 @@ class UserConfigForm extends ilPropertyFormGUI
 
         $matrixAuthMethod = new ilRadioGroupInputGUI($this->plugin->txt("config.user.authMethod"), "authMethod");
 
-        $usingExternalAccount = new ilRadioOption(
+        $matrixAuthMethod->addOption(new ilRadioOption(
             $this->plugin->txt("config.user.useExternalAccount"),
             "usingExternal"
+        ));
+        $matrixAuthMethod->addOption(
+            new ilRadioOption(
+            $this->plugin->txt("config.user.loginOrCreate"),
+            "loginOrCreate"
+        )
         );
-        $loginOrCreate = new ilRadioOption($this->plugin->txt("config.user.loginOrCreate"), "loginOrCreate");
-
-        $matrixAuthMethod->addOption($usingExternalAccount);
-        $matrixAuthMethod->addOption($loginOrCreate);
 
         $this->addItem($matrixAuthMethod);
 
