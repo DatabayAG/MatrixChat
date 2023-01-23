@@ -63,6 +63,7 @@ class UserConfigController extends BaseController
                     ),
                     true
                 );
+                return false;
             }
             ilUtil::sendSuccess(sprintf(
                 $this->plugin->txt("matrix.user.authentication.success"),
@@ -81,7 +82,6 @@ class UserConfigController extends BaseController
         }
 
         ilUtil::sendFailure($this->plugin->txt("matrix.user.authentication.failed.unConfigured"), true);
-
         return false;
     }
 
