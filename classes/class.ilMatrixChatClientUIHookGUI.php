@@ -261,6 +261,7 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
         $dic->ctrl()->setParameterByClass(self::class, "ref_id", (int) $query["ref_id"]);
 
         if ($this->plugin->matrixApi->general->serverReachable()) {
+            //ToDo: gets marked as active together with the the "Multilanguage tab" on group settings tab
             $tabs->addSubTab(
                 "matrix-chat-course-settings",
                 $this->plugin->txt("matrix.chat.course.settings"),
