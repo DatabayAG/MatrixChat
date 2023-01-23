@@ -29,6 +29,11 @@ use ilCourseParticipants;
 use ILIAS\Plugin\MatrixChatClient\Model\UserConfig;
 use ilObjUser;
 use ILIAS\Plugin\MatrixChatClient\Repository\UserRoomAddQueueRepository;
+use ilObject;
+use ILIAS\Plugin\MatrixChatClient\Model\CourseSettings;
+use ilObjGroupGUI;
+use ilUIPluginRouterGUI;
+use ilMatrixChatClientUIHookGUI;
 
 /**
  * Class ChatCourseSettingsController
@@ -46,20 +51,25 @@ class ChatCourseSettingsController extends BaseController
      * @var UserRoomAddQueueRepository
      */
     private $userRoomAddQueueRepo;
+    /**
+     * @var CourseSettings
+     */
+    private $courseSettings;
 
     public function __construct(Container $dic)
     {
         parent::__construct($dic);
         $this->courseSettingsRepo = CourseSettingsRepository::getInstance($dic->database());
         $this->userRoomAddQueueRepo = UserRoomAddQueueRepository::getInstance($dic->database());
+
+        $this->courseSettings = $this->courseSettingsRepo->read((int) $this->verifyQueryParameter("ref_id"));
     }
 
     public function showSettings(?ChatCourseSettingsForm $form = null) : void
     {
-        $refId = (int) $this->verifyQueryParameter("ref_id");
+        $courseSettings = $this->courseSettings;
         if (!$form) {
             $form = new ChatCourseSettingsForm();
-            $courseSettings = $this->courseSettingsRepo->read($refId);
 
             if (
                 $courseSettings->isChatIntegrationEnabled()
@@ -77,14 +87,14 @@ class ChatCourseSettingsController extends BaseController
         $this->mainTpl->loadStandardTemplate();
 
         $guiClass = $this->plugin->getObjGUIClassByType(ilObject::_lookupType(
-            $this->courseSettings->getCourseId(),
+            $courseSettings->getCourseId(),
             true
         ));
 
         $this->ctrl->setParameterByClass(
             $guiClass,
             "ref_id",
-            $this->courseSettings->getCourseId()
+            $courseSettings->getCourseId()
         );
         $this->tabs->setBackTarget(
             $this->lng->txt("crs_settings"),
@@ -104,16 +114,13 @@ class ChatCourseSettingsController extends BaseController
     public function saveSettings() : void
     {
         $form = new ChatCourseSettingsForm();
-
+        $courseSettings = $this->courseSettings;
         if (!$form->checkInput()) {
             $form->setValuesByPost();
             $this->showSettings($form);
         }
 
         $form->setValuesByPost();
-
-        $courseId = (int) $this->verifyQueryParameter("ref_id");
-        $courseSettings = $this->courseSettingsRepo->read($courseId);
 
         $enableChatIntegration = (bool) $form->getInput("chatIntegrationEnabled");
 
@@ -122,13 +129,13 @@ class ChatCourseSettingsController extends BaseController
         $room = $courseSettings->getMatrixRoom();
 
         if ($enableChatIntegration && (!$room || !$room->exists())) {
-            $room = $this->matrixApi->admin->createRoom(ilObject::_lookupTitle(ilObject::_lookupObjId($courseId)));
+            $room = $this->matrixApi->admin->createRoom(ilObject::_lookupTitle(ilObject::_lookupObjId($courseSettings->getCourseId())));
             $courseSettings->setMatrixRoom($room);
         }
 
         if ($enableChatIntegration) {
             if ($room) {
-                foreach ((ilCourseParticipants::getInstance($courseId))->getParticipants() as $participantId) {
+                foreach ((ilCourseParticipants::getInstance($courseSettings->getCourseId()))->getParticipants() as $participantId) {
                     $participantId = (int) $participantId;
                     $userConfig = (new UserConfig(new ilObjUser($participantId)))->load();
 
@@ -148,7 +155,7 @@ class ChatCourseSettingsController extends BaseController
                         $this->matrixApi->admin->addUserToRoom($matrixUser, $room);
                     }
 
-                    $userRoomAddQueue = $this->userRoomAddQueueRepo->read($participantId, $courseId);
+                    $userRoomAddQueue = $this->userRoomAddQueueRepo->read($participantId, $courseSettings->getCourseId());
                     if ($userRoomAddQueue) {
                         $this->userRoomAddQueueRepo->delete($userRoomAddQueue);
                     }
@@ -193,19 +200,17 @@ class ChatCourseSettingsController extends BaseController
         if (!$form->checkInput()) {
             $form->setValuesByPost();
             $this->confirmDisableCourseChatIntegration($form);
+            return;
         }
 
+        $courseSettings = $this->courseSettings;
         $form->setValuesByPost();
-        $courseId = (int) $this->verifyQueryParameter("ref_id");
         $deleteRoom = (bool) $form->getInput("deleteChatRoom");
 
         if (!$deleteRoom) {
-            $this->redirectToCommand("showSettings", ["ref_id" => $courseId]);
-        }
-
-        $courseSettings = $this->courseSettingsRepo->read($courseId);
-        if (!$courseSettings) {
-            $this->redirectToCommand("showSettings", ["ref_id" => $courseId]);
+            $this->redirectToCommand("showSettings", [
+                "ref_id" => $this->courseSettings->getCourseId()
+            ]);
         }
 
         if (
@@ -216,7 +221,7 @@ class ChatCourseSettingsController extends BaseController
             $courseSettings->setMatrixRoom(null);
             if ($this->courseSettingsRepo->save($courseSettings)) {
                 ilUtil::sendSuccess($this->plugin->txt("matrix.chat.room.delete.success"), true);
-                $this->redirectToCommand("showSettings", ["ref_id" => $courseId]);
+                $this->redirectToCommand("showSettings", ["ref_id" => $courseSettings->getCourseId()]);
             }
         }
 
