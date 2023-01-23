@@ -66,9 +66,9 @@ class UserConfigForm extends ilPropertyFormGUI
         ));
         $matrixAuthMethod->addOption(
             new ilRadioOption(
-            $this->plugin->txt("config.user.loginOrCreate"),
-            "loginOrCreate"
-        )
+                $this->plugin->txt("config.user.loginOrCreate"),
+                "loginOrCreate"
+            )
         );
 
         $this->addItem($matrixAuthMethod);
