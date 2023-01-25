@@ -22,16 +22,16 @@
     },
     "sharedSecret": {
       "title": "Shared Secret",
-      "info": "'registration_shared_secret' from the Synapse homeserver configuration (homeserver.yaml)<br><br>This field will be cleared after the form submission.",
+      "info": "'registration_shared_secret' from the Synapse-Homeserver configuration (homeserver.yaml)<br><br>This field will be cleared after the form submission.",
       "empty": "This field is required if it has not been saved yet!"
     },
     "admin": {
       "username": {
-        "title": "Username of the Matrix-Server administrator",
+        "title": "Username of the Matrix-Server Administrator",
         "info": "Will be used to do administrator tasks like creating rooms."
       },
       "password": {
-        "title": "Password of the Matrix-Server administrator",
+        "title": "Password of the Matrix-Server Administrator",
         "info": "Will be used to do administrator tasks like creating rooms.<br>Input-Field will be cleared after saving the password!"
       }
     },
@@ -39,11 +39,11 @@
       "generalSettings": "General settings",
       "title": "Chat Settings",
       "authMethod": "Matrix Authentication Method",
-      "useExternalAccount": "Use external account",
-      "loginOrCreate": "Authentication with existing account or creation of new account using naming scheme",
-      "login": "Authenticate with existing account",
+      "useExternalAccount": "Use External Account",
+      "loginOrCreate": "Authentication With Existing Account or Creation of New Account Using Naming Scheme",
+      "login": "Authenticate With Existing Account",
       "create": {
-        "title": "Create Account using naming scheme",
+        "title": "Create Account Using Naming Scheme",
         "username": {
           "info": "To avoid conflicts a suffix '%s' is added to the entered username.<br><br>The username (including suffix) may only contain the characters %s.<br>Uppercase letters are converted to lowercase!",
           "illegalCharactersUsed": "Only \"a-z, 0-9, =, _, -, ., /, '\" are allowed",
@@ -53,7 +53,7 @@
       "method": {
         "title": "Matrix-User registration method",
         "externalAccount": "Use external account entry",
-        "fromNameScheme": "Based on name scheme"
+        "fromNameScheme": "Based on Naming Scheme"
       }
     },
     "loadLimit": {
@@ -62,7 +62,7 @@
         "info": "How many messages should be loaded when the chat is opened (newest x messages)"
       },
       "history": {
-        "title": "Old messages to load",
+        "title": "Number of Old Messages to Load at a Time",
         "info": "How many messages to load at the same time when the user scrolls up in the Chat-Window"
       }
     }
@@ -100,7 +100,7 @@
       },
       "course": {
         "settings": "Chat settings",
-        "enable": "Activate Matrix-Chat integration for the Course"
+        "enable": "Activate Matrix-Chat Integration for the Course"
       }
     },
     "user": {
@@ -109,16 +109,13 @@
           "authFailed": "Authentication with Matrix-User '%s' failed",
           "unConfigured": "No authentication configured",
           "usernameTaken": "Username '%s' is already taken",
-          "userCreation": "Beim Anlegen des Benutzers ist ein Fehler aufgetreten"
+          "userCreation": "An error occurred while creating the user"
         },
         "success": "Authentication successful with username '%s' (Matrix-User-ID: %s)"
       }
     },
     "admin": {
-      "loginInvalid": "Admin-Login invalid",
-      "auth": {
-        "login": "Login into Matrix Chat"
-      }
+      "loginInvalid": "Admin-Login invalid"
     }
   }
 }

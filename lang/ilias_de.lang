@@ -11,28 +11,28 @@ authenticate#:#Authentifizieren
 config.usernameScheme.title#:#Matrix-Benutzer-Namensschema
 config.usernameScheme.info#:#Dieses Schema wird verwendet, um den Matrix-Benutzernamen zu erzeugen,<br>wenn ILIAS-Benutzer einem Matrix-Chat beitreten wollen, aber bisher keinen Benutzer haben. <br><br>Das Schema darf nur die folgenden Zeichen enthalten %s.<br>Großbuchstaben werden in Kleinbuchstaben umgewandelt!<br><br>Unterstützte Variablen: <br>%s
 config.sharedSecret.title#:#Gemeinsames Geheimnis
-config.sharedSecret.info#:#'registration_shared_secret' aus der Synapse homeserver konfiguration (homeserver.yaml)<br><br>Dieses Feld wird nach dem Absenden des Formulars wieder gelöscht.
+config.sharedSecret.info#:#'registration_shared_secret' aus der Synapse-Homeserver konfiguration (homeserver.yaml)<br><br>Dieses Feld wird nach dem Absenden des Formulars wieder gelöscht.
 config.sharedSecret.empty#:#Dieses Feld ist erforderlich, wenn es noch nicht gespeichert wurde!
-config.admin.username.title#:#Benutzername des Matrix-Server Administrators
+config.admin.username.title#:#Benutzername Des Matrix-Server Administrators
 config.admin.username.info#:#Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen.
-config.admin.password.title#:#Passwort des Matrix-Server Administrators
+config.admin.password.title#:#Passwort Des Matrix-Server Administrators
 config.admin.password.info#:#Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen.<br>Eingabefeld wird nach abspeichern des Passwortes geleert!
 config.user.generalSettings#:#Allgemeine Einstellungen
 config.user.title#:#Chat Einstellungen
 config.user.authMethod#:#Matrix-Authentifizierungsmethode
-config.user.useExternalAccount#:#Externes Konto verwenden
-config.user.loginOrCreate#:#Authentifizierung mit bestehendem Konto oder Erstellen eines neuen Kontos mittels Namensschema
-config.user.login#:#Mit bestehendem Konto authentifizieren
-config.user.create.title#:#Konto mittels Namensschema erstellen
+config.user.useExternalAccount#:#Externes Konto Verwenden
+config.user.loginOrCreate#:#Authentifizierung mit Bestehendem Konto oder Erstellen Eines Neuen Kontos Mittels Namensschema
+config.user.login#:#Mit Bestehendem Konto Authentifizieren
+config.user.create.title#:#Konto Mittels Namensschema Erstellen
 config.user.create.username.info#:#Um Konflikte zu vermeiden, wird dem eingegebenen Benutzernamen ein Suffix "%s" hinzugefügt.<br><br> Der Benutzername (inklusive Suffix) darf nur die Zeichen %s enthalten. <br>Großbuchstaben werden in Kleinbuchstaben umgewandelt!
 config.user.create.username.illegalCharactersUsed#:#Nur "a-z, 0-9, =, _, -, ., /, '" sind erlaubt
 config.user.create.username.idm_info#:#Sie sind durch einen IDM-Server authentifiziert. Der Benutzername wird automatisch festgelegt.<br><br>
 config.user.method.title#:#Matrix-Benutzer Registrierungsmethode
 config.user.method.externalAccount#:#Verwende Externen-Account Eintrag
-config.user.method.fromNameScheme#:#Benutzer basierend auf Namensschema
+config.user.method.fromNameScheme#:#Benutzer Basierend Auf Namensschema
 config.loadLimit.initial.title#:#Initiales Chat-Nachrichten Limit
 config.loadLimit.initial.info#:#Wie viele Nachrichten sollen beim Laden des Chats initial geladen werden (neusten x Nachrichten)
-config.loadLimit.history.title#:#Alte Nachrichten nachlade Limit
+config.loadLimit.history.title#:#Anzahl Der Gleichzeitig Zu Ladenden Alten Nachrichten
 config.loadLimit.history.info#:#Wie viele Nachrichten gleichzeitig sollen nachgeladen werden, wenn der Benutzer im Chat-Fenster nach oben scrollt
 chat#:#Chat
 matrix.server.url#:#Matrix Server (Synapse) URL
@@ -44,7 +44,7 @@ matrix.chat.send#:#Senden
 matrix.chat.login.failed#:#Matrix-Login fehlgeschlagen
 matrix.chat.login.success#:#Matrix-Login erfolgreich
 matrix.chat.logout.success#:#Matrix-Logout erfolgreich
-matrix.chat.room.notFoundEvenThoughEnabled#:#Der Raum wurde nicht gefunden, obwohl diese Integration aktiviert ist.<br>Wahrscheinlich wurde der Raum durch einen externen Client gelöscht oder der genutzte Administrator kann nicht mehr auf diesen zugreifen!<br><br>Die Integration muss wahrscheinlich deaktiviert (und dabei der Raum gelöscht werden, falls möglich) und dann wieder aktiviert werden.
+matrix.chat.room.notFoundEvenThoughEnabled#:#Der Raum wurde nicht gefunden, obwohl die Integration für den Kurs aktiviert ist.<br>Wahrscheinlich wurde der Raum durch einen externen Client gelöscht oder der genutzte Administrator kann nicht mehr auf diesen zugreifen!<br><br>Die Integration muss wahrscheinlich deaktiviert (und dabei der Raum gelöscht werden, falls möglich) und dann wieder aktiviert werden.
 matrix.chat.room.notFound#:#Raum konnte nicht gefunden werden.
 matrix.chat.room.memberAssignFailed#:#Benutzer konnte nicht zum Raum hinzugefügt werden.
 matrix.chat.room.delete.confirm#:#Möchten Sie auch den Chatraum löschen?
@@ -52,11 +52,10 @@ matrix.chat.room.delete.button#:#Chatraum löschen
 matrix.chat.room.delete.success#:#Chatraum erfolgreich gelöscht
 matrix.chat.room.delete.failed#:#Chatraum konnte nicht gelöscht werden
 matrix.chat.course.settings#:#Chat-Einstellungen
-matrix.chat.course.enable#:#Aktiviere Matrix-Chat Integration für den Kurs
+matrix.chat.course.enable#:#Aktiviere Matrix-Chat Integration Für Den Kurs
 matrix.user.authentication.failed.authFailed#:#Authentifizierung mit Matrix-Benutzer '%s' fehlgeschlagen
 matrix.user.authentication.failed.unConfigured#:#Keine Authentifizierung konfiguriert
 matrix.user.authentication.failed.usernameTaken#:#Benutzername '%s' ist bereits vergeben
-matrix.user.authentication.failed.userCreation#:#An error occurred while creating the user
-matrix.user.authentication.success#:#Authentifizierung erfolgreich mit Benutzername '%s' (matrix-user-id: %s)
+matrix.user.authentication.failed.userCreation#:#Beim Anlegen des Benutzers ist ein Fehler aufgetreten
+matrix.user.authentication.success#:#Authentifizierung erfolgreich mit Benutzername '%s' (Matrix-User-ID: %s)
 matrix.admin.loginInvalid#:#Admin-Login ungültig
-matrix.admin.auth.login#:#In Matrix-Chat einloggen

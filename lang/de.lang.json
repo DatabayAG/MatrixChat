@@ -22,16 +22,16 @@
     },
     "sharedSecret": {
       "title": "Gemeinsames Geheimnis",
-      "info": "'registration_shared_secret' aus der Synapse homeserver konfiguration (homeserver.yaml)<br><br>Dieses Feld wird nach dem Absenden des Formulars wieder gelöscht.",
+      "info": "'registration_shared_secret' aus der Synapse-Homeserver konfiguration (homeserver.yaml)<br><br>Dieses Feld wird nach dem Absenden des Formulars wieder gelöscht.",
       "empty": "Dieses Feld ist erforderlich, wenn es noch nicht gespeichert wurde!"
     },
     "admin": {
       "username": {
-        "title": "Benutzername des Matrix-Server Administrators",
+        "title": "Benutzername Des Matrix-Server Administrators",
         "info": "Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen."
       },
       "password": {
-        "title": "Passwort des Matrix-Server Administrators",
+        "title": "Passwort Des Matrix-Server Administrators",
         "info": "Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen.<br>Eingabefeld wird nach abspeichern des Passwortes geleert!"
       }
     },
@@ -39,11 +39,11 @@
       "generalSettings": "Allgemeine Einstellungen",
       "title": "Chat Einstellungen",
       "authMethod": "Matrix-Authentifizierungsmethode",
-      "useExternalAccount": "Externes Konto verwenden",
-      "loginOrCreate": "Authentifizierung mit bestehendem Konto oder Erstellen eines neuen Kontos mittels Namensschema",
-      "login": "Mit bestehendem Konto authentifizieren",
+      "useExternalAccount": "Externes Konto Verwenden",
+      "loginOrCreate": "Authentifizierung mit Bestehendem Konto oder Erstellen Eines Neuen Kontos Mittels Namensschema",
+      "login": "Mit Bestehendem Konto Authentifizieren",
       "create": {
-        "title": "Konto mittels Namensschema erstellen",
+        "title": "Konto Mittels Namensschema Erstellen",
         "username": {
           "info": "Um Konflikte zu vermeiden, wird dem eingegebenen Benutzernamen ein Suffix \"%s\" hinzugefügt.<br><br> Der Benutzername (inklusive Suffix) darf nur die Zeichen %s enthalten. <br>Großbuchstaben werden in Kleinbuchstaben umgewandelt!",
           "illegalCharactersUsed": "Nur \"a-z, 0-9, =, _, -, ., /, '\" sind erlaubt",
@@ -53,7 +53,7 @@
       "method": {
         "title": "Matrix-Benutzer Registrierungsmethode",
         "externalAccount": "Verwende Externen-Account Eintrag",
-        "fromNameScheme": "Benutzer basierend auf Namensschema"
+        "fromNameScheme": "Benutzer Basierend Auf Namensschema"
       }
     },
     "loadLimit": {
@@ -62,7 +62,7 @@
         "info": "Wie viele Nachrichten sollen beim Laden des Chats initial geladen werden (neusten x Nachrichten)"
       },
       "history": {
-        "title": "Alte Nachrichten nachlade Limit",
+        "title": "Anzahl Der Gleichzeitig Zu Ladenden Alten Nachrichten",
         "info": "Wie viele Nachrichten gleichzeitig sollen nachgeladen werden, wenn der Benutzer im Chat-Fenster nach oben scrollt"
       }
     }
@@ -88,7 +88,7 @@
         "success": "Matrix-Logout erfolgreich"
       },
       "room": {
-        "notFoundEvenThoughEnabled": "Der Raum wurde nicht gefunden, obwohl diese Integration aktiviert ist.<br>Wahrscheinlich wurde der Raum durch einen externen Client gelöscht oder der genutzte Administrator kann nicht mehr auf diesen zugreifen!<br><br>Die Integration muss wahrscheinlich deaktiviert (und dabei der Raum gelöscht werden, falls möglich) und dann wieder aktiviert werden.",
+        "notFoundEvenThoughEnabled": "Der Raum wurde nicht gefunden, obwohl die Integration für den Kurs aktiviert ist.<br>Wahrscheinlich wurde der Raum durch einen externen Client gelöscht oder der genutzte Administrator kann nicht mehr auf diesen zugreifen!<br><br>Die Integration muss wahrscheinlich deaktiviert (und dabei der Raum gelöscht werden, falls möglich) und dann wieder aktiviert werden.",
         "notFound": "Raum konnte nicht gefunden werden.",
         "memberAssignFailed": "Benutzer konnte nicht zum Raum hinzugefügt werden.",
         "delete": {
@@ -100,7 +100,7 @@
       },
       "course": {
         "settings": "Chat-Einstellungen",
-        "enable": "Aktiviere Matrix-Chat Integration für den Kurs"
+        "enable": "Aktiviere Matrix-Chat Integration Für Den Kurs"
       }
     },
     "user": {
@@ -109,16 +109,13 @@
           "authFailed": "Authentifizierung mit Matrix-Benutzer '%s' fehlgeschlagen",
           "unConfigured": "Keine Authentifizierung konfiguriert",
           "usernameTaken": "Benutzername '%s' ist bereits vergeben",
-          "userCreation": "An error occurred while creating the user"
+          "userCreation": "Beim Anlegen des Benutzers ist ein Fehler aufgetreten"
         },
         "success": "Authentifizierung erfolgreich mit Benutzername '%s' (Matrix-User-ID: %s)"
       }
     },
     "admin": {
-      "loginInvalid": "Admin-Login ungültig",
-      "auth": {
-        "login": "In Matrix-Chat einloggen"
-      }
+      "loginInvalid": "Admin-Login ungültig"
     }
   }
 }
