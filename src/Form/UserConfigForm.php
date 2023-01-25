@@ -55,7 +55,7 @@ class UserConfigForm extends ilPropertyFormGUI
         $this->dic = $DIC;
         $this->plugin = ilMatrixChatClientPlugin::getInstance();
         $this->mainTpl = $this->dic->ui()->mainTemplate();
-        $this->setTitle("REPLACE ME");
+        $this->setTitle($this->plugin->txt("config.user.generalSettings"));
         $this->setFormAction(UserConfigController::getInstance()->getCommandLink("showGeneralConfig", [], true));
 
         $matrixAuthMethod = new ilRadioGroupInputGUI($this->plugin->txt("config.user.authMethod"), "authMethod");
