@@ -22,6 +22,7 @@ use ReflectionException;
 use ILIAS\Plugin\MatrixChatClient\Libs\IliasConfigLoader\Exception\ConfigLoadNonPrimitiveDataTypeDetected;
 use TypeError;
 use ILIAS\Plugin\MatrixChatClient\Libs\IliasConfigLoader\Exception\ConfigLoadInvalidTypeException;
+use ILIAS\Plugin\MatrixChatClient\Libs\IliasConfigLoader\Annotation\ConfigAutoLoadSave;
 
 /**
  * Class ConfigBase
@@ -116,11 +117,22 @@ abstract class ConfigBase
      */
     protected function getProperties(ReflectionClass $refClass) : Properties
     {
+        $configAutoLoadSaveClass = new ReflectionClass(ConfigAutoLoadSave::class);
+        $configAutoLoadSaveClassShortName = $configAutoLoadSaveClass->getShortName();
         $properties = new Properties();
+        $tmpPropertiesArray = [
+            "loadable" => [],
+            "unloadable" => []
+        ];
         $defaultProperties = $this->getDefaultValues();
 
+        $anyConfigAutoLoadSaveAnnotationDetected = false;
+        //ToDo: Improve, should rather set something like "skipLoad" or "load" and
+        // allow controlling the loading process for other things too, not just specific annotation.
         foreach ($refClass->getProperties() as $property) {
             $foundTypes = [];
+            $docComment = $property->getDocComment();
+            $configAutoLoadSaveAnnotationDetected = false;
             if (in_array(
                 $property->getName(),
                 array_merge(
@@ -138,16 +150,18 @@ abstract class ConfigBase
                 if ($typeReflection->allowsNull()) {
                     $foundTypes[] = "null";
                 }
-            } else {
-                $docComment = $property->getDocComment();
-                if ($docComment) {
-                    preg_match("/@var ([a-zA-Z0-9, ()_].*)/", $property->getDocComment(), $docComments);
-                    foreach (explode("|", $docComments[1]) as $type) {
-                        $foundTypes[] = $type;
-                    }
-                } else {
-                    $foundTypes[] = gettype($defaultProperties[$property->getName()]);
+            } elseif ($docComment) {
+                preg_match("/@var ([a-zA-Z0-9, ()_].*)/", $docComment, $docComments);
+                foreach (explode("|", $docComments[1]) as $type) {
+                    $foundTypes[] = $type;
                 }
+            } else {
+                $foundTypes[] = gettype($defaultProperties[$property->getName()]);
+            }
+
+            if ($docComment && preg_match("/@" . $configAutoLoadSaveClassShortName . "/", $docComment)) {
+                $anyConfigAutoLoadSaveAnnotationDetected = true;
+                $configAutoLoadSaveAnnotationDetected = true;
             }
 
             $isNotLoadable = false;
@@ -174,16 +188,46 @@ abstract class ConfigBase
             }
 
             if ($isNotLoadable) {
-                $properties->addUnloadable((new UnloadableProperty())
-                    ->setProperty($property)
-                    ->setTypes($foundTypes)
-                    ->setException(new ConfigLoadNonPrimitiveDataTypeDetected()));
+                $tmpPropertiesArray["unloadable"][] = [
+                    "property" => (new UnloadableProperty())
+                        ->setProperty($property)
+                        ->setTypes($foundTypes)
+                        ->setException(new ConfigLoadNonPrimitiveDataTypeDetected()),
+                    "configAutoLoadSaveAnnotationDetected" => $configAutoLoadSaveAnnotationDetected,
+                ];
             }
 
-            $properties->addLoadable((new LoadableProperty())
-                ->setProperty($property)
-                ->setTypes($foundTypes));
+            $tmpPropertiesArray["loadable"][] = [
+                "property" => (new LoadableProperty())
+                    ->setProperty($property)
+                    ->setTypes($foundTypes),
+                "configAutoLoadSaveAnnotationDetected" => $configAutoLoadSaveAnnotationDetected,
+            ];
         }
+
+        if (!$anyConfigAutoLoadSaveAnnotationDetected) {
+            //No annotation detected, load all properties
+            foreach ($tmpPropertiesArray["loadable"] as $loadableProperty) {
+                $properties->addLoadable($loadableProperty["property"]);
+            }
+            foreach ($tmpPropertiesArray["unloadable"] as $unloadableProperty) {
+                $properties->addUnloadable($unloadableProperty["property"]);
+            }
+        } else {
+            //At least one property was annotated, load only annotated properties
+            foreach ($tmpPropertiesArray["loadable"] as $loadableProperty) {
+                if ($loadableProperty["configAutoLoadSaveAnnotationDetected"]) {
+                    $properties->addLoadable($loadableProperty["property"]);
+                }
+            }
+            foreach ($tmpPropertiesArray["unloadable"] as $unloadableProperty) {
+                if ($unloadableProperty["configAutoLoadSaveAnnotationDetected"]) {
+                    $properties->addUnloadable($unloadableProperty["property"]);
+                }
+            }
+        }
+
+
         return $properties;
     }
 
