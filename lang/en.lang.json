@@ -40,7 +40,7 @@
       "title": "Chat Settings",
       "authMethod": "Matrix Authentication Method",
       "useExternalAccount": "Use external account",
-      "loginOrCreate": "Authenticate with existing account or create new one with naming scheme",
+      "loginOrCreate": "Authentication with existing account or creation of new account using naming scheme",
       "login": "Authenticate with existing account",
       "create": {
         "title": "Create Account using naming scheme",
@@ -111,7 +111,7 @@
           "usernameTaken": "Username '%s' is already taken",
           "userCreation": "Beim Anlegen des Benutzers ist ein Fehler aufgetreten"
         },
-        "success": "Authentication successful with username '%s' (matrix-user-id: %s)"
+        "success": "Authentication successful with username '%s' (Matrix-User-ID: %s)"
       }
     },
     "admin": {

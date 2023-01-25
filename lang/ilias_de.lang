@@ -21,9 +21,9 @@ config.user.generalSettings#:#Allgemeine Einstellungen
 config.user.title#:#Chat Einstellungen
 config.user.authMethod#:#Matrix-Authentifizierungsmethode
 config.user.useExternalAccount#:#Externes Konto verwenden
-config.user.loginOrCreate#:#Authentifizierung mit bestehendem Konto oder Erstellen eines neuen Kontos mit Namensschema
+config.user.loginOrCreate#:#Authentifizierung mit bestehendem Konto oder Erstellen eines neuen Kontos mittels Namensschema
 config.user.login#:#Mit bestehendem Konto authentifizieren
-config.user.create.title#:#Konto mit Namensschema erstellen
+config.user.create.title#:#Konto mittels Namensschema erstellen
 config.user.create.username.info#:#Um Konflikte zu vermeiden, wird dem eingegebenen Benutzernamen ein Suffix "%s" hinzugefügt.<br><br> Der Benutzername (inklusive Suffix) darf nur die Zeichen %s enthalten. <br>Großbuchstaben werden in Kleinbuchstaben umgewandelt!
 config.user.create.username.illegalCharactersUsed#:#Nur "a-z, 0-9, =, _, -, ., /, '" sind erlaubt
 config.user.create.username.idm_info#:#Sie sind durch einen IDM-Server authentifiziert. Der Benutzername wird automatisch festgelegt.<br><br>

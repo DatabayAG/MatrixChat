@@ -40,10 +40,10 @@
       "title": "Chat Einstellungen",
       "authMethod": "Matrix-Authentifizierungsmethode",
       "useExternalAccount": "Externes Konto verwenden",
-      "loginOrCreate": "Authentifizierung mit bestehendem Konto oder Erstellen eines neuen Kontos mit Namensschema",
+      "loginOrCreate": "Authentifizierung mit bestehendem Konto oder Erstellen eines neuen Kontos mittels Namensschema",
       "login": "Mit bestehendem Konto authentifizieren",
       "create": {
-        "title": "Konto mit Namensschema erstellen",
+        "title": "Konto mittels Namensschema erstellen",
         "username": {
           "info": "Um Konflikte zu vermeiden, wird dem eingegebenen Benutzernamen ein Suffix \"%s\" hinzugefügt.<br><br> Der Benutzername (inklusive Suffix) darf nur die Zeichen %s enthalten. <br>Großbuchstaben werden in Kleinbuchstaben umgewandelt!",
           "illegalCharactersUsed": "Nur \"a-z, 0-9, =, _, -, ., /, '\" sind erlaubt",
@@ -111,7 +111,7 @@
           "usernameTaken": "Benutzername '%s' ist bereits vergeben",
           "userCreation": "An error occurred while creating the user"
         },
-        "success": "Authentifizierung erfolgreich mit Benutzername '%s' (matrix-user-id: %s)"
+        "success": "Authentifizierung erfolgreich mit Benutzername '%s' (Matrix-User-ID: %s)"
       }
     },
     "admin": {
