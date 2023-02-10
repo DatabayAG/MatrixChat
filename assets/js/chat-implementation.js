@@ -140,11 +140,17 @@ document.addEventListener("DOMContentLoaded", () => {
           case "m.room.member":
             let content = event.getContent();
             if (content.membership === "join" && content.displayname) {
-              //ToDo: Change to only add notification when name actually changes
-              //ToDo: Also add actual "previous" name
+              //ToDo: Change to only add notification when name actually changes (currently also shows notification "changed name" for fresh joined user)
+              if (matrixChatConfig.user.matrixUserId === event.sender.userId) {
+                let displayNameElement = document.querySelector(".chat-logged-in-as-user-displayname");
+                if (displayNameElement) {
+                  displayNameElement.innerText = content.displayname;
+                }
+              }
+
               await addNotificationMessage(
                 translation.matrix.chat.notifications.changedName
-                .replace("%s", "AAA") //Change
+                .replace("%s", event.sender.name)
                 .replace("%s", content.displayname)
               );
             }

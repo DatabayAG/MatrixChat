@@ -44,11 +44,21 @@ class DisableCourseChatIntegrationForm extends ilPropertyFormGUI
         $this->plugin = ilMatrixChatClientPlugin::getInstance();
         ilUtil::sendQuestion($this->plugin->txt("matrix.chat.room.delete.confirm"));
 
-        $fullyDeleteChatRoom = new ilCheckboxInputGUI($this->plugin->txt("matrix.chat.room.delete.button"), "deleteChatRoom");
+        $fullyDeleteChatRoom = new ilCheckboxInputGUI(
+            $this->plugin->txt("matrix.chat.room.delete.button"),
+            "deleteChatRoom"
+        );
         $this->addItem($fullyDeleteChatRoom);
 
-        $this->setFormAction(ChatCourseSettingsController::getInstance()->getCommandLink("showSettings", ["ref_id" => $courseId], true));
+        $this->setFormAction(ChatCourseSettingsController::getInstance()->getCommandLink(
+            "showSettings",
+            ["ref_id" => $courseId],
+            true
+        ));
         $this->addCommandButton(ChatCourseSettingsController::getCommand("showSettings"), $this->lng->txt("cancel"));
-        $this->addCommandButton(ChatCourseSettingsController::getCommand("disableCourseChatIntegration"), $this->lng->txt("confirm"));
+        $this->addCommandButton(
+            ChatCourseSettingsController::getCommand("disableCourseChatIntegration"),
+            $this->lng->txt("confirm")
+        );
     }
 }

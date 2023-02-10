@@ -1,6 +1,7 @@
 <?php xml version = "1.0" encoding = "UTF-8"?>
 <plugin id="mcc">
     <events>
-        <event type="listen" id="Services/Authentication" />
+        <event type="listen" id="Modules/Course" />
+        <event type="listen" id="Modules/Group" />
     </events>
 </plugin>

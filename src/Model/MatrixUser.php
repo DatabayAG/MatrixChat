@@ -42,11 +42,15 @@ class MatrixUser implements JsonSerializable
     /**
      * @var string
      */
-    private $homeServer;
+    private $deviceId;
     /**
      * @var string
      */
-    private $deviceId;
+    private $matrixUsername;
+    /**
+     * @var string
+     */
+    private $matrixDisplayName;
 
     /**
      * @return int
@@ -105,24 +109,6 @@ class MatrixUser implements JsonSerializable
     /**
      * @return string
      */
-    public function getHomeServer() : string
-    {
-        return $this->homeServer;
-    }
-
-    /**
-     * @param string $homeServer
-     * @return MatrixUser
-     */
-    public function setHomeServer(string $homeServer) : MatrixUser
-    {
-        $this->homeServer = $homeServer;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
     public function getDeviceId() : string
     {
         return $this->deviceId;
@@ -135,6 +121,42 @@ class MatrixUser implements JsonSerializable
     public function setDeviceId(string $deviceId) : MatrixUser
     {
         $this->deviceId = $deviceId;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMatrixUsername() : string
+    {
+        return $this->matrixUsername;
+    }
+
+    /**
+     * @param string $matrixUsername
+     * @return MatrixUser
+     */
+    public function setMatrixUsername(string $matrixUsername) : MatrixUser
+    {
+        $this->matrixUsername = $matrixUsername;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMatrixDisplayName() : string
+    {
+        return $this->matrixDisplayName;
+    }
+
+    /**
+     * @param string $matrixDisplayName
+     * @return MatrixUser
+     */
+    public function setMatrixDisplayName(string $matrixDisplayName) : MatrixUser
+    {
+        $this->matrixDisplayName = $matrixDisplayName;
         return $this;
     }
 

@@ -56,8 +56,8 @@ class MatrixApiCommunicator
     {
         $this->client = HttpClient::create();
         $this->plugin = $plugin;
-        $this->admin = new MatrixAdminApi($matrixServerUrl, $this->client, $this->plugin);
         $this->user = new MatrixUserApi($matrixServerUrl, $this->client, $this->plugin);
+        $this->admin = new MatrixAdminApi($matrixServerUrl, $this->client, $this->plugin);
         $this->general = new MatrixGeneralApi($matrixServerUrl, $this->client, $this->plugin);
     }
 }

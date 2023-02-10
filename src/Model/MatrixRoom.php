@@ -19,6 +19,8 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChatClient\Model;
 
+use ilMatrixChatClientPlugin;
+
 /**
  * Class MatrixRoom
  *
@@ -38,7 +40,30 @@ class MatrixRoom
     /**
      * @var bool
      */
-    private $encrypted = false;
+    private $encrypted;
+    /**
+     * @var string[]
+     */
+    private $members;
+    /**
+     * @var ilMatrixChatClientPlugin
+     */
+    private $plugin;
+
+    /**
+     * @param string   $id
+     * @param string   $name
+     * @param bool     $encrypted
+     * @param string[] $members
+     */
+    public function __construct(string $id, string $name, bool $encrypted, array $members)
+    {
+        $this->id = $id;
+        $this->name = $name;
+        $this->encrypted = $encrypted;
+        $this->members = $members;
+        $this->plugin = ilMatrixChatClientPlugin::getInstance();
+    }
 
     /**
      * @return string
@@ -46,16 +71,6 @@ class MatrixRoom
     public function getId() : string
     {
         return $this->id;
-    }
-
-    /**
-     * @param string $id
-     * @return MatrixRoom
-     */
-    public function setId(string $id) : MatrixRoom
-    {
-        $this->id = $id;
-        return $this;
     }
 
     /**
@@ -67,16 +82,6 @@ class MatrixRoom
     }
 
     /**
-     * @param string $name
-     * @return MatrixRoom
-     */
-    public function setName(string $name) : MatrixRoom
-    {
-        $this->name = $name;
-        return $this;
-    }
-
-    /**
      * @return bool
      */
     public function isEncrypted() : bool
@@ -85,12 +90,30 @@ class MatrixRoom
     }
 
     /**
-     * @param bool $encrypted
+     * @return string[]
+     */
+    public function getMembers() : array
+    {
+        return $this->members;
+    }
+
+    /**
+     * @param string[] $members
      * @return MatrixRoom
      */
-    public function setEncrypted(bool $encrypted) : MatrixRoom
+    public function setMembers(array $members) : MatrixRoom
     {
-        $this->encrypted = $encrypted;
+        $this->members = $members;
         return $this;
+    }
+
+    public function isMember(MatrixUser $matrixUser) : bool
+    {
+        return in_array($matrixUser->getMatrixUserId(), $this->getMembers(), true);
+    }
+
+    public function exists() : bool
+    {
+        return $this->plugin->matrixApi->admin->roomExists($this->getId());
     }
 }

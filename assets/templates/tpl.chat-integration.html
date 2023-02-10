@@ -1,15 +1,14 @@
 <div class="chat">
     <span class="chat-top-container">
-        <a href="{LOGOUT_URL}" class="btn btn-default">{LOGOUT_TEXT}</a>
-        <!-- BEGIN encrypted -->
-    <span class="chat-encryption chat-encrypted">{ENCRYPTED_TEXT}</span>
-        <!-- END encrypted -->
-        <!-- BEGIN unencrypted -->
-    <span class="chat-encryption chat-unencrypted">
-        <span>{UNENCRYPTED_TEXT}</span>
-        <button id="encryption_enable_button" style="display: none;" class="btn btn-default">{ENCRYPTION_ENABLE_TEXT}</button>
-    </span>
-        <!-- END unencrypted -->
+        <span class="chat-logged-in-as">
+            <span class="chat-logged-in-as-text">{LOGGED_IN_AS_TEXT}</span>
+            <span class="chat-logged-in-as-user-displayname">{LOGGED_IN_AS_DISPLAY_NAME}</span>
+            <span>
+                <span>(</span>
+                <span class="chat-logged-in-as-user">{LOGGED_IN_AS_USER}</span>
+                <span>)</span>
+            </span>
+        </span>
     </span>
     <div class="chat-messages-container">
 

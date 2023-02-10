@@ -27,6 +27,7 @@ use ilUtil;
 
 /**
  * Class ChatCourseSettingsForm
+ *
  * @package ILIAS\Plugin\MatrixChatClient\Form
  * @author  Marvin Beym <mbeym@databay.de>
  */

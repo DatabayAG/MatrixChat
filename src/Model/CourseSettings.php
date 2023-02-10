@@ -16,6 +16,8 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChatClient\Model;
 
+use ilMatrixChatClientPlugin;
+
 /**
  * Class CourseSettings
  *
@@ -25,31 +27,39 @@ namespace ILIAS\Plugin\MatrixChatClient\Model;
 class CourseSettings
 {
     /**
-     * @var int|null
+     * @var int
      */
-    private $courseId = null;
+    private $courseId;
     /**
      * @var bool
      */
     private $chatIntegrationEnabled = false;
 
     /**
-     * @var string|null
+     * @var ilMatrixChatClientPlugin
      */
-    private $matrixRoomId;
-
+    private $plugin;
     /**
-     * @return int|null
+     * @var MatrixRoom|null
      */
-    public function getCourseId() : ?int
-    {
-        return $this->courseId;
-    }
+    private $matrixRoom;
 
-    public function setCourseId(int $courseId) : self
+    public function __construct(int $courseId, ?string $matrixRoomId = null)
     {
         $this->courseId = $courseId;
-        return $this;
+
+        $this->plugin = ilMatrixChatClientPlugin::getInstance();
+        if ($matrixRoomId) {
+            $this->matrixRoom = $this->plugin->matrixApi->admin->getRoom($matrixRoomId);
+        }
+    }
+
+    /**
+     * @return int
+     */
+    public function getCourseId() : int
+    {
+        return $this->courseId;
     }
 
     public function isChatIntegrationEnabled() : bool
@@ -63,14 +73,14 @@ class CourseSettings
         return $this;
     }
 
-    public function getMatrixRoomId() : ?string
+    public function getMatrixRoom() : ?MatrixRoom
     {
-        return $this->matrixRoomId;
+        return $this->matrixRoom;
     }
 
-    public function setMatrixRoomId(?string $matrixRoomId) : CourseSettings
+    public function setMatrixRoom(?MatrixRoom $matrixRoom) : CourseSettings
     {
-        $this->matrixRoomId = $matrixRoomId;
+        $this->matrixRoom = $matrixRoom;
         return $this;
     }
 }

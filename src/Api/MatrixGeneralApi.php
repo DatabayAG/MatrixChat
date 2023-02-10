@@ -18,6 +18,7 @@ namespace ILIAS\Plugin\MatrixChatClient\Api;
 
 /**
  * Class MatrixGeneralApi
+ *
  * @package ILIAS\Plugin\MatrixChatClient\Api
  * @author  Marvin Beym <mbeym@databay.de>
  */

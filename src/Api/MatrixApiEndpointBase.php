@@ -18,16 +18,13 @@ namespace ILIAS\Plugin\MatrixChatClient\Api;
 
 use ilMatrixChatClientPlugin;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use JsonException;
-use ILIAS\Plugin\MatrixChatClient\Model\MatrixUser;
 use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
+use Throwable;
 
 /**
  * Class MatrixApiEndpointBase
+ *
  * @package ILIAS\Plugin\MatrixChatClient\Api
  * @author  Marvin Beym <mbeym@databay.de>
  */
@@ -58,6 +55,16 @@ abstract class MatrixApiEndpointBase
         $this->courseSettingsRepo = CourseSettingsRepository::getInstance();
     }
 
+    protected function getMatrixUserDisplayName(string $matrixUserId) : string
+    {
+        try {
+            $response = $this->sendRequest("/_matrix/client/v3/profile/{$matrixUserId}/displayname");
+        } catch (MatrixApiException $e) {
+            return "";
+        }
+
+        return $response["displayname"];
+    }
 
     private function getApiUrl(string $apiCall) : string
     {
@@ -87,8 +94,8 @@ abstract class MatrixApiEndpointBase
 
         try {
             $request = $this->client->request($method, $this->getApiUrl($apiCall), $options);
-            $content = $request->getContent();
-        } catch (TransportExceptionInterface|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface $e) {
+            $content = $request->getContent(false);
+        } catch (Throwable $e) {
             throw new MatrixApiException("REQUEST_ERROR", $e->getMessage(), $e->getCode());
         }
 
@@ -99,6 +106,11 @@ abstract class MatrixApiEndpointBase
         }
 
         if (isset($responseData["errcode"])) {
+            if ($responseData["errcode"] === "M_LIMIT_EXCEEDED") {
+                $this->plugin->dic->logger()->root()->error(
+                    "matrix api request limit reached. Request call: '{$this->getApiUrl($apiCall)}'"
+                );
+            }
             throw new MatrixApiException($responseData["errcode"], $responseData["error"]);
         }
         return $responseData;
