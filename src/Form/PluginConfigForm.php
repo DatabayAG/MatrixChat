@@ -116,6 +116,7 @@ class PluginConfigForm extends ilPropertyFormGUI
             }, array_keys($this->plugin->getUsernameSchemeVariables())))
         ));
 
+        $serverReachable = $this->plugin->matrixApi->general->serverReachable();
         $serverSection = new ilFormSectionHeaderGUI();
         if ($this->plugin->matrixApi->general->serverReachable()) {
             $serverSection->setTitle(sprintf(
@@ -136,10 +137,17 @@ class PluginConfigForm extends ilPropertyFormGUI
                 $this->plugin->txt("matrix.admin.login.valid")
             ));
         } else {
-            $adminAuthenticationSection->setTitle(sprintf(
-                $this->plugin->txt("config.section.adminAuthentication.invalid"),
-                $this->plugin->txt("matrix.admin.login.invalid")
-            ));
+            if (!$serverReachable) {
+                $adminAuthenticationSection->setTitle(sprintf(
+                    $this->plugin->txt("config.section.adminAuthentication.invalid"),
+                    $this->plugin->txt("matrix.server.unreachable")
+                ));
+            } else {
+                $adminAuthenticationSection->setTitle(sprintf(
+                    $this->plugin->txt("config.section.adminAuthentication.invalid"),
+                    $this->plugin->txt("matrix.admin.login.invalid")
+                ));
+            }
         }
 
         $chatSection = new ilFormSectionHeaderGUI();
