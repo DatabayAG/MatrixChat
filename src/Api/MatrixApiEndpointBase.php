@@ -106,21 +106,24 @@ abstract class MatrixApiEndpointBase
             $options["auth_bearer"] = $token;
         }
 
+        $statusCode = "UNKNOWN";
+
         try {
             $request = $this->client->request($method, $this->getApiUrl($apiCall), $options);
             $content = $request->getContent(false);
+            $statusCode = $request->getStatusCode();
             if ($request->getStatusCode() >= 500) {
-                throw new Exception("Status code of 5xx returned");
+                throw new Exception("Received Status code of $statusCode");
             }
         } catch (Throwable $e) {
-            $this->logger->error("Matrix API request to `{$this->getApiUrl($apiCall)}` failed. Ex.: " . $e->getMessage());
+            $this->logger->error("Matrix API request to `{$this->getApiUrl($apiCall)}` failed | Status-Code: $statusCode | Ex.: {$e->getMessage()}");
             throw new MatrixApiException("REQUEST_ERROR", $e->getMessage(), $e->getCode());
         }
 
         try {
             $responseData = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
         } catch (JsonException $e) {
-            $this->logger->error("Matrix API request to `{$this->getApiUrl($apiCall)}` failed. Error occurred while decoding response json data . Ex.: " . $e->getMessage());
+            $this->logger->error("Matrix API request to `{$this->getApiUrl($apiCall)}` failed. Error occurred while decoding response json data | Status-Code: $statusCode |Ex.: {$e->getMessage()}");
             throw new MatrixApiException("JSON_ERROR", $e->getMessage());
         }
 
