@@ -8,6 +8,11 @@ general.plugin.settings#:#Plugin Settings
 general.plugin.notActivated#:#Plugin is not active, yet. Please activate it.
 general.plugin.requiredParameterMissing#:#The required parameter '%s' could not be found.
 authenticate#:#Authenticate
+config.section.server.reachable#:#<span class='sectionTitleWithStatus'>Server <span class='alert alert-success sectionStatus'>Server is reachable</span></span>
+config.section.server.unreachable#:#<span class='sectionTitleWithStatus'>Server <span class='alert alert-danger sectionStatus'>Server is unreachable</span></span>
+config.section.adminAuthentication#:#Admin-Authentication
+config.section.chat#:#Chat
+config.section.user#:#User
 config.usernameScheme.title#:#Matrix-User naming scheme
 config.usernameScheme.info#:#This scheme is used to create the matrix username,<br>when ILIAS users want to join a Matrix chat but do not have a user yet.<br><br>The scheme may only contain the characters %s.<br>Uppercase letters are converted to lowercase!<br><br>Supported variables: <br>%s
 config.sharedSecret.title#:#Shared Secret
@@ -58,4 +63,5 @@ matrix.user.authentication.failed.unConfigured#:#No authentication configured
 matrix.user.authentication.failed.usernameTaken#:#Username '%s' is already taken
 matrix.user.authentication.failed.userCreation#:#An error occurred while creating the user
 matrix.user.authentication.success#:#Authentication successful with username '%s' (Matrix-User-ID: %s)
-matrix.admin.loginInvalid#:#Admin-Login invalid
+matrix.admin.login.valid#:#Admin-Login valid
+matrix.admin.login.invalid#:#Admin-Login invalid

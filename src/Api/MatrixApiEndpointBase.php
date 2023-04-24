@@ -16,6 +16,8 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChatClient\Api;
 
+use Exception;
+use ilLogger;
 use ilMatrixChatClientPlugin;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use JsonException;
@@ -46,13 +48,23 @@ abstract class MatrixApiEndpointBase
      * @var ilMatrixChatClientPlugin
      */
     protected $plugin;
+    /**
+     * @var ilLogger
+     */
+    private $logger;
+    /**
+     * @var float
+     */
+    private $requestTimeout;
 
-    public function __construct(string $matrixServerUrl, HttpClientInterface $client, ilMatrixChatClientPlugin $plugin)
+    public function __construct(string $matrixServerUrl, HttpClientInterface $client, ilMatrixChatClientPlugin $plugin, float $requestTimeout = 3)
     {
         $this->matrixServerUrl = $matrixServerUrl;
         $this->client = $client;
         $this->plugin = $plugin;
         $this->courseSettingsRepo = CourseSettingsRepository::getInstance();
+        $this->logger = $this->plugin->dic->logger()->root();
+        $this->requestTimeout = $requestTimeout;
     }
 
     protected function getMatrixUserDisplayName(string $matrixUserId) : string
@@ -80,7 +92,9 @@ abstract class MatrixApiEndpointBase
         array $body = [],
         ?string $token = null
     ) : array {
-        $options = [];
+        $options = [
+            "timeout" => $this->requestTimeout
+        ];
         if ($body !== []) {
             try {
                 $options["body"] = json_encode($body, JSON_THROW_ON_ERROR);
@@ -95,20 +109,25 @@ abstract class MatrixApiEndpointBase
         try {
             $request = $this->client->request($method, $this->getApiUrl($apiCall), $options);
             $content = $request->getContent(false);
+            if ($request->getStatusCode() >= 500) {
+                throw new Exception("Status code of 5xx returned");
+            }
         } catch (Throwable $e) {
+            $this->logger->error("Matrix API request to `{$this->getApiUrl($apiCall)}` failed. Ex.: " . $e->getMessage());
             throw new MatrixApiException("REQUEST_ERROR", $e->getMessage(), $e->getCode());
         }
 
         try {
             $responseData = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
         } catch (JsonException $e) {
+            $this->logger->error("Matrix API request to `{$this->getApiUrl($apiCall)}` failed. Error occurred while decoding response json data . Ex.: " . $e->getMessage());
             throw new MatrixApiException("JSON_ERROR", $e->getMessage());
         }
 
         if (isset($responseData["errcode"])) {
             if ($responseData["errcode"] === "M_LIMIT_EXCEEDED") {
-                $this->plugin->dic->logger()->root()->error(
-                    "matrix api request limit reached. Request call: '{$this->getApiUrl($apiCall)}'"
+                $this->logger->error(
+                    "Matrix Api Request limit reached. Request call: '{$this->getApiUrl($apiCall)}'"
                 );
             }
             throw new MatrixApiException($responseData["errcode"], $responseData["error"]);

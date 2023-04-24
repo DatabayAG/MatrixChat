@@ -16,14 +16,17 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChatClient\Form;
 
-use ilPropertyFormGUI;
-use ilMatrixChatClientPlugin;
-use ilTextInputGUI;
-use ilPasswordInputGUI;
+use ilFormSectionHeaderGUI;
+use ilGlobalPageTemplate;
+use ILIAS\DI\Container;
 use ilMatrixChatClientConfigGUI;
+use ilMatrixChatClientPlugin;
+use ilNumberInputGUI;
+use ilPasswordInputGUI;
+use ilPropertyFormGUI;
+use ilTextInputGUI;
 use ilUriInputGUI;
 use ilUtil;
-use ilNumberInputGUI;
 
 /**
  * Class PluginConfigForm
@@ -37,24 +40,26 @@ class PluginConfigForm extends ilPropertyFormGUI
      * @var ilMatrixChatClientPlugin
      */
     private $plugin;
+    /**
+     * @var Container
+     */
+    private $dic;
+    /**
+     * @var ilGlobalPageTemplate
+     */
+    private $mainTpl;
 
     public function __construct()
     {
         parent::__construct();
         $this->plugin = ilMatrixChatClientPlugin::getInstance();
+        $this->dic = $this->plugin->dic;
+        $this->mainTpl = $this->dic->ui()->mainTemplate();
+        $this->mainTpl->addCss($this->plugin->cssFolder("style.css"));
 
         $this->setFormAction($this->ctrl->getFormActionByClass(ilMatrixChatClientConfigGUI::class, "showSettings"));
         $this->setId("{$this->plugin->getId()}_{$this->plugin->getPluginName()}_plugin_config_form");
         $this->setTitle($this->plugin->txt("general.plugin.settings"));
-
-        if ($this->plugin->matrixApi->general->serverReachable()) {
-            ilUtil::sendSuccess($this->plugin->txt("matrix.server.reachable"), true);
-        } else {
-            ilUtil::sendFailure($this->plugin->txt("matrix.server.unreachable"), true);
-        }
-        if (!$this->plugin->matrixApi->admin->checkAdminUser()) {
-            ilUtil::sendFailure($this->plugin->txt("matrix.admin.loginInvalid"), true);
-        }
 
         $matrixServerUrl = new ilUriInputGUI($this->plugin->txt("matrix.server.url"), "matrixServerUrl");
         $matrixServerUrl->setRequired(true);
@@ -111,12 +116,51 @@ class PluginConfigForm extends ilPropertyFormGUI
             }, array_keys($this->plugin->getUsernameSchemeVariables())))
         ));
 
+        $serverSection = new ilFormSectionHeaderGUI();
+        if ($this->plugin->matrixApi->general->serverReachable()) {
+            $serverSection->setTitle(sprintf(
+                $this->plugin->txt("config.section.server.reachable"),
+                $this->plugin->txt("matrix.server.reachable")
+            ));
+        } else {
+            $serverSection->setTitle(sprintf(
+                $this->plugin->txt("config.section.server.unreachable"),
+                $this->plugin->txt("matrix.server.unreachable")
+            ));
+        }
+
+        $adminAuthenticationSection = new ilFormSectionHeaderGUI();
+        if ($this->plugin->matrixApi->admin->checkAdminUser()) {
+            $adminAuthenticationSection->setTitle(sprintf(
+                $this->plugin->txt("config.section.adminAuthentication.valid"),
+                $this->plugin->txt("matrix.admin.login.valid")
+            ));
+        } else {
+            $adminAuthenticationSection->setTitle(sprintf(
+                $this->plugin->txt("config.section.adminAuthentication.invalid"),
+                $this->plugin->txt("matrix.admin.login.invalid")
+            ));
+        }
+
+        $chatSection = new ilFormSectionHeaderGUI();
+        $chatSection->setTitle($this->plugin->txt("config.section.chat"));
+
+        $userSection = new ilFormSectionHeaderGUI();
+        $userSection->setTitle($this->plugin->txt("config.section.user"));
+
+        $this->addItem($serverSection);
         $this->addItem($matrixServerUrl);
+        $this->addItem($sharedSecret);
+
+        $this->addItem($adminAuthenticationSection);
         $this->addItem($matrixAdminUsername);
         $this->addItem($matrixAdminPassword);
-        $this->addItem($sharedSecret);
+
+        $this->addItem($chatSection);
         $this->addItem($chatInitialLoadLimit);
         $this->addItem($chatHistoryLoadLimit);
+
+        $this->addItem($userSection);
         $this->addItem($usernameScheme);
         $this->addCommandButton("saveSettings", $this->lng->txt("save"));
     }

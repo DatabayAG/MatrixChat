@@ -8,6 +8,12 @@ general.plugin.settings#:#Plugin-Einstellungen
 general.plugin.notActivated#:#Das Plugin ist nicht aktiviert. Bitte aktivieren Sie dieses zunächst.
 general.plugin.requiredParameterMissing#:#Der benötigte Parameter '%s' konnte nicht gefunden werden.
 authenticate#:#Authentifizieren
+config.section.server.reachable#:#<span class='sectionTitleWithStatus'>Server <span class='alert alert-success sectionStatus'>%s</span></span>
+config.section.server.unreachable#:#<span class='sectionTitleWithStatus'>Server <span class='alert alert-danger sectionStatus'>%s</span></span>
+config.section.adminAuthentication.valid#:#<span class='sectionTitleWithStatus'>Admin-Authentifizierung <span class='alert alert-success sectionStatus'>%s</span></span>
+config.section.adminAuthentication.invalid#:#<span class='sectionTitleWithStatus'>Admin-Authentifizierung <span class='alert alert-danger sectionStatus'>%s</span></span>
+config.section.chat#:#Chat
+config.section.user#:#Benutzer
 config.usernameScheme.title#:#Matrix-Benutzer-Namensschema
 config.usernameScheme.info#:#Dieses Schema wird verwendet, um den Matrix-Benutzernamen zu erzeugen,<br>wenn ILIAS-Benutzer einem Matrix-Chat beitreten wollen, aber bisher keinen Benutzer haben. <br><br>Das Schema darf nur die folgenden Zeichen enthalten %s.<br>Großbuchstaben werden in Kleinbuchstaben umgewandelt!<br><br>Unterstützte Variablen: <br>%s
 config.sharedSecret.title#:#Gemeinsames Geheimnis
@@ -58,4 +64,5 @@ matrix.user.authentication.failed.unConfigured#:#Keine Authentifizierung konfigu
 matrix.user.authentication.failed.usernameTaken#:#Benutzername '%s' ist bereits vergeben
 matrix.user.authentication.failed.userCreation#:#Beim Anlegen des Benutzers ist ein Fehler aufgetreten
 matrix.user.authentication.success#:#Authentifizierung erfolgreich mit Benutzername '%s' (Matrix-User-ID: %s)
-matrix.admin.loginInvalid#:#Admin-Login ungültig
+matrix.admin.login.valid#:#Admin-Login gültig
+matrix.admin.login.invalid#:#Admin-Login ungültig
