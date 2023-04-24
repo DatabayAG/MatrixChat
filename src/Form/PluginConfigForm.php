@@ -16,14 +16,14 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChatClient\Form;
 
-use ilPropertyFormGUI;
-use ilMatrixChatClientPlugin;
-use ilTextInputGUI;
-use ilPasswordInputGUI;
 use ilMatrixChatClientConfigGUI;
+use ilMatrixChatClientPlugin;
+use ilNumberInputGUI;
+use ilPasswordInputGUI;
+use ilPropertyFormGUI;
+use ilTextInputGUI;
 use ilUriInputGUI;
 use ilUtil;
-use ilNumberInputGUI;
 
 /**
  * Class PluginConfigForm
@@ -49,11 +49,11 @@ class PluginConfigForm extends ilPropertyFormGUI
 
         if ($this->plugin->matrixApi->general->serverReachable()) {
             ilUtil::sendSuccess($this->plugin->txt("matrix.server.reachable"), true);
+            if (!$this->plugin->matrixApi->admin->checkAdminUser()) {
+                ilUtil::sendFailure($this->plugin->txt("matrix.admin.loginInvalid"), true);
+            }
         } else {
             ilUtil::sendFailure($this->plugin->txt("matrix.server.unreachable"), true);
-        }
-        if (!$this->plugin->matrixApi->admin->checkAdminUser()) {
-            ilUtil::sendFailure($this->plugin->txt("matrix.admin.loginInvalid"), true);
         }
 
         $matrixServerUrl = new ilUriInputGUI($this->plugin->txt("matrix.server.url"), "matrixServerUrl");
