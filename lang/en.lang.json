@@ -16,6 +16,15 @@
   },
   "authenticate": "Authenticate",
   "config": {
+    "section": {
+      "server": {
+        "reachable": "<span class='sectionTitleWithStatus'>Server <span class='alert alert-success sectionStatus'>Server is reachable</span></span>",
+        "unreachable": "<span class='sectionTitleWithStatus'>Server <span class='alert alert-danger sectionStatus'>Server is unreachable</span></span>"
+      },
+      "adminAuthentication": "Admin-Authentication",
+      "chat": "Chat",
+      "user": "User"
+    },
     "usernameScheme": {
       "title": "Matrix-User naming scheme",
       "info": "This scheme is used to create the matrix username,<br>when ILIAS users want to join a Matrix chat but do not have a user yet.<br><br>The scheme may only contain the characters %s.<br>Uppercase letters are converted to lowercase!<br><br>Supported variables: <br>%s"
@@ -115,7 +124,10 @@
       }
     },
     "admin": {
-      "loginInvalid": "Admin-Login invalid"
+      "login": {
+        "valid": "Admin-Login valid",
+        "invalid": "Admin-Login invalid"
+      }
     }
   }
 }

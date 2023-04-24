@@ -52,6 +52,6 @@ class MatrixGeneralApi extends MatrixApiEndpointBase
 
     public function serverReachable() : bool
     {
-        return $this->getServerVersionInfo() !== [];
+        return $this->getServerVersionInfo() !== null;
     }
 }

@@ -97,3 +97,19 @@ button.chat-message-writer-send:hover {
     justify-content: center;
     align-items: center;
 }
+
+.sectionTitleWithStatus {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+.sectionStatus {
+    margin: 0 !important;
+    padding: 0.25rem 1rem !important;
+    border-radius: 1rem !important;
+    border: 2px solid black !important;
+}

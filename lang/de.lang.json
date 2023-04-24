@@ -16,6 +16,18 @@
   },
   "authenticate": "Authentifizieren",
   "config": {
+    "section": {
+      "server": {
+        "reachable": "<span class='sectionTitleWithStatus'>Server <span class='alert alert-success sectionStatus'>%s</span></span>",
+        "unreachable": "<span class='sectionTitleWithStatus'>Server <span class='alert alert-danger sectionStatus'>%s</span></span>"
+      },
+      "adminAuthentication": {
+        "valid": "<span class='sectionTitleWithStatus'>Admin-Authentifizierung <span class='alert alert-success sectionStatus'>%s</span></span>",
+        "invalid": "<span class='sectionTitleWithStatus'>Admin-Authentifizierung <span class='alert alert-danger sectionStatus'>%s</span></span>"
+      },
+      "chat": "Chat",
+      "user": "Benutzer"
+    },
     "usernameScheme": {
       "title": "Matrix-Benutzer-Namensschema",
       "info": "Dieses Schema wird verwendet, um den Matrix-Benutzernamen zu erzeugen,<br>wenn ILIAS-Benutzer einem Matrix-Chat beitreten wollen, aber bisher keinen Benutzer haben. <br><br>Das Schema darf nur die folgenden Zeichen enthalten %s.<br>Großbuchstaben werden in Kleinbuchstaben umgewandelt!<br><br>Unterstützte Variablen: <br>%s"
@@ -115,7 +127,10 @@
       }
     },
     "admin": {
-      "loginInvalid": "Admin-Login ungültig"
+      "login": {
+        "valid": "Admin-Login gültig",
+        "invalid": "Admin-Login ungültig"
+      }
     }
   }
 }
