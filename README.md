@@ -53,6 +53,11 @@
     - The user is added to a waiting list.   
     - Once the user completes the configuration. The user is invited to the chat room of the course.
 
+### Removing User from Course
+
+- When an ILIAS user is removed from a course  
+  The user will be removed from the chat room of the course as well.
+
 ### Opening the Chat Window
 
 - If a user hasn't configured authentication or the authentication with the Matrix server failed.  
