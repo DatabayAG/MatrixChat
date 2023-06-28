@@ -17,8 +17,8 @@ declare(strict_types=1);
 namespace ILIAS\Plugin\MatrixChatClient\Model;
 
 use Exception;
-use ILIAS\Plugin\MatrixChatClient\Libs\IliasConfigLoader\Model\ConfigBase;
 use ILIAS\Plugin\MatrixChatClient\Libs\IliasConfigLoader\Exception\ConfigLoadException;
+use ILIAS\Plugin\MatrixChatClient\Libs\IliasConfigLoader\Model\SettingsConfig;
 
 /**
  * Class PluginConfig
@@ -26,7 +26,7 @@ use ILIAS\Plugin\MatrixChatClient\Libs\IliasConfigLoader\Exception\ConfigLoadExc
  * @package ILIAS\Plugin\MatrixChatClient\Model
  * @author  Marvin Beym <mbeym@databay.de>
  */
-class PluginConfig extends ConfigBase
+class PluginConfig extends SettingsConfig
 {
     /**
      * @var string
@@ -41,6 +41,10 @@ class PluginConfig extends ConfigBase
      */
     private $matrixAdminPassword = "";
     /**
+     * @var string
+     */
+    private $sharedSecret = "";
+    /**
      * @var int
      */
     private $chatInitialLoadLimit = 20;
@@ -49,15 +53,7 @@ class PluginConfig extends ConfigBase
      */
     private $chatHistoryLoadLimit = 20;
 
-    /**
-     * @var string
-     */
-    private $loginMethod = "byLoginAndPassword";
-
-    /**
-     * @var bool
-     */
-    private $useLdapAutoLogin = false;
+    private $usernameScheme = "";
 
     /**
      * @return string
@@ -114,6 +110,24 @@ class PluginConfig extends ConfigBase
     }
 
     /**
+     * @return string
+     */
+    public function getSharedSecret() : string
+    {
+        return $this->sharedSecret;
+    }
+
+    /**
+     * @param string $sharedSecret
+     * @return PluginConfig
+     */
+    public function setSharedSecret(string $sharedSecret) : PluginConfig
+    {
+        $this->sharedSecret = $sharedSecret;
+        return $this;
+    }
+
+    /**
      * @return int
      */
     public function getChatInitialLoadLimit() : int
@@ -152,36 +166,18 @@ class PluginConfig extends ConfigBase
     /**
      * @return string
      */
-    public function getLoginMethod() : string
+    public function getUsernameScheme() : string
     {
-        return $this->loginMethod;
+        return $this->usernameScheme;
     }
 
     /**
-     * @param string $loginMethod
+     * @param string $usernameScheme
      * @return PluginConfig
      */
-    public function setLoginMethod(string $loginMethod) : PluginConfig
+    public function setUsernameScheme(string $usernameScheme) : PluginConfig
     {
-        $this->loginMethod = $loginMethod;
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isUseLdapAutoLogin() : bool
-    {
-        return $this->useLdapAutoLogin;
-    }
-
-    /**
-     * @param bool $useLdapAutoLogin
-     * @return PluginConfig
-     */
-    public function setUseLdapAutoLogin(bool $useLdapAutoLogin) : PluginConfig
-    {
-        $this->useLdapAutoLogin = $useLdapAutoLogin;
+        $this->usernameScheme = $usernameScheme;
         return $this;
     }
 

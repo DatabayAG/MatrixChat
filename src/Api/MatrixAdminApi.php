@@ -33,19 +33,45 @@ class MatrixAdminApi extends MatrixApiEndpointBase
      */
     private $adminUser;
 
-    /**
-     * Optional: Other api calls will login automatically and remember the admin user for future use
-     *
-     * @return MatrixUser|null
-     */
-    public function login() : ?MatrixUser
+    public function checkAdminUser() : bool
+    {
+        try {
+            return $this->getUser() !== null;
+        } catch (Throwable $ex) {
+            return false;
+        }
+    }
+
+    public function loginUserWithAdmin(int $iliasUserId, string $matrixUserId) : ?MatrixUser
+    {
+        try {
+            $response = $this->sendRequest(
+                "/_synapse/admin/v1/users/{$matrixUserId}/login",
+                "POST",
+                [],
+                $this->getUser()->getAccessToken()
+            );
+        } catch (MatrixApiException $e) {
+            return null;
+        }
+
+        return (new MatrixUser())
+            ->setIliasUserId($iliasUserId)
+            ->setMatrixUserId($matrixUserId)
+            ->setMatrixUsername($matrixUserId) //ToDo: maybe can be removed/replaced with matrixUserId
+            ->setMatrixDisplayName($this->getMatrixUserDisplayName($matrixUserId))
+            ->setAccessToken($response["access_token"])
+            ->setDeviceId("ilias_auth_verification");
+    }
+
+    public function login(string $username, string $password, string $deviceId) : ?MatrixUser
     {
         try {
             $response = $this->sendRequest("/_matrix/client/v3/login", "POST", [
                 "type" => "m.login.password",
-                "user" => $this->plugin->getPluginConfig()->getMatrixAdminUsername(),
-                "password" => $this->plugin->getPluginConfig()->getMatrixAdminPassword(),
-                "device_id" => "ilias_matrix_chat_device_admin"
+                "user" => $username,
+                "password" => $password,
+                "device_id" => $deviceId
             ]);
         } catch (MatrixApiException $e) {
             return null;
@@ -53,24 +79,20 @@ class MatrixAdminApi extends MatrixApiEndpointBase
 
         return (new MatrixUser())
             ->setMatrixUserId($response["user_id"])
+            ->setMatrixUsername($username)
+            ->setMatrixDisplayName($this->getMatrixUserDisplayName($response["user_id"]))
             ->setAccessToken($response["access_token"])
-            ->setHomeServer($response["home_server"])
-            ->setDeviceId($response["device_id"]);
-    }
-
-    public function checkAdminUser() : bool
-    {
-        return $this->getUser() !== null;
+            ->setDeviceId($deviceId);
     }
 
     private function getUser() : MatrixUser
     {
         if ($this->adminUser === null) {
-            $this->adminUser = $this->login();
-        }
-
-        if (!$this->adminUser) {
-            $this->adminUser = $this->login();
+            $this->adminUser = $this->login(
+                $this->plugin->getPluginConfig()->getMatrixAdminUsername(),
+                $this->plugin->getPluginConfig()->getMatrixAdminPassword(),
+                "ilias_matrix_chat_device_admin"
+            );
         }
 
         return $this->adminUser;
@@ -95,10 +117,12 @@ class MatrixAdminApi extends MatrixApiEndpointBase
         }
 
         try {
-            return (new MatrixRoom())
-                ->setId($response["room_id"])
-                ->setName($response["name"])
-                ->setEncrypted($response["encryption"] !== null);
+            return new MatrixRoom(
+                $response["room_id"],
+                $response["name"],
+                $response["encryption"] !== null,
+                $this->getRoomMembers($matrixRoomId)
+            );
         } catch (Throwable $e) {
             $this->plugin->dic->logger()->root()->error($e->getMessage());
             return null;
@@ -120,19 +144,22 @@ class MatrixAdminApi extends MatrixApiEndpointBase
             $this->getUser()->getAccessToken()
         );
 
-        $matrixRoom = (new MatrixRoom())
-            ->setId($response["room_id"])
-            ->setName($name);
+        $matrixRoom = new MatrixRoom(
+            $response["room_id"],
+            $name,
+            false,
+            $this->getRoomMembers($response["room_id"])
+        );
 
         $this->addUserToRoom($this->getUser(), $matrixRoom);
         return $matrixRoom;
     }
 
-    public function deleteRoom(string $roomId) : bool
+    public function deleteRoom(MatrixRoom $room) : bool
     {
         try {
             $response = $this->sendRequest(
-                "/_synapse/admin/v1/rooms/$roomId",
+                "/_synapse/admin/v1/rooms/{$room->getId()}",
                 "DELETE",
                 ["message" => "Deleted because course chat integration was disabled", "purge" => true, "block" => true],
                 $this->getUser()->getAccessToken()
@@ -186,8 +213,108 @@ class MatrixAdminApi extends MatrixApiEndpointBase
         return true;
     }
 
-    public function isUserMemberOfRoom(MatrixUser $matrixUser, string $matrixRoomId) : bool
+    public function isUserMemberOfRoom(MatrixUser $matrixUser, MatrixRoom $room) : bool
     {
-        return in_array($matrixUser->getMatrixUserId(), $this->getRoomMembers($matrixRoomId), true);
+        return $room->isMember($matrixUser);
+    }
+
+    public function userExists(string $matrixUserId) : bool
+    {
+        try {
+            return $this->sendRequest(
+                "/_synapse/admin/v2/users/$matrixUserId",
+                "GET",
+                [],
+                $this->getUser()->getAccessToken()
+            ) !== [];
+        } catch (MatrixApiException $e) {
+            return false;
+        }
+    }
+
+    public function usernameAvailable(string $username) : bool
+    {
+        try {
+            $response = $this->sendRequest(
+                "/_synapse/admin/v1/username_available?username=$username",
+                "GET",
+                [],
+                $this->getUser()->getAccessToken()
+            );
+            return $response["available"];
+        } catch (MatrixApiException $e) {
+            return false;
+        }
+    }
+
+    public function retrieveNonce() : ?string
+    {
+        try {
+            $response = $this->sendRequest(
+                "/_synapse/admin/v1/register",
+                "GET",
+                [],
+                $this->getUser()->getAccessToken()
+            );
+            return $response["nonce"];
+        } catch (MatrixApiException $e) {
+            return null;
+        }
+    }
+
+    public function createUser(string $username, string $password, string $displayName) : ?MatrixUser
+    {
+        $nonce = $this->retrieveNonce();
+        if (!$nonce) {
+            return null;
+        }
+
+        if (!$this->plugin->getPluginConfig()->getSharedSecret()) {
+            return null;
+        }
+
+        $hmac = hash_hmac(
+            "sha1",
+            "$nonce\0$username\0$password\0notadmin",
+            $this->plugin->getPluginConfig()->getSharedSecret()
+        );
+
+        try {
+            $response = $this->sendRequest(
+                "/_synapse/admin/v1/register",
+                "POST",
+                [
+                    "nonce" => $nonce,
+                    "username" => $username,
+                    "password" => $password,
+                    "displayname" => $displayName,
+                    "admin" => false,
+                    "mac" => $hmac
+                ],
+                $this->getUser()->getAccessToken()
+            );
+        } catch (MatrixApiException $e) {
+            return null;
+        }
+
+        return $this->login($username, $password, "ilias_auth_verification");
+    }
+
+    public function removeUserFromRoom(MatrixUser $matrixUser, MatrixRoom $room, string $reason) : bool
+    {
+        try {
+            $response = $this->sendRequest(
+                "/_matrix/client/v3/rooms/{$room->getId()}/kick",
+                "POST",
+                [
+                    "reason" => $reason,
+                    "user_id" => $matrixUser->getMatrixUserId(),
+                ],
+                $this->getUser()->getAccessToken()
+            );
+            return true;
+        } catch (MatrixApiException $e) {
+            return false;
+        }
     }
 }

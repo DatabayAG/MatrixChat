@@ -21,7 +21,8 @@ use ILIAS\Plugin\MatrixChatClient\Model\CourseSettings;
 
 /**
  * Class CourseSettingsRepository
- * @package ILIAS\Plugin\DawUserInterface\Repository
+ *
+ * @package ILIAS\Plugin\MatrixChatClient\Repository
  * @author  Marvin Beym <mbeym@databay.de>
  */
 class CourseSettingsRepository
@@ -51,6 +52,7 @@ class CourseSettingsRepository
 
     /**
      * Returns the instance of the repository to prevent recreation of the whole object.
+     *
      * @param ilDBInterface|null $db
      * @return self
      */
@@ -67,15 +69,13 @@ class CourseSettingsRepository
      */
     public function readAll() : array
     {
-        $result = $this->db->query("SELECT * FROM " . self::TABLE_NAME, );
+        $result = $this->db->query("SELECT * FROM " . self::TABLE_NAME);
 
         $data = [];
 
         while ($row = $this->db->fetchAssoc($result)) {
-            $data[] = (new CourseSettings())
-                ->setCourseId((int) $row["course_id"])
-                ->setChatIntegrationEnabled((bool) $row["chat_integration_enabled"])
-                ->setMatrixRoomId($row["matrix_room_id"]);
+            $data[] = (new CourseSettings((int) $row["course_id"], $row["matrix_room_id"]))
+                ->setChatIntegrationEnabled((bool) $row["chat_integration_enabled"]);
         }
 
         return $data;
@@ -90,14 +90,12 @@ class CourseSettingsRepository
         );
 
         if ($result->numRows() === 0) {
-            return (new CourseSettings())->setCourseId($courseId);
+            return new CourseSettings($courseId);
         }
 
         $data = $this->db->fetchAssoc($result);
-        return (new CourseSettings())
-            ->setCourseId($courseId)
-            ->setChatIntegrationEnabled((bool) $data["chat_integration_enabled"])
-            ->setMatrixRoomId($data["matrix_room_id"]);
+        return (new CourseSettings($courseId, $data["matrix_room_id"]))
+            ->setChatIntegrationEnabled((bool) $data["chat_integration_enabled"]);
     }
 
     public function exists(int $courseId) : bool
@@ -123,7 +121,7 @@ class CourseSettingsRepository
                 ],
                 [
                     $courseSettings->isChatIntegrationEnabled(),
-                    $courseSettings->getMatrixRoomId(),
+                    $courseSettings->getMatrixRoom() ? $courseSettings->getMatrixRoom()->getId() : null,
                     $courseSettings->getCourseId()
                 ]
             );
@@ -135,7 +133,7 @@ class CourseSettingsRepository
             ["integer", "integer", "text"],
             [$courseSettings->getCourseId(),
              $courseSettings->isChatIntegrationEnabled(),
-             $courseSettings->getMatrixRoomId()
+             $courseSettings->getMatrixRoom() ? $courseSettings->getMatrixRoom()->getId() : null
             ]
         );
         return $affectedRows === 1;

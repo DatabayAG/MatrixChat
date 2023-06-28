@@ -16,18 +16,17 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChatClient\Api;
 
+use Exception;
+use ilLogger;
 use ilMatrixChatClientPlugin;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use JsonException;
-use ILIAS\Plugin\MatrixChatClient\Model\MatrixUser;
 use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
+use Throwable;
 
 /**
  * Class MatrixApiEndpointBase
+ *
  * @package ILIAS\Plugin\MatrixChatClient\Api
  * @author  Marvin Beym <mbeym@databay.de>
  */
@@ -49,15 +48,35 @@ abstract class MatrixApiEndpointBase
      * @var ilMatrixChatClientPlugin
      */
     protected $plugin;
+    /**
+     * @var ilLogger
+     */
+    private $logger;
+    /**
+     * @var float
+     */
+    private $requestTimeout;
 
-    public function __construct(string $matrixServerUrl, HttpClientInterface $client, ilMatrixChatClientPlugin $plugin)
+    public function __construct(string $matrixServerUrl, HttpClientInterface $client, ilMatrixChatClientPlugin $plugin, float $requestTimeout = 3)
     {
         $this->matrixServerUrl = $matrixServerUrl;
         $this->client = $client;
         $this->plugin = $plugin;
         $this->courseSettingsRepo = CourseSettingsRepository::getInstance();
+        $this->logger = $this->plugin->dic->logger()->root();
+        $this->requestTimeout = $requestTimeout;
     }
 
+    protected function getMatrixUserDisplayName(string $matrixUserId) : string
+    {
+        try {
+            $response = $this->sendRequest("/_matrix/client/v3/profile/{$matrixUserId}/displayname");
+        } catch (MatrixApiException $e) {
+            return "";
+        }
+
+        return $response["displayname"];
+    }
 
     private function getApiUrl(string $apiCall) : string
     {
@@ -73,7 +92,9 @@ abstract class MatrixApiEndpointBase
         array $body = [],
         ?string $token = null
     ) : array {
-        $options = [];
+        $options = [
+            "timeout" => $this->requestTimeout
+        ];
         if ($body !== []) {
             try {
                 $options["body"] = json_encode($body, JSON_THROW_ON_ERROR);
@@ -85,20 +106,33 @@ abstract class MatrixApiEndpointBase
             $options["auth_bearer"] = $token;
         }
 
+        $statusCode = "UNKNOWN";
+
         try {
             $request = $this->client->request($method, $this->getApiUrl($apiCall), $options);
-            $content = $request->getContent();
-        } catch (TransportExceptionInterface|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface $e) {
+            $content = $request->getContent(false);
+            $statusCode = $request->getStatusCode();
+            if ($request->getStatusCode() >= 500) {
+                throw new Exception("Received Status code of $statusCode");
+            }
+        } catch (Throwable $e) {
+            $this->logger->error("Matrix API request to `{$this->getApiUrl($apiCall)}` failed | Status-Code: $statusCode | Ex.: {$e->getMessage()}");
             throw new MatrixApiException("REQUEST_ERROR", $e->getMessage(), $e->getCode());
         }
 
         try {
             $responseData = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
         } catch (JsonException $e) {
+            $this->logger->error("Matrix API request to `{$this->getApiUrl($apiCall)}` failed. Error occurred while decoding response json data | Status-Code: $statusCode |Ex.: {$e->getMessage()}");
             throw new MatrixApiException("JSON_ERROR", $e->getMessage());
         }
 
         if (isset($responseData["errcode"])) {
+            if ($responseData["errcode"] === "M_LIMIT_EXCEEDED") {
+                $this->logger->error(
+                    "Matrix Api Request limit reached. Request call: '{$this->getApiUrl($apiCall)}'"
+                );
+            }
             throw new MatrixApiException($responseData["errcode"], $responseData["error"]);
         }
         return $responseData;

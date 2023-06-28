@@ -14,6 +14,71 @@
       "requiredParameterMissing": "Der benötigte Parameter '%s' konnte nicht gefunden werden."
     }
   },
+  "authenticate": "Authentifizieren",
+  "config": {
+    "section": {
+      "server": {
+        "reachable": "<span class='sectionTitleWithStatus'>Server <span class='alert alert-success sectionStatus'>%s</span></span>",
+        "unreachable": "<span class='sectionTitleWithStatus'>Server <span class='alert alert-danger sectionStatus'>%s</span></span>"
+      },
+      "adminAuthentication": {
+        "valid": "<span class='sectionTitleWithStatus'>Admin-Authentifizierung <span class='alert alert-success sectionStatus'>%s</span></span>",
+        "invalid": "<span class='sectionTitleWithStatus'>Admin-Authentifizierung <span class='alert alert-danger sectionStatus'>%s</span></span>"
+      },
+      "chat": "Chat",
+      "user": "Benutzer"
+    },
+    "usernameScheme": {
+      "title": "Matrix-Benutzer-Namensschema",
+      "info": "Dieses Schema wird verwendet, um den Matrix-Benutzernamen zu erzeugen,<br>wenn ILIAS-Benutzer einem Matrix-Chat beitreten wollen, aber bisher keinen Benutzer haben. <br><br>Das Schema darf nur die folgenden Zeichen enthalten %s.<br>Großbuchstaben werden in Kleinbuchstaben umgewandelt!<br><br>Unterstützte Variablen: <br>%s"
+    },
+    "sharedSecret": {
+      "title": "Gemeinsames Geheimnis",
+      "info": "'registration_shared_secret' aus der Synapse-Homeserver konfiguration (homeserver.yaml)<br><br>Dieses Feld wird nach dem Absenden des Formulars wieder gelöscht.",
+      "empty": "Dieses Feld ist erforderlich, wenn es noch nicht gespeichert wurde!"
+    },
+    "admin": {
+      "username": {
+        "title": "Benutzername Des Matrix-Server Administrators",
+        "info": "Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen."
+      },
+      "password": {
+        "title": "Passwort Des Matrix-Server Administrators",
+        "info": "Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen.<br>Eingabefeld wird nach abspeichern des Passwortes geleert!"
+      }
+    },
+    "user": {
+      "generalSettings": "Allgemeine Einstellungen",
+      "title": "Chat Einstellungen",
+      "authMethod": "Matrix-Authentifizierungsmethode",
+      "useExternalAccount": "Externes Konto Verwenden",
+      "loginOrCreate": "Authentifizierung mit Bestehendem Konto oder Erstellen Eines Neuen Kontos Mittels Namensschema",
+      "login": "Mit Bestehendem Konto Authentifizieren",
+      "create": {
+        "title": "Konto Mittels Namensschema Erstellen",
+        "username": {
+          "info": "Um Konflikte zu vermeiden, wird dem eingegebenen Benutzernamen ein Suffix \"%s\" hinzugefügt.<br><br> Der Benutzername (inklusive Suffix) darf nur die Zeichen %s enthalten. <br>Großbuchstaben werden in Kleinbuchstaben umgewandelt!",
+          "illegalCharactersUsed": "Nur \"a-z, 0-9, =, _, -, ., /, '\" sind erlaubt",
+          "idm_info": "Sie sind durch einen IDM-Server authentifiziert. Der Benutzername wird automatisch festgelegt.<br><br>"
+        }
+      },
+      "method": {
+        "title": "Matrix-Benutzer Registrierungsmethode",
+        "externalAccount": "Verwende Externen-Account Eintrag",
+        "fromNameScheme": "Benutzer Basierend Auf Namensschema"
+      }
+    },
+    "loadLimit": {
+      "initial": {
+        "title": "Initiales Chat-Nachrichten Limit",
+        "info": "Wie viele Nachrichten sollen beim Laden des Chats initial geladen werden (neusten x Nachrichten)"
+      },
+      "history": {
+        "title": "Anzahl Der Gleichzeitig Zu Ladenden Alten Nachrichten",
+        "info": "Wie viele Nachrichten gleichzeitig sollen nachgeladen werden, wenn der Benutzer im Chat-Fenster nach oben scrollt"
+      }
+    }
+  },
   "chat": "Chat",
   "matrix": {
     "server": {
@@ -22,16 +87,7 @@
       "unreachable": "Server nicht erreichbar"
     },
     "chat": {
-      "loadLimit": {
-        "initial": {
-          "title": "Initiales Chat-Nachrichten Limit",
-          "info": "Wie viele Nachrichten sollen beim Laden des Chats initial geladen werden (neusten x Nachrichten)"
-        },
-        "history": {
-          "title": "Alte Nachrichten nachlade Limit",
-          "info": "Wie viele Nachrichten gleichzeitig sollen nachgeladen werden, wenn der Benutzer im Chat-Fenster nach oben scrollt"
-        }
-      },
+      "loggedInAs": "Eingeloggt als",
       "notifications": {
         "changedName": "Benutzer '%s' hat seinen Namen auf '%s' geändert"
       },
@@ -44,11 +100,7 @@
         "success": "Matrix-Logout erfolgreich"
       },
       "room": {
-        "encryption": {
-          "encrypted": "Verschlüsselt",
-          "unencrypted": "Unverschlüsselt"
-        },
-        "notFoundEvenThoughEnabled": "Der Raum wurde nicht gefunden, obwohl diese Integration aktiviert ist.<br>Wahrscheinlich wurde der Raum durch einen externen Client gelöscht oder der genutzte Administrator kann nicht mehr auf diesen zugreifen!<br><br>Die Integration muss wahrscheinlich deaktiviert (und dabei der Raum gelöscht werden, falls möglich) und dann wieder aktiviert werden.",
+        "notFoundEvenThoughEnabled": "Der Raum wurde nicht gefunden, obwohl die Integration für den Kurs aktiviert ist.<br>Wahrscheinlich wurde der Raum durch einen externen Client gelöscht oder der genutzte Administrator kann nicht mehr auf diesen zugreifen!<br><br>Die Integration muss wahrscheinlich deaktiviert (und dabei der Raum gelöscht werden, falls möglich) und dann wieder aktiviert werden.",
         "notFound": "Raum konnte nicht gefunden werden.",
         "memberAssignFailed": "Benutzer konnte nicht zum Raum hinzugefügt werden.",
         "delete": {
@@ -60,33 +112,24 @@
       },
       "course": {
         "settings": "Chat-Einstellungen",
-        "enable": "Aktiviere Matrix-Chat Integration für den Kurs"
+        "enable": "Aktiviere Matrix-Chat Integration Für Den Kurs"
+      }
+    },
+    "user": {
+      "authentication": {
+        "failed": {
+          "authFailed": "Authentifizierung mit Matrix-Benutzer '%s' fehlgeschlagen",
+          "unConfigured": "Keine Authentifizierung konfiguriert",
+          "usernameTaken": "Benutzername '%s' ist bereits vergeben",
+          "userCreation": "Beim Anlegen des Benutzers ist ein Fehler aufgetreten"
+        },
+        "success": "Authentifizierung erfolgreich mit Benutzername '%s' (Matrix-User-ID: %s)"
       }
     },
     "admin": {
-      "loginInvalid": "Admin-Login ungültig",
-      "username": {
-        "input": "Benutzername des Matrix-Server Administrators",
-        "info": "Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen."
-      },
-      "password": {
-        "input": "Passwort des Matrix-Server Administrators",
-        "info": "Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen.<br>Eingabefeld wird nach abspeichern des Passwortes geleert!"
-      },
-      "auth": {
-        "login": "In Matrix-Chat einloggen",
-        "notConfigured": "Authentifizierung ist nicht (korrekt) konfiguriert",
-        "method": "Authentifizierungs Methode",
-        "byLoginAndPassword": {
-          "title": "Authentifizierung über Benutzername und Passwort"
-        },
-        "byLdap": {
-          "title": "Authentifizierung über LDAP",
-          "autoLogin": {
-            "title": "Automatisches LDAP login",
-            "info": "Wenn aktiviert, wird der Benutzer automatisch in den Matrix-Chat eingeloggt, wenn er sich das erste Mal in ILIAS anmeldet.<br><br><span style='color: red;'>Hierzu wird das login Event abgefangen!</span>"
-          }
-        }
+      "login": {
+        "valid": "Admin-Login gültig",
+        "invalid": "Admin-Login ungültig"
       }
     }
   }

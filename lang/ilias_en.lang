@@ -7,21 +7,48 @@ general.update.failed#:#Update failed
 general.plugin.settings#:#Plugin Settings
 general.plugin.notActivated#:#Plugin is not active, yet. Please activate it.
 general.plugin.requiredParameterMissing#:#The required parameter '%s' could not be found.
+authenticate#:#Authenticate
+config.section.server.reachable#:#<span class='sectionTitleWithStatus'>Server <span class='alert alert-success sectionStatus'>Server is reachable</span></span>
+config.section.server.unreachable#:#<span class='sectionTitleWithStatus'>Server <span class='alert alert-danger sectionStatus'>Server is unreachable</span></span>
+config.section.adminAuthentication#:#Admin-Authentication
+config.section.chat#:#Chat
+config.section.user#:#User
+config.usernameScheme.title#:#Matrix-User naming scheme
+config.usernameScheme.info#:#This scheme is used to create the matrix username,<br>when ILIAS users want to join a Matrix chat but do not have a user yet.<br><br>The scheme may only contain the characters %s.<br>Uppercase letters are converted to lowercase!<br><br>Supported variables: <br>%s
+config.sharedSecret.title#:#Shared Secret
+config.sharedSecret.info#:#'registration_shared_secret' from the Synapse-Homeserver configuration (homeserver.yaml)<br><br>This field will be cleared after the form submission.
+config.sharedSecret.empty#:#This field is required if it has not been saved yet!
+config.admin.username.title#:#Username of the Matrix-Server Administrator
+config.admin.username.info#:#Will be used to do administrator tasks like creating rooms.
+config.admin.password.title#:#Password of the Matrix-Server Administrator
+config.admin.password.info#:#Will be used to do administrator tasks like creating rooms.<br>Input-Field will be cleared after saving the password!
+config.user.generalSettings#:#General settings
+config.user.title#:#Chat Settings
+config.user.authMethod#:#Matrix Authentication Method
+config.user.useExternalAccount#:#Use External Account
+config.user.loginOrCreate#:#Authentication With Existing Account or Creation of New Account Using Naming Scheme
+config.user.login#:#Authenticate With Existing Account
+config.user.create.title#:#Create Account Using Naming Scheme
+config.user.create.username.info#:#To avoid conflicts a suffix '%s' is added to the entered username.<br><br>The username (including suffix) may only contain the characters %s.<br>Uppercase letters are converted to lowercase!
+config.user.create.username.illegalCharactersUsed#:#Only "a-z, 0-9, =, _, -, ., /, '" are allowed
+config.user.create.username.idm_info#:#You are authenticated by an IDM server. The username is set automatically.<br><br>
+config.user.method.title#:#Matrix-User registration method
+config.user.method.externalAccount#:#Use external account entry
+config.user.method.fromNameScheme#:#Based on Naming Scheme
+config.loadLimit.initial.title#:#Initial chat message load limit
+config.loadLimit.initial.info#:#How many messages should be loaded when the chat is opened (newest x messages)
+config.loadLimit.history.title#:#Number of Old Messages to Load at a Time
+config.loadLimit.history.info#:#How many messages to load at the same time when the user scrolls up in the Chat-Window
 chat#:#Chat
 matrix.server.url#:#Matrix Server (Synapse) URL
 matrix.server.reachable#:#Server is reachable
 matrix.server.unreachable#:#Server is unreachable
-matrix.chat.loadLimit.initial.title#:#Initial chat message load limit
-matrix.chat.loadLimit.initial.info#:#How many messages should be loaded when the chat is opened (newest x messages)
-matrix.chat.loadLimit.history.title#:#Old messages to load
-matrix.chat.loadLimit.history.info#:#How many messages to load at the same time when the user scrolls up in the Chat-Window
+matrix.chat.loggedInAs#:#Logged in as
 matrix.chat.notifications.changedName#:#User '%s' changed their name to '%s'
 matrix.chat.send#:#Send
 matrix.chat.login.failed#:#Matrix login failed
 matrix.chat.login.success#:#Matrix login successful
 matrix.chat.logout.success#:#Matrix logout successful
-matrix.chat.room.encryption.encrypted#:#Encrypted
-matrix.chat.room.encryption.unencrypted#:#Unencrypted
 matrix.chat.room.notFoundEvenThoughEnabled#:#The room was not found even though the integration is enabled for the course.<br>It's possible the room was deleted by an external client or the used administrator cannot access it anymore!<br><br>The integration probably needs to be deactivated (deleting the room if possible) and then reactivated.
 matrix.chat.room.notFound#:#Room could not be found.
 matrix.chat.room.memberAssignFailed#:#User could not be added to the room.
@@ -30,17 +57,11 @@ matrix.chat.room.delete.button#:#Delete chat room
 matrix.chat.room.delete.success#:#Room deleted successfully
 matrix.chat.room.delete.failed#:#Room could not be deleted
 matrix.chat.course.settings#:#Chat settings
-matrix.chat.course.enable#:#Activate Matrix-Chat integration for the Course
-matrix.admin.loginInvalid#:#Admin-Login invalid
-matrix.admin.username.input#:#Username of the Matrix-Server administrator
-matrix.admin.username.info#:#Will be used to do administrator tasks like creating rooms.
-matrix.admin.password.input#:#Password of the Matrix-Server administrator
-matrix.admin.password.info#:#Will be used to do administrator tasks like creating rooms.<br>Input-Field will be cleared after saving the password!
-matrix.admin.auth.login#:#Login into Matrix Chat
-matrix.admin.auth.notConfigured#:#Authentication is not (correctly) configured
-matrix.admin.auth.method#:#Authentication method
-matrix.admin.auth.byLoginAndPassword.title#:#Authentication using Username and Password
-matrix.admin.auth.byLoginAndPassword.missingUsernamePassword#:#No Username or Password was configured. Please configure a username and password first.
-matrix.admin.auth.byLdap.title#:#Authentication using LDAP
-matrix.admin.auth.byLdap.autoLogin.title#:#Automatic ldap login
-matrix.admin.auth.byLdap.autoLogin.info#:#If activated, the user will be automatically logged into the Matrix-Chat, once the user logins into ILIAS.<br><br><span style='color: red;'>For this the login even will be catched!</span>
+matrix.chat.course.enable#:#Activate Matrix-Chat Integration for the Course
+matrix.user.authentication.failed.authFailed#:#Authentication with Matrix-User '%s' failed
+matrix.user.authentication.failed.unConfigured#:#No authentication configured
+matrix.user.authentication.failed.usernameTaken#:#Username '%s' is already taken
+matrix.user.authentication.failed.userCreation#:#An error occurred while creating the user
+matrix.user.authentication.success#:#Authentication successful with username '%s' (Matrix-User-ID: %s)
+matrix.admin.login.valid#:#Admin-Login valid
+matrix.admin.login.invalid#:#Admin-Login invalid

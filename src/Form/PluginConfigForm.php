@@ -16,17 +16,17 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChatClient\Form;
 
-use ilPropertyFormGUI;
-use ilMatrixChatClientPlugin;
-use ilTextInputGUI;
-use ilPasswordInputGUI;
+use ilFormSectionHeaderGUI;
+use ilGlobalPageTemplate;
+use ILIAS\DI\Container;
 use ilMatrixChatClientConfigGUI;
+use ilMatrixChatClientPlugin;
+use ilNumberInputGUI;
+use ilPasswordInputGUI;
+use ilPropertyFormGUI;
+use ilTextInputGUI;
 use ilUriInputGUI;
 use ilUtil;
-use ilNumberInputGUI;
-use ilRadioGroupInputGUI;
-use ilRadioOption;
-use ilCheckboxInputGUI;
 
 /**
  * Class PluginConfigForm
@@ -40,79 +40,136 @@ class PluginConfigForm extends ilPropertyFormGUI
      * @var ilMatrixChatClientPlugin
      */
     private $plugin;
+    /**
+     * @var Container
+     */
+    private $dic;
+    /**
+     * @var ilGlobalPageTemplate
+     */
+    private $mainTpl;
 
     public function __construct()
     {
         parent::__construct();
         $this->plugin = ilMatrixChatClientPlugin::getInstance();
+        $this->dic = $this->plugin->dic;
+        $this->mainTpl = $this->dic->ui()->mainTemplate();
+        $this->mainTpl->addCss($this->plugin->cssFolder("style.css"));
 
         $this->setFormAction($this->ctrl->getFormActionByClass(ilMatrixChatClientConfigGUI::class, "showSettings"));
         $this->setId("{$this->plugin->getId()}_{$this->plugin->getPluginName()}_plugin_config_form");
         $this->setTitle($this->plugin->txt("general.plugin.settings"));
 
-        if ($this->plugin->matrixApi->general->serverReachable()) {
-            ilUtil::sendSuccess($this->plugin->txt("matrix.server.reachable"), true);
-        } else {
-            ilUtil::sendFailure($this->plugin->txt("matrix.server.unreachable"), true);
-        }
-        if (!$this->plugin->matrixApi->admin->checkAdminUser()) {
-            ilUtil::sendFailure($this->plugin->txt("matrix.admin.loginInvalid"), true);
-        }
-
         $matrixServerUrl = new ilUriInputGUI($this->plugin->txt("matrix.server.url"), "matrixServerUrl");
         $matrixServerUrl->setRequired(true);
 
         $matrixAdminUsername = new ilTextInputGUI(
-            $this->plugin->txt("matrix.admin.username.input"),
+            $this->plugin->txt("config.admin.username.title"),
             "matrixAdminUsername"
         );
         $matrixAdminUsername->setRequired(true);
-        $matrixAdminUsername->setInfo($this->plugin->txt("matrix.admin.username.info"));
+        $matrixAdminUsername->setInfo($this->plugin->txt("config.admin.username.info"));
 
         $matrixAdminPassword = new ilPasswordInputGUI(
-            $this->plugin->txt("matrix.admin.password.input"),
+            $this->plugin->txt("config.admin.password.title"),
             "matrixAdminPassword"
         );
-        $matrixAdminPassword->setInfo($this->plugin->txt("matrix.admin.password.info"));
+        $matrixAdminPassword->setInfo($this->plugin->txt("config.admin.password.info"));
         $matrixAdminPassword->setSkipSyntaxCheck(true);
         $matrixAdminPassword->setRetype(false);
 
-        $loginMethod = new ilRadioGroupInputGUI($this->plugin->txt("matrix.admin.auth.method"), "loginMethod");
-        $loginMethod->setRequired(true);
-
-        $byLoginAndPassword = new ilRadioOption(
-            $this->plugin->txt("matrix.admin.auth.byLoginAndPassword.title"),
-            "byLoginAndPassword"
-        );
-        $byLdap = new ilRadioOption($this->plugin->txt("matrix.admin.auth.byLdap.title"), "byLdap");
-        $useLdapAutoLogin = new ilCheckboxInputGUI($this->plugin->txt("matrix.admin.auth.byLdap.autoLogin.title"), "useLdapAutoLogin");
-        $useLdapAutoLogin->setInfo($this->plugin->txt("matrix.admin.auth.byLdap.autoLogin.info"));
-        $byLdap->addSubItem($useLdapAutoLogin);
-
-
-        $loginMethod->addOption($byLoginAndPassword);
-        $loginMethod->addOption($byLdap);
+        $sharedSecret = new ilPasswordInputGUI($this->plugin->txt("config.sharedSecret.title"), "sharedSecret");
+        $sharedSecret->setInfo($this->plugin->txt("config.sharedSecret.info"));
+        $sharedSecret->setSkipSyntaxCheck(true);
+        $sharedSecret->setRetype(false);
 
         $chatInitialLoadLimit = new ilNumberInputGUI(
-            $this->plugin->txt("matrix.chat.loadLimit.initial.title"),
+            $this->plugin->txt("config.loadLimit.initial.title"),
             "chatInitialLoadLimit"
         );
         $chatInitialLoadLimit->setRequired(true);
-        $chatInitialLoadLimit->setInfo($this->plugin->txt("matrix.chat.loadLimit.initial.info"));
+        $chatInitialLoadLimit->setInfo($this->plugin->txt("config.loadLimit.initial.info"));
 
         $chatHistoryLoadLimit = new ilNumberInputGUI(
-            $this->plugin->txt("matrix.chat.loadLimit.history.title"),
+            $this->plugin->txt("config.loadLimit.history.title"),
             "chatHistoryLoadLimit"
         );
         $chatHistoryLoadLimit->setRequired(true);
-        $chatHistoryLoadLimit->setInfo($this->plugin->txt("matrix.chat.loadLimit.history.info"));
+        $chatHistoryLoadLimit->setInfo($this->plugin->txt("config.loadLimit.history.info"));
 
+        $usernameScheme = new ilTextInputGUI(
+            $this->plugin->txt("config.usernameScheme.title"),
+            "usernameScheme"
+        );
+        $usernameScheme->setRequired(true);
+
+        $allowedCharacters = array_map(static function ($char) {
+            return "<span style='color: blue; font-weight: bold'>$char</span>";
+        }, ["a-z", "0-9", "=", "_", "-", ".", "/", "'"]);
+
+        $usernameScheme->setInfo(sprintf(
+            $this->plugin->txt("config.usernameScheme.info"),
+            implode(", ", $allowedCharacters),
+            "- " . implode("<br>- ", array_map(static function ($variable) : string {
+                return "<span>{</span>$variable<span>}</span>";
+            }, array_keys($this->plugin->getUsernameSchemeVariables())))
+        ));
+
+        $serverReachable = $this->plugin->matrixApi->general->serverReachable();
+        $serverSection = new ilFormSectionHeaderGUI();
+        if ($this->plugin->matrixApi->general->serverReachable()) {
+            $serverSection->setTitle(sprintf(
+                $this->plugin->txt("config.section.server.reachable"),
+                $this->plugin->txt("matrix.server.reachable")
+            ));
+        } else {
+            $serverSection->setTitle(sprintf(
+                $this->plugin->txt("config.section.server.unreachable"),
+                $this->plugin->txt("matrix.server.unreachable")
+            ));
+        }
+
+        $adminAuthenticationSection = new ilFormSectionHeaderGUI();
+        if ($this->plugin->matrixApi->admin->checkAdminUser()) {
+            $adminAuthenticationSection->setTitle(sprintf(
+                $this->plugin->txt("config.section.adminAuthentication.valid"),
+                $this->plugin->txt("matrix.admin.login.valid")
+            ));
+        } else {
+            if (!$serverReachable) {
+                $adminAuthenticationSection->setTitle(sprintf(
+                    $this->plugin->txt("config.section.adminAuthentication.invalid"),
+                    $this->plugin->txt("matrix.server.unreachable")
+                ));
+            } else {
+                $adminAuthenticationSection->setTitle(sprintf(
+                    $this->plugin->txt("config.section.adminAuthentication.invalid"),
+                    $this->plugin->txt("matrix.admin.login.invalid")
+                ));
+            }
+        }
+
+        $chatSection = new ilFormSectionHeaderGUI();
+        $chatSection->setTitle($this->plugin->txt("config.section.chat"));
+
+        $userSection = new ilFormSectionHeaderGUI();
+        $userSection->setTitle($this->plugin->txt("config.section.user"));
+
+        $this->addItem($serverSection);
         $this->addItem($matrixServerUrl);
+        $this->addItem($sharedSecret);
+
+        $this->addItem($adminAuthenticationSection);
         $this->addItem($matrixAdminUsername);
         $this->addItem($matrixAdminPassword);
-        $this->addItem($loginMethod);
+
+        $this->addItem($chatSection);
         $this->addItem($chatInitialLoadLimit);
         $this->addItem($chatHistoryLoadLimit);
+
+        $this->addItem($userSection);
+        $this->addItem($usernameScheme);
         $this->addCommandButton("saveSettings", $this->lng->txt("save"));
     }
 }

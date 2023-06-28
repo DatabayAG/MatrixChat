@@ -81,27 +81,35 @@ button.chat-message-writer-send:hover {
     width: inherit;
 }
 
+.chat-logged-in-as-user-displayname {
+    font-size: larger;
+    font-weight: bolder;
+    color: #4c6586;
+}
+
+.chat-logged-in-as {
+    padding: 0.5rem;
+}
+
 .chat-top-container {
     display: flex;
+    margin-bottom: 1rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.sectionTitleWithStatus {
+    display: flex;
+    flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    margin: 0;
+    padding: 0;
 }
 
-.chat-encryption {
-    padding: 0.75rem;
-    margin-bottom: 1rem;
-    border-radius: 1rem;
-}
-
-.chat-encrypted {
-    background: greenyellow;
-    color: black;
-}
-
-.chat-unencrypted {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    background: red;
-    color: white;
+.sectionStatus {
+    margin: 0 !important;
+    padding: 0.25rem 1rem !important;
+    border-radius: 1rem !important;
+    border: 2px solid black !important;
 }

@@ -18,6 +18,7 @@ namespace ILIAS\Plugin\MatrixChatClient\Api;
 
 /**
  * Class MatrixGeneralApi
+ *
  * @package ILIAS\Plugin\MatrixChatClient\Api
  * @author  Marvin Beym <mbeym@databay.de>
  */
@@ -36,8 +37,21 @@ class MatrixGeneralApi extends MatrixApiEndpointBase
         return $response["flows"];
     }
 
+    /**
+     * @return array{name:String, version:String}|null
+     */
+    public function getServerVersionInfo() : ?array
+    {
+        try {
+            $response = $this->sendRequest("/_matrix/federation/v1/version");
+        } catch (MatrixApiException $e) {
+            return null;
+        }
+        return $response["server"];
+    }
+
     public function serverReachable() : bool
     {
-        return $this->getSupportedLoginMethods() !== [];
+        return $this->getServerVersionInfo() !== null;
     }
 }

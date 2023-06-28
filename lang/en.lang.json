@@ -14,6 +14,68 @@
       "requiredParameterMissing": "The required parameter '%s' could not be found."
     }
   },
+  "authenticate": "Authenticate",
+  "config": {
+    "section": {
+      "server": {
+        "reachable": "<span class='sectionTitleWithStatus'>Server <span class='alert alert-success sectionStatus'>Server is reachable</span></span>",
+        "unreachable": "<span class='sectionTitleWithStatus'>Server <span class='alert alert-danger sectionStatus'>Server is unreachable</span></span>"
+      },
+      "adminAuthentication": "Admin-Authentication",
+      "chat": "Chat",
+      "user": "User"
+    },
+    "usernameScheme": {
+      "title": "Matrix-User naming scheme",
+      "info": "This scheme is used to create the matrix username,<br>when ILIAS users want to join a Matrix chat but do not have a user yet.<br><br>The scheme may only contain the characters %s.<br>Uppercase letters are converted to lowercase!<br><br>Supported variables: <br>%s"
+    },
+    "sharedSecret": {
+      "title": "Shared Secret",
+      "info": "'registration_shared_secret' from the Synapse-Homeserver configuration (homeserver.yaml)<br><br>This field will be cleared after the form submission.",
+      "empty": "This field is required if it has not been saved yet!"
+    },
+    "admin": {
+      "username": {
+        "title": "Username of the Matrix-Server Administrator",
+        "info": "Will be used to do administrator tasks like creating rooms."
+      },
+      "password": {
+        "title": "Password of the Matrix-Server Administrator",
+        "info": "Will be used to do administrator tasks like creating rooms.<br>Input-Field will be cleared after saving the password!"
+      }
+    },
+    "user": {
+      "generalSettings": "General settings",
+      "title": "Chat Settings",
+      "authMethod": "Matrix Authentication Method",
+      "useExternalAccount": "Use External Account",
+      "loginOrCreate": "Authentication With Existing Account or Creation of New Account Using Naming Scheme",
+      "login": "Authenticate With Existing Account",
+      "create": {
+        "title": "Create Account Using Naming Scheme",
+        "username": {
+          "info": "To avoid conflicts a suffix '%s' is added to the entered username.<br><br>The username (including suffix) may only contain the characters %s.<br>Uppercase letters are converted to lowercase!",
+          "illegalCharactersUsed": "Only \"a-z, 0-9, =, _, -, ., /, '\" are allowed",
+          "idm_info": "You are authenticated by an IDM server. The username is set automatically.<br><br>"
+        }
+      },
+      "method": {
+        "title": "Matrix-User registration method",
+        "externalAccount": "Use external account entry",
+        "fromNameScheme": "Based on Naming Scheme"
+      }
+    },
+    "loadLimit": {
+      "initial": {
+        "title": "Initial chat message load limit",
+        "info": "How many messages should be loaded when the chat is opened (newest x messages)"
+      },
+      "history": {
+        "title": "Number of Old Messages to Load at a Time",
+        "info": "How many messages to load at the same time when the user scrolls up in the Chat-Window"
+      }
+    }
+  },
   "chat": "Chat",
   "matrix": {
     "server": {
@@ -22,16 +84,7 @@
       "unreachable": "Server is unreachable"
     },
     "chat": {
-      "loadLimit": {
-        "initial": {
-          "title": "Initial chat message load limit",
-          "info": "How many messages should be loaded when the chat is opened (newest x messages)"
-        },
-        "history": {
-          "title": "Old messages to load",
-          "info": "How many messages to load at the same time when the user scrolls up in the Chat-Window"
-        }
-      },
+      "loggedInAs": "Logged in as",
       "notifications": {
         "changedName": "User '%s' changed their name to '%s'"
       },
@@ -44,10 +97,6 @@
         "success": "Matrix logout successful"
       },
       "room": {
-        "encryption": {
-          "encrypted": "Encrypted",
-          "unencrypted": "Unencrypted"
-        },
         "notFoundEvenThoughEnabled": "The room was not found even though the integration is enabled for the course.<br>It's possible the room was deleted by an external client or the used administrator cannot access it anymore!<br><br>The integration probably needs to be deactivated (deleting the room if possible) and then reactivated.",
         "notFound": "Room could not be found.",
         "memberAssignFailed": "User could not be added to the room.",
@@ -60,34 +109,24 @@
       },
       "course": {
         "settings": "Chat settings",
-        "enable": "Activate Matrix-Chat integration for the Course"
+        "enable": "Activate Matrix-Chat Integration for the Course"
+      }
+    },
+    "user": {
+      "authentication": {
+        "failed": {
+          "authFailed": "Authentication with Matrix-User '%s' failed",
+          "unConfigured": "No authentication configured",
+          "usernameTaken": "Username '%s' is already taken",
+          "userCreation": "An error occurred while creating the user"
+        },
+        "success": "Authentication successful with username '%s' (Matrix-User-ID: %s)"
       }
     },
     "admin": {
-      "loginInvalid": "Admin-Login invalid",
-      "username": {
-        "input": "Username of the Matrix-Server administrator",
-        "info": "Will be used to do administrator tasks like creating rooms."
-      },
-      "password": {
-        "input": "Password of the Matrix-Server administrator",
-        "info": "Will be used to do administrator tasks like creating rooms.<br>Input-Field will be cleared after saving the password!"
-      },
-      "auth": {
-        "login": "Login into Matrix Chat",
-        "notConfigured": "Authentication is not (correctly) configured",
-        "method": "Authentication method",
-        "byLoginAndPassword": {
-            "title": "Authentication using Username and Password",
-          "missingUsernamePassword": "No Username or Password was configured. Please configure a username and password first."
-        },
-        "byLdap": {
-          "title": "Authentication using LDAP",
-          "autoLogin": {
-            "title": "Automatic ldap login",
-            "info": "If activated, the user will be automatically logged into the Matrix-Chat, once the user logins into ILIAS.<br><br><span style='color: red;'>For this the login even will be catched!</span>"
-          }
-        }
+      "login": {
+        "valid": "Admin-Login valid",
+        "invalid": "Admin-Login invalid"
       }
     }
   }

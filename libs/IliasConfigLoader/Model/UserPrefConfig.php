@@ -4,62 +4,64 @@ declare(strict_types=1);
 /**
  * This file is part of ILIAS, a powerful learning management system
  * published by ILIAS open source e-Learning e.V.
+ *
  * ILIAS is licensed with the GPL-3.0,
  * see https://www.gnu.org/licenses/gpl-3.0.en.html
  * You should have received a copy of said license along with the
  * source code, too.
+ *
  * If this is not the case or you just want to try ILIAS, you'll find
  * us at:
  * https://www.ilias.de
  * https://github.com/ILIAS-eLearning
+ *
  *********************************************************************/
 
 namespace ILIAS\Plugin\MatrixChatClient\Libs\IliasConfigLoader\Model;
 
-use ReflectionProperty;
+use ilObjUser;
 
 /**
- * Class LoadableProperty
+ * Class UserConfig
+ *
  * @package ILIAS\Plugin\MatrixChatClient\Libs\IliasConfigLoader\Model
  * @author  Marvin Beym <mbeym@databay.de>
  */
-class LoadableProperty
+class UserPrefConfig extends ConfigBase
 {
     /**
-     * @var ReflectionProperty
+     * @var ilObjUser
      */
-    private $property;
-    /**
-     * @var string[]
-     */
-    private $types;
+    protected $user;
 
-    public function getProperty() : ReflectionProperty
+    public function __construct(ilObjUser $user, string $settingsPrefix)
     {
-        return $this->property;
+        $this->user = $user;
+        parent::__construct($settingsPrefix);
     }
 
-    public function setProperty(ReflectionProperty $property) : self
+    protected function saveSingleValue(string $key, $value) : void
     {
-        $this->property = $property;
-        return $this;
+        $this->user->writePref($key, $value);
     }
 
-    /**
-     * @return string[]
-     */
-    public function getTypes() : array
+    protected function loadSingleValue(string $key, ?string $defaultValue) : ?string
     {
-        return $this->types;
+        $pref = $this->user->getPref($key);
+
+        return $pref ?: $defaultValue;
     }
 
-    /**
-     * @param string[] $types
-     * @return $this
-     */
-    public function setTypes(array $types) : self
+    protected function cleanSingleValue(string $key) : bool
     {
-        $this->types = $types;
-        return $this;
+        $this->user->deletePref($key);
+        return true;
+    }
+
+    protected function getIgnoredPropertyNames() : array
+    {
+        return [
+            "user"
+        ];
     }
 }

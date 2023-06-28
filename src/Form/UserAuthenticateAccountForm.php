@@ -20,43 +20,49 @@ declare(strict_types=1);
 namespace ILIAS\Plugin\MatrixChatClient\Form;
 
 use ilPropertyFormGUI;
-use ilPasswordInputGUI;
-use ilTextInputGUI;
-use ILIAS\Plugin\MatrixChatClient\Controller\ChatClientController;
 use ilMatrixChatClientPlugin;
+use ILIAS\DI\Container;
+use ILIAS\Plugin\MatrixChatClient\Controller\UserConfigController;
+use ilTextInputGUI;
+use ilPasswordInputGUI;
 
 /**
- * Class ChatLoginForm
+ * Class UserAuthentificateAccountForm
  *
  * @package ILIAS\Plugin\MatrixChatClient\Form
  * @author  Marvin Beym <mbeym@databay.de>
  */
-class ChatLoginForm extends ilPropertyFormGUI
+class UserAuthenticateAccountForm extends ilPropertyFormGUI
 {
+    /**
+     * @var ilMatrixChatClientPlugin
+     */
+    private $plugin;
+    /**
+     * @var Container
+     */
+    private $dic;
+
     public function __construct()
     {
-        parent::__construct();
         global $DIC;
-        $query = $DIC->http()->request()->getQueryParams();
+        parent::__construct();
+        $this->dic = $DIC;
+        $this->plugin = ilMatrixChatClientPlugin::getInstance();
+        $this->setTitle($this->plugin->txt("config.user.login"));
+        $this->setFormAction(UserConfigController::getInstance()->getCommandLink("showLogin", [], true));
 
-        $this->setTitle(ilMatrixChatClientPlugin::getInstance()->txt("matrix.admin.auth.login"));
-        $this->setFormAction(ChatClientController::getInstance()->getCommandLink(
-            "showChatLogin",
-            ["ref_id" => $query["ref_id"]],
-            true
-        ));
-
-        $username = new ilTextInputGUI($this->lng->txt("login"), "username");
+        $username = new ilTextInputGUI($this->lng->txt("username"), "username");
         $username->setRequired(true);
-        $this->addItem($username);
-
 
         $password = new ilPasswordInputGUI($this->lng->txt("password"), "password");
+        $password->setSkipSyntaxCheck(true);
         $password->setRetype(false);
         $password->setRequired(true);
-        $password->setSkipSyntaxCheck(true);
+
+        $this->addItem($username);
         $this->addItem($password);
 
-        $this->addCommandButton(ChatClientController::getCommand("saveChatLogin"), $this->lng->txt("log_in"));
+        $this->addCommandButton(UserConfigController::getCommand("saveLogin"), $this->plugin->txt("authenticate"));
     }
 }
