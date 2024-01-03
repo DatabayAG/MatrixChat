@@ -94,11 +94,10 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
             return;
         }
 
-        $sharedSecretValue = $sharedSecretValue ?? $this->plugin->getPluginConfig()->getSharedSecret();
-        $matrixServerUrl = rtrim($form->getInput("matrixServerUrl"), "/");
+        $sharedSecretValue = $sharedSecretValue ?: $this->plugin->getPluginConfig()->getSharedSecret();
 
         $this->plugin->getPluginConfig()
-                     ->setMatrixServerUrl($matrixServerUrl)
+                     ->setMatrixServerUrl(rtrim($form->getInput("matrixServerUrl"), "/"))
                      ->setMatrixAdminUsername($form->getInput("matrixAdminUsername"))
                      ->setChatInitialLoadLimit((int) $form->getInput("chatInitialLoadLimit"))
                      ->setChatHistoryLoadLimit((int) $form->getInput("chatHistoryLoadLimit"))
