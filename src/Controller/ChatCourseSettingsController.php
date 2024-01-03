@@ -67,7 +67,7 @@ class ChatCourseSettingsController extends BaseController
         $gui = null;
         switch (ilObject::_lookupType($this->courseSettings->getCourseId(), true)) {
             case "crs":
-                $gui = new ilObjCourseGUI();
+                $gui = new ilObjCourseGUI([], $this->courseSettings->getCourseId(), true);
                 $gui->prepareOutput();
                 $gui->setSubTabs("properties");
                 break;
