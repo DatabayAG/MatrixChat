@@ -1,0 +1,115 @@
+:root {
+    --primary-color: #444444;
+}
+
+.chat-messages-container {
+    border: 2px solid var(--primary-color);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    height: 400px;
+    font-size: 1.4rem;
+    gap: 1rem;
+    overflow-y: scroll;
+}
+
+.chat-message {
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-message-content > p > img {
+    width: fit-content;
+    max-width: 200px;
+    height: fit-content;
+}
+
+.chat-message-image {
+    width: fit-content;
+    max-width: 200px;
+    height: fit-content;
+}
+
+.chat-message-author {
+
+}
+
+.chat-message-date {
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding-left: 0.5rem
+}
+
+.chat-message-content {
+    padding-left: 1rem;
+}
+
+.chat-message-writer {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    padding: 1rem 0;
+}
+
+.chat-message-writer > .EasyMDEContainer {
+    width: 100%;
+}
+
+.editor-toolbar {
+    display: flex;
+}
+
+button.chat-message-writer-send {
+    margin-left: auto !important;
+    color: white !important;
+    background-color: #4c6586 !important;
+    border-color: #4c6586 !important;
+}
+
+button.chat-message-writer-send:hover {
+    color: white !important;
+    background-color: #3a4c65 !important;
+    border-color: #36485f !important;
+}
+
+.CodeMirror-scroll {
+    min-height: 1rem !important;
+    max-height: 30rem !important;
+}
+
+.chat-message-writer-message {
+    width: inherit;
+}
+
+.chat-logged-in-as-user-displayname {
+    font-size: larger;
+    font-weight: bolder;
+    color: #4c6586;
+}
+
+.chat-logged-in-as {
+    padding: 0.5rem;
+}
+
+.chat-top-container {
+    display: flex;
+    margin-bottom: 1rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.sectionTitleWithStatus {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+.sectionStatus {
+    margin: 0 !important;
+    padding: 0.25rem 1rem !important;
+    border-radius: 1rem !important;
+    border: 2px solid black !important;
+}

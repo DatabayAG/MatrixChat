@@ -46,6 +46,7 @@ class PluginConfigForm extends ilPropertyFormGUI
         $this->plugin = ilMatrixChatClientPlugin::getInstance();
         $this->dic = $this->plugin->dic;
         $this->mainTpl = $this->dic->ui()->mainTemplate();
+        $this->mainTpl->addCss($this->plugin->cssFolder("style.css"));
 
         $this->setFormAction($this->ctrl->getFormActionByClass(ilMatrixChatClientConfigGUI::class, "showSettings"));
         $this->setId("{$this->plugin->getId()}_{$this->plugin->getPluginName()}_plugin_config_form");
