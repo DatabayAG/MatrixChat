@@ -39,6 +39,8 @@ class PluginConfig extends SettingsConfig
     private bool $localUserSpecifyOtherMatrixAccount = false;
     private bool $localUserCreateOnConfiguredHomeserver = false;
 
+    private string $roomPrefix = "";
+
     public function getMatrixServerUrl(): string
     {
         return $this->matrixServerUrl;
@@ -146,6 +148,17 @@ class PluginConfig extends SettingsConfig
     public function setLocalUserCreateOnConfiguredHomeserver(bool $localUserCreateOnConfiguredHomeserver): PluginConfig
     {
         $this->localUserCreateOnConfiguredHomeserver = $localUserCreateOnConfiguredHomeserver;
+        return $this;
+    }
+
+    public function getRoomPrefix(): string
+    {
+        return $this->roomPrefix;
+    }
+
+    public function setRoomPrefix(string $roomPrefix): PluginConfig
+    {
+        $this->roomPrefix = $roomPrefix;
         return $this;
     }
 

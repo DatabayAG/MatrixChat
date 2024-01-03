@@ -63,6 +63,7 @@ class PluginConfigForm extends ilPropertyFormGUI
         $this->addAdminUserSection($serverReachable);
         $this->addExternalUserSection($allowedUsernameSchemeCharacters);
         $this->addLocalUserSection($allowedUsernameSchemeCharacters);
+        $this->addRoomSection();
 
         $this->addCommandButton("saveSettings", $this->lng->txt("save"));
     }
@@ -209,5 +210,18 @@ class PluginConfigForm extends ilPropertyFormGUI
         ));
 
         $this->addItem($accountOptions);
+    }
+
+    protected function addRoomSection(): void
+    {
+        $section = new ilFormSectionHeaderGUI();
+        $section->setTitle($this->plugin->txt("config.section.room"));
+        $this->addItem($section);
+
+        $roomPrefix = new ilTextInputGUI(
+            $this->plugin->txt("config.room.prefix"),
+            "roomPrefix"
+        );
+        $this->addItem($roomPrefix);
     }
 }

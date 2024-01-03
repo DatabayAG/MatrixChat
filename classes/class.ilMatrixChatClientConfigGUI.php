@@ -120,6 +120,7 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
         $this->plugin->getPluginConfig()
             ->setMatrixServerUrl(rtrim($form->getInput("matrixServerUrl"), "/"))
             ->setMatrixAdminUsername($form->getInput("matrixAdminUsername"))
+            ->setSharedSecret($sharedSecretValue)
             ->setExternalUserScheme($form->getInput("externalUserScheme"))
             ->setExternalUserCreateOnConfiguredHomeserver(in_array(
                     "externalUserCreateOnConfiguredHomeserver",
@@ -137,8 +138,7 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
             ->setLocalUserSpecifyOtherMatrixAccount(in_array(
                     "localUserSpecifyOtherMatrixAccount",
                     (array) $form->getInput("localUserAccountOptions"), true)
-            )
-            ->setSharedSecret($sharedSecretValue);
+            )->setRoomPrefix($form->getInput("roomPrefix"));
 
         $matrixAdminPassword = $form->getInput("matrixAdminPassword");
         if ($matrixAdminPassword !== "") {

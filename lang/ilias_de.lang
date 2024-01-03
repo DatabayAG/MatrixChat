@@ -18,10 +18,13 @@ config.section.adminAuthentication.invalid#:#<span class='sectionTitleWithStatus
 config.section.chat#:#Chat
 config.section.user.external#:#Extern authentifizierte ILIAS-Benutzer
 config.section.user.local#:#Lokale ILIAS-Benutzer
+config.section.room#:#Raum
 
 config.usernameScheme.external#:#Schema zum Verbinden von ILIAS-Usern mit externem Account
 config.usernameScheme.local#:#Schema zum Verbinden von ILIAS-Usern mit lokalem Account
 config.usernameScheme.info#:#Dieses Schema wird verwendet, um den Matrix-Benutzernamen zu erzeugen,<br>wenn extern authentifizierte ILIAS-Benutzer einem Matrix-Chat beitreten wollen, aber bisher keinen Benutzer haben. <br><br>Das Schema darf nur die folgenden Zeichen enthalten %s.<br>Großbuchstaben werden in Kleinbuchstaben umgewandelt!<br><br>Unterstützte Variablen: <br>%s
+
+config.room.prefix#:#Raumpräfix
 
 config.accountOptions.title#:#Account-Optionen
 config.accountOptions.createOnConfiguredHomeserver#:#Account auf konfiguriertem Homeserver anlegen und nutzen.
