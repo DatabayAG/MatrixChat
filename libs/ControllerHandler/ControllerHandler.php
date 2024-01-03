@@ -19,6 +19,7 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChatClient\Libs\ControllerHandler;
 
+use ILIAS\Plugin\MatrixChatClient\Utils\UiUtil;
 use ilUtil;
 use ilPlugin;
 use ilMatrixChatClientPlugin;
@@ -35,16 +36,18 @@ class ControllerHandler
      * @var ilMatrixChatClientPlugin
      */
     private $plugin;
+    private UiUtil $uiUtil;
 
     public function __construct(ilMatrixChatClientPlugin $plugin)
     {
         $this->plugin = $plugin;
+        $this->uiUtil = new UiUtil();
     }
 
     public function handleCommand(string $cmd) : void
     {
         if (!isset($cmd)) {
-            ilUtil::sendFailure($this->plugin->txt("general.cmd.undefined"), true);
+            $this->uiUtil->sendFailure($this->plugin->txt("general.cmd.undefined"), true);
             $this->plugin->redirectToHome();
         }
         if (method_exists($this, $cmd)) {
@@ -68,7 +71,7 @@ class ControllerHandler
                     }
                 }
             }
-            ilUtil::sendFailure(sprintf($this->plugin->txt("general.cmd.notFound"), $cmd), true);
+            $this->uiUtil->sendFailure(sprintf($this->plugin->txt("general.cmd.notFound"), $cmd), true);
             $this->plugin->redirectToHome();
         }
     }

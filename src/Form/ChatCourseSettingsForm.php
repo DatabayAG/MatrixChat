@@ -16,6 +16,8 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChatClient\Form;
 
+use ILIAS\HTTP\Wrapper\WrapperFactory;
+use ILIAS\Plugin\MatrixChatClient\Utils\UiUtil;
 use ilPropertyFormGUI;
 use ilCheckboxInputGUI;
 use ILIAS\DI\Container;
@@ -41,6 +43,8 @@ class ChatCourseSettingsForm extends ilPropertyFormGUI
      * @var Container
      */
     private $dic;
+    private UiUtil $uiUtil;
+    private WrapperFactory $httpWrapper;
 
     public function __construct()
     {
@@ -48,7 +52,17 @@ class ChatCourseSettingsForm extends ilPropertyFormGUI
         $this->plugin = ilMatrixChatClientPlugin::getInstance();
         global $DIC;
         $this->dic = $DIC;
-        $query = $this->dic->http()->request()->getQueryParams();
+        $this->uiUtil = new UiUtil();
+        $this->httpWrapper = $this->dic->http()->wrapper();
+
+        $refId = $this->httpWrapper->query()->retrieve(
+            'refId',
+            $this->refinery->byTrying([
+                $this->refinery->kindlyTo()->int(),
+                $this->refinery->always(null)
+            ])
+        );
+
         $this->setTitle($this->plugin->txt("matrix.chat.course.settings"));
 
         $enableChatIntegration = new ilCheckboxInputGUI(
@@ -58,15 +72,15 @@ class ChatCourseSettingsForm extends ilPropertyFormGUI
         $enableChatIntegration->setRequired(true);
         $this->addItem($enableChatIntegration);
 
-        if (!isset($query["ref_id"]) || !$query["ref_id"]) {
-            ilUtil::sendFailure($this->plugin->txt("required_parameter_missing"), true);
+        if (!$refId) {
+            $this->uiUtil->sendFailure($this->plugin->txt("required_parameter_missing"), true);
             $this->plugin->redirectToHome();
         }
 
         $this->ctrl->setParameterByClass(
             ilMatrixChatClientUIHookGUI::class,
             "ref_id",
-            (int) $query["ref_id"]
+            $refId
         );
         $this->setFormAction($this->ctrl->getFormActionByClass([
             ilUIPluginRouterGUI::class,

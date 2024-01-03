@@ -16,6 +16,7 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChatClient\Controller;
 
+use ILIAS\Plugin\MatrixChatClient\Utils\UiUtil;
 use ilTemplate;
 use ILIAS\DI\Container;
 use ILIAS\Plugin\MatrixChatClient\Model\CourseSettings;
@@ -59,19 +60,24 @@ class ChatClientController extends BaseController
      * @var CourseSettingsRepository
      */
     private $courseSettingsRepo;
+    private UiUtil $uiUtil;
+    private \ILIAS\HTTP\Wrapper\WrapperFactory $httpWrapper;
+    private \ILIAS\Refinery\Factory $refinery;
 
     public function __construct(Container $dic)
     {
         parent::__construct($dic);
 
         $this->request = $this->dic->http()->request();
-        $query = $this->request->getQueryParams();
+        $this->uiUtil = new UiUtil();
 
         $courseId = (int) $this->verifyQueryParameter("ref_id");
 
         $this->courseId = (int) $courseId;
         $this->courseSettingsRepo = CourseSettingsRepository::getInstance();
         $this->courseSettings = $this->courseSettingsRepo->read((int) $this->courseId);
+        $this->httpWrapper = $this->dic->http()->wrapper();
+        $this->refinery = $this->dic->refinery();
     }
 
     public function injectTabs(string $selectedTabId) : void
@@ -80,7 +86,7 @@ class ChatClientController extends BaseController
         $this->ctrl->setParameterByClass(ilUIPluginRouterGUI::class, "ref_id", $this->courseId);
         switch (ilObject::_lookupType($this->courseId, true)) {
             case "crs":
-                $gui = new ilObjCourseGUI();
+                $gui = new ilObjCourseGUI([], $this->courseId, true);
                 $gui->prepareOutput();
                 break;
             case "grp":
@@ -126,7 +132,7 @@ class ChatClientController extends BaseController
         }
 
         if (!ilCourseParticipants::_isParticipant($this->courseId, $this->dic->user()->getId())) {
-            ilUtil::sendFailure($this->lng->txt("permission_denied", true));
+            $this->uiUtil->sendFailure($this->lng->txt("permission_denied", true));
             $this->ctrl->redirectByClass(
                 ["ilRepositoryGUI", "ilObjCourseGUI"],
                 "view"
@@ -146,7 +152,7 @@ class ChatClientController extends BaseController
         );
 
         if (!$matrixUser) {
-            ilUtil::sendFailure($this->plugin->txt("matrix.chat.login.failed"), true);
+            $this->uiUtil->sendFailure($this->plugin->txt("matrix.chat.login.failed"), true);
             $this->ctrl->redirectByClass(
                 ["ilRepositoryGUI", "ilObjCourseGUI"],
                 "view"
@@ -157,7 +163,7 @@ class ChatClientController extends BaseController
         $room = $this->courseSettings->getMatrixRoom();
 
         if (!$room) {
-            ilUtil::sendFailure($this->plugin->txt("matrix.chat.room.notFound"), true);
+            $this->uiUtil->sendFailure($this->plugin->txt("matrix.chat.room.notFound"), true);
             $this->ctrl->redirectByClass(
                 ["ilRepositoryGUI", "ilObjCourseGUI"],
                 "view"
@@ -169,7 +175,7 @@ class ChatClientController extends BaseController
             !$this->matrixApi->admin->isUserMemberOfRoom($matrixUser, $room)
             && !$this->matrixApi->admin->addUserToRoom($matrixUser, $room)
         ) {
-            ilUtil::sendFailure($this->plugin->txt("matrix.chat.room.memberAssignFailed"), true);
+            $this->uiUtil->sendFailure($this->plugin->txt("matrix.chat.room.memberAssignFailed"), true);
             $this->ctrl->redirectByClass(
                 ["ilRepositoryGUI", "ilObjCourseGUI"],
                 "view"
@@ -225,10 +231,17 @@ class ChatClientController extends BaseController
     public function getTemplateAjax() : void
     {
         $query = $this->request->getQueryParams();
+        $templateName = $this->httpWrapper->query()->retrieve(
+            'templateName',
+            $this->refinery->byTrying([
+                $this->refinery->kindlyTo()->int(),
+                $this->refinery->always(null)
+            ])
+        );
+
         $http = $this->dic->http();
         if (
-            !isset($query["templateName"])
-            || !$query["templateName"]
+            !$templateName
             || !file_exists($this->plugin->templatesFolder($query["templateName"]))
         ) {
             $responseStream = Streams::ofString("");

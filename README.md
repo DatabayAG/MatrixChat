@@ -4,8 +4,8 @@
 
 | Component | Min                                              | Max                                              | Link                      |
 |-----------|--------------------------------------------------|--------------------------------------------------|---------------------------|
-| PHP       | ![](https://img.shields.io/badge/7.3-blue.svg)   | ![](https://img.shields.io/badge/7.4-blue.svg)   | [PHP](https://php.net)    |
-| ILIAS     | ![](https://img.shields.io/badge/7.x-orange.svg) | ![](https://img.shields.io/badge/7.x-orange.svg) | [ILIAS](https://ilias.de) |
+| PHP       | ![](https://img.shields.io/badge/7.4-blue.svg)   | ![](https://img.shields.io/badge/8.0-blue.svg)   | [PHP](https://php.net)    |
+| ILIAS     | ![](https://img.shields.io/badge/8.x-orange.svg) | ![](https://img.shields.io/badge/8.x-orange.svg) | [ILIAS](https://ilias.de) |
 
 ---
 ## Table of contents
@@ -30,10 +30,10 @@
 
 ## Installation
 
-1. Clone this repository to **/var/www/ilias7/Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/MatrixChatClient/MatrixChatClient**
+1. Clone this repository to **/var/www/ilias7/Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/MatrixChatClient**
 2. Install the Composer dependencies
    ```bash
-   cd /var/www/ilias7/Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/MatrixChatClient/MatrixChatClient
+   cd /var/www/ilias7/Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/MatrixChatClient
    composer install --no-dev
    ```
    Developers **MUST** omit the `--no-dev` argument.
@@ -91,5 +91,3 @@
       - Enter the password for your new Matrix-User.
       - Enter the password again to confirm.
     - In both cases if authentication was successful. A message will be shown with your username and Matrix-User-ID.
-
-ToDo

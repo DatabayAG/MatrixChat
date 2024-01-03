@@ -19,6 +19,7 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChatClient\Controller;
 
+use ILIAS\Plugin\MatrixChatClient\Utils\UiUtil;
 use ilUIPluginRouterGUI;
 use ilPersonalSettingsGUI;
 use ilMatrixChatClientUIHookGUI;
@@ -48,12 +49,14 @@ class UserConfigController extends BaseController
      * @var ilObjUser
      */
     private $user;
+    private UiUtil $uiUtil;
 
     public function __construct(Container $dic)
     {
         parent::__construct($dic);
 
         $this->user = $this->dic->user();
+        $this->uiUtil = new UiUtil();
         $this->userConfig = (new UserConfig($this->user))->load();
     }
 
@@ -62,7 +65,7 @@ class UserConfigController extends BaseController
         $matrixUserId = $this->userConfig->getMatrixUserId();
         if ($matrixUserId) {
             if (!$this->matrixApi->admin->userExists($matrixUserId)) {
-                ilUtil::sendFailure(
+                $this->uiUtil->sendFailure(
                     sprintf(
                         $this->plugin->txt("matrix.user.authentication.failed.authFailed"),
                         $matrixUserId
@@ -71,7 +74,7 @@ class UserConfigController extends BaseController
                 );
                 return false;
             }
-            ilUtil::sendSuccess(sprintf(
+            $this->uiUtil->sendSuccess(sprintf(
                 $this->plugin->txt("matrix.user.authentication.success"),
                 $this->userConfig->getMatrixUsername(),
                 $matrixUserId
@@ -80,14 +83,14 @@ class UserConfigController extends BaseController
         }
 
         if ($this->userConfig->getAuthMethod() === "usingExternal") {
-            ilUtil::sendFailure(sprintf(
+            $this->uiUtil->sendFailure(sprintf(
                 $this->plugin->txt("matrix.user.authentication.failed.authFailed"),
                 $matrixUserId
             ), true);
             return true;
         }
 
-        ilUtil::sendFailure($this->plugin->txt("matrix.user.authentication.failed.unConfigured"), true);
+        $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.authentication.failed.unConfigured"), true);
         return false;
     }
 
@@ -129,7 +132,7 @@ class UserConfigController extends BaseController
             ->setMatrixUsername("")
             ->save();
 
-        ilUtil::sendSuccess($this->plugin->txt("general.update.success"), true);
+        $this->uiUtil->sendSuccess($this->plugin->txt("general.update.success"), true);
         $this->redirectToCommand("showGeneralConfig");
     }
 
@@ -185,7 +188,7 @@ class UserConfigController extends BaseController
 
         $matrixUser = $this->matrixApi->admin->login($username, $password, "ilias_auth_verification");
         if (!$matrixUser) {
-            ilUtil::sendFailure($this->plugin->txt("matrix.user.authentication.failed.authFailed"), true);
+            $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.authentication.failed.authFailed"), true);
             $this->showLogin($form);
             return;
         }
@@ -231,7 +234,7 @@ class UserConfigController extends BaseController
         $username .= $usernameSuffix;
         $username = strtolower($username);
         if (preg_match("/[^a-z0-9=_\-.\/']/i", $username)) {
-            ilUtil::sendFailure($this->lng->txt("form_input_not_valid"), true);
+            $this->uiUtil->sendFailure($this->lng->txt("form_input_not_valid"), true);
             $usernameInput->setAlert(
                 $this->plugin->txt("config.user.create.username.illegalCharactersUsed")
             );
@@ -244,7 +247,7 @@ class UserConfigController extends BaseController
         }
 
         if (!$this->matrixApi->admin->usernameAvailable($username)) {
-            ilUtil::sendFailure(sprintf(
+            $this->uiUtil->sendFailure(sprintf(
                 $this->plugin->txt("matrix.user.authentication.failed.usernameTaken"),
                 $username
             ), true);
@@ -263,7 +266,7 @@ class UserConfigController extends BaseController
         $matrixUser = $this->matrixApi->admin->createUser($username, $password, $this->user->getFullname());
 
         if (!$matrixUser) {
-            ilUtil::sendFailure($this->plugin->txt("matrix.user.authentication.failed.userCreation"), true);
+            $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.authentication.failed.userCreation"), true);
             $this->showCreate($form);
             return;
         }

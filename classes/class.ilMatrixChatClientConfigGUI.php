@@ -7,6 +7,7 @@ declare(strict_types=1);
 use ILIAS\DI\Container;
 use ILIAS\FileUpload\FileUpload;
 use ILIAS\Plugin\MatrixChatClient\Form\PluginConfigForm;
+use ILIAS\Plugin\MatrixChatClient\Utils\UiUtil;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -14,6 +15,9 @@ require_once __DIR__ . '/../vendor/autoload.php';
  * Class ilMatrixChatClientConfigGUI
  *
  * @author  Marvin Beym <mbeym@databay.de>
+ * @ilCtrl_Calls      ilMatrixChatClientConfigGUI: ilPropertyFormGUI
+ * @ilCtrl_Calls      ilMatrixChatClientConfigGUI: ilAdministrationGUI
+ * @ilCtrl_IsCalledBy ilMatrixChatClientConfigGUI: ilObjComponentSettingsGUI
  */
 class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
 {
@@ -53,10 +57,8 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
      * @var ilCtrl
      */
     private $ctrl;
+    private UiUtil $uiUtil;
 
-    /**
-     * @throws ilPluginException
-     */
     public function __construct()
     {
         global $DIC;
@@ -68,13 +70,14 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
         $this->upload = $this->dic->upload();
         $this->logger = $this->dic->logger()->root();
         $this->user = $this->dic->user();
+        $this->uiUtil = new UiUtil();
 
-        $this->plugin = ilPlugin::getPluginObject(
-            $_GET["ctype"],
-            $_GET["cname"],
-            $_GET["slot_id"],
-            $_GET["pname"]
-        );
+        /**
+         * @var ilComponentFactory $componentFactory
+         */
+        $componentFactory = $DIC["component.factory"];
+        $this->plugin = $componentFactory->getPlugin("mcc");
+
         $this->plugin->denyConfigIfPluginNotActive();
     }
 
@@ -99,7 +102,7 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
         $form = new PluginConfigForm();
 
         if (!$form->checkInput()) {
-            ilUtil::sendFailure($this->plugin->txt("general.update.failed"));
+            $this->uiUtil->sendFailure($this->plugin->txt("general.update.failed"));
             $form->setValuesByPost();
             $this->showSettings($form);
             return;
@@ -115,7 +118,7 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
              */
             $sharedSecret = $form->getItemByPostVar("sharedSecret");
             $sharedSecret->setRequired(true);
-            ilUtil::sendFailure($this->lng->txt("form_input_not_valid"), true);
+            $this->uiUtil->sendFailure($this->lng->txt("form_input_not_valid"), true);
             $sharedSecret->setAlert($this->plugin->txt("config.sharedSecret.empty"));
             $this->showSettings($form);
             return;
@@ -139,9 +142,9 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
 
         try {
             $this->plugin->getPluginConfig()->save();
-            ilUtil::sendSuccess($this->plugin->txt("general.update.success"), true);
+            $this->uiUtil->sendSuccess($this->plugin->txt("general.update.success"), true);
         } catch (Exception $e) {
-            ilUtil::sendFailure($this->plugin->txt($e->getMessage()), true);
+            $this->uiUtil->sendFailure($this->plugin->txt($e->getMessage()), true);
         }
         $this->ctrl->redirectByClass(self::class, "showSettings");
     }
@@ -152,14 +155,14 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
      * @param $cmd
      * @throws Exception
      */
-    public function performCommand($cmd)
+    public function performCommand($cmd): void
     {
         $cmd = $cmd === "configure" ? $this->getDefaultCommand() : $cmd;
 
         if (method_exists($this, $cmd)) {
             $this->{$cmd}();
         } else {
-            ilUtil::sendFailure(sprintf($this->plugin->txt("general.cmd.notFound"), $cmd));
+            $this->uiUtil->sendFailure(sprintf($this->plugin->txt("general.cmd.notFound"), $cmd));
             $this->{$this->getDefaultCommand()}();
         }
     }

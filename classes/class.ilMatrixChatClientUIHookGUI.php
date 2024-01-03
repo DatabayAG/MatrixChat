@@ -26,6 +26,7 @@ use ILIAS\Plugin\MatrixChatClient\Controller\ChatCourseSettingsController;
 use ILIAS\Plugin\MatrixChatClient\Controller\ChatClientController;
 use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
 use ILIAS\Plugin\MatrixChatClient\Controller\UserConfigController;
+use ILIAS\Plugin\MatrixChatClient\Utils\UiUtil;
 
 /**
  * Class ilMatrixChatClientUIHookGUI
@@ -78,16 +79,22 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
      * @var ControllerHandler
      */
     private $controllerHandler;
+    private UiUtil $uiUtil;
+    private \ILIAS\HTTP\Wrapper\WrapperFactory $httpWrapper;
+    private \ILIAS\Refinery\Factory $refinery;
 
     public function __construct()
     {
         $this->plugin = ilMatrixChatClientPlugin::getInstance();
         $this->dic = $this->plugin->dic;
         $this->ctrl = $this->dic->ctrl();
+        $this->uiUtil = new UiUtil();
         $this->controllerHandler = new ControllerHandler($this->plugin);
+        $this->httpWrapper = $this->dic->http()->wrapper();
+        $this->refinery = $this->dic->refinery();
     }
 
-    public function modifyGUI($a_comp, $a_part, $a_par = array())
+    public function modifyGUI($a_comp, $a_part, $a_par = array()): void
     {
         if ($a_part !== "sub_tabs") {
             return;
@@ -113,10 +120,10 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
 
     public function getHTML($a_comp, $a_part, $a_par = []) : array
     {
-        $tplId = $a_par["tpl_id"];
-        $html = $a_par["html"];
+        $tplId = $a_par["tpl_id"] ?? null;
+        $html = $a_par["html"] ?? null;
 
-        if (!$tplId || !$html) {
+        if (!$html || !$tplId) {
             return $this->uiHookResponse();
         }
 
@@ -129,9 +136,16 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
         $nextClass = $this->ctrl->getNextClass();
         $cmd = $this->ctrl->getCmd();
 
+        $refId = $this->httpWrapper->query()->retrieve(
+            'refId',
+            $this->refinery->byTrying([
+                $this->refinery->kindlyTo()->int(),
+                $this->refinery->always(null)
+            ])
+        );
+
         if ($nextClass) {
-            $query = $this->dic->http()->request()->getQueryParams();
-            foreach ($query as $key => $value) {
+            foreach ($this->dic->http()->request()->getQueryParams() as $key => $value) {
                 $this->ctrl->setParameterByClass($cmdClass, $key, $value);
             }
 
@@ -139,9 +153,9 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
                 $this->ctrl->redirectByClass([ilDashboardGUI::class, $cmdClass], $cmd);
             }
 
-            $objGuiClass = $this->plugin->getObjGUIClassByType(ilObject::_lookupType($query["ref_id"], true));
+            $objGuiClass = $this->plugin->getObjGUIClassByType(ilObject::_lookupType($refId, true));
             if (!$objGuiClass) {
-                $this->dic->logger()->root()->error("Unable to redirect to gui class. Type '{$query["ref_id"]}' is not supported");
+                $this->dic->logger()->root()->error("Unable to redirect to gui class. Type '{$refId}' is not supported");
                 $this->plugin->redirectToHome();
             }
 
@@ -154,8 +168,13 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
     private function injectChatUserConfigTab(Container $dic) : void
     {
         $tabs = $dic->tabs();
-        $query = $dic->http()->request()->getQueryParams();
-
+        $referrer = $this->httpWrapper->query()->retrieve(
+            'referrer',
+            $this->refinery->byTrying([
+                $this->refinery->kindlyTo()->string(),
+                $this->refinery->always(null)
+            ])
+        );
         if (
             !in_array(
                 $this->ctrl->getCmdClass(),
@@ -165,9 +184,9 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
                 ],
                 true
             )
-            && !isset($query["referrer"])
+            && !$referrer
             && !in_array(
-                $query["referrer"],
+                $referrer,
                 [
                     ilPersonalSettingsGUI::class,
                     strtolower(ilPersonalSettingsGUI::class)
@@ -191,17 +210,25 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
     private function injectChatIntegrationTab(Container $dic) : void
     {
         $tabs = $dic->tabs();
-        $query = $dic->http()->request()->getQueryParams();
 
-        if (!isset($query["ref_id"])) {
+        $refId = $this->httpWrapper->query()->retrieve(
+            'refId',
+            $this->refinery->byTrying([
+                $this->refinery->kindlyTo()->int(),
+                $this->refinery->always(null)
+            ])
+        );
+
+
+        if (!$refId) {
             return;
         }
 
-        if (!$this->plugin->getObjGUIClassByType(ilObject::_lookupType($query["ref_id"], true))) {
+        if (!$this->plugin->getObjGUIClassByType(ilObject::_lookupType($refId, true))) {
             return;
         }
 
-        $courseSettings = CourseSettingsRepository::getInstance($this->dic->database())->read((int) $query["ref_id"]);
+        $courseSettings = CourseSettingsRepository::getInstance($this->dic->database())->read($refId);
 
         $viewTabFound = false;
         foreach ($tabs->target as $target) {
@@ -213,11 +240,11 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
 
         if (
             $viewTabFound
-            && $this->plugin->matrixApi->general->serverReachable()
+            && $this->plugin->getMatrixCommunicator()->general->serverReachable()
             && $courseSettings->isChatIntegrationEnabled()
             && $this->ctrl->getCmd() !== ChatClientController::getCommand("showChat")
         ) {
-            $dic->ctrl()->setParameterByClass(self::class, "ref_id", (int) $query["ref_id"]);
+            $dic->ctrl()->setParameterByClass(self::class, "ref_id", $refId);
 
             $tabs->addTab(
                 "matrix-chat",
@@ -233,9 +260,16 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
     private function injectChatIntegrationConfigTab(Container $dic) : void
     {
         $tabs = $dic->tabs();
-        $query = $dic->http()->request()->getQueryParams();
 
-        if ($tabs->getActiveTab() !== "settings") {
+        $refId = $this->httpWrapper->query()->retrieve(
+            'refId',
+            $this->refinery->byTrying([
+                $this->refinery->kindlyTo()->int(),
+                $this->refinery->always(null)
+            ])
+        );
+
+        if (!$refId || $tabs->getActiveTab() !== "settings") {
             return;
         }
 
@@ -247,20 +281,17 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
             }
         }
 
-        $guiClass = $this->plugin->getObjGUIClassByType(ilObject::_lookupType($query["ref_id"], true));
+        $guiClass = $this->plugin->getObjGUIClassByType(ilObject::_lookupType($refId, true));
 
         if (!$guiClass || $chatSettingsTabFound) {
             return;
         }
 
-        if (!isset($query["ref_id"]) || !$query["ref_id"]) {
-            ilUtil::sendFailure($this->plugin->txt("general.plugin.requiredParameterMissing"), true);
-            $this->plugin->redirectToHome();
-        }
 
-        $dic->ctrl()->setParameterByClass(self::class, "ref_id", (int) $query["ref_id"]);
 
-        if ($this->plugin->matrixApi->general->serverReachable()) {
+        $dic->ctrl()->setParameterByClass(self::class, "ref_id", $refId);
+
+        if ($this->plugin->getMatrixCommunicator()->general->serverReachable()) {
             //ToDo: gets marked as active together with the the "Multilanguage tab" on group settings tab
             $tabs->addSubTab(
                 "matrix-chat-course-settings",

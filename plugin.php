@@ -19,8 +19,8 @@ $id = "mcc";
 
 $version = "0.0.24";
 
-$ilias_min_version = "7.0";
-$ilias_max_version = "7.999";
+$ilias_min_version = "8.0";
+$ilias_max_version = "8.999";
 
 $responsible = "mbeym";
 $responsible_mail = "mbeym@databay.de";

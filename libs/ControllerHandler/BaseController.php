@@ -79,7 +79,7 @@ abstract class BaseController
         $this->lng->loadLanguageModule("crs");
         $this->ctrl = $this->dic->ctrl();
         $this->tabs = $this->dic->tabs();
-        $this->matrixApi = $this->plugin->matrixApi;
+        $this->matrixApi = $this->plugin->getMatrixCommunicator();
     }
 
     public static function getInstance(?Container $dic = null) : BaseController

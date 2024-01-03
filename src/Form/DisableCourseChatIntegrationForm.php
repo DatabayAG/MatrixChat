@@ -19,6 +19,7 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChatClient\Form;
 
+use ILIAS\Plugin\MatrixChatClient\Utils\UiUtil;
 use ilPropertyFormGUI;
 use ILIAS\Plugin\MatrixChatClient\Controller\ChatCourseSettingsController;
 use ilUtil;
@@ -37,12 +38,14 @@ class DisableCourseChatIntegrationForm extends ilPropertyFormGUI
      * @var ilMatrixChatClientPlugin
      */
     private $plugin;
+    private UiUtil $uiUtil;
 
     public function __construct(?int $courseId = null)
     {
         parent::__construct();
         $this->plugin = ilMatrixChatClientPlugin::getInstance();
-        ilUtil::sendQuestion($this->plugin->txt("matrix.chat.room.delete.confirm"));
+        $this->uiUtil = new UiUtil();
+        $this->uiUtil->sendQuestion($this->plugin->txt("matrix.chat.room.delete.confirm"));
 
         $fullyDeleteChatRoom = new ilCheckboxInputGUI(
             $this->plugin->txt("matrix.chat.room.delete.button"),

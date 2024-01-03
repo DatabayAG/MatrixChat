@@ -116,9 +116,9 @@ class PluginConfigForm extends ilPropertyFormGUI
             }, array_keys($this->plugin->getUsernameSchemeVariables())))
         ));
 
-        $serverReachable = $this->plugin->matrixApi->general->serverReachable();
+        $serverReachable = $this->plugin->getMatrixCommunicator()->general->serverReachable();
         $serverSection = new ilFormSectionHeaderGUI();
-        if ($this->plugin->matrixApi->general->serverReachable()) {
+        if ($this->plugin->getMatrixCommunicator()->general->serverReachable()) {
             $serverSection->setTitle(sprintf(
                 $this->plugin->txt("config.section.server.reachable"),
                 $this->plugin->txt("matrix.server.reachable")
@@ -131,7 +131,7 @@ class PluginConfigForm extends ilPropertyFormGUI
         }
 
         $adminAuthenticationSection = new ilFormSectionHeaderGUI();
-        if ($this->plugin->matrixApi->admin->checkAdminUser()) {
+        if ($this->plugin->getMatrixCommunicator()->admin->checkAdminUser()) {
             $adminAuthenticationSection->setTitle(sprintf(
                 $this->plugin->txt("config.section.adminAuthentication.valid"),
                 $this->plugin->txt("matrix.admin.login.valid")

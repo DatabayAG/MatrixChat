@@ -17,7 +17,7 @@
     "classmap": ["./src", "./libs"]
   },
   "require": {
-    "php": ">=7.3",
+    "php": "^7.4 || ^8.0",
     "symfony/http-client": "^5.4",
     "ext-json": "*"
   },
