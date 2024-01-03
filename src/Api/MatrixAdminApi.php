@@ -28,7 +28,7 @@ use Throwable;
  */
 class MatrixAdminApi extends MatrixApiEndpointBase
 {
-    private ?MatrixUser $adminUser;
+    private ?MatrixUser $adminUser = null;
 
     public function checkAdminUser() : bool
     {
