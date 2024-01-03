@@ -19,8 +19,8 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChatClient\Model;
 
+use ILIAS\Plugin\Libraries\IliasConfigLoader\Model\Config\UserPrefConfig;
 use ilObjUser;
-use ILIAS\Plugin\MatrixChatClient\Libs\IliasConfigLoader\Model\UserPrefConfig;
 
 /**
  * Class UserConfig

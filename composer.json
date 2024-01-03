@@ -19,7 +19,9 @@
   "require": {
     "php": "^7.4 || ^8.0",
     "symfony/http-client": "^5.4",
-    "ext-json": "*"
+    "ext-json": "*",
+    "mbeym/ilias-config-loader": "8.*",
+    "mbeym/user-field-loader": "8.*"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest",
@@ -28,5 +30,15 @@
   },
   "config": {
     "classmap-authoritative": true
-  }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://public-deploy:AN-vXiUY9q8e5ZKetPAw@gitlab.databay.de/mbeym/IliasConfigLoader"
+    },
+    {
+      "type": "vcs",
+      "url": "https://public-deploy:vRKWom9_PbykfxCAo8iv@gitlab.databay.de/mbeym/UserFieldLoader"
+    }
+  ]
 }

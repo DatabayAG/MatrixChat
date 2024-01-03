@@ -4,8 +4,74 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3c6a9f0d5b89b4899737a757ae93dbd8",
+    "content-hash": "c97a1e4d2380e096b56c6d0d60cdf8c5",
     "packages": [
+        {
+            "name": "mbeym/ilias-config-loader",
+            "version": "8.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://public-deploy:AN-vXiUY9q8e5ZKetPAw@gitlab.databay.de/mbeym/IliasConfigLoader",
+                "reference": "46fdf5431985f0e77a2f23535f7bd0cbd3acee9b"
+            },
+            "require": {
+                "php": "^7.4 || ^8.0"
+            },
+            "require-dev": {
+                "captainhook/captainhook": "^5.10",
+                "friendsofphp/php-cs-fixer": "^3.11"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ILIAS\\Plugin\\Libraries\\IliasConfigLoader\\": "src/"
+                }
+            },
+            "license": [
+                "GPL"
+            ],
+            "authors": [
+                {
+                    "name": "Marvin Beym",
+                    "email": "mBeym@databay.de"
+                }
+            ],
+            "description": "A utility for easily loading plugin config data from and to object, ",
+            "time": "2023-12-05T10:17:14+00:00"
+        },
+        {
+            "name": "mbeym/user-field-loader",
+            "version": "8.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://public-deploy:vRKWom9_PbykfxCAo8iv@gitlab.databay.de/mbeym/UserFieldLoader",
+                "reference": "c431ea392ebb6cce0ebdc67f4f1354038005c903"
+            },
+            "require": {
+                "php": "^7.4 || ^8.0"
+            },
+            "require-dev": {
+                "captainhook/captainhook": "^5.10",
+                "friendsofphp/php-cs-fixer": "^3.11"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ILIAS\\Plugin\\Libraries\\UserFieldLoader\\": "src/"
+                }
+            },
+            "license": [
+                "GPL"
+            ],
+            "authors": [
+                {
+                    "name": "Marvin Beym",
+                    "email": "mBeym@databay.de"
+                }
+            ],
+            "description": "A utility for loading ILIAS User Fields",
+            "time": "2023-06-28T13:33:51+00:00"
+        },
         {
             "name": "psr/container",
             "version": "1.1.2",
@@ -3077,8 +3143,9 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.3"
+        "php": "^7.4 || ^8.0",
+        "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.3.0"
 }
