@@ -31,26 +31,11 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  */
 class MatrixApiCommunicator
 {
-    /**
-     * @var HttpClientInterface
-     */
-    private $client;
-    /**
-     * @var ilMatrixChatClientPlugin
-     */
-    private $plugin;
-    /**
-     * @var MatrixAdminApi
-     */
-    public $admin;
-    /**
-     * @var MatrixUserApi
-     */
-    public $user;
-    /**
-     * @var MatrixGeneralApi
-     */
-    public $general;
+    private HttpClientInterface $client;
+    private ilMatrixChatClientPlugin $plugin;
+    public MatrixAdminApi $admin;
+    public MatrixUserApi $user;
+    public MatrixGeneralApi $general;
 
     public function __construct(ilMatrixChatClientPlugin $plugin, string $matrixServerUrl)
     {

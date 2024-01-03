@@ -37,7 +37,6 @@ class RoomJoined extends RoomModel
 
     /**
      * @param array{notification_count: int, highlight_count: int} $unreadNotifications
-     * @return RoomJoined
      */
     public function setUnreadNotifications(array $unreadNotifications) : RoomJoined
     {
@@ -45,18 +44,11 @@ class RoomJoined extends RoomModel
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getTimeline() : array
     {
         return $this->timeline;
     }
 
-    /**
-     * @param array $timeline
-     * @return RoomJoined
-     */
     public function setTimeline(array $timeline) : RoomJoined
     {
         $this->timeline = $timeline;

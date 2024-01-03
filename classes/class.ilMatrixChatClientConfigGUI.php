@@ -21,42 +21,15 @@ require_once __DIR__ . '/../vendor/autoload.php';
  */
 class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
 {
-    /**
-     * @var ilObjUser
-     */
-    protected $user;
-    /**
-     * @var ilLogger
-     */
-    protected $logger;
-    /**
-     * @var FileUpload
-     */
-    protected $upload;
-    /**
-     * @var ilMatrixChatClientPlugin
-     */
-    protected $plugin;
-    /**
-     * @var ilTabsGUI
-     */
-    protected $tabs;
-    /**
-     * @var Container
-     */
-    protected $dic;
-    /**
-     * @var ilGlobalPageTemplate
-     */
-    protected $mainTpl;
-    /**
-     * @var ilLanguage
-     */
-    protected $lng;
-    /**
-     * @var ilCtrl
-     */
-    private $ctrl;
+    protected ilObjUser $user;
+    protected ilLogger $logger;
+    protected FileUpload $upload;
+    protected ilMatrixChatClientPlugin $plugin;
+    protected ilTabsGUI $tabs;
+    protected Container $dic;
+    protected ilGlobalPageTemplate $mainTpl;
+    protected ilLanguage $lng;
+    private ilCtrl $ctrl;
     private UiUtil $uiUtil;
 
     public function __construct()
@@ -81,9 +54,6 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
         $this->plugin->denyConfigIfPluginNotActive();
     }
 
-    /**
-     * Show the general settings form/tab
-     */
     public function showSettings(?PluginConfigForm $form = null) : void
     {
         if ($form === null) {
@@ -149,13 +119,7 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
         $this->ctrl->redirectByClass(self::class, "showSettings");
     }
 
-    /**
-     * Calls the function for a received command
-     *
-     * @param $cmd
-     * @throws Exception
-     */
-    public function performCommand($cmd): void
+    public function performCommand(string $cmd): void
     {
         $cmd = $cmd === "configure" ? $this->getDefaultCommand() : $cmd;
 
@@ -167,11 +131,6 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
         }
     }
 
-    /**
-     * Returns the default command
-     *
-     * @return string
-     */
     protected function getDefaultCommand() : string
     {
         return "showSettings";

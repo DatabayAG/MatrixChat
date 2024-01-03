@@ -29,31 +29,17 @@ use ilMatrixChatClientPlugin;
  */
 class MatrixRoom
 {
-    /**
-     * @var string
-     */
-    private $id;
-    /**
-     * @var string
-     */
-    private $name;
-    /**
-     * @var bool
-     */
-    private $encrypted;
+    private string $id;
+    private string $name;
+    private bool $encrypted;
+
     /**
      * @var string[]
      */
-    private $members;
-    /**
-     * @var ilMatrixChatClientPlugin
-     */
-    private $plugin;
+    private array $members;
+    private ilMatrixChatClientPlugin $plugin;
 
     /**
-     * @param string   $id
-     * @param string   $name
-     * @param bool     $encrypted
      * @param string[] $members
      */
     public function __construct(string $id, string $name, bool $encrypted, array $members)
@@ -65,25 +51,18 @@ class MatrixRoom
         $this->plugin = ilMatrixChatClientPlugin::getInstance();
     }
 
-    /**
-     * @return string
-     */
+
     public function getId() : string
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
+
     public function getName() : string
     {
         return $this->name;
     }
 
-    /**
-     * @return bool
-     */
     public function isEncrypted() : bool
     {
         return $this->encrypted;
@@ -99,7 +78,6 @@ class MatrixRoom
 
     /**
      * @param string[] $members
-     * @return MatrixRoom
      */
     public function setMembers(array $members) : MatrixRoom
     {

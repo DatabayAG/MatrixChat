@@ -46,18 +46,9 @@ use ReflectionMethod;
  */
 class ChatCourseSettingsController extends BaseController
 {
-    /**
-     * @var CourseSettingsRepository
-     */
-    private $courseSettingsRepo;
-    /**
-     * @var UserRoomAddQueueRepository
-     */
-    private $userRoomAddQueueRepo;
-    /**
-     * @var CourseSettings
-     */
-    private $courseSettings;
+    private CourseSettingsRepository $courseSettingsRepo;
+    private UserRoomAddQueueRepository $userRoomAddQueueRepo;
+    private CourseSettings $courseSettings;
     private UiUtil $uiUtil;
 
     public function __construct(Container $dic)

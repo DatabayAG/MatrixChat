@@ -26,10 +26,7 @@ use Exception;
  */
 class MatrixApiException extends Exception
 {
-    /**
-     * @var string
-     */
-    private $errorCode;
+    private string $errorCode;
 
     public function __construct(string $errorCode, string $errorMessage, int $code = 0)
     {

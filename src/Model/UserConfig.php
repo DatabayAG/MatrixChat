@@ -30,73 +30,46 @@ use ILIAS\Plugin\MatrixChatClient\Libs\IliasConfigLoader\Model\UserPrefConfig;
  */
 class UserConfig extends UserPrefConfig
 {
-    /**
-     * @var string
-     */
-    private $authMethod = "usingExternal";
-
-    /**
-     * @var string
-     */
-    private $matrixUsername = "";
-    /**
-     * @var string
-     */
-    private $matrixUserId = "";
+    private string $authMethod = "usingExternal";
+    private string $matrixUsername = "";
+    private string $matrixUserId = "";
 
     public function __construct(ilObjUser $user)
     {
         parent::__construct($user, "mcc_");
     }
 
-    /**
-     * @return string
-     */
+
     public function getAuthMethod() : string
     {
         return $this->authMethod;
     }
 
-    /**
-     * @param string $authMethod
-     * @return UserConfig
-     */
+
     public function setAuthMethod(string $authMethod) : UserConfig
     {
         $this->authMethod = $authMethod;
         return $this;
     }
 
-    /**
-     * @return string
-     */
+
     public function getMatrixUsername() : string
     {
         return $this->matrixUsername;
     }
 
-    /**
-     * @param string $matrixUsername
-     * @return UserConfig
-     */
     public function setMatrixUsername(string $matrixUsername) : UserConfig
     {
         $this->matrixUsername = $matrixUsername;
         return $this;
     }
 
-    /**
-     * @return string
-     */
+
     public function getMatrixUserId() : string
     {
         return $this->getAuthMethod() === "loginOrCreate" ? $this->matrixUserId : $this->user->getExternalAccount();
     }
 
-    /**
-     * @param string $matrixUserId
-     * @return UserConfig
-     */
     public function setMatrixUserId(string $matrixUserId) : UserConfig
     {
         $this->matrixUserId = $matrixUserId;

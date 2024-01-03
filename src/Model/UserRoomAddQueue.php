@@ -27,15 +27,8 @@ namespace ILIAS\Plugin\MatrixChatClient\Model;
  */
 class UserRoomAddQueue
 {
-    /**
-     * @var int
-     */
-    private $userId;
-
-    /**
-     * @var int
-     */
-    private $refId;
+    private int $userId;
+    private int $refId;
 
     public function __construct($userId, $refId)
     {
@@ -43,17 +36,13 @@ class UserRoomAddQueue
         $this->refId = $refId;
     }
 
-    /**
-     * @return int
-     */
+
     public function getUserId() : int
     {
         return $this->userId;
     }
 
-    /**
-     * @return int
-     */
+
     public function getRefId() : int
     {
         return $this->refId;

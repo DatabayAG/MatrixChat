@@ -34,10 +34,7 @@ use ilCheckboxInputGUI;
  */
 class DisableCourseChatIntegrationForm extends ilPropertyFormGUI
 {
-    /**
-     * @var ilMatrixChatClientPlugin
-     */
-    private $plugin;
+    private ilMatrixChatClientPlugin $plugin;
     private UiUtil $uiUtil;
 
     public function __construct(?int $courseId = null)

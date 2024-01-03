@@ -27,14 +27,9 @@ use ILIAS\Plugin\MatrixChatClient\Model\UserRoomAddQueue;
  */
 class UserRoomAddQueueRepository
 {
-    /**
-     * @var self|null
-     */
-    private static $instance;
-    /**
-     * @var ilDBInterface
-     */
-    protected $db;
+    private static ?UserRoomAddQueueRepository $instance = null;
+    protected ilDBInterface $db;
+
     /**
      * @var string
      */
@@ -50,13 +45,7 @@ class UserRoomAddQueueRepository
         }
     }
 
-    /**
-     * Returns the instance of the repository to prevent recreation of the whole object.
-     *
-     * @param ilDBInterface|null $db
-     * @return self
-     */
-    public static function getInstance(ilDBInterface $db = null) : self
+    public static function getInstance(?ilDBInterface $db = null) : self
     {
         if (self::$instance) {
             return self::$instance;
@@ -122,7 +111,6 @@ class UserRoomAddQueueRepository
     }
 
     /**
-     * @param int $userId
      * @return UserRoomAddQueue[]
      */
     public function readAllByUserId(int $userId) : array

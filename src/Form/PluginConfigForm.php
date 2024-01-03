@@ -36,18 +36,9 @@ use ilUtil;
  */
 class PluginConfigForm extends ilPropertyFormGUI
 {
-    /**
-     * @var ilMatrixChatClientPlugin
-     */
-    private $plugin;
-    /**
-     * @var Container
-     */
-    private $dic;
-    /**
-     * @var ilGlobalPageTemplate
-     */
-    private $mainTpl;
+    private ilMatrixChatClientPlugin $plugin;
+    private Container $dic;
+    private ilGlobalPageTemplate $mainTpl;
 
     public function __construct()
     {

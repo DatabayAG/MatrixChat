@@ -16,7 +16,9 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChatClient\Controller;
 
+use ILIAS\HTTP\Wrapper\WrapperFactory;
 use ILIAS\Plugin\MatrixChatClient\Utils\UiUtil;
+use ILIAS\Refinery\Factory;
 use ilTemplate;
 use ILIAS\DI\Container;
 use ILIAS\Plugin\MatrixChatClient\Model\CourseSettings;
@@ -44,31 +46,16 @@ use ILIAS\Plugin\MatrixChatClient\Model\UserConfig;
  */
 class ChatClientController extends BaseController
 {
-    /**
-     * @var CourseSettings
-     */
-    private $courseSettings;
-    /**
-     * @var int
-     */
-    private $courseId;
-    /**
-     * @var RequestInterface|ServerRequestInterface
-     */
-    private $request;
-    /**
-     * @var CourseSettingsRepository
-     */
-    private $courseSettingsRepo;
+    private CourseSettings $courseSettings;
+    private int $courseId;
+    private CourseSettingsRepository $courseSettingsRepo;
     private UiUtil $uiUtil;
-    private \ILIAS\HTTP\Wrapper\WrapperFactory $httpWrapper;
-    private \ILIAS\Refinery\Factory $refinery;
+    private WrapperFactory $httpWrapper;
+    private Factory $refinery;
 
     public function __construct(Container $dic)
     {
         parent::__construct($dic);
-
-        $this->request = $this->dic->http()->request();
         $this->uiUtil = new UiUtil();
 
         $courseId = (int) $this->verifyQueryParameter("ref_id");
@@ -230,7 +217,6 @@ class ChatClientController extends BaseController
 
     public function getTemplateAjax() : void
     {
-        $query = $this->request->getQueryParams();
         $templateName = $this->httpWrapper->query()->retrieve(
             'templateName',
             $this->refinery->byTrying([
@@ -242,7 +228,7 @@ class ChatClientController extends BaseController
         $http = $this->dic->http();
         if (
             !$templateName
-            || !file_exists($this->plugin->templatesFolder($query["templateName"]))
+            || !file_exists($this->plugin->templatesFolder($templateName))
         ) {
             $responseStream = Streams::ofString("");
             $http->saveResponse($http->response()->withBody($responseStream));
@@ -250,7 +236,7 @@ class ChatClientController extends BaseController
             $http->close();
         }
 
-        $tpl = new ilTemplate($this->plugin->templatesFolder($query["templateName"]), false, false);
+        $tpl = new ilTemplate($this->plugin->templatesFolder($templateName), false, false);
         $a = $tpl->get();
 
         $responseStream = Streams::ofString($a);

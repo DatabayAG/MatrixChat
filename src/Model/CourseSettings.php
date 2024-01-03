@@ -26,23 +26,10 @@ use ilMatrixChatClientPlugin;
  */
 class CourseSettings
 {
-    /**
-     * @var int
-     */
-    private $courseId;
-    /**
-     * @var bool
-     */
-    private $chatIntegrationEnabled = false;
-
-    /**
-     * @var ilMatrixChatClientPlugin
-     */
-    private $plugin;
-    /**
-     * @var MatrixRoom|null
-     */
-    private $matrixRoom;
+    private int $courseId;
+    private bool $chatIntegrationEnabled = false;
+    private ilMatrixChatClientPlugin $plugin;
+    private ?MatrixRoom $matrixRoom;
 
     public function __construct(int $courseId, ?string $matrixRoomId = null)
     {
@@ -54,9 +41,7 @@ class CourseSettings
         }
     }
 
-    /**
-     * @return int
-     */
+
     public function getCourseId() : int
     {
         return $this->courseId;

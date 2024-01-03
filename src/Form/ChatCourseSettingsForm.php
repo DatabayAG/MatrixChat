@@ -35,14 +35,8 @@ use ilUtil;
  */
 class ChatCourseSettingsForm extends ilPropertyFormGUI
 {
-    /**
-     * @var ilMatrixChatClientPlugin
-     */
-    private $plugin;
-    /**
-     * @var Container
-     */
-    private $dic;
+    private ilMatrixChatClientPlugin $plugin;
+    private Container $dic;
     private UiUtil $uiUtil;
     private WrapperFactory $httpWrapper;
 

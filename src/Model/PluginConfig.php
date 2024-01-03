@@ -28,153 +28,88 @@ use ILIAS\Plugin\MatrixChatClient\Libs\IliasConfigLoader\Model\SettingsConfig;
  */
 class PluginConfig extends SettingsConfig
 {
-    /**
-     * @var string
-     */
-    private $matrixServerUrl = "";
-    /**
-     * @var string
-     */
-    private $matrixAdminUsername = "";
-    /**
-     * @var string
-     */
-    private $matrixAdminPassword = "";
-    /**
-     * @var string
-     */
-    private $sharedSecret = "";
-    /**
-     * @var int
-     */
-    private $chatInitialLoadLimit = 20;
-    /**
-     * @var int
-     */
-    private $chatHistoryLoadLimit = 20;
+    private string $matrixServerUrl = "";
+    private string $matrixAdminUsername = "";
+    private string $matrixAdminPassword = "";
+    private string $sharedSecret = "";
+    private int $chatInitialLoadLimit = 20;
+    private int $chatHistoryLoadLimit = 20;
+    private string $usernameScheme = "";
 
-    private $usernameScheme = "";
-
-    /**
-     * @return string
-     */
     public function getMatrixServerUrl() : string
     {
         return $this->matrixServerUrl;
     }
 
-    /**
-     * @param string $matrixServerUrl
-     * @return PluginConfig
-     */
     public function setMatrixServerUrl(string $matrixServerUrl) : PluginConfig
     {
         $this->matrixServerUrl = $matrixServerUrl;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getMatrixAdminUsername() : string
     {
         return $this->matrixAdminUsername;
     }
 
-    /**
-     * @param string $matrixAdminUsername
-     * @return PluginConfig
-     */
     public function setMatrixAdminUsername(string $matrixAdminUsername) : PluginConfig
     {
         $this->matrixAdminUsername = $matrixAdminUsername;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getMatrixAdminPassword() : string
     {
         return $this->matrixAdminPassword;
     }
 
-    /**
-     * @param string $matrixAdminPassword
-     * @return PluginConfig
-     */
     public function setMatrixAdminPassword(string $matrixAdminPassword) : PluginConfig
     {
         $this->matrixAdminPassword = $matrixAdminPassword;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getSharedSecret() : string
     {
         return $this->sharedSecret;
     }
 
-    /**
-     * @param string $sharedSecret
-     * @return PluginConfig
-     */
     public function setSharedSecret(string $sharedSecret) : PluginConfig
     {
         $this->sharedSecret = $sharedSecret;
         return $this;
     }
 
-    /**
-     * @return int
-     */
+
     public function getChatInitialLoadLimit() : int
     {
         return $this->chatInitialLoadLimit;
     }
 
-    /**
-     * @param int $chatInitialLoadLimit
-     * @return PluginConfig
-     */
     public function setChatInitialLoadLimit(int $chatInitialLoadLimit) : PluginConfig
     {
         $this->chatInitialLoadLimit = $chatInitialLoadLimit;
         return $this;
     }
 
-    /**
-     * @return int
-     */
+
     public function getChatHistoryLoadLimit() : int
     {
         return $this->chatHistoryLoadLimit;
     }
 
-    /**
-     * @param int $chatHistoryLoadLimit
-     * @return PluginConfig
-     */
     public function setChatHistoryLoadLimit(int $chatHistoryLoadLimit) : PluginConfig
     {
         $this->chatHistoryLoadLimit = $chatHistoryLoadLimit;
         return $this;
     }
 
-    /**
-     * @return string
-     */
+
     public function getUsernameScheme() : string
     {
         return $this->usernameScheme;
     }
 
-    /**
-     * @param string $usernameScheme
-     * @return PluginConfig
-     */
     public function setUsernameScheme(string $usernameScheme) : PluginConfig
     {
         $this->usernameScheme = $usernameScheme;

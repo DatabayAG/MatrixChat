@@ -47,43 +47,16 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
     /** @var string */
     public const PNAME = "MatrixChatClient";
 
-    /**
-     * @var ilMatrixChatClientPlugin|null
-     */
-    private static $instance = null;
-    /**
-     * @var PluginConfig
-     */
-    private $pluginConfig;
-    /**
-     * @var UserRoomAddQueueRepository
-     */
-    private $userRoomAddQueueRepo;
-    /**
-     * @var CourseSettingsRepository
-     */
-    private $courseSettingsRepo;
-    /**
-     * @var MatrixApiCommunicator
-     */
-    public $matrixCommunicator;
-    /**
-     * @var Container
-     */
-    public $dic;
-    /**
-     * @var ilCtrl
-     */
-    private $ctrl;
-    /**
-     * @var ilSetting
-     */
-    public $settings;
+    private static ?ilMatrixChatClientPlugin $instance = null;
+    private ?PluginConfig $pluginConfig = null;
+    private UserRoomAddQueueRepository $userRoomAddQueueRepo;
+    private CourseSettingsRepository $courseSettingsRepo;
+    public ?MatrixApiCommunicator $matrixCommunicator = null;
+    public Container $dic;
+    private ilCtrl $ctrl;
+    public ilSetting $settings;
     private UiUtil $uiUtil;
 
-    /**
-     * @throws ConfigLoadException
-     */
     public function __construct(ilDBInterface $db, ilComponentRepositoryWrite $component_repository, string $id)
     {
         global $DIC;
@@ -282,16 +255,11 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
     }
 
     /**
-     * Called by ilias event system to hook into afterLogin event.
-     *
-     * @param string $a_component
-     * @param string $a_event
      * @param mixed  $a_parameter
-     * @return void
      * @throws ConfigLoadException
      * @throws ReflectionException
      */
-    public function handleEvent($a_component, $a_event, $a_parameter) : void
+    public function handleEvent(string $a_component, string $a_event, $a_parameter) : void
     {
         if (!in_array($a_event, ["addParticipant", "deleteParticipant"], true)) {
             return;

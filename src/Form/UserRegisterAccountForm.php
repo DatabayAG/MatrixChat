@@ -35,18 +35,9 @@ use ILIAS\Plugin\MatrixChatClient\Form\Input\SuffixedTextInput;
  */
 class UserRegisterAccountForm extends ilPropertyFormGUI
 {
-    /**
-     * @var ilMatrixChatClientPlugin
-     */
-    private $plugin;
-    /**
-     * @var Container
-     */
-    private $dic;
-    /**
-     * @var ilGlobalPageTemplate
-     */
-    private $mainTpl;
+    private ilMatrixChatClientPlugin $plugin;
+    private Container $dic;
+    private ilGlobalPageTemplate $mainTpl;
 
     public function __construct()
     {

@@ -32,30 +32,12 @@ use Throwable;
  */
 abstract class MatrixApiEndpointBase
 {
-    /**
-     * @var string
-     */
-    private $matrixServerUrl;
-    /**
-     * @var CourseSettingsRepository
-     */
-    protected $courseSettingsRepo;
-    /**
-     * @var HttpClientInterface
-     */
-    protected $client;
-    /**
-     * @var ilMatrixChatClientPlugin
-     */
-    protected $plugin;
-    /**
-     * @var ilLogger
-     */
-    private $logger;
-    /**
-     * @var float
-     */
-    private $requestTimeout;
+    private string $matrixServerUrl;
+    protected CourseSettingsRepository $courseSettingsRepo;
+    protected HttpClientInterface $client;
+    protected ilMatrixChatClientPlugin $plugin;
+    private ilLogger $logger;
+    private float $requestTimeout;
 
     public function __construct(string $matrixServerUrl, HttpClientInterface $client, ilMatrixChatClientPlugin $plugin, float $requestTimeout = 3)
     {

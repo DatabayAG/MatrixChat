@@ -34,14 +34,8 @@ use ilPasswordInputGUI;
  */
 class UserAuthenticateAccountForm extends ilPropertyFormGUI
 {
-    /**
-     * @var ilMatrixChatClientPlugin
-     */
-    private $plugin;
-    /**
-     * @var Container
-     */
-    private $dic;
+    private ilMatrixChatClientPlugin $plugin;
+    private Container $dic;
 
     public function __construct()
     {

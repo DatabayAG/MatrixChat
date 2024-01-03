@@ -35,18 +35,9 @@ use ILIAS\Plugin\MatrixChatClient\Controller\UserConfigController;
  */
 class UserConfigForm extends ilPropertyFormGUI
 {
-    /**
-     * @var ilMatrixChatClientPlugin
-     */
-    private $plugin;
-    /**
-     * @var ilGlobalPageTemplate
-     */
-    private $mainTpl;
-    /**
-     * @var Container
-     */
-    private $dic;
+    private ilMatrixChatClientPlugin $plugin;
+    private ilGlobalPageTemplate $mainTpl;
+    private Container $dic;
 
     public function __construct()
     {

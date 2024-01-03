@@ -41,14 +41,8 @@ use ilObjUser;
  */
 class UserConfigController extends BaseController
 {
-    /**
-     * @var UserConfig
-     */
-    private $userConfig;
-    /**
-     * @var ilObjUser
-     */
-    private $user;
+    private UserConfig $userConfig;
+    private ilObjUser $user;
     private UiUtil $uiUtil;
 
     public function __construct(Container $dic)

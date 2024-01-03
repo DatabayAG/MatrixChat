@@ -31,9 +31,7 @@ class RoomModel
         $this->roomId = $roomId;
     }
 
-    /**
-     * @return string
-     */
+
     public function getRoomId() : string
     {
         return $this->roomId;

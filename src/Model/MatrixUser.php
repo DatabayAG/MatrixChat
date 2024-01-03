@@ -27,133 +27,79 @@ use ReflectionClass;
  */
 class MatrixUser implements JsonSerializable
 {
-    /**
-     * @var int
-     */
-    private $iliasUserId;
-    /**
-     * @var string
-     */
-    private $matrixUserId;
-    /**
-     * @var string
-     */
-    private $accessToken;
-    /**
-     * @var string
-     */
-    private $deviceId;
-    /**
-     * @var string
-     */
-    private $matrixUsername;
-    /**
-     * @var string
-     */
-    private $matrixDisplayName;
+    private int $iliasUserId;
+    private string $matrixUserId;
+    private string $accessToken;
+    private string $deviceId;
+    private string $matrixUsername;
+    private string $matrixDisplayName;
 
-    /**
-     * @return int
-     */
+
     public function getIliasUserId() : int
     {
         return $this->iliasUserId;
     }
 
-    /**
-     * @param int $iliasUserId
-     * @return MatrixUser
-     */
     public function setIliasUserId(int $iliasUserId) : MatrixUser
     {
         $this->iliasUserId = $iliasUserId;
         return $this;
     }
 
-    /**
-     * @return string
-     */
+
     public function getMatrixUserId() : string
     {
         return $this->matrixUserId;
     }
 
-    /**
-     * @param string $matrixUserId
-     * @return MatrixUser
-     */
     public function setMatrixUserId(string $matrixUserId) : MatrixUser
     {
         $this->matrixUserId = $matrixUserId;
         return $this;
     }
 
-    /**
-     * @return string
-     */
+
     public function getAccessToken() : string
     {
         return $this->accessToken;
     }
 
-    /**
-     * @param string $accessToken
-     * @return MatrixUser
-     */
     public function setAccessToken(string $accessToken) : MatrixUser
     {
         $this->accessToken = $accessToken;
         return $this;
     }
 
-    /**
-     * @return string
-     */
+
     public function getDeviceId() : string
     {
         return $this->deviceId;
     }
 
-    /**
-     * @param string $deviceId
-     * @return MatrixUser
-     */
     public function setDeviceId(string $deviceId) : MatrixUser
     {
         $this->deviceId = $deviceId;
         return $this;
     }
 
-    /**
-     * @return string
-     */
+
     public function getMatrixUsername() : string
     {
         return $this->matrixUsername;
     }
 
-    /**
-     * @param string $matrixUsername
-     * @return MatrixUser
-     */
     public function setMatrixUsername(string $matrixUsername) : MatrixUser
     {
         $this->matrixUsername = $matrixUsername;
         return $this;
     }
 
-    /**
-     * @return string
-     */
+
     public function getMatrixDisplayName() : string
     {
         return $this->matrixDisplayName;
     }
 
-    /**
-     * @param string $matrixDisplayName
-     * @return MatrixUser
-     */
     public function setMatrixDisplayName(string $matrixDisplayName) : MatrixUser
     {
         $this->matrixDisplayName = $matrixDisplayName;

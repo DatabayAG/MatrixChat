@@ -21,12 +21,14 @@ declare(strict_types=1);
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use ILIAS\DI\Container;
+use ILIAS\HTTP\Wrapper\WrapperFactory;
 use ILIAS\Plugin\MatrixChatClient\Libs\ControllerHandler\ControllerHandler;
 use ILIAS\Plugin\MatrixChatClient\Controller\ChatCourseSettingsController;
 use ILIAS\Plugin\MatrixChatClient\Controller\ChatClientController;
 use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
 use ILIAS\Plugin\MatrixChatClient\Controller\UserConfigController;
 use ILIAS\Plugin\MatrixChatClient\Utils\UiUtil;
+use ILIAS\Refinery\Factory;
 
 /**
  * Class ilMatrixChatClientUIHookGUI
@@ -63,25 +65,13 @@ use ILIAS\Plugin\MatrixChatClient\Utils\UiUtil;
  */
 class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
 {
-    /**
-     * @var ilMatrixChatClientPlugin
-     */
-    private $plugin;
-    /**
-     * @var Container
-     */
-    private $dic;
-    /**
-     * @var ilCtrl
-     */
-    private $ctrl;
-    /**
-     * @var ControllerHandler
-     */
-    private $controllerHandler;
+    private ilMatrixChatClientPlugin $plugin;
+    private Container $dic;
+    private ilCtrl $ctrl;
+    private ControllerHandler $controllerHandler;
     private UiUtil $uiUtil;
-    private \ILIAS\HTTP\Wrapper\WrapperFactory $httpWrapper;
-    private \ILIAS\Refinery\Factory $refinery;
+    private WrapperFactory $httpWrapper;
+    private Factory $refinery;
 
     public function __construct()
     {
@@ -305,10 +295,6 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
     }
 
     /**
-     * Returns the array used to replace the html content
-     *
-     * @param string $mode
-     * @param string $html
      * @return string[]
      */
     protected function uiHookResponse(string $mode = ilUIHookPluginGUI::KEEP, string $html = "") : array
