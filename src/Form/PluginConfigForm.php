@@ -16,17 +16,18 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChatClient\Form;
 
+use ilCheckboxGroupInputGUI;
+use ilCheckboxInputGUI;
+use ilCheckboxOption;
 use ilFormSectionHeaderGUI;
 use ilGlobalPageTemplate;
 use ILIAS\DI\Container;
 use ilMatrixChatClientConfigGUI;
 use ilMatrixChatClientPlugin;
-use ilNumberInputGUI;
 use ilPasswordInputGUI;
 use ilPropertyFormGUI;
 use ilTextInputGUI;
 use ilUriInputGUI;
-use ilUtil;
 
 /**
  * Class PluginConfigForm
@@ -52,50 +53,24 @@ class PluginConfigForm extends ilPropertyFormGUI
         $this->setId("{$this->plugin->getId()}_{$this->plugin->getPluginName()}_plugin_config_form");
         $this->setTitle($this->plugin->txt("general.plugin.settings"));
 
-        $matrixServerUrl = new ilUriInputGUI($this->plugin->txt("matrix.server.url"), "matrixServerUrl");
-        $matrixServerUrl->setRequired(true);
+        $serverReachable = $this->plugin->getMatrixCommunicator()->general->serverReachable();
 
-        $matrixAdminUsername = new ilTextInputGUI(
-            $this->plugin->txt("config.admin.username.title"),
-            "matrixAdminUsername"
-        );
-        $matrixAdminUsername->setRequired(true);
-        $matrixAdminUsername->setInfo($this->plugin->txt("config.admin.username.info"));
-
-        $matrixAdminPassword = new ilPasswordInputGUI(
-            $this->plugin->txt("config.admin.password.title"),
-            "matrixAdminPassword"
-        );
-        $matrixAdminPassword->setInfo($this->plugin->txt("config.admin.password.info"));
-        $matrixAdminPassword->setSkipSyntaxCheck(true);
-        $matrixAdminPassword->setRetype(false);
-
-        $sharedSecret = new ilPasswordInputGUI($this->plugin->txt("config.sharedSecret.title"), "sharedSecret");
-        $sharedSecret->setInfo($this->plugin->txt("config.sharedSecret.info"));
-        $sharedSecret->setSkipSyntaxCheck(true);
-        $sharedSecret->setRetype(false);
-
-        $usernameScheme = new ilTextInputGUI(
-            $this->plugin->txt("config.usernameScheme.title"),
-            "usernameScheme"
-        );
-        $usernameScheme->setRequired(true);
-
-        $allowedCharacters = array_map(static function ($char) {
+        $allowedUsernameSchemeCharacters = array_map(static function ($char) {
             return "<span style='color: blue; font-weight: bold'>$char</span>";
         }, ["a-z", "0-9", "=", "_", "-", ".", "/", "'"]);
 
-        $usernameScheme->setInfo(sprintf(
-            $this->plugin->txt("config.usernameScheme.info"),
-            implode(", ", $allowedCharacters),
-            "- " . implode("<br>- ", array_map(static function ($variable) : string {
-                return "<span>{</span>$variable<span>}</span>";
-            }, array_keys($this->plugin->getUsernameSchemeVariables())))
-        ));
+        $this->addServerSection($serverReachable);
+        $this->addAdminUserSection($serverReachable);
+        $this->addExternalUserSection($allowedUsernameSchemeCharacters);
+        $this->addLocalUserSection($allowedUsernameSchemeCharacters);
 
-        $serverReachable = $this->plugin->getMatrixCommunicator()->general->serverReachable();
+        $this->addCommandButton("saveSettings", $this->lng->txt("save"));
+    }
+
+    protected function addServerSection($serverReachable): void
+    {
         $serverSection = new ilFormSectionHeaderGUI();
-        if ($this->plugin->getMatrixCommunicator()->general->serverReachable()) {
+        if ($serverReachable) {
             $serverSection->setTitle(sprintf(
                 $this->plugin->txt("config.section.server.reachable"),
                 $this->plugin->txt("matrix.server.reachable")
@@ -106,7 +81,21 @@ class PluginConfigForm extends ilPropertyFormGUI
                 $this->plugin->txt("matrix.server.unreachable")
             ));
         }
+        $this->addItem($serverSection);
 
+        $matrixServerUrl = new ilUriInputGUI($this->plugin->txt("matrix.server.url"), "matrixServerUrl");
+        $matrixServerUrl->setRequired(true);
+        $this->addItem($matrixServerUrl);
+
+        $sharedSecret = new ilPasswordInputGUI($this->plugin->txt("config.sharedSecret.title"), "sharedSecret");
+        $sharedSecret->setInfo($this->plugin->txt("config.sharedSecret.info"));
+        $sharedSecret->setSkipSyntaxCheck(true);
+        $sharedSecret->setRetype(false);
+        $this->addItem($sharedSecret);
+    }
+
+    protected function addAdminUserSection(bool $serverReachable): void
+    {
         $adminAuthenticationSection = new ilFormSectionHeaderGUI();
         if ($this->plugin->getMatrixCommunicator()->admin->checkAdminUser()) {
             $adminAuthenticationSection->setTitle(sprintf(
@@ -126,20 +115,99 @@ class PluginConfigForm extends ilPropertyFormGUI
                 ));
             }
         }
-
-        $userSection = new ilFormSectionHeaderGUI();
-        $userSection->setTitle($this->plugin->txt("config.section.user"));
-
-        $this->addItem($serverSection);
-        $this->addItem($matrixServerUrl);
-        $this->addItem($sharedSecret);
-
         $this->addItem($adminAuthenticationSection);
-        $this->addItem($matrixAdminUsername);
-        $this->addItem($matrixAdminPassword);
 
-        $this->addItem($userSection);
+        $matrixAdminUsername = new ilTextInputGUI(
+            $this->plugin->txt("config.admin.username.title"),
+            "matrixAdminUsername"
+        );
+        $matrixAdminUsername->setRequired(true);
+        $matrixAdminUsername->setInfo($this->plugin->txt("config.admin.username.info"));
+        $this->addItem($matrixAdminUsername);
+
+        $matrixAdminPassword = new ilPasswordInputGUI(
+            $this->plugin->txt("config.admin.password.title"),
+            "matrixAdminPassword"
+        );
+        $matrixAdminPassword->setInfo($this->plugin->txt("config.admin.password.info"));
+        $matrixAdminPassword->setSkipSyntaxCheck(true);
+        $matrixAdminPassword->setRetype(false);
+        $this->addItem($matrixAdminPassword);
+    }
+
+    protected function addExternalUserSection(array $allowedCharacters): void
+    {
+        $section = new ilFormSectionHeaderGUI();
+        $section->setTitle($this->plugin->txt("config.section.user.external"));
+        $this->addItem($section);
+
+        $usernameScheme = new ilTextInputGUI(
+            $this->plugin->txt("config.usernameScheme.external"),
+            "externalUserScheme"
+        );
+        $usernameScheme->setRequired(true);
+
+        $usernameScheme->setInfo(sprintf(
+            $this->plugin->txt("config.usernameScheme.info"),
+            implode(", ", $allowedCharacters),
+            "- " . implode("<br>- ", array_map(static function ($variable): string {
+                return "<span>{</span>$variable<span>}</span>";
+            }, array_keys($this->plugin->getUsernameSchemeVariables())))
+        ));
         $this->addItem($usernameScheme);
-        $this->addCommandButton("saveSettings", $this->lng->txt("save"));
+
+        $accountOptions = new ilCheckboxGroupInputGUI(
+            $this->plugin->txt("config.accountOptions.title"),
+            "externalUserAccountOptions"
+        );
+
+        $accountOptions->addOption(new ilCheckboxOption(
+                $this->plugin->txt("config.accountOptions.specifyOtherMatrixAccount"),
+                "externalUserSpecifyOtherMatrixAccount"
+        ));
+        $accountOptions->addOption(new ilCheckboxOption(
+            $this->plugin->txt("config.accountOptions.createOnConfiguredHomeserver"),
+            "externalUserCreateOnConfiguredHomeserver"
+        ));
+
+        $this->addItem($accountOptions);
+    }
+
+    protected function addLocalUserSection(array $allowedCharacters): void
+    {
+        $section = new ilFormSectionHeaderGUI();
+        $section->setTitle($this->plugin->txt("config.section.user.local"));
+        $this->addItem($section);
+
+        $usernameScheme = new ilTextInputGUI(
+            $this->plugin->txt("config.usernameScheme.local"),
+            "localUserScheme"
+        );
+        $usernameScheme->setRequired(true);
+
+        $usernameScheme->setInfo(sprintf(
+            $this->plugin->txt("config.usernameScheme.info"),
+            implode(", ", $allowedCharacters),
+            "- " . implode("<br>- ", array_map(static function ($variable): string {
+                return "<span>{</span>$variable<span>}</span>";
+            }, array_keys($this->plugin->getUsernameSchemeVariables())))
+        ));
+        $this->addItem($usernameScheme);
+
+        $accountOptions = new ilCheckboxGroupInputGUI(
+            $this->plugin->txt("config.accountOptions.title"),
+            "localUserAccountOptions"
+        );
+
+        $accountOptions->addOption(new ilCheckboxOption(
+            $this->plugin->txt("config.accountOptions.specifyOtherMatrixAccount"),
+            "localUserSpecifyOtherMatrixAccount"
+        ));
+        $accountOptions->addOption(new ilCheckboxOption(
+            $this->plugin->txt("config.accountOptions.createOnConfiguredHomeserver"),
+            "localUserCreateOnConfiguredHomeserver"
+        ));
+
+        $this->addItem($accountOptions);
     }
 }

@@ -32,67 +32,127 @@ class PluginConfig extends SettingsConfig
     private string $matrixAdminUsername = "";
     private string $matrixAdminPassword = "";
     private string $sharedSecret = "";
-    private string $usernameScheme = "";
+    private string $externalUserScheme = "";
+    private bool $externalUserSpecifyOtherMatrixAccount = false;
+    private bool $externalUserCreateOnConfiguredHomeserver = false;
+    private string $localUserScheme = "";
+    private bool $localUserSpecifyOtherMatrixAccount = false;
+    private bool $localUserCreateOnConfiguredHomeserver = false;
 
-    public function getMatrixServerUrl() : string
+    public function getMatrixServerUrl(): string
     {
         return $this->matrixServerUrl;
     }
 
-    public function setMatrixServerUrl(string $matrixServerUrl) : PluginConfig
+    public function setMatrixServerUrl(string $matrixServerUrl): PluginConfig
     {
         $this->matrixServerUrl = $matrixServerUrl;
         return $this;
     }
 
-    public function getMatrixAdminUsername() : string
+    public function getMatrixAdminUsername(): string
     {
         return $this->matrixAdminUsername;
     }
 
-    public function setMatrixAdminUsername(string $matrixAdminUsername) : PluginConfig
+    public function setMatrixAdminUsername(string $matrixAdminUsername): PluginConfig
     {
         $this->matrixAdminUsername = $matrixAdminUsername;
         return $this;
     }
 
-    public function getMatrixAdminPassword() : string
+    public function getMatrixAdminPassword(): string
     {
         return $this->matrixAdminPassword;
     }
 
-    public function setMatrixAdminPassword(string $matrixAdminPassword) : PluginConfig
+    public function setMatrixAdminPassword(string $matrixAdminPassword): PluginConfig
     {
         $this->matrixAdminPassword = $matrixAdminPassword;
         return $this;
     }
 
-    public function getSharedSecret() : string
+    public function getSharedSecret(): string
     {
         return $this->sharedSecret;
     }
 
-    public function setSharedSecret(string $sharedSecret) : PluginConfig
+    public function setSharedSecret(string $sharedSecret): PluginConfig
     {
         $this->sharedSecret = $sharedSecret;
         return $this;
     }
 
-    public function getUsernameScheme() : string
+    public function getExternalUserScheme(): string
     {
-        return $this->usernameScheme;
+        return $this->externalUserScheme;
     }
 
-    public function setUsernameScheme(string $usernameScheme) : PluginConfig
+    public function setExternalUserScheme(string $externalUserScheme): PluginConfig
     {
-        $this->usernameScheme = $usernameScheme;
+        $this->externalUserScheme = $externalUserScheme;
+        return $this;
+    }
+
+    public function isExternalUserSpecifyOtherMatrixAccount(): bool
+    {
+        return $this->externalUserSpecifyOtherMatrixAccount;
+    }
+
+    public function setExternalUserSpecifyOtherMatrixAccount(bool $externalUserSpecifyOtherMatrixAccount): PluginConfig
+    {
+        $this->externalUserSpecifyOtherMatrixAccount = $externalUserSpecifyOtherMatrixAccount;
+        return $this;
+    }
+
+    public function isExternalUserCreateOnConfiguredHomeserver(): bool
+    {
+        return $this->externalUserCreateOnConfiguredHomeserver;
+    }
+
+    public function setExternalUserCreateOnConfiguredHomeserver(bool $externalUserCreateOnConfiguredHomeserver
+    ): PluginConfig {
+        $this->externalUserCreateOnConfiguredHomeserver = $externalUserCreateOnConfiguredHomeserver;
+        return $this;
+    }
+
+    public function getLocalUserScheme(): string
+    {
+        return $this->localUserScheme;
+    }
+
+    public function setLocalUserScheme(string $localUserScheme): PluginConfig
+    {
+        $this->localUserScheme = $localUserScheme;
+        return $this;
+    }
+
+    public function isLocalUserSpecifyOtherMatrixAccount(): bool
+    {
+        return $this->localUserSpecifyOtherMatrixAccount;
+    }
+
+    public function setLocalUserSpecifyOtherMatrixAccount(bool $localUserSpecifyOtherMatrixAccount): PluginConfig
+    {
+        $this->localUserSpecifyOtherMatrixAccount = $localUserSpecifyOtherMatrixAccount;
+        return $this;
+    }
+
+    public function isLocalUserCreateOnConfiguredHomeserver(): bool
+    {
+        return $this->localUserCreateOnConfiguredHomeserver;
+    }
+
+    public function setLocalUserCreateOnConfiguredHomeserver(bool $localUserCreateOnConfiguredHomeserver): PluginConfig
+    {
+        $this->localUserCreateOnConfiguredHomeserver = $localUserCreateOnConfiguredHomeserver;
         return $this;
     }
 
     /**
      * @throws Exception
      */
-    public function save() : void
+    public function save(): void
     {
         try {
             parent::save();

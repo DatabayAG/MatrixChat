@@ -14,7 +14,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 /**
  * Class ilMatrixChatClientConfigGUI
  *
- * @author  Marvin Beym <mbeym@databay.de>
+ * @author            Marvin Beym <mbeym@databay.de>
  * @ilCtrl_Calls      ilMatrixChatClientConfigGUI: ilPropertyFormGUI
  * @ilCtrl_Calls      ilMatrixChatClientConfigGUI: ilAdministrationGUI
  * @ilCtrl_IsCalledBy ilMatrixChatClientConfigGUI: ilObjComponentSettingsGUI
@@ -54,12 +54,33 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
         $this->plugin->denyConfigIfPluginNotActive();
     }
 
-    public function showSettings(?PluginConfigForm $form = null) : void
+    public function showSettings(?PluginConfigForm $form = null): void
     {
         if ($form === null) {
             $form = new PluginConfigForm();
+
+            $externalUserAccountOptions = [];
+            $localUserAccountOptions = [];
+
+            if ($this->plugin->getPluginConfig()->isExternalUserCreateOnConfiguredHomeserver()) {
+                $externalUserAccountOptions[] = "externalUserCreateOnConfiguredHomeserver";
+            }
+            if ($this->plugin->getPluginConfig()->isExternalUserSpecifyOtherMatrixAccount()) {
+                $externalUserAccountOptions[] = "externalUserSpecifyOtherMatrixAccount";
+            }
+            if ($this->plugin->getPluginConfig()->isLocalUserCreateOnConfiguredHomeserver()) {
+                $localUserAccountOptions[] = "localUserCreateOnConfiguredHomeserver";
+            }
+            if ($this->plugin->getPluginConfig()->isLocalUserSpecifyOtherMatrixAccount()) {
+                $localUserAccountOptions[] = "localUserSpecifyOtherMatrixAccount";
+            }
+
             $form->setValuesByArray(
-                $this->plugin->getPluginConfig()->toArray(["matrixAdminPassword", "sharedSecret"]),
+                $this->plugin->getPluginConfig()->toArray(["matrixAdminPassword", "sharedSecret"])
+                + [
+                    "externalUserAccountOptions" => $externalUserAccountOptions,
+                    "localUserAccountOptions" => $localUserAccountOptions
+                ],
                 true
             );
         }
@@ -67,7 +88,7 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
         $this->mainTpl->setContent($form->getHTML());
     }
 
-    public function saveSettings() : void
+    public function saveSettings(): void
     {
         $form = new PluginConfigForm();
 
@@ -97,10 +118,27 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
         $sharedSecretValue = $sharedSecretValue ?: $this->plugin->getPluginConfig()->getSharedSecret();
 
         $this->plugin->getPluginConfig()
-                     ->setMatrixServerUrl(rtrim($form->getInput("matrixServerUrl"), "/"))
-                     ->setMatrixAdminUsername($form->getInput("matrixAdminUsername"))
-                     ->setUsernameScheme($form->getInput("usernameScheme"))
-                     ->setSharedSecret($sharedSecretValue);
+            ->setMatrixServerUrl(rtrim($form->getInput("matrixServerUrl"), "/"))
+            ->setMatrixAdminUsername($form->getInput("matrixAdminUsername"))
+            ->setExternalUserScheme($form->getInput("externalUserScheme"))
+            ->setExternalUserCreateOnConfiguredHomeserver(in_array(
+                    "externalUserCreateOnConfiguredHomeserver",
+                    (array) $form->getInput("externalUserAccountOptions"), true)
+            )
+            ->setExternalUserSpecifyOtherMatrixAccount(in_array(
+                    "externalUserSpecifyOtherMatrixAccount",
+                    (array) $form->getInput("externalUserAccountOptions"), true)
+            )
+            ->setLocalUserScheme($form->getInput("localUserScheme"))
+            ->setLocalUserCreateOnConfiguredHomeserver(in_array(
+                    "localUserCreateOnConfiguredHomeserver",
+                    (array) $form->getInput("localUserAccountOptions"), true)
+            )
+            ->setLocalUserSpecifyOtherMatrixAccount(in_array(
+                    "localUserSpecifyOtherMatrixAccount",
+                    (array) $form->getInput("localUserAccountOptions"), true)
+            )
+            ->setSharedSecret($sharedSecretValue);
 
         $matrixAdminPassword = $form->getInput("matrixAdminPassword");
         if ($matrixAdminPassword !== "") {
@@ -128,7 +166,7 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
         }
     }
 
-    protected function getDefaultCommand() : string
+    protected function getDefaultCommand(): string
     {
         return "showSettings";
     }

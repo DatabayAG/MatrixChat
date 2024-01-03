@@ -7,22 +7,35 @@ general.update.failed#:#Aktualisierung fehlgeschlagen
 general.plugin.settings#:#Plugin-Einstellungen
 general.plugin.notActivated#:#Das Plugin ist nicht aktiviert. Bitte aktivieren Sie dieses zunächst.
 general.plugin.requiredParameterMissing#:#Der benötigte Parameter '%s' konnte nicht gefunden werden.
+
 authenticate#:#Authentifizieren
+chat#:#Chat
+
 config.section.server.reachable#:#<span class='sectionTitleWithStatus'>Server <span class='alert alert-success sectionStatus'>%s</span></span>
 config.section.server.unreachable#:#<span class='sectionTitleWithStatus'>Server <span class='alert alert-danger sectionStatus'>%s</span></span>
 config.section.adminAuthentication.valid#:#<span class='sectionTitleWithStatus'>Admin-Authentifizierung <span class='alert alert-success sectionStatus'>%s</span></span>
 config.section.adminAuthentication.invalid#:#<span class='sectionTitleWithStatus'>Admin-Authentifizierung <span class='alert alert-danger sectionStatus'>%s</span></span>
 config.section.chat#:#Chat
-config.section.user#:#Benutzer
-config.usernameScheme.title#:#Matrix-Benutzer-Namensschema
-config.usernameScheme.info#:#Dieses Schema wird verwendet, um den Matrix-Benutzernamen zu erzeugen,<br>wenn ILIAS-Benutzer einem Matrix-Chat beitreten wollen, aber bisher keinen Benutzer haben. <br><br>Das Schema darf nur die folgenden Zeichen enthalten %s.<br>Großbuchstaben werden in Kleinbuchstaben umgewandelt!<br><br>Unterstützte Variablen: <br>%s
+config.section.user.external#:#Extern authentifizierte ILIAS-Benutzer
+config.section.user.local#:#Lokale ILIAS-Benutzer
+
+config.usernameScheme.external#:#Schema zum Verbinden von ILIAS-Usern mit externem Account
+config.usernameScheme.local#:#Schema zum Verbinden von ILIAS-Usern mit lokalem Account
+config.usernameScheme.info#:#Dieses Schema wird verwendet, um den Matrix-Benutzernamen zu erzeugen,<br>wenn extern authentifizierte ILIAS-Benutzer einem Matrix-Chat beitreten wollen, aber bisher keinen Benutzer haben. <br><br>Das Schema darf nur die folgenden Zeichen enthalten %s.<br>Großbuchstaben werden in Kleinbuchstaben umgewandelt!<br><br>Unterstützte Variablen: <br>%s
+
+config.accountOptions.title#:#Account-Optionen
+config.accountOptions.createOnConfiguredHomeserver#:#Account auf konfiguriertem Homeserver anlegen und nutzen.
+config.accountOptions.specifyOtherMatrixAccount#:#Anderen Matrix Account angeben.
+
 config.sharedSecret.title#:#Gemeinsames Geheimnis
 config.sharedSecret.info#:#'registration_shared_secret' aus der Synapse-Homeserver konfiguration (homeserver.yaml)<br><br>Dieses Feld wird nach dem Absenden des Formulars wieder gelöscht.
 config.sharedSecret.empty#:#Dieses Feld ist erforderlich, wenn es noch nicht gespeichert wurde!
+
 config.admin.username.title#:#Benutzername Des Matrix-Server Administrators
 config.admin.username.info#:#Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen.
 config.admin.password.title#:#Passwort Des Matrix-Server Administrators
 config.admin.password.info#:#Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen.<br>Eingabefeld wird nach abspeichern des Passwortes geleert!
+
 config.user.generalSettings#:#Allgemeine Einstellungen
 config.user.title#:#Chat Einstellungen
 config.user.authMethod#:#Matrix-Authentifizierungsmethode
@@ -36,14 +49,11 @@ config.user.create.username.idm_info#:#Sie sind durch einen IDM-Server authentif
 config.user.method.title#:#Matrix-Benutzer Registrierungsmethode
 config.user.method.externalAccount#:#Verwende Externen-Account Eintrag
 config.user.method.fromNameScheme#:#Benutzer Basierend Auf Namensschema
-config.loadLimit.initial.title#:#Initiales Chat-Nachrichten Limit
-config.loadLimit.initial.info#:#Wie viele Nachrichten sollen beim Laden des Chats initial geladen werden (neusten x Nachrichten)
-config.loadLimit.history.title#:#Anzahl Der Gleichzeitig Zu Ladenden Alten Nachrichten
-config.loadLimit.history.info#:#Wie viele Nachrichten gleichzeitig sollen nachgeladen werden, wenn der Benutzer im Chat-Fenster nach oben scrollt
-chat#:#Chat
+
 matrix.server.url#:#Matrix Server (Synapse) URL
 matrix.server.reachable#:#Server erreichbar
 matrix.server.unreachable#:#Server nicht erreichbar
+
 matrix.chat.loggedInAs#:#Eingeloggt als
 matrix.chat.notifications.changedName#:#Benutzer '%s' hat seinen Namen auf '%s' geändert
 matrix.chat.send#:#Senden
@@ -59,10 +69,12 @@ matrix.chat.room.delete.success#:#Chatraum erfolgreich gelöscht
 matrix.chat.room.delete.failed#:#Chatraum konnte nicht gelöscht werden
 matrix.chat.course.settings#:#Chat-Einstellungen
 matrix.chat.course.enable#:#Aktiviere Matrix-Chat Integration Für Den Kurs
+
 matrix.user.authentication.failed.authFailed#:#Authentifizierung mit Matrix-Benutzer '%s' fehlgeschlagen
 matrix.user.authentication.failed.unConfigured#:#Keine Authentifizierung konfiguriert
 matrix.user.authentication.failed.usernameTaken#:#Benutzername '%s' ist bereits vergeben
 matrix.user.authentication.failed.userCreation#:#Beim Anlegen des Benutzers ist ein Fehler aufgetreten
 matrix.user.authentication.success#:#Authentifizierung erfolgreich mit Benutzername '%s' (Matrix-User-ID: %s)
+
 matrix.admin.login.valid#:#Admin-Login gültig
 matrix.admin.login.invalid#:#Admin-Login ungültig

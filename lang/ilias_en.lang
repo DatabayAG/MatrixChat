@@ -7,21 +7,34 @@ general.update.failed#:#Update failed
 general.plugin.settings#:#Plugin Settings
 general.plugin.notActivated#:#Plugin is not active, yet. Please activate it.
 general.plugin.requiredParameterMissing#:#The required parameter '%s' could not be found.
+
 authenticate#:#Authenticate
+chat#:#Chat
+
 config.section.server.reachable#:#<span class='sectionTitleWithStatus'>Server <span class='alert alert-success sectionStatus'>Server is reachable</span></span>
 config.section.server.unreachable#:#<span class='sectionTitleWithStatus'>Server <span class='alert alert-danger sectionStatus'>Server is unreachable</span></span>
 config.section.adminAuthentication#:#Admin-Authentication
 config.section.chat#:#Chat
-config.section.user#:#User
-config.usernameScheme.title#:#Matrix-User naming scheme
-config.usernameScheme.info#:#This scheme is used to create the matrix username,<br>when ILIAS users want to join a Matrix chat but do not have a user yet.<br><br>The scheme may only contain the characters %s.<br>Uppercase letters are converted to lowercase!<br><br>Supported variables: <br>%s
+config.section.user.external#:#Externally Authenticated ILIAS Users
+config.section.user.local#:#Local ILIAS users
+
+config.usernameScheme.external#:#Scheme for connecting ILIAS users with an external account
+config.usernameScheme.local#:#Scheme for connecting ILIAS users with an local account
+config.usernameScheme.info#:#This scheme is used to create the matrix username,<br>when externally authenticated ILIAS users want to join a Matrix chat but do not have a user yet.<br><br>The scheme may only contain the characters %s.<br>Uppercase letters are converted to lowercase!<br><br>Supported variables: <br>%s
+
+config.accountOptions.title#:#Account-Options
+config.accountOptions.createOnConfiguredHomeserver#:#Create and use account on configured homeserver.
+config.accountOptions.specifyOtherMatrixAccount#:#Specify another Matrix account.
+
 config.sharedSecret.title#:#Shared Secret
 config.sharedSecret.info#:#'registration_shared_secret' from the Synapse-Homeserver configuration (homeserver.yaml)<br><br>This field will be cleared after the form submission.
 config.sharedSecret.empty#:#This field is required if it has not been saved yet!
+
 config.admin.username.title#:#Username of the Matrix-Server Administrator
 config.admin.username.info#:#Will be used to do administrator tasks like creating rooms.
 config.admin.password.title#:#Password of the Matrix-Server Administrator
 config.admin.password.info#:#Will be used to do administrator tasks like creating rooms.<br>Input-Field will be cleared after saving the password!
+
 config.user.generalSettings#:#General settings
 config.user.title#:#Chat Settings
 config.user.authMethod#:#Matrix Authentication Method
@@ -35,14 +48,11 @@ config.user.create.username.idm_info#:#You are authenticated by an IDM server. T
 config.user.method.title#:#Matrix-User registration method
 config.user.method.externalAccount#:#Use external account entry
 config.user.method.fromNameScheme#:#Based on Naming Scheme
-config.loadLimit.initial.title#:#Initial chat message load limit
-config.loadLimit.initial.info#:#How many messages should be loaded when the chat is opened (newest x messages)
-config.loadLimit.history.title#:#Number of Old Messages to Load at a Time
-config.loadLimit.history.info#:#How many messages to load at the same time when the user scrolls up in the Chat-Window
-chat#:#Chat
+
 matrix.server.url#:#Matrix Server (Synapse) URL
 matrix.server.reachable#:#Server is reachable
 matrix.server.unreachable#:#Server is unreachable
+
 matrix.chat.loggedInAs#:#Logged in as
 matrix.chat.notifications.changedName#:#User '%s' changed their name to '%s'
 matrix.chat.send#:#Send
@@ -58,10 +68,12 @@ matrix.chat.room.delete.success#:#Room deleted successfully
 matrix.chat.room.delete.failed#:#Room could not be deleted
 matrix.chat.course.settings#:#Chat settings
 matrix.chat.course.enable#:#Activate Matrix-Chat Integration for the Course
+
 matrix.user.authentication.failed.authFailed#:#Authentication with Matrix-User '%s' failed
 matrix.user.authentication.failed.unConfigured#:#No authentication configured
 matrix.user.authentication.failed.usernameTaken#:#Username '%s' is already taken
 matrix.user.authentication.failed.userCreation#:#An error occurred while creating the user
 matrix.user.authentication.success#:#Authentication successful with username '%s' (Matrix-User-ID: %s)
+
 matrix.admin.login.valid#:#Admin-Login valid
 matrix.admin.login.invalid#:#Admin-Login invalid
