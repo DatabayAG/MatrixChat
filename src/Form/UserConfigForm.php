@@ -64,7 +64,6 @@ class UserConfigForm extends ilPropertyFormGUI
 
         $this->addItem($matrixAuthMethod);
 
-        $this->mainTpl->addCss($this->plugin->cssFolder("user-settings.css"));
         $this->addCommandButton(UserConfigController::getCommand("saveGeneralConfig"), $this->lng->txt("save"));
     }
 }
