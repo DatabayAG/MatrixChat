@@ -197,16 +197,6 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
         return parent::beforeUninstall();
     }
 
-    public function updateLanguages($a_lang_keys = null) : void
-    {
-        try {
-            $jsonTranslationLoader = new JsonTranslationLoader($this->getDirectory() . "/lang");
-            $jsonTranslationLoader->load();
-        } catch (Exception $e) {
-        }
-        parent::updateLanguages($a_lang_keys);
-    }
-
     public function getPluginConfig(): PluginConfig
     {
         if (!$this->pluginConfig && $this->isActive()) {
