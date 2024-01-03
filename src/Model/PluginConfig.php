@@ -32,8 +32,6 @@ class PluginConfig extends SettingsConfig
     private string $matrixAdminUsername = "";
     private string $matrixAdminPassword = "";
     private string $sharedSecret = "";
-    private int $chatInitialLoadLimit = 20;
-    private int $chatHistoryLoadLimit = 20;
     private string $usernameScheme = "";
 
     public function getMatrixServerUrl() : string
@@ -79,31 +77,6 @@ class PluginConfig extends SettingsConfig
         $this->sharedSecret = $sharedSecret;
         return $this;
     }
-
-
-    public function getChatInitialLoadLimit() : int
-    {
-        return $this->chatInitialLoadLimit;
-    }
-
-    public function setChatInitialLoadLimit(int $chatInitialLoadLimit) : PluginConfig
-    {
-        $this->chatInitialLoadLimit = $chatInitialLoadLimit;
-        return $this;
-    }
-
-
-    public function getChatHistoryLoadLimit() : int
-    {
-        return $this->chatHistoryLoadLimit;
-    }
-
-    public function setChatHistoryLoadLimit(int $chatHistoryLoadLimit) : PluginConfig
-    {
-        $this->chatHistoryLoadLimit = $chatHistoryLoadLimit;
-        return $this;
-    }
-
 
     public function getUsernameScheme() : string
     {

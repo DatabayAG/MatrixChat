@@ -75,20 +75,6 @@ class PluginConfigForm extends ilPropertyFormGUI
         $sharedSecret->setSkipSyntaxCheck(true);
         $sharedSecret->setRetype(false);
 
-        $chatInitialLoadLimit = new ilNumberInputGUI(
-            $this->plugin->txt("config.loadLimit.initial.title"),
-            "chatInitialLoadLimit"
-        );
-        $chatInitialLoadLimit->setRequired(true);
-        $chatInitialLoadLimit->setInfo($this->plugin->txt("config.loadLimit.initial.info"));
-
-        $chatHistoryLoadLimit = new ilNumberInputGUI(
-            $this->plugin->txt("config.loadLimit.history.title"),
-            "chatHistoryLoadLimit"
-        );
-        $chatHistoryLoadLimit->setRequired(true);
-        $chatHistoryLoadLimit->setInfo($this->plugin->txt("config.loadLimit.history.info"));
-
         $usernameScheme = new ilTextInputGUI(
             $this->plugin->txt("config.usernameScheme.title"),
             "usernameScheme"
@@ -141,9 +127,6 @@ class PluginConfigForm extends ilPropertyFormGUI
             }
         }
 
-        $chatSection = new ilFormSectionHeaderGUI();
-        $chatSection->setTitle($this->plugin->txt("config.section.chat"));
-
         $userSection = new ilFormSectionHeaderGUI();
         $userSection->setTitle($this->plugin->txt("config.section.user"));
 
@@ -154,10 +137,6 @@ class PluginConfigForm extends ilPropertyFormGUI
         $this->addItem($adminAuthenticationSection);
         $this->addItem($matrixAdminUsername);
         $this->addItem($matrixAdminPassword);
-
-        $this->addItem($chatSection);
-        $this->addItem($chatInitialLoadLimit);
-        $this->addItem($chatHistoryLoadLimit);
 
         $this->addItem($userSection);
         $this->addItem($usernameScheme);
