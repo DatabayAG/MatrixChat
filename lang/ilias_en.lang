@@ -18,6 +18,7 @@ config.section.chat#:#Chat
 config.section.user.external#:#Externally Authenticated ILIAS Users
 config.section.user.local#:#Local ILIAS users
 config.section.room#:#Room
+config.section.general#:#General Settings
 
 config.usernameScheme.external#:#Scheme for connecting ILIAS users with an external account
 config.usernameScheme.local#:#Scheme for connecting ILIAS users with an local account
@@ -28,6 +29,8 @@ config.room.prefix#:#Room Prefix
 config.accountOptions.title#:#Account-Options
 config.accountOptions.createOnConfiguredHomeserver#:#Create and use account on configured homeserver.
 config.accountOptions.specifyOtherMatrixAccount#:#Specify another Matrix account.
+
+config.activateChat.title#:#Activate Chat
 
 config.sharedSecret.title#:#Shared Secret
 config.sharedSecret.info#:#'registration_shared_secret' from the Synapse-Homeserver configuration (homeserver.yaml)<br><br>This field will be cleared after the form submission.

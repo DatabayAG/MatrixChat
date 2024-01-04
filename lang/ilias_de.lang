@@ -19,6 +19,7 @@ config.section.chat#:#Chat
 config.section.user.external#:#Extern authentifizierte ILIAS-Benutzer
 config.section.user.local#:#Lokale ILIAS-Benutzer
 config.section.room#:#Raum
+config.section.general#:#Allgemeine Einstellungen
 
 config.usernameScheme.external#:#Schema zum Verbinden von ILIAS-Usern mit externem Account
 config.usernameScheme.local#:#Schema zum Verbinden von ILIAS-Usern mit lokalem Account
@@ -29,6 +30,8 @@ config.room.prefix#:#Raumpräfix
 config.accountOptions.title#:#Account-Optionen
 config.accountOptions.createOnConfiguredHomeserver#:#Account auf konfiguriertem Homeserver anlegen und nutzen.
 config.accountOptions.specifyOtherMatrixAccount#:#Anderen Matrix Account angeben.
+
+config.activateChat.title#:#Chat Aktivieren
 
 config.sharedSecret.title#:#Gemeinsames Geheimnis
 config.sharedSecret.info#:#'registration_shared_secret' aus der Synapse-Homeserver konfiguration (homeserver.yaml)<br><br>Dieses Feld wird nach dem Absenden des Formulars wieder gelöscht.

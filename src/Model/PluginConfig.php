@@ -36,8 +36,8 @@ class PluginConfig extends SettingsConfig
     private array $externalUserOptions = [];
     private string $localUserScheme = "";
     private array $localUserOptions = [];
-
     private string $roomPrefix = "";
+    private array $activateChat = [];
 
     public function getMatrixServerUrl(): string
     {
@@ -135,6 +135,17 @@ class PluginConfig extends SettingsConfig
     public function setLocalUserOptions(array $localUserOptions): PluginConfig
     {
         $this->localUserOptions = $localUserOptions;
+        return $this;
+    }
+
+    public function getActivateChat(): array
+    {
+        return $this->activateChat;
+    }
+
+    public function setActivateChat(array $activateChat): PluginConfig
+    {
+        $this->activateChat = $activateChat;
         return $this;
     }
 

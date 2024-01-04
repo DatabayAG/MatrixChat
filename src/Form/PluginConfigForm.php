@@ -43,6 +43,8 @@ class PluginConfigForm extends ilPropertyFormGUI
 
     public const SPECIFY_OTHER_MATRIX_ACCOUNT = "specifyOtherMatrixAccount";
     public const CREATE_ON_CONFIGURED_HOMESERVER = "createOnConfiguredHomeserver";
+    public const ACTIVATE_COURSE_CHAT = "activateCourseChat";
+    public const ACTIVATE_GROUP_CHAT = "activateGroupChat";
 
     public function __construct()
     {
@@ -62,6 +64,7 @@ class PluginConfigForm extends ilPropertyFormGUI
             return "<span style='color: blue; font-weight: bold'>$char</span>";
         }, ["a-z", "0-9", "=", "_", "-", ".", "/", "'"]);
 
+        $this->addGeneralSection();
         $this->addServerSection($serverReachable);
         $this->addAdminUserSection($serverReachable);
         $this->addExternalUserSection($allowedUsernameSchemeCharacters);
@@ -69,6 +72,29 @@ class PluginConfigForm extends ilPropertyFormGUI
         $this->addRoomSection();
 
         $this->addCommandButton("saveSettings", $this->lng->txt("save"));
+    }
+    
+    protected function addGeneralSection(): void
+    {
+        $section = new ilFormSectionHeaderGUI();
+        $section->setTitle($this->plugin->txt("config.section.general"));
+        $this->addItem($section);
+
+        $activateChat = new ilCheckboxGroupInputGUI(
+            $this->plugin->txt("config.activateChat.title"),
+            "activateChat"
+        );
+
+        $activateChat->addOption(new ilCheckboxOption(
+            $this->lng->txt("crs"),
+            self::ACTIVATE_COURSE_CHAT
+        ));
+
+        $activateChat->addOption(new ilCheckboxOption(
+            $this->lng->txt("grp"),
+            self::ACTIVATE_GROUP_CHAT
+        ));
+        $this->addItem($activateChat);
     }
 
     protected function addServerSection($serverReachable): void
