@@ -21,7 +21,8 @@
     "symfony/http-client": "^5.4",
     "ext-json": "*",
     "mbeym/ilias-config-loader": "8.*",
-    "mbeym/user-field-loader": "8.*"
+    "mbeym/user-field-loader": "8.*",
+    "mbeym/controller-handler": "8.*"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest",
@@ -39,6 +40,10 @@
     {
       "type": "vcs",
       "url": "https://public-deploy:vRKWom9_PbykfxCAo8iv@gitlab.databay.de/mbeym/UserFieldLoader"
+    },
+    {
+      "type": "vcs",
+      "url": "https://public-deploy:wkLzRsvzjW9iyxeshmty@gitlab.databay.de/mbeym/ControllerHandler"
     }
   ]
 }

@@ -19,7 +19,7 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChatClient\Controller;
 
-use ILIAS\Plugin\MatrixChatClient\Utils\UiUtil;
+;
 use ilUIPluginRouterGUI;
 use ilPersonalSettingsGUI;
 use ilMatrixChatClientUIHookGUI;
@@ -27,7 +27,6 @@ use ILIAS\Plugin\MatrixChatClient\Form\UserConfigForm;
 use ilUtil;
 use ILIAS\DI\Container;
 use ILIAS\Plugin\MatrixChatClient\Model\UserConfig;
-use ILIAS\Plugin\MatrixChatClient\Libs\IliasConfigLoader\Exception\ConfigLoadException;
 use ILIAS\Plugin\MatrixChatClient\Form\UserAuthenticateAccountForm;
 use ILIAS\Plugin\MatrixChatClient\Form\UserRegisterAccountForm;
 use ilTextInputGUI;

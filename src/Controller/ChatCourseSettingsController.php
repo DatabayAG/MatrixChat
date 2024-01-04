@@ -16,25 +16,23 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChatClient\Controller;
 
-use ILIAS\Plugin\MatrixChatClient\Form\ChatCourseSettingsForm;
-use ILIAS\Plugin\MatrixChatClient\Utils\UiUtil;
-use ilRepositoryGUI;
-use ilObjCourseGUI;
-use ilUtil;
 use Exception;
-use ILIAS\DI\Container;
-use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
-use ilObjCourse;
-use ILIAS\Plugin\MatrixChatClient\Form\DisableCourseChatIntegrationForm;
 use ilCourseParticipants;
-use ILIAS\Plugin\MatrixChatClient\Model\UserConfig;
-use ilObjUser;
-use ILIAS\Plugin\MatrixChatClient\Repository\UserRoomAddQueueRepository;
-use ilObject;
+use ILIAS\DI\Container;
+use ILIAS\Plugin\Libraries\ControllerHandler\BaseController;
+use ILIAS\Plugin\Libraries\ControllerHandler\ControllerHandler;
+use ILIAS\Plugin\MatrixChatClient\Form\ChatCourseSettingsForm;
+use ILIAS\Plugin\MatrixChatClient\Form\DisableCourseChatIntegrationForm;
 use ILIAS\Plugin\MatrixChatClient\Model\CourseSettings;
-use ilObjGroupGUI;
-use ilUIPluginRouterGUI;
+use ILIAS\Plugin\MatrixChatClient\Model\UserConfig;
+use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
+use ILIAS\Plugin\MatrixChatClient\Repository\UserRoomAddQueueRepository;
 use ilMatrixChatClientUIHookGUI;
+use ilObjCourseGUI;
+use ilObject;
+use ilObjGroupGUI;
+use ilObjUser;
+use ilUIPluginRouterGUI;
 use ReflectionClass;
 use ReflectionMethod;
 
@@ -49,19 +47,19 @@ class ChatCourseSettingsController extends BaseController
     private CourseSettingsRepository $courseSettingsRepo;
     private UserRoomAddQueueRepository $userRoomAddQueueRepo;
     private CourseSettings $courseSettings;
-    private UiUtil $uiUtil;
 
-    public function __construct(Container $dic)
+    public function __construct(Container $dic, ControllerHandler $controllerHandler)
     {
-        parent::__construct($dic);
+        parent::__construct($dic, $controllerHandler);
         $this->courseSettingsRepo = CourseSettingsRepository::getInstance($dic->database());
         $this->userRoomAddQueueRepo = UserRoomAddQueueRepository::getInstance($dic->database());
-        $this->uiUtil = new UiUtil();
-        
-        $this->courseSettings = $this->courseSettingsRepo->read((int) $this->verifyQueryParameter("ref_id"));
+
+        $this->courseSettings = $this->courseSettingsRepo->read(
+            (int) $this->controllerHandler->verifyQueryParameterExists("ref_id")
+        );
     }
 
-    private function injectTabs() : void
+    private function injectTabs(): void
     {
         $this->ctrl->setParameterByClass(ilUIPluginRouterGUI::class, "ref_id", $this->courseSettings->getCourseId());
         $gui = null;
@@ -103,7 +101,7 @@ class ChatCourseSettingsController extends BaseController
         $this->tabs->activateSubTab("matrix-chat-course-settings");
     }
 
-    public function showSettings(?ChatCourseSettingsForm $form = null) : void
+    public function showSettings(?ChatCourseSettingsForm $form = null): void
     {
         $this->injectTabs();
 
@@ -129,7 +127,7 @@ class ChatCourseSettingsController extends BaseController
         $this->mainTpl->printToStdOut();
     }
 
-    public function saveSettings() : void
+    public function saveSettings(): void
     {
         $form = new ChatCourseSettingsForm();
         $courseSettings = $this->courseSettings;
@@ -173,7 +171,8 @@ class ChatCourseSettingsController extends BaseController
                         $this->matrixApi->admin->addUserToRoom($matrixUser, $room);
                     }
 
-                    $userRoomAddQueue = $this->userRoomAddQueueRepo->read($participantId, $courseSettings->getCourseId());
+                    $userRoomAddQueue = $this->userRoomAddQueueRepo->read($participantId,
+                        $courseSettings->getCourseId());
                     if ($userRoomAddQueue) {
                         $this->userRoomAddQueueRepo->delete($userRoomAddQueue);
                     }
@@ -199,7 +198,7 @@ class ChatCourseSettingsController extends BaseController
         $this->redirectToCommand("showSettings");
     }
 
-    public function confirmDisableCourseChatIntegration(?DisableCourseChatIntegrationForm $form = null) : void
+    public function confirmDisableCourseChatIntegration(?DisableCourseChatIntegrationForm $form = null): void
     {
         $courseId = (int) $this->verifyQueryParameter("ref_id");
 
@@ -212,7 +211,7 @@ class ChatCourseSettingsController extends BaseController
         $this->mainTpl->printToStdOut();
     }
 
-    public function disableCourseChatIntegration() : void
+    public function disableCourseChatIntegration(): void
     {
         $form = new DisableCourseChatIntegrationForm();
         if (!$form->checkInput()) {
@@ -244,5 +243,10 @@ class ChatCourseSettingsController extends BaseController
         }
 
         $this->uiUtil->sendFailure($this->plugin->txt("matrix.chat.room.delete.failed"), true);
+    }
+
+    public function getCtrlClassesForCommand(string $cmd): array
+    {
+        return [ilUIPluginRouterGUI::class, ilMatrixChatClientUIHookGUI::class];
     }
 }

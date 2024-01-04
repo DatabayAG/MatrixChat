@@ -6,8 +6,9 @@ declare(strict_types=1);
 
 use ILIAS\DI\Container;
 use ILIAS\FileUpload\FileUpload;
+use ILIAS\Plugin\Libraries\ControllerHandler\UiUtils;
 use ILIAS\Plugin\MatrixChatClient\Form\PluginConfigForm;
-use ILIAS\Plugin\MatrixChatClient\Utils\UiUtil;
+;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -30,7 +31,7 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
     protected ilGlobalPageTemplate $mainTpl;
     protected ilLanguage $lng;
     private ilCtrl $ctrl;
-    private UiUtil $uiUtil;
+    private UiUtils $uiUtil;
 
     public function __construct()
     {
@@ -43,7 +44,7 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
         $this->upload = $this->dic->upload();
         $this->logger = $this->dic->logger()->root();
         $this->user = $this->dic->user();
-        $this->uiUtil = new UiUtil();
+        $this->uiUtil = new UiUtils();
 
         /**
          * @var ilComponentFactory $componentFactory

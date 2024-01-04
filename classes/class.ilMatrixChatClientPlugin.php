@@ -19,16 +19,15 @@ declare(strict_types=1);
  *********************************************************************/
 
 use ILIAS\DI\Container;
-use ILIAS\Plugin\MatrixChatClient\Libs\JsonTranslationLoader\JsonTranslationLoader;
+use ILIAS\Plugin\Libraries\ControllerHandler\UiUtils;
 use ILIAS\Plugin\MatrixChatClient\Model\PluginConfig;
 use ILIAS\Plugin\MatrixChatClient\Api\MatrixApiCommunicator;
-use ILIAS\Plugin\MatrixChatClient\Libs\IliasConfigLoader\Exception\ConfigLoadException;
 use ILIAS\Plugin\MatrixChatClient\Model\UserConfig;
 use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
 use ILIAS\Plugin\MatrixChatClient\Repository\UserRoomAddQueueRepository;
 use ILIAS\Plugin\MatrixChatClient\Model\UserRoomAddQueue;
 use ILIAS\Plugin\MatrixChatClient\Model\CourseSettings;
-use ILIAS\Plugin\MatrixChatClient\Utils\UiUtil;
+;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -55,7 +54,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
     public Container $dic;
     private ilCtrl $ctrl;
     public ilSetting $settings;
-    private UiUtil $uiUtil;
+    private UiUtils $uiUtil;
 
     public function __construct(ilDBInterface $db, ilComponentRepositoryWrite $component_repository, string $id)
     {
@@ -65,7 +64,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
         $this->settings = new ilSetting(self::class);
         $this->userRoomAddQueueRepo = UserRoomAddQueueRepository::getInstance($this->dic->database());
         $this->courseSettingsRepo = CourseSettingsRepository::getInstance($this->dic->database());
-        $this->uiUtil = new UiUtil();
+        $this->uiUtil = new UiUtils();
 
         parent::__construct($db, $component_repository, $id);
     }
@@ -244,11 +243,6 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
         }
     }
 
-    /**
-     * @param mixed  $a_parameter
-     * @throws ConfigLoadException
-     * @throws ReflectionException
-     */
     public function handleEvent(string $a_component, string $a_event, $a_parameter) : void
     {
         if (!in_array($a_event, ["addParticipant", "deleteParticipant"], true)) {

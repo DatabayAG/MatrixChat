@@ -17,7 +17,7 @@ declare(strict_types=1);
 namespace ILIAS\Plugin\MatrixChatClient\Form;
 
 use ILIAS\HTTP\Wrapper\WrapperFactory;
-use ILIAS\Plugin\MatrixChatClient\Utils\UiUtil;
+;
 use ilPropertyFormGUI;
 use ilCheckboxInputGUI;
 use ILIAS\DI\Container;

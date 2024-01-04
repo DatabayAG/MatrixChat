@@ -4,8 +4,41 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c97a1e4d2380e096b56c6d0d60cdf8c5",
+    "content-hash": "b11087615f85287ee496bde737fb0720",
     "packages": [
+        {
+            "name": "mbeym/controller-handler",
+            "version": "8.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://public-deploy:wkLzRsvzjW9iyxeshmty@gitlab.databay.de/mbeym/ControllerHandler",
+                "reference": "1883a4e25b53c605442d1317166c84ed5f428e70"
+            },
+            "require": {
+                "php": ">=7.4 <8.1"
+            },
+            "require-dev": {
+                "captainhook/captainhook": "^5.10",
+                "friendsofphp/php-cs-fixer": "^3.11"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ILIAS\\Plugin\\Libraries\\ControllerHandler\\": "src/"
+                }
+            },
+            "license": [
+                "GPL"
+            ],
+            "authors": [
+                {
+                    "name": "Marvin Beym",
+                    "email": "mBeym@databay.de"
+                }
+            ],
+            "description": "A utility tool for handling/implementing a controller structure in ILIAS Plugins",
+            "time": "2023-07-24T08:18:45+00:00"
+        },
         {
             "name": "mbeym/ilias-config-loader",
             "version": "8.0.4",

@@ -19,7 +19,7 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChatClient\Form;
 
-use ILIAS\Plugin\MatrixChatClient\Utils\UiUtil;
+;
 use ilPropertyFormGUI;
 use ILIAS\Plugin\MatrixChatClient\Controller\ChatCourseSettingsController;
 use ilUtil;
