@@ -25,7 +25,6 @@ use ILIAS\HTTP\Wrapper\WrapperFactory;
 use ILIAS\Plugin\Libraries\ControllerHandler\ControllerHandler;
 use ILIAS\Plugin\Libraries\ControllerHandler\UiUtils;
 use ILIAS\Plugin\MatrixChatClient\Controller\ChatController;
-use ILIAS\Plugin\MatrixChatClient\Controller\ChatCourseSettingsController;
 use ILIAS\Plugin\MatrixChatClient\Controller\UserConfigController;
 use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
 use ILIAS\Refinery\Factory;
@@ -123,8 +122,6 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
         global $DIC;
 
         $this->injectChatTab($DIC);
-        //$this->injectChatIntegrationTab($DIC);
-        $this->injectChatIntegrationConfigTab($DIC);
         $this->injectChatUserConfigTab($DIC);
 
         parent::modifyGUI($a_comp, $a_part, $a_par);
@@ -269,52 +266,6 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
                 $chatController->getCommandLink(ChatController::CMD_SHOW_CHAT, [
                     "ref_id" => $refId
                 ])
-            );
-        }
-    }
-
-    private function injectChatIntegrationConfigTab(Container $dic): void
-    {
-        $tabs = $dic->tabs();
-
-        $refId = $this->httpWrapper->query()->retrieve(
-            'ref_id',
-            $this->refinery->byTrying([
-                $this->refinery->kindlyTo()->int(),
-                $this->refinery->always(null)
-            ])
-        );
-
-        if (!$refId || $tabs->getActiveTab() !== "settings") {
-            return;
-        }
-
-        $chatSettingsTabFound = false;
-        foreach ($tabs->sub_target as $target) {
-            if ($target["id"] === "matrix-chat-course-settings") {
-                $chatSettingsTabFound = true;
-                break;
-            }
-        }
-
-        $guiClass = $this->plugin->getObjGUIClassByType(ilObject::_lookupType($refId, true));
-
-        if (!$guiClass || $chatSettingsTabFound) {
-            return;
-        }
-
-
-        $dic->ctrl()->setParameterByClass(self::class, "ref_id", $refId);
-
-        if ($this->plugin->getMatrixCommunicator()->general->serverReachable()) {
-            //ToDo: gets marked as active together with the the "Multilanguage tab" on group settings tab
-            $tabs->addSubTab(
-                "matrix-chat-course-settings",
-                $this->plugin->txt("matrix.chat.course.settings"),
-                $dic->ctrl()->getLinkTargetByClass([
-                    ilUIPluginRouterGUI::class,
-                    self::class,
-                ], ChatCourseSettingsController::getCommand("showSettings"))
             );
         }
     }

@@ -24,7 +24,6 @@ namespace ILIAS\Plugin\MatrixChatClient\Form;
 use ilCheckboxInputGUI;
 use ILIAS\Plugin\Libraries\ControllerHandler\UiUtils;
 use ILIAS\Plugin\MatrixChatClient\Controller\ChatController;
-use ILIAS\Plugin\MatrixChatClient\Controller\ChatCourseSettingsController;
 use ilMatrixChatClientPlugin;
 use ilPropertyFormGUI;
 
