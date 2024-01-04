@@ -50,7 +50,7 @@ class ChatCourseSettingsForm extends ilPropertyFormGUI
         $this->httpWrapper = $this->dic->http()->wrapper();
 
         $refId = $this->httpWrapper->query()->retrieve(
-            'refId',
+            'ref_id',
             $this->refinery->byTrying([
                 $this->refinery->kindlyTo()->int(),
                 $this->refinery->always(null)

@@ -127,7 +127,7 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
         $cmd = $this->ctrl->getCmd();
 
         $refId = $this->httpWrapper->query()->retrieve(
-            'refId',
+            'ref_id',
             $this->refinery->byTrying([
                 $this->refinery->kindlyTo()->int(),
                 $this->refinery->always(null)
@@ -202,7 +202,7 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
         $tabs = $dic->tabs();
 
         $refId = $this->httpWrapper->query()->retrieve(
-            'refId',
+            'ref_id',
             $this->refinery->byTrying([
                 $this->refinery->kindlyTo()->int(),
                 $this->refinery->always(null)
@@ -252,7 +252,7 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
         $tabs = $dic->tabs();
 
         $refId = $this->httpWrapper->query()->retrieve(
-            'refId',
+            'ref_id',
             $this->refinery->byTrying([
                 $this->refinery->kindlyTo()->int(),
                 $this->refinery->always(null)
