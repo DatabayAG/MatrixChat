@@ -127,6 +127,8 @@ class ChatController extends BaseController
 
     public function saveChatSettings(): void
     {
+        $this->checkPermissionOnObject("write");
+
         $form = new ChatSettingsForm($this, $this->refId);
         $courseSettings = $this->courseSettings;
         if (!$form->checkInput()) {
@@ -198,6 +200,8 @@ class ChatController extends BaseController
 
     public function showConfirmDisableChatIntegration(?DisableChatIntegrationForm $form = null): void
     {
+        $this->checkPermissionOnObject("write");
+
         if (!$form) {
             $form = new DisableChatIntegrationForm($this, $this->refId);
         }
@@ -207,6 +211,8 @@ class ChatController extends BaseController
 
     public function disableChatIntegration(): void
     {
+        $this->checkPermissionOnObject("write");
+
         $form = new DisableChatIntegrationForm($this, $this->refId);
         if (!$form->checkInput()) {
             $form->setValuesByPost();
