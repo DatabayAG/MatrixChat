@@ -253,8 +253,10 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
             (
                 $courseSettings->isChatIntegrationEnabled()
                 || $this->access->checkAccess("write", "", $refId)
-            ) && $this->ctrl->getCmd() !== ChatController::getCommand("showChat")
-
+            ) && !in_array($this->ctrl->getCmd(), [
+                ChatController::getCommand(ChatController::CMD_SHOW_CHAT),
+                ChatController::getCommand(ChatController::CMD_SHOW_CHAT_SETTINGS)
+            ], true)
         ) {
             /**
              * @var ChatController $chatController

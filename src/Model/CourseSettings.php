@@ -29,7 +29,7 @@ class CourseSettings
     private int $courseId;
     private bool $chatIntegrationEnabled = false;
     private ilMatrixChatClientPlugin $plugin;
-    private ?MatrixRoom $matrixRoom;
+    private ?MatrixRoom $matrixRoom = null;
 
     public function __construct(int $courseId, ?string $matrixRoomId = null)
     {

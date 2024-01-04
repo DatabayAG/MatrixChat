@@ -16,46 +16,39 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChatClient\Form;
 
-use ILIAS\HTTP\Wrapper\WrapperFactory;
-;
-use ilPropertyFormGUI;
 use ilCheckboxInputGUI;
 use ILIAS\DI\Container;
-use ilMatrixChatClientPlugin;
+use ILIAS\HTTP\Wrapper\WrapperFactory;
+use ILIAS\Plugin\Libraries\ControllerHandler\UiUtils;
+use ILIAS\Plugin\MatrixChatClient\Controller\ChatController;
 use ILIAS\Plugin\MatrixChatClient\Controller\ChatCourseSettingsController;
+use ilMatrixChatClientPlugin;
 use ilMatrixChatClientUIHookGUI;
-use ilUIPluginRouterGUI;
-use ilUtil;
+use ilPropertyFormGUI;
+
+;
 
 /**
- * Class ChatCourseSettingsForm
+ * Class ChatSettingsForm
  *
  * @package ILIAS\Plugin\MatrixChatClient\Form
  * @author  Marvin Beym <mbeym@databay.de>
  */
-class ChatCourseSettingsForm extends ilPropertyFormGUI
+class ChatSettingsForm extends ilPropertyFormGUI
 {
     private ilMatrixChatClientPlugin $plugin;
     private Container $dic;
-    private UiUtil $uiUtil;
+    private UiUtils $uiUtil;
     private WrapperFactory $httpWrapper;
 
-    public function __construct()
+    public function __construct(ChatController $controller, int $refId)
     {
         parent::__construct();
         $this->plugin = ilMatrixChatClientPlugin::getInstance();
         global $DIC;
         $this->dic = $DIC;
-        $this->uiUtil = new UiUtil();
+        $this->uiUtil = new UiUtils();
         $this->httpWrapper = $this->dic->http()->wrapper();
-
-        $refId = $this->httpWrapper->query()->retrieve(
-            'ref_id',
-            $this->refinery->byTrying([
-                $this->refinery->kindlyTo()->int(),
-                $this->refinery->always(null)
-            ])
-        );
 
         $this->setTitle($this->plugin->txt("matrix.chat.course.settings"));
 
@@ -66,23 +59,13 @@ class ChatCourseSettingsForm extends ilPropertyFormGUI
         $enableChatIntegration->setRequired(true);
         $this->addItem($enableChatIntegration);
 
-        if (!$refId) {
-            $this->uiUtil->sendFailure($this->plugin->txt("required_parameter_missing"), true);
-            $this->plugin->redirectToHome();
-        }
-
-        $this->ctrl->setParameterByClass(
-            ilMatrixChatClientUIHookGUI::class,
-            "ref_id",
-            $refId
-        );
-        $this->setFormAction($this->ctrl->getFormActionByClass([
-            ilUIPluginRouterGUI::class,
-            ilMatrixChatClientUIHookGUI::class
-        ], ChatCourseSettingsController::getCommand("showSettings")));
+        $this->setFormAction($controller->getCommandLink(
+            ChatController::CMD_SHOW_CHAT_SETTINGS,
+            ["ref_id" => $refId], true
+        ));
 
         $this->addCommandButton(
-            ChatCourseSettingsController::getCommand("saveSettings"),
+            ChatController::getCommand(ChatController::CMD_SAVE_CHAT_SETTINGS),
             $this->lng->txt("save")
         );
     }

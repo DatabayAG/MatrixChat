@@ -20,28 +20,30 @@ declare(strict_types=1);
 namespace ILIAS\Plugin\MatrixChatClient\Form;
 
 ;
-use ilPropertyFormGUI;
-use ILIAS\Plugin\MatrixChatClient\Controller\ChatCourseSettingsController;
-use ilUtil;
-use ilMatrixChatClientPlugin;
+
 use ilCheckboxInputGUI;
+use ILIAS\Plugin\Libraries\ControllerHandler\UiUtils;
+use ILIAS\Plugin\MatrixChatClient\Controller\ChatController;
+use ILIAS\Plugin\MatrixChatClient\Controller\ChatCourseSettingsController;
+use ilMatrixChatClientPlugin;
+use ilPropertyFormGUI;
 
 /**
- * Class DisableCourseChatIntegration
+ * Class DisableChatIntegrationForm
  *
  * @package ILIAS\Plugin\MatrixChatClient\Form
  * @author  Marvin Beym <mbeym@databay.de>
  */
-class DisableCourseChatIntegrationForm extends ilPropertyFormGUI
+class DisableChatIntegrationForm extends ilPropertyFormGUI
 {
     private ilMatrixChatClientPlugin $plugin;
-    private UiUtil $uiUtil;
+    private UiUtils $uiUtil;
 
-    public function __construct(?int $courseId = null)
+    public function __construct(ChatController $controller, int $refId)
     {
         parent::__construct();
         $this->plugin = ilMatrixChatClientPlugin::getInstance();
-        $this->uiUtil = new UiUtil();
+        $this->uiUtil = new UiUtils();
         $this->uiUtil->sendQuestion($this->plugin->txt("matrix.chat.room.delete.confirm"));
 
         $fullyDeleteChatRoom = new ilCheckboxInputGUI(
@@ -50,14 +52,15 @@ class DisableCourseChatIntegrationForm extends ilPropertyFormGUI
         );
         $this->addItem($fullyDeleteChatRoom);
 
-        $this->setFormAction(ChatCourseSettingsController::getInstance()->getCommandLink(
-            "showSettings",
-            ["ref_id" => $courseId],
+        $this->setFormAction($controller->getCommandLink(
+            ChatController::CMD_SHOW_CHAT_SETTINGS,
+            ["ref_id" => $refId],
             true
         ));
-        $this->addCommandButton(ChatCourseSettingsController::getCommand("showSettings"), $this->lng->txt("cancel"));
+
+        $this->addCommandButton(ChatController::getCommand(ChatController::CMD_SHOW_CHAT_SETTINGS), $this->lng->txt("cancel"));
         $this->addCommandButton(
-            ChatCourseSettingsController::getCommand("disableCourseChatIntegration"),
+            ChatController::getCommand(ChatController::CMD_DISABLE_CHAT_INTEGRATION),
             $this->lng->txt("confirm")
         );
     }

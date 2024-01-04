@@ -11,10 +11,9 @@
   ],
   "autoload": {
     "psr-4": {
-      "ILIAS\\Plugin\\MatrixChatClient\\": "src/",
-      "ILIAS\\Plugin\\MatrixChatClient\\Libs\\" : "libs/"
+      "ILIAS\\Plugin\\MatrixChatClient\\": "src/"
     },
-    "classmap": ["./src", "./libs"]
+    "classmap": ["./src"]
   },
   "require": {
     "php": "^7.4 || ^8.0",

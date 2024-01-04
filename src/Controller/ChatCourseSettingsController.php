@@ -21,8 +21,8 @@ use ilCourseParticipants;
 use ILIAS\DI\Container;
 use ILIAS\Plugin\Libraries\ControllerHandler\BaseController;
 use ILIAS\Plugin\Libraries\ControllerHandler\ControllerHandler;
-use ILIAS\Plugin\MatrixChatClient\Form\ChatCourseSettingsForm;
-use ILIAS\Plugin\MatrixChatClient\Form\DisableCourseChatIntegrationForm;
+use ILIAS\Plugin\MatrixChatClient\Form\ChatSettingsForm;
+use ILIAS\Plugin\MatrixChatClient\Form\DisableChatIntegrationForm;
 use ILIAS\Plugin\MatrixChatClient\Model\CourseSettings;
 use ILIAS\Plugin\MatrixChatClient\Model\UserConfig;
 use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
@@ -101,13 +101,13 @@ class ChatCourseSettingsController extends BaseController
         $this->tabs->activateSubTab("matrix-chat-course-settings");
     }
 
-    public function showSettings(?ChatCourseSettingsForm $form = null): void
+    public function showSettings(?ChatSettingsForm $form = null): void
     {
         $this->injectTabs();
 
         $courseSettings = $this->courseSettings;
         if (!$form) {
-            $form = new ChatCourseSettingsForm();
+            $form = new ChatSettingsForm();
 
             if (
                 $courseSettings->isChatIntegrationEnabled()
@@ -129,7 +129,7 @@ class ChatCourseSettingsController extends BaseController
 
     public function saveSettings(): void
     {
-        $form = new ChatCourseSettingsForm();
+        $form = new ChatSettingsForm();
         $courseSettings = $this->courseSettings;
         if (!$form->checkInput()) {
             $form->setValuesByPost();
@@ -189,7 +189,7 @@ class ChatCourseSettingsController extends BaseController
 
         if (!$enableChatIntegration && $room->exists()) {
             $this->redirectToCommand(
-                "confirmDisableCourseChatIntegration",
+                "confirmDisableChatIntegrationForm",
                 ["ref_id" => $courseSettings->getCourseId()]
             );
         }
@@ -198,22 +198,22 @@ class ChatCourseSettingsController extends BaseController
         $this->redirectToCommand("showSettings");
     }
 
-    public function confirmDisableCourseChatIntegration(?DisableCourseChatIntegrationForm $form = null): void
+    public function confirmDisableChatIntegrationForm(?DisableChatIntegrationForm $form = null): void
     {
         $courseId = (int) $this->verifyQueryParameter("ref_id");
 
         $this->mainTpl->loadStandardTemplate();
 
         if (!$form) {
-            $form = new DisableCourseChatIntegrationForm($courseId);
+            $form = new DisableChatIntegrationForm($courseId);
         }
         $this->mainTpl->setContent($form->getHTML());
         $this->mainTpl->printToStdOut();
     }
 
-    public function disableCourseChatIntegration(): void
+    public function disableChatIntegrationForm(): void
     {
-        $form = new DisableCourseChatIntegrationForm();
+        $form = new DisableChatIntegrationForm();
         if (!$form->checkInput()) {
             $form->setValuesByPost();
             $this->confirmDisableCourseChatIntegration($form);
