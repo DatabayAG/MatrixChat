@@ -23,10 +23,12 @@ namespace ILIAS\Plugin\MatrixChatClient\Controller;
 
 use ilAccessHandler;
 use ILIAS\DI\Container;
+use ILIAS\Plugin\LdapPasswordChange\Ui\UiUtils;
 use ILIAS\Plugin\Libraries\ControllerHandler\BaseController;
 use ILIAS\Plugin\Libraries\ControllerHandler\ControllerHandler;
 use ILIAS\Plugin\MatrixChatClient\Model\CourseSettings;
 use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
+use ilInfoScreenGUI;
 use ilMatrixChatClientPlugin;
 use ilMatrixChatClientUIHookGUI;
 use ilObjCourseGUI;
@@ -75,7 +77,7 @@ class ChatController extends BaseController
 
     public function showChat(): void
     {
-        //$this->tabs->addSubTab("matrix-chat-chat", $this->plugin->);
+        $this->checkPermissionOnObject("read");
 
         $this->injectTabs();
         $this->tabs->clearSubTabs();
@@ -87,7 +89,7 @@ class ChatController extends BaseController
             ])
         );
 
-        if (!$this->access->checkAccess("write", "", $this->refId)) {
+        if (!$this->checkPermissionOnObject("write", false)) {
             $this->tabs->addSubTab(
                 self::SUB_TAB_CHAT_SETTINGS,
                 $this->plugin->txt("matrix.chat.course.settings"),
@@ -101,6 +103,19 @@ class ChatController extends BaseController
         $this->tabs->activateTab(self::TAB_CHAT);
 
         $this->renderToMainTemplate("");
+    }
+
+    public function checkPermissionOnObject(string $permission, bool $redirectToInfoScreenOnFail = true): bool
+    {
+        $hasAccess = $this->access->checkAccess($permission, "", $this->refId);
+        if (!$hasAccess && $redirectToInfoScreenOnFail) {
+            $this->uiUtil->sendFailure($this->dic->language()->txt("permission_denied"), true);
+            $this->ctrl->setParameterByClass(ilInfoScreenGUI::class, "ref_id", $this->refId);
+            $this->ctrl->redirectByClass(ilInfoScreenGUI::class, "showSummary");
+            return false; //Never gets to here
+        }
+
+        return $hasAccess;
     }
 
     protected function injectTabs(): void
