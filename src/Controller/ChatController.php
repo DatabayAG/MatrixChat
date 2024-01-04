@@ -96,7 +96,7 @@ class ChatController extends BaseController
         $this->tabs->activateTab(self::TAB_CHAT);
         $this->tabs->activateSubTab(self::TAB_CHAT);
 
-        $this->renderToMainTemplate("");
+        $this->renderToMainTemplate($this->plugin->getPluginConfig()->getPageDesignerText());
     }
     public function showChatSettings(?ChatSettingsForm $form = null): void
     {
