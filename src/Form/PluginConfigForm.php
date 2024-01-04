@@ -43,8 +43,6 @@ class PluginConfigForm extends ilPropertyFormGUI
 
     public const SPECIFY_OTHER_MATRIX_ACCOUNT = "specifyOtherMatrixAccount";
     public const CREATE_ON_CONFIGURED_HOMESERVER = "createOnConfiguredHomeserver";
-    public const ACTIVATE_COURSE_CHAT = "activateCourseChat";
-    public const ACTIVATE_GROUP_CHAT = "activateGroupChat";
 
     public function __construct()
     {
@@ -87,12 +85,12 @@ class PluginConfigForm extends ilPropertyFormGUI
 
         $activateChat->addOption(new ilCheckboxOption(
             $this->lng->txt("crs"),
-            self::ACTIVATE_COURSE_CHAT
+            "crs"
         ));
 
         $activateChat->addOption(new ilCheckboxOption(
             $this->lng->txt("grp"),
-            self::ACTIVATE_GROUP_CHAT
+            "grp"
         ));
         $this->addItem($activateChat);
     }
