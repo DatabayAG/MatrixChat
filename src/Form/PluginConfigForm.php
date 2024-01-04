@@ -41,6 +41,9 @@ class PluginConfigForm extends ilPropertyFormGUI
     private Container $dic;
     private ilGlobalPageTemplate $mainTpl;
 
+    public const SPECIFY_OTHER_MATRIX_ACCOUNT = "specifyOtherMatrixAccount";
+    public const CREATE_ON_CONFIGURED_HOMESERVER = "createOnConfiguredHomeserver";
+
     public function __construct()
     {
         parent::__construct();
@@ -70,19 +73,19 @@ class PluginConfigForm extends ilPropertyFormGUI
 
     protected function addServerSection($serverReachable): void
     {
-        $serverSection = new ilFormSectionHeaderGUI();
+        $section = new ilFormSectionHeaderGUI();
         if ($serverReachable) {
-            $serverSection->setTitle(sprintf(
+            $section->setTitle(sprintf(
                 $this->plugin->txt("config.section.server.reachable"),
                 $this->plugin->txt("matrix.server.reachable")
             ));
         } else {
-            $serverSection->setTitle(sprintf(
+            $section->setTitle(sprintf(
                 $this->plugin->txt("config.section.server.unreachable"),
                 $this->plugin->txt("matrix.server.unreachable")
             ));
         }
-        $this->addItem($serverSection);
+        $this->addItem($section);
 
         $matrixServerUrl = new ilUriInputGUI($this->plugin->txt("matrix.server.url"), "matrixServerUrl");
         $matrixServerUrl->setRequired(true);
@@ -97,26 +100,26 @@ class PluginConfigForm extends ilPropertyFormGUI
 
     protected function addAdminUserSection(bool $serverReachable): void
     {
-        $adminAuthenticationSection = new ilFormSectionHeaderGUI();
+        $section = new ilFormSectionHeaderGUI();
         if ($this->plugin->getMatrixCommunicator()->admin->checkAdminUser()) {
-            $adminAuthenticationSection->setTitle(sprintf(
+            $section->setTitle(sprintf(
                 $this->plugin->txt("config.section.adminAuthentication.valid"),
                 $this->plugin->txt("matrix.admin.login.valid")
             ));
         } else {
             if (!$serverReachable) {
-                $adminAuthenticationSection->setTitle(sprintf(
+                $section->setTitle(sprintf(
                     $this->plugin->txt("config.section.adminAuthentication.invalid"),
                     $this->plugin->txt("matrix.server.unreachable")
                 ));
             } else {
-                $adminAuthenticationSection->setTitle(sprintf(
+                $section->setTitle(sprintf(
                     $this->plugin->txt("config.section.adminAuthentication.invalid"),
                     $this->plugin->txt("matrix.admin.login.invalid")
                 ));
             }
         }
-        $this->addItem($adminAuthenticationSection);
+        $this->addItem($section);
 
         $matrixAdminUsername = new ilTextInputGUI(
             $this->plugin->txt("config.admin.username.title"),
@@ -159,16 +162,16 @@ class PluginConfigForm extends ilPropertyFormGUI
 
         $accountOptions = new ilCheckboxGroupInputGUI(
             $this->plugin->txt("config.accountOptions.title"),
-            "externalUserAccountOptions"
+            "externalUserOptions"
         );
 
         $accountOptions->addOption(new ilCheckboxOption(
-                $this->plugin->txt("config.accountOptions.specifyOtherMatrixAccount"),
-                "externalUserSpecifyOtherMatrixAccount"
+            $this->plugin->txt("config.accountOptions.createOnConfiguredHomeserver"),
+            self::CREATE_ON_CONFIGURED_HOMESERVER
         ));
         $accountOptions->addOption(new ilCheckboxOption(
-            $this->plugin->txt("config.accountOptions.createOnConfiguredHomeserver"),
-            "externalUserCreateOnConfiguredHomeserver"
+                $this->plugin->txt("config.accountOptions.specifyOtherMatrixAccount"),
+                self::SPECIFY_OTHER_MATRIX_ACCOUNT
         ));
 
         $this->addItem($accountOptions);
@@ -197,16 +200,16 @@ class PluginConfigForm extends ilPropertyFormGUI
 
         $accountOptions = new ilCheckboxGroupInputGUI(
             $this->plugin->txt("config.accountOptions.title"),
-            "localUserAccountOptions"
+            "localUserOptions"
         );
 
         $accountOptions->addOption(new ilCheckboxOption(
-            $this->plugin->txt("config.accountOptions.specifyOtherMatrixAccount"),
-            "localUserSpecifyOtherMatrixAccount"
+            $this->plugin->txt("config.accountOptions.createOnConfiguredHomeserver"),
+            self::CREATE_ON_CONFIGURED_HOMESERVER
         ));
         $accountOptions->addOption(new ilCheckboxOption(
-            $this->plugin->txt("config.accountOptions.createOnConfiguredHomeserver"),
-            "localUserCreateOnConfiguredHomeserver"
+            $this->plugin->txt("config.accountOptions.specifyOtherMatrixAccount"),
+            self::SPECIFY_OTHER_MATRIX_ACCOUNT
         ));
 
         $this->addItem($accountOptions);

@@ -33,11 +33,9 @@ class PluginConfig extends SettingsConfig
     private string $matrixAdminPassword = "";
     private string $sharedSecret = "";
     private string $externalUserScheme = "";
-    private bool $externalUserSpecifyOtherMatrixAccount = false;
-    private bool $externalUserCreateOnConfiguredHomeserver = false;
+    private array $externalUserOptions = [];
     private string $localUserScheme = "";
-    private bool $localUserSpecifyOtherMatrixAccount = false;
-    private bool $localUserCreateOnConfiguredHomeserver = false;
+    private array $localUserOptions = [];
 
     private string $roomPrefix = "";
 
@@ -96,28 +94,6 @@ class PluginConfig extends SettingsConfig
         return $this;
     }
 
-    public function isExternalUserSpecifyOtherMatrixAccount(): bool
-    {
-        return $this->externalUserSpecifyOtherMatrixAccount;
-    }
-
-    public function setExternalUserSpecifyOtherMatrixAccount(bool $externalUserSpecifyOtherMatrixAccount): PluginConfig
-    {
-        $this->externalUserSpecifyOtherMatrixAccount = $externalUserSpecifyOtherMatrixAccount;
-        return $this;
-    }
-
-    public function isExternalUserCreateOnConfiguredHomeserver(): bool
-    {
-        return $this->externalUserCreateOnConfiguredHomeserver;
-    }
-
-    public function setExternalUserCreateOnConfiguredHomeserver(bool $externalUserCreateOnConfiguredHomeserver
-    ): PluginConfig {
-        $this->externalUserCreateOnConfiguredHomeserver = $externalUserCreateOnConfiguredHomeserver;
-        return $this;
-    }
-
     public function getLocalUserScheme(): string
     {
         return $this->localUserScheme;
@@ -129,28 +105,6 @@ class PluginConfig extends SettingsConfig
         return $this;
     }
 
-    public function isLocalUserSpecifyOtherMatrixAccount(): bool
-    {
-        return $this->localUserSpecifyOtherMatrixAccount;
-    }
-
-    public function setLocalUserSpecifyOtherMatrixAccount(bool $localUserSpecifyOtherMatrixAccount): PluginConfig
-    {
-        $this->localUserSpecifyOtherMatrixAccount = $localUserSpecifyOtherMatrixAccount;
-        return $this;
-    }
-
-    public function isLocalUserCreateOnConfiguredHomeserver(): bool
-    {
-        return $this->localUserCreateOnConfiguredHomeserver;
-    }
-
-    public function setLocalUserCreateOnConfiguredHomeserver(bool $localUserCreateOnConfiguredHomeserver): PluginConfig
-    {
-        $this->localUserCreateOnConfiguredHomeserver = $localUserCreateOnConfiguredHomeserver;
-        return $this;
-    }
-
     public function getRoomPrefix(): string
     {
         return $this->roomPrefix;
@@ -159,6 +113,28 @@ class PluginConfig extends SettingsConfig
     public function setRoomPrefix(string $roomPrefix): PluginConfig
     {
         $this->roomPrefix = $roomPrefix;
+        return $this;
+    }
+
+    public function getExternalUserOptions(): array
+    {
+        return $this->externalUserOptions;
+    }
+
+    public function setExternalUserOptions(array $externalUserOptions): PluginConfig
+    {
+        $this->externalUserOptions = $externalUserOptions;
+        return $this;
+    }
+
+    public function getLocalUserOptions(): array
+    {
+        return $this->localUserOptions;
+    }
+
+    public function setLocalUserOptions(array $localUserOptions): PluginConfig
+    {
+        $this->localUserOptions = $localUserOptions;
         return $this;
     }
 

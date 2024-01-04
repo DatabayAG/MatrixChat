@@ -59,28 +59,8 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
         if ($form === null) {
             $form = new PluginConfigForm();
 
-            $externalUserAccountOptions = [];
-            $localUserAccountOptions = [];
-
-            if ($this->plugin->getPluginConfig()->isExternalUserCreateOnConfiguredHomeserver()) {
-                $externalUserAccountOptions[] = "externalUserCreateOnConfiguredHomeserver";
-            }
-            if ($this->plugin->getPluginConfig()->isExternalUserSpecifyOtherMatrixAccount()) {
-                $externalUserAccountOptions[] = "externalUserSpecifyOtherMatrixAccount";
-            }
-            if ($this->plugin->getPluginConfig()->isLocalUserCreateOnConfiguredHomeserver()) {
-                $localUserAccountOptions[] = "localUserCreateOnConfiguredHomeserver";
-            }
-            if ($this->plugin->getPluginConfig()->isLocalUserSpecifyOtherMatrixAccount()) {
-                $localUserAccountOptions[] = "localUserSpecifyOtherMatrixAccount";
-            }
-
             $form->setValuesByArray(
-                $this->plugin->getPluginConfig()->toArray(["matrixAdminPassword", "sharedSecret"])
-                + [
-                    "externalUserAccountOptions" => $externalUserAccountOptions,
-                    "localUserAccountOptions" => $localUserAccountOptions
-                ],
+                $this->plugin->getPluginConfig()->toArray(["matrixAdminPassword", "sharedSecret"]),
                 true
             );
         }
@@ -122,23 +102,9 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
             ->setMatrixAdminUsername($form->getInput("matrixAdminUsername"))
             ->setSharedSecret($sharedSecretValue)
             ->setExternalUserScheme($form->getInput("externalUserScheme"))
-            ->setExternalUserCreateOnConfiguredHomeserver(in_array(
-                    "externalUserCreateOnConfiguredHomeserver",
-                    (array) $form->getInput("externalUserAccountOptions"), true)
-            )
-            ->setExternalUserSpecifyOtherMatrixAccount(in_array(
-                    "externalUserSpecifyOtherMatrixAccount",
-                    (array) $form->getInput("externalUserAccountOptions"), true)
-            )
-            ->setLocalUserScheme($form->getInput("localUserScheme"))
-            ->setLocalUserCreateOnConfiguredHomeserver(in_array(
-                    "localUserCreateOnConfiguredHomeserver",
-                    (array) $form->getInput("localUserAccountOptions"), true)
-            )
-            ->setLocalUserSpecifyOtherMatrixAccount(in_array(
-                    "localUserSpecifyOtherMatrixAccount",
-                    (array) $form->getInput("localUserAccountOptions"), true)
-            )->setRoomPrefix($form->getInput("roomPrefix"));
+            ->setExternalUserOptions($form->getInput("externalUserOptions"))
+            ->setLocalUserOptions($form->getInput("localUserOptions"))
+            ->setRoomPrefix($form->getInput("roomPrefix"));
 
         $matrixAdminPassword = $form->getInput("matrixAdminPassword");
         if ($matrixAdminPassword !== "") {
