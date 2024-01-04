@@ -52,7 +52,10 @@ class PluginConfigForm extends ilPropertyFormGUI
         $this->mainTpl = $this->dic->ui()->mainTemplate();
         $this->mainTpl->addCss($this->plugin->cssFolder("style.css"));
 
-        $this->setFormAction($this->ctrl->getFormActionByClass(ilMatrixChatClientConfigGUI::class, "showSettings"));
+        $this->setFormAction($this->ctrl->getFormActionByClass(
+            ilMatrixChatClientConfigGUI::class,
+            ilMatrixChatClientConfigGUI::CMD_SHOW_SETTINGS)
+        );
         $this->setId("{$this->plugin->getId()}_{$this->plugin->getPluginName()}_plugin_config_form");
         $this->setTitle($this->plugin->txt("general.plugin.settings"));
 
@@ -69,7 +72,7 @@ class PluginConfigForm extends ilPropertyFormGUI
         $this->addLocalUserSection($allowedUsernameSchemeCharacters);
         $this->addRoomSection();
 
-        $this->addCommandButton("saveSettings", $this->lng->txt("save"));
+        $this->addCommandButton(ilMatrixChatClientConfigGUI::CMD_SAVE_SETTINGS, $this->lng->txt("save"));
     }
     
     protected function addGeneralSection(): void

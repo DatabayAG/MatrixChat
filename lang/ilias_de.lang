@@ -37,6 +37,9 @@ config.sharedSecret.title#:#Gemeinsames Geheimnis
 config.sharedSecret.info#:#'registration_shared_secret' aus der Synapse-Homeserver konfiguration (homeserver.yaml)<br><br>Dieses Feld wird nach dem Absenden des Formulars wieder gelöscht.
 config.sharedSecret.empty#:#Dieses Feld ist erforderlich, wenn es noch nicht gespeichert wurde!
 
+config.pageDesignerText.title#:#Matrix Chat Seite gestalten
+config.pageDesignerText.info#:#Text wird auf dem Chat-Tab innerhalb von Kursen & Gruppen angezeigt. <br>Aktivieren von TinyMCE-Editor empfohlen.
+
 config.admin.username.title#:#Benutzername Des Matrix-Server Administrators
 config.admin.username.info#:#Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen.
 config.admin.password.title#:#Passwort Des Matrix-Server Administrators

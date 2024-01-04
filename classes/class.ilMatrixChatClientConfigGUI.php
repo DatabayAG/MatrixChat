@@ -7,6 +7,7 @@ declare(strict_types=1);
 use ILIAS\DI\Container;
 use ILIAS\FileUpload\FileUpload;
 use ILIAS\Plugin\Libraries\ControllerHandler\UiUtils;
+use ILIAS\Plugin\MatrixChatClient\Form\ChatPageDesignerForm;
 use ILIAS\Plugin\MatrixChatClient\Form\PluginConfigForm;
 ;
 
@@ -22,6 +23,14 @@ require_once __DIR__ . '/../vendor/autoload.php';
  */
 class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
 {
+    public const CMD_SHOW_SETTINGS = "showSettings";
+    public const CMD_SAVE_SETTINGS = "saveSettings";
+
+    public const CMD_SHOW_CHAT_PAGE_DESIGNER = "showChatPageDesigner";
+    public const CMD_SAVE_CHAT_PAGE_DESIGNER = "saveChatPageDesigner";
+    public const TAB_PLUGIN_SETTINGS = "tab_plugin_settings";
+    public const TAB_CHAT_PAGE_DESIGNER = "tab_chat_page_designer";
+
     protected ilObjUser $user;
     protected ilLogger $logger;
     protected FileUpload $upload;
@@ -57,6 +66,7 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
 
     public function showSettings(?PluginConfigForm $form = null): void
     {
+        $this->injectTabs(self::TAB_PLUGIN_SETTINGS);
         if ($form === null) {
             $form = new PluginConfigForm();
 
@@ -119,7 +129,66 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
         } catch (Exception $e) {
             $this->uiUtil->sendFailure($this->plugin->txt($e->getMessage()), true);
         }
-        $this->ctrl->redirectByClass(self::class, "showSettings");
+        $this->ctrl->redirectByClass(self::class, self::CMD_SHOW_SETTINGS);
+    }
+
+
+    public function showChatPageDesigner(?ChatPageDesignerForm $form = null): void
+    {
+        $this->injectTabs(self::TAB_CHAT_PAGE_DESIGNER);
+
+        if ($form === null) {
+            $form = new ChatPageDesignerForm();
+
+            $form->setValuesByArray(
+                $this->plugin->getPluginConfig()->toArray(["matrixAdminPassword", "sharedSecret"]),
+                true
+            );
+        }
+        $this->mainTpl->setContent($form->getHTML());
+    }
+
+    public function saveChatPageDesigner(): void
+    {
+        $form = new ChatPageDesignerForm();
+
+        if (!$form->checkInput()) {
+            $this->uiUtil->sendFailure($this->plugin->txt("general.update.failed"));
+            $form->setValuesByPost();
+            $this->showChatPageDesigner($form);
+            return;
+        }
+
+        $form->setValuesByPost();
+
+        $this->plugin->getPluginConfig()
+            ->setPageDesignerText($form->getInput("pageDesignerText"));
+
+        try {
+            $this->plugin->getPluginConfig()->save();
+            $this->uiUtil->sendSuccess($this->plugin->txt("general.update.success"), true);
+        } catch (Exception $e) {
+            $this->uiUtil->sendFailure($this->plugin->txt($e->getMessage()), true);
+        }
+        $this->ctrl->redirectByClass(self::class, self::CMD_SHOW_CHAT_PAGE_DESIGNER);
+    }
+
+    public function injectTabs(?string $tabId = null): void
+    {
+        $this->tabs->addTab(
+            self::TAB_PLUGIN_SETTINGS,
+            $this->plugin->txt("general.plugin.settings"),
+            $this->ctrl->getLinkTargetByClass(self::class, self::CMD_SHOW_SETTINGS)
+        );
+        $this->tabs->addTab(
+            self::TAB_CHAT_PAGE_DESIGNER,
+            $this->plugin->txt("config.pageDesignerText.title"),
+            $this->ctrl->getLinkTargetByClass(self::class, self::CMD_SHOW_CHAT_PAGE_DESIGNER)
+        );
+
+        if ($tabId) {
+            $this->tabs->activateTab($tabId);
+        }
     }
 
     public function performCommand(string $cmd): void
@@ -136,6 +205,6 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
 
     protected function getDefaultCommand(): string
     {
-        return "showSettings";
+        return self::CMD_SHOW_SETTINGS;
     }
 }

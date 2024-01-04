@@ -38,6 +38,7 @@ class PluginConfig extends SettingsConfig
     private array $localUserOptions = [];
     private string $roomPrefix = "";
     private array $activateChat = [];
+    private string $pageDesignerText = "";
 
     public function getMatrixServerUrl(): string
     {
@@ -146,6 +147,17 @@ class PluginConfig extends SettingsConfig
     public function setActivateChat(array $activateChat): PluginConfig
     {
         $this->activateChat = $activateChat;
+        return $this;
+    }
+
+    public function getPageDesignerText(): string
+    {
+        return $this->pageDesignerText;
+    }
+
+    public function setPageDesignerText(string $pageDesignerText): PluginConfig
+    {
+        $this->pageDesignerText = $pageDesignerText;
         return $this;
     }
 
