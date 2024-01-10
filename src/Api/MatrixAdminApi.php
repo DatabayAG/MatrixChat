@@ -28,7 +28,7 @@ use Throwable;
  */
 class MatrixAdminApi extends MatrixApiEndpointBase
 {
-    private ?MatrixUser $adminUser = null;
+    public static ?MatrixUser $adminUser = null;
 
     public function checkAdminUser(): bool
     {
@@ -84,15 +84,15 @@ class MatrixAdminApi extends MatrixApiEndpointBase
 
     private function getUser(): MatrixUser
     {
-        if ($this->adminUser === null) {
-            $this->adminUser = $this->login(
+        if (self::$adminUser === null) {
+            self::$adminUser = $this->login(
                 $this->plugin->getPluginConfig()->getMatrixAdminUsername(),
                 $this->plugin->getPluginConfig()->getMatrixAdminPassword(),
                 "ilias_matrix_chat_device_admin"
             );
         }
 
-        return $this->adminUser;
+        return self::$adminUser;
     }
 
     public function roomExists(string $matrixRoomId): bool
