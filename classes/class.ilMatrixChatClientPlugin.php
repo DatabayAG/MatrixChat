@@ -50,7 +50,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
     private ?PluginConfig $pluginConfig = null;
     private UserRoomAddQueueRepository $userRoomAddQueueRepo;
     private CourseSettingsRepository $courseSettingsRepo;
-    public ?MatrixApiCommunicator $matrixCommunicator = null;
+    protected ?MatrixApiCommunicator $matrixCommunicator = null;
     public Container $dic;
     private ilCtrl $ctrl;
     public ilSetting $settings;
