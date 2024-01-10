@@ -59,6 +59,27 @@ config.user.method.title#:#Matrix-Benutzer Registrierungsmethode
 config.user.method.externalAccount#:#Verwende Externen-Account Eintrag
 config.user.method.fromNameScheme#:#Benutzer Basierend Auf Namensschema
 
+config.user.method.createOnConfiguredHomeserver#:#Account auf dem verbundenem Homeserver verwenden
+config.user.method.createOnConfiguredHomeserver.connectedHomeserver#:#Verbundener Matrix Homeserver
+config.user.method.createOnConfiguredHomeserver.detectedMatrixAccount#:#Erkannter Matrix-Account
+
+config.user.method.specifyOtherMatrixAccount#:#Anderen Matrix-Account nutzen
+config.user.method.specifyOtherMatrixAccount.accountName#:#Account-Name (Inklusive homeserver)
+
+config.user.resetAccountSettings#:#Matrix-Accounteinstellungen zurücksetzen
+config.user.resetAccountSettings.success#:#Matrix-Accounteinstellungen zurückgesetzt!
+
+config.user.changeLocalUserPassword.title#:#Passwort von Lokal verbundenen Matrix-Benutzer ändern
+config.user.changeLocalUserPassword.failure.userNotExist#:#Ihr passwort konnte nicht geändert werden. Ihr Benutzer existiert nicht!
+config.user.changeLocalUserPassword.failure.general#:#Ihr passwort konnte nicht geändert werden.
+config.user.changeLocalUserPassword.success#:#Ihr passwort wurde erfolgreich geändert. Ihre Geräte wurden ausgeloggt!
+
+config.user.register.success#:#Matrix-Account erfolgreich registriert.
+config.user.register.failure#:#Matrix-Account konnte nicht registriert werden.
+config.user.register.failure.usernameAlreadyUsed#:#Matrix-Account konnte nicht registriert werden. Ihr Benutzername ist bereits vergeben.
+config.user.auth.failure#:#Matrix-Account konnte nicht authentifiziert werden.
+config.user.auth.success#:#Matrix-Account erfolgreich authentifiziert.
+
 matrix.server.url#:#Matrix Server (Synapse) URL
 matrix.server.reachable#:#Server erreichbar
 matrix.server.unreachable#:#Server nicht erreichbar
@@ -84,6 +105,10 @@ matrix.user.authentication.failed.unConfigured#:#Keine Authentifizierung konfigu
 matrix.user.authentication.failed.usernameTaken#:#Benutzername '%s' ist bereits vergeben
 matrix.user.authentication.failed.userCreation#:#Beim Anlegen des Benutzers ist ein Fehler aufgetreten
 matrix.user.authentication.success#:#Authentifizierung erfolgreich mit Benutzername '%s' (Matrix-User-ID: %s)
+matrix.user.name#:#Matrix-Benutzername
+matrix.user.account#:#Matrix-Account
+matrix.user.password#:#Matrix-User Passwort
+matrix.user.password.external.required#:#Ihr "Erkannter Matrix-Account" existiert nicht. Bitte geben sie ein Passwort ein um diesen zu erstellen.
 
 matrix.admin.login.valid#:#Admin-Login gültig
 matrix.admin.login.invalid#:#Admin-Login ungültig
