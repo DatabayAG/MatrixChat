@@ -24,8 +24,10 @@ use ILIAS\DI\Container;
 use ILIAS\HTTP\Wrapper\WrapperFactory;
 use ILIAS\Plugin\Libraries\ControllerHandler\ControllerHandler;
 use ILIAS\Plugin\Libraries\ControllerHandler\UiUtils;
+use ILIAS\Plugin\MatrixChatClient\Controller\BaseUserConfigController;
 use ILIAS\Plugin\MatrixChatClient\Controller\ChatController;
-use ILIAS\Plugin\MatrixChatClient\Controller\UserConfigController;
+use ILIAS\Plugin\MatrixChatClient\Controller\ExternalUserConfigController;
+use ILIAS\Plugin\MatrixChatClient\Controller\LocalUserConfigController;
 use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
 use ILIAS\Refinery\Factory;
 
@@ -206,13 +208,22 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
             return;
         }
 
+        /**
+         * @var LocalUserConfigController $localUserConfigController
+         */
+        $localUserConfigController = $this->controllerHandler->getController(LocalUserConfigController::class);
+
+        /**
+         * @var ExternalUserConfigController $externalUserConfigController
+         */
+        $externalUserConfigController = $this->controllerHandler->getController(ExternalUserConfigController::class);
+
         $tabs->addTab(
-            "chat-user-config",
+            BaseUserConfigController::TAB_USER_CHAT_CONFIG,
             $this->plugin->txt("config.user.title"),
-            $dic->ctrl()->getLinkTargetByClass([
-                ilUIPluginRouterGUI::class,
-                self::class,
-            ], UserConfigController::getCommand("showGeneralConfig"))
+            $this->dic->user()->getAuthMode() === "local"
+                ? $localUserConfigController->getCommandLink(BaseUserConfigController::CMD_SHOW_USER_CHAT_CONFIG)
+                : $externalUserConfigController->getCommandLink(BaseUserConfigController::CMD_SHOW_USER_CHAT_CONFIG)
         );
     }
 
