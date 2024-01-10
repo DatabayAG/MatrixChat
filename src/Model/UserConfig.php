@@ -30,7 +30,7 @@ use ilObjUser;
  */
 class UserConfig extends UserPrefConfig
 {
-    private string $authMethod = "usingExternal";
+    private string $authMethod = "";
     private string $matrixUsername = "";
     private string $matrixUserId = "";
 
@@ -67,12 +67,32 @@ class UserConfig extends UserPrefConfig
 
     public function getMatrixUserId() : string
     {
-        return $this->getAuthMethod() === "loginOrCreate" ? $this->matrixUserId : $this->user->getExternalAccount();
+        return $this->matrixUserId;
     }
 
     public function setMatrixUserId(string $matrixUserId) : UserConfig
     {
         $this->matrixUserId = $matrixUserId;
         return $this;
+    }
+
+        public function save(): void
+    {
+        try {
+            parent::save();
+        } catch (ConfigLoadException $ex) {
+            $errorsFound = 0;
+            foreach ($ex->getUnloadableProperties() as $unloadableProperty) {
+                switch ($unloadableProperty->getProperty()->getName()) {
+                    default:
+                        $errorsFound++;
+                        break;
+                }
+            }
+
+            if ($errorsFound > 0) {
+                throw new Exception("general.update.failed");
+            }
+        }
     }
 }
