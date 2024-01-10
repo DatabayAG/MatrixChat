@@ -61,7 +61,7 @@ class LocalUserPasswordChangeForm extends ilPropertyFormGUI
         ));
 
         $matrixAccount = new ilTextInputGUI(
-            $this->plugin->txt("matrixAccount"),
+            $this->plugin->txt("matrix.user.account"),
             "matrixAccount"
         );
         $matrixAccount->setDisabled(true);

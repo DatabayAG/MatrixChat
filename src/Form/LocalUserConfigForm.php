@@ -67,13 +67,13 @@ class LocalUserConfigForm extends BaseUserConfigForm
 
         $radioOption->addSubItem($this->getConnectedMatrixHomeserverInput());
         $radioOption->addSubItem($this->getMatrixAccountInput(
-            "matrixUsername",
+            "matrix.user.name",
             "matrixUsername",
             true
         ));
 
         $matrixUserPassword = new ilPasswordInputGUI(
-            $this->plugin->txt("matrixUserPassword"),
+            $this->plugin->txt("matrix.user.password"),
             "matrixUserPassword"
         );
         $matrixUserPassword->setRequired(true);
@@ -102,7 +102,7 @@ class LocalUserConfigForm extends BaseUserConfigForm
     protected function onAuthenticated(): bool
     {
         $this->addItem($this->getConnectedMatrixHomeserverInput());
-        $this->addItem($this->getMatrixAccountInput("matrixAccount", "matrixAccount", true));
+        $this->addItem($this->getMatrixAccountInput("matrix.user.account", "matrixAccount", true));
 
         $this->showCommandButton(true);
         $this->addCommandButton(LocalUserConfigController::getCommand(
