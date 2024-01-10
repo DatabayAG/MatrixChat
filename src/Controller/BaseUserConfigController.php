@@ -46,8 +46,6 @@ abstract class BaseUserConfigController extends BaseController
     public const CMD_SHOW_USER_CHAT_CONFIG = "showUserChatConfig";
     public const CMD_SAVE_USER_CHAT_CONFIG = "saveUserChatConfig";
     public const CMD_RESET_ACCOUNT_SETTINGS = "resetAccountSettings";
-
-
     protected UserConfig $userConfig;
     protected ilObjUser $user;
     protected ilTabsGUI $tabs;
@@ -68,6 +66,8 @@ abstract class BaseUserConfigController extends BaseController
     abstract public function showUserChatConfig(?BaseUserConfigForm $form = null): void;
 
     abstract public function saveUserChatConfig(): void;
+
+    abstract public function buildUsername(): string;
 
     public function resetAccountSettings(): void
     {

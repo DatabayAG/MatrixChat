@@ -50,16 +50,11 @@ class LocalUserConfigController extends BaseUserConfigController
                 $this->userConfig->getAuthMethod()
             );
 
-            $username = $this->plugin->getPluginConfig()->getLocalUserScheme();
-            foreach ($this->plugin->getUsernameSchemeVariables() as $key => $value) {
-                $username = str_replace("{" . $key . "}", $value, $username);
-            }
-
             $form->setValuesByArray(array_merge(
                 $this->userConfig->toArray(),
                 [
                     "connectedHomeserver" => $this->plugin->getPluginConfig()->getMatrixServerUrl(),
-                    "matrixUsername" => $username,
+                    "matrixUsername" => $this->buildUsername(),
                     "matrixAccount" => $this->userConfig->getMatrixUserId()
                 ]
             ), true);
@@ -83,6 +78,8 @@ class LocalUserConfigController extends BaseUserConfigController
         $authMethod = $form->getInput("authMethod");
         $matrixUsername = $form->getInput("matrixUsername");
         $matrixUserPassword = $form->getInput("matrixUserPassword");
+
+        $this->userConfig->setAuthMethod($form->getInput("authMethod"));
 
         if ($authMethod === PluginConfigForm::CREATE_ON_CONFIGURED_HOMESERVER) {
             if ($this->matrixApi->admin->usernameAvailable($matrixUsername)) {
@@ -116,7 +113,6 @@ class LocalUserConfigController extends BaseUserConfigController
             }
 
             $this->userConfig
-                ->setAuthMethod($form->getInput("authMethod"))
                 ->setMatrixUserId($matrixUser->getMatrixUserId())
                 ->setMatrixUsername($matrixUsername)
                 ->save();
@@ -167,5 +163,14 @@ class LocalUserConfigController extends BaseUserConfigController
 
         $this->uiUtil->sendSuccess($this->plugin->txt("config.user.changeLocalUserPassword.success"), true);
         $this->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
+    }
+
+    public function buildUsername(): string
+    {
+        $username = $this->plugin->getPluginConfig()->getLocalUserScheme();
+        foreach ($this->plugin->getUsernameSchemeVariables() as $key => $value) {
+            $username = str_replace("{" . $key . "}", $value, $username);
+        }
+        return $username;
     }
 }
