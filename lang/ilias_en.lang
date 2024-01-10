@@ -1,5 +1,3 @@
-/* This file was automatically generated from the en.lang.json file. DO NOT EDIT! */
-
 general.cmd.undefined#:#No command was found
 general.cmd.notFound#:#Command '%s' could not be found
 general.update.success#:#Update successful
@@ -8,13 +6,11 @@ general.plugin.settings#:#Plugin Settings
 general.plugin.notActivated#:#Plugin is not active, yet. Please activate it.
 general.plugin.requiredParameterMissing#:#The required parameter '%s' could not be found.
 
-authenticate#:#Authenticate
 chat#:#Chat
 
 config.section.server.reachable#:#<span class='sectionTitleWithStatus'>Server <span class='alert alert-success sectionStatus'>Server is reachable</span></span>
 config.section.server.unreachable#:#<span class='sectionTitleWithStatus'>Server <span class='alert alert-danger sectionStatus'>Server is unreachable</span></span>
 config.section.adminAuthentication#:#Admin-Authentication
-config.section.chat#:#Chat
 config.section.user.external#:#Externally Authenticated ILIAS Users
 config.section.user.local#:#Local ILIAS users
 config.section.room#:#Room
@@ -47,16 +43,6 @@ config.admin.password.info#:#Will be used to do administrator tasks like creatin
 config.user.generalSettings#:#General settings
 config.user.title#:#Chat Settings
 config.user.authMethod#:#Matrix Authentication Method
-config.user.useExternalAccount#:#Use External Account
-config.user.loginOrCreate#:#Authentication With Existing Account or Creation of New Account Using Naming Scheme
-config.user.login#:#Authenticate With Existing Account
-config.user.create.title#:#Create Account Using Naming Scheme
-config.user.create.username.info#:#To avoid conflicts a suffix '%s' is added to the entered username.<br><br>The username (including suffix) may only contain the characters %s.<br>Uppercase letters are converted to lowercase!
-config.user.create.username.illegalCharactersUsed#:#Only "a-z, 0-9, =, _, -, ., /, '" are allowed
-config.user.create.username.idm_info#:#You are authenticated by an IDM server. The username is set automatically.<br><br>
-config.user.method.title#:#Matrix-User registration method
-config.user.method.externalAccount#:#Use external account entry
-config.user.method.fromNameScheme#:#Based on Naming Scheme
 
 config.user.method.createOnConfiguredHomeserver#:#Use account on the connected home server
 config.user.method.createOnConfiguredHomeserver.connectedHomeserver#:#Connected Matrix Homeserver
@@ -83,12 +69,6 @@ matrix.server.url#:#Matrix Server (Synapse) URL
 matrix.server.reachable#:#Server is reachable
 matrix.server.unreachable#:#Server is unreachable
 
-matrix.chat.loggedInAs#:#Logged in as
-matrix.chat.notifications.changedName#:#User '%s' changed their name to '%s'
-matrix.chat.send#:#Send
-matrix.chat.login.failed#:#Matrix login failed
-matrix.chat.login.success#:#Matrix login successful
-matrix.chat.logout.success#:#Matrix logout successful
 matrix.chat.room.notFoundEvenThoughEnabled#:#The room was not found even though the integration is enabled for the course.<br>It's possible the room was deleted by an external client or the used administrator cannot access it anymore!<br><br>The integration probably needs to be deactivated (deleting the room if possible) and then reactivated.
 matrix.chat.room.notFound#:#Room could not be found.
 matrix.chat.room.memberAssignFailed#:#User could not be added to the room.
@@ -99,11 +79,6 @@ matrix.chat.room.delete.failed#:#Room could not be deleted
 matrix.chat.course.settings#:#Chat settings
 matrix.chat.course.enable#:#Activate Matrix-Chat Integration for the Course
 
-matrix.user.authentication.failed.authFailed#:#Authentication with Matrix-User '%s' failed
-matrix.user.authentication.failed.unConfigured#:#No authentication configured
-matrix.user.authentication.failed.usernameTaken#:#Username '%s' is already taken
-matrix.user.authentication.failed.userCreation#:#An error occurred while creating the user
-matrix.user.authentication.success#:#Authentication successful with username '%s' (Matrix-User-ID: %s)
 matrix.user.name#:#Matrix-Username
 matrix.user.account#:#Matrix-Account
 matrix.user.password#:#Matrix-User Password

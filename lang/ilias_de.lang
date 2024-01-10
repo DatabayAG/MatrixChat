@@ -1,5 +1,3 @@
-/* This file was automatically generated from the de.lang.json file. DO NOT EDIT! */
-
 general.cmd.undefined#:#Kein Kommando wurde gefunden
 general.cmd.notFound#:#Kommando '%s' wurde nicht gefunden
 general.update.success#:#Aktualisierung erfolgreich
@@ -8,14 +6,12 @@ general.plugin.settings#:#Plugin-Einstellungen
 general.plugin.notActivated#:#Das Plugin ist nicht aktiviert. Bitte aktivieren Sie dieses zunächst.
 general.plugin.requiredParameterMissing#:#Der benötigte Parameter '%s' konnte nicht gefunden werden.
 
-authenticate#:#Authentifizieren
 chat#:#Chat
 
 config.section.server.reachable#:#<span class='sectionTitleWithStatus'>Server <span class='alert alert-success sectionStatus'>%s</span></span>
 config.section.server.unreachable#:#<span class='sectionTitleWithStatus'>Server <span class='alert alert-danger sectionStatus'>%s</span></span>
 config.section.adminAuthentication.valid#:#<span class='sectionTitleWithStatus'>Admin-Authentifizierung <span class='alert alert-success sectionStatus'>%s</span></span>
 config.section.adminAuthentication.invalid#:#<span class='sectionTitleWithStatus'>Admin-Authentifizierung <span class='alert alert-danger sectionStatus'>%s</span></span>
-config.section.chat#:#Chat
 config.section.user.external#:#Extern authentifizierte ILIAS-Benutzer
 config.section.user.local#:#Lokale ILIAS-Benutzer
 config.section.room#:#Raum
@@ -48,16 +44,6 @@ config.admin.password.info#:#Wird verwendet um Administrator-Aufgaben wie z.B. Z
 config.user.generalSettings#:#Allgemeine Einstellungen
 config.user.title#:#Chat Einstellungen
 config.user.authMethod#:#Matrix-Authentifizierungsmethode
-config.user.useExternalAccount#:#Externes Konto Verwenden
-config.user.loginOrCreate#:#Authentifizierung mit Bestehendem Konto oder Erstellen Eines Neuen Kontos Mittels Namensschema
-config.user.login#:#Mit Bestehendem Konto Authentifizieren
-config.user.create.title#:#Konto Mittels Namensschema Erstellen
-config.user.create.username.info#:#Um Konflikte zu vermeiden, wird dem eingegebenen Benutzernamen ein Suffix "%s" hinzugefügt.<br><br> Der Benutzername (inklusive Suffix) darf nur die Zeichen %s enthalten. <br>Großbuchstaben werden in Kleinbuchstaben umgewandelt!
-config.user.create.username.illegalCharactersUsed#:#Nur "a-z, 0-9, =, _, -, ., /, '" sind erlaubt
-config.user.create.username.idm_info#:#Sie sind durch einen IDM-Server authentifiziert. Der Benutzername wird automatisch festgelegt.<br><br>
-config.user.method.title#:#Matrix-Benutzer Registrierungsmethode
-config.user.method.externalAccount#:#Verwende Externen-Account Eintrag
-config.user.method.fromNameScheme#:#Benutzer Basierend Auf Namensschema
 
 config.user.method.createOnConfiguredHomeserver#:#Account auf dem verbundenem Homeserver verwenden
 config.user.method.createOnConfiguredHomeserver.connectedHomeserver#:#Verbundener Matrix Homeserver
@@ -84,12 +70,6 @@ matrix.server.url#:#Matrix Server (Synapse) URL
 matrix.server.reachable#:#Server erreichbar
 matrix.server.unreachable#:#Server nicht erreichbar
 
-matrix.chat.loggedInAs#:#Eingeloggt als
-matrix.chat.notifications.changedName#:#Benutzer '%s' hat seinen Namen auf '%s' geändert
-matrix.chat.send#:#Senden
-matrix.chat.login.failed#:#Matrix-Login fehlgeschlagen
-matrix.chat.login.success#:#Matrix-Login erfolgreich
-matrix.chat.logout.success#:#Matrix-Logout erfolgreich
 matrix.chat.room.notFoundEvenThoughEnabled#:#Der Raum wurde nicht gefunden, obwohl die Integration für den Kurs aktiviert ist.<br>Wahrscheinlich wurde der Raum durch einen externen Client gelöscht oder der genutzte Administrator kann nicht mehr auf diesen zugreifen!<br><br>Die Integration muss wahrscheinlich deaktiviert (und dabei der Raum gelöscht werden, falls möglich) und dann wieder aktiviert werden.
 matrix.chat.room.notFound#:#Raum konnte nicht gefunden werden.
 matrix.chat.room.memberAssignFailed#:#Benutzer konnte nicht zum Raum hinzugefügt werden.
@@ -100,11 +80,6 @@ matrix.chat.room.delete.failed#:#Chatraum konnte nicht gelöscht werden
 matrix.chat.course.settings#:#Chat-Einstellungen
 matrix.chat.course.enable#:#Aktiviere Matrix-Chat Integration Für Den Kurs
 
-matrix.user.authentication.failed.authFailed#:#Authentifizierung mit Matrix-Benutzer '%s' fehlgeschlagen
-matrix.user.authentication.failed.unConfigured#:#Keine Authentifizierung konfiguriert
-matrix.user.authentication.failed.usernameTaken#:#Benutzername '%s' ist bereits vergeben
-matrix.user.authentication.failed.userCreation#:#Beim Anlegen des Benutzers ist ein Fehler aufgetreten
-matrix.user.authentication.success#:#Authentifizierung erfolgreich mit Benutzername '%s' (Matrix-User-ID: %s)
 matrix.user.name#:#Matrix-Benutzername
 matrix.user.account#:#Matrix-Account
 matrix.user.password#:#Matrix-User Passwort
