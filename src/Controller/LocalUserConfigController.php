@@ -82,9 +82,9 @@ class LocalUserConfigController extends BaseUserConfigController
         $this->userConfig->setAuthMethod($form->getInput("authMethod"));
 
         if ($authMethod === PluginConfigForm::CREATE_ON_CONFIGURED_HOMESERVER) {
-            if ($this->matrixApi->admin->usernameAvailable($matrixUsername)) {
+            if ($this->matrixApi->usernameAvailable($matrixUsername)) {
                 //user needs to be created
-                $matrixUser = $this->matrixApi->admin->createUser(
+                $matrixUser = $this->matrixApi->createUser(
                     $matrixUsername,
                     $matrixUserPassword,
                     $this->user->getFullname()
@@ -98,7 +98,7 @@ class LocalUserConfigController extends BaseUserConfigController
 
                 $this->uiUtil->sendSuccess($this->plugin->txt("config.user.register.success"), true);
             } else {
-                $matrixUser = $this->matrixApi->admin->login(
+                $matrixUser = $this->matrixApi->login(
                     $matrixUsername,
                     $matrixUserPassword,
                     "ilias_auth_verification"
@@ -150,13 +150,13 @@ class LocalUserConfigController extends BaseUserConfigController
         $newPassword = $form->getInput("newPassword");
         $matrixUserId = $this->userConfig->getMatrixUserId();
 
-        if (!$this->matrixApi->admin->userExists($matrixUserId)) {
+        if (!$this->matrixApi->userExists($matrixUserId)) {
             $this->uiUtil->sendFailure($this->plugin->txt("config.user.changeLocalUserPassword.failure.userNotExist"),
                 true);
             $this->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
         }
 
-        if (!$this->matrixApi->admin->changePassword($matrixUserId, $newPassword)) {
+        if (!$this->matrixApi->changePassword($matrixUserId, $newPassword)) {
             $this->uiUtil->sendFailure($this->plugin->txt("config.user.changeLocalUserPassword.failure.general"), true);
             $this->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
         }

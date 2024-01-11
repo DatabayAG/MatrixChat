@@ -145,7 +145,7 @@ class ChatController extends BaseController
         $room = $courseSettings->getMatrixRoom();
 
         if ($enableChatIntegration && (!$room || !$room->exists())) {
-            $room = $this->matrixApi->admin->createRoom(ilObject::_lookupTitle(ilObject::_lookupObjId($courseSettings->getCourseId())));
+            $room = $this->matrixApi->createRoom(ilObject::_lookupTitle(ilObject::_lookupObjId($courseSettings->getCourseId())));
             $courseSettings->setMatrixRoom($room);
         }
 
@@ -159,7 +159,7 @@ class ChatController extends BaseController
                         continue;
                     }
 
-                    $matrixUser = $this->matrixApi->admin->loginUserWithAdmin(
+                    $matrixUser = $this->matrixApi->loginUserWithAdmin(
                         $participantId,
                         $userConfig->getMatrixUserId()
                     );
@@ -167,8 +167,8 @@ class ChatController extends BaseController
                         continue;
                     }
 
-                    if (!$this->matrixApi->admin->isUserMemberOfRoom($matrixUser, $room)) {
-                        $this->matrixApi->admin->addUserToRoom($matrixUser, $room);
+                    if (!$this->matrixApi->isUserMemberOfRoom($matrixUser, $room)) {
+                        $this->matrixApi->addUserToRoom($matrixUser, $room);
                     }
 
                     $userRoomAddQueue = $this->userRoomAddQueueRepo->read($participantId,
@@ -232,7 +232,7 @@ class ChatController extends BaseController
         if (
             $this->courseSettings->getMatrixRoom()
             && $this->courseSettings->getMatrixRoom()->exists()
-            && $this->matrixApi->admin->deleteRoom($this->courseSettings->getMatrixRoom())
+            && $this->matrixApi->deleteRoom($this->courseSettings->getMatrixRoom())
         ) {
             $this->courseSettings->setMatrixRoom(null);
             if ($this->courseSettingsRepo->save($this->courseSettings)) {

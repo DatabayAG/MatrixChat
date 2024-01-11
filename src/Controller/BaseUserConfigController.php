@@ -24,7 +24,7 @@ namespace ILIAS\Plugin\MatrixChatClient\Controller;
 use ILIAS\DI\Container;
 use ILIAS\Plugin\Libraries\ControllerHandler\BaseController;
 use ILIAS\Plugin\Libraries\ControllerHandler\ControllerHandler;
-use ILIAS\Plugin\MatrixChatClient\Api\MatrixApiCommunicator;
+use ILIAS\Plugin\MatrixChatClient\Api\MatrixApi;
 use ILIAS\Plugin\MatrixChatClient\Form\BaseUserConfigForm;
 use ILIAS\Plugin\MatrixChatClient\Model\UserConfig;
 use ilMatrixChatClientPlugin;
@@ -50,7 +50,7 @@ abstract class BaseUserConfigController extends BaseController
     protected ilObjUser $user;
     protected ilTabsGUI $tabs;
     protected ilMatrixChatClientPlugin $plugin;
-    protected MatrixApiCommunicator $matrixApi;
+    protected MatrixApi $matrixApi;
 
     public function __construct(Container $dic, ControllerHandler $controllerHandler)
     {
@@ -60,7 +60,7 @@ abstract class BaseUserConfigController extends BaseController
         $this->tabs = $this->dic->tabs();
         $this->plugin = ilMatrixChatClientPlugin::getInstance();
         $this->userConfig = (new UserConfig($this->user))->load();
-        $this->matrixApi = $this->plugin->getMatrixCommunicator();
+        $this->matrixApi = $this->plugin->getMatrixApi();
     }
 
     abstract public function showUserChatConfig(?BaseUserConfigForm $form = null): void;

@@ -37,7 +37,7 @@ class CourseSettings
 
         $this->plugin = ilMatrixChatClientPlugin::getInstance();
         if ($matrixRoomId) {
-            $this->matrixRoom = $this->plugin->getMatrixCommunicator()->admin->getRoom($matrixRoomId);
+            $this->matrixRoom = $this->plugin->getMatrixApi()->getRoom($matrixRoomId);
         }
     }
 

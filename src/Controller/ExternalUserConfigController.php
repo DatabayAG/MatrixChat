@@ -44,7 +44,7 @@ class ExternalUserConfigController extends BaseUserConfigController
                 $this->user,
                 $this->userConfig->getMatrixUserId(),
                 $this->userConfig->getAuthMethod(),
-                !$this->matrixApi->admin->userExists($this->buildMatrixUserId())
+                !$this->matrixApi->userExists($this->buildMatrixUserId())
             );
 
             $form->setValuesByArray(array_merge(
@@ -67,7 +67,7 @@ class ExternalUserConfigController extends BaseUserConfigController
             $this->user,
             null,
             null,
-            !$this->matrixApi->admin->userExists($this->buildMatrixUserId())
+            !$this->matrixApi->userExists($this->buildMatrixUserId())
         );
 
         if (!$form->checkInput()) {
@@ -84,8 +84,8 @@ class ExternalUserConfigController extends BaseUserConfigController
         $this->userConfig->setAuthMethod($form->getInput("authMethod"));
 
         if ($authMethod === PluginConfigForm::CREATE_ON_CONFIGURED_HOMESERVER) {
-            if ($this->matrixApi->admin->userExists($matrixUserId)) {
-                $matrixUser = $this->matrixApi->admin->loginUserWithAdmin($this->user->getId(), $matrixUserId);
+            if ($this->matrixApi->userExists($matrixUserId)) {
+                $matrixUser = $this->matrixApi->loginUserWithAdmin($this->user->getId(), $matrixUserId);
 
                 if (!$matrixUser) {
                     //Logging into user failed, even though it exists (should never happen)
@@ -103,7 +103,7 @@ class ExternalUserConfigController extends BaseUserConfigController
                 //Register new account
                 $username = $this->buildUsername();
 
-                if (!$this->matrixApi->admin->usernameAvailable($username)) {
+                if (!$this->matrixApi->usernameAvailable($username)) {
                     //Should only ever happen if a user was register in the same moment this code ran (unlikely)
                     $this->uiUtil->sendFailure($this->plugin->txt("config.user.register.failure.usernameAlreadyUsed"));
                     $this->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
@@ -115,7 +115,7 @@ class ExternalUserConfigController extends BaseUserConfigController
                     $this->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
                 }
 
-                $matrixUser = $this->matrixApi->admin->createUser(
+                $matrixUser = $this->matrixApi->createUser(
                     $username,
                     $matrixUserPassword,
                     $this->user->getFullname()

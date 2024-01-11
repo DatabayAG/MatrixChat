@@ -59,7 +59,7 @@ class PluginConfigForm extends ilPropertyFormGUI
         $this->setId("{$this->plugin->getId()}_{$this->plugin->getPluginName()}_plugin_config_form");
         $this->setTitle($this->plugin->txt("general.plugin.settings"));
 
-        $serverReachable = $this->plugin->getMatrixCommunicator()->general->serverReachable();
+        $serverReachable = $this->plugin->getMatrixApi()->serverReachable();
 
         $allowedUsernameSchemeCharacters = array_map(static function ($char) {
             return "<span style='color: blue; font-weight: bold'>$char</span>";
@@ -128,7 +128,7 @@ class PluginConfigForm extends ilPropertyFormGUI
     protected function addAdminUserSection(bool $serverReachable): void
     {
         $section = new ilFormSectionHeaderGUI();
-        if ($this->plugin->getMatrixCommunicator()->admin->checkAdminUser()) {
+        if ($this->plugin->getMatrixApi()->checkAdminUser()) {
             $section->setTitle(sprintf(
                 $this->plugin->txt("config.section.adminAuthentication.valid"),
                 $this->plugin->txt("matrix.admin.login.valid")

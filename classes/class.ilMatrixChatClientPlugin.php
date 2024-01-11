@@ -21,7 +21,7 @@ declare(strict_types=1);
 use ILIAS\DI\Container;
 use ILIAS\Plugin\Libraries\ControllerHandler\UiUtils;
 use ILIAS\Plugin\MatrixChatClient\Model\PluginConfig;
-use ILIAS\Plugin\MatrixChatClient\Api\MatrixApiCommunicator;
+use ILIAS\Plugin\MatrixChatClient\Api\MatrixApi;
 use ILIAS\Plugin\MatrixChatClient\Model\UserConfig;
 use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
 use ILIAS\Plugin\MatrixChatClient\Repository\UserRoomAddQueueRepository;
@@ -50,7 +50,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
     private ?PluginConfig $pluginConfig = null;
     private UserRoomAddQueueRepository $userRoomAddQueueRepo;
     private CourseSettingsRepository $courseSettingsRepo;
-    protected ?MatrixApiCommunicator $matrixCommunicator = null;
+    protected ?MatrixApi $matrixApi = null;
     public Container $dic;
     private ilCtrl $ctrl;
     public ilSetting $settings;
@@ -181,12 +181,18 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
         }
     }
 
-    public function getMatrixCommunicator(): MatrixApiCommunicator
+    public function getMatrixApi(): MatrixApi
     {
-        if (!$this->matrixCommunicator && $this->isActive()) {
-            $this->matrixCommunicator = new MatrixApiCommunicator($this, $this->getPluginConfig()->getmatrixServerUrl());
+        if (!$this->matrixApi && $this->isActive()) {
+            $this->matrixApi = new MatrixApi(
+                $this->getPluginConfig()->getmatrixServerUrl(),
+                3,
+                $this,
+                $this->dic->logger()->root()
+
+            );
         }
-        return $this->matrixCommunicator;
+        return $this->matrixApi;
 
     }
 
@@ -208,7 +214,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
     {
         $userConfig = (new UserConfig($user))->load();
 
-        $matrixUser = $this->getMatrixCommunicator()->admin->loginUserWithAdmin($user->getId(), $userConfig->getMatrixUserId());
+        $matrixUser = $this->getMatrixApi()->loginUserWithAdmin($user->getId(), $userConfig->getMatrixUserId());
         if (!$matrixUser) {
             return;
         }
@@ -233,7 +239,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
                 }
 
                 if (!$room->isMember($matrixUser)) {
-                    if ($this->getMatrixCommunicator()->admin->addUserToRoom($matrixUser, $room)) {
+                    if ($this->getMatrixApi()->addUserToRoom($matrixUser, $room)) {
                         $this->userRoomAddQueueRepo->delete($userRoomAddQueue);
                     }
                 } else {
@@ -263,7 +269,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
         if (!$userConfig->getMatrixUserId()) {
             $addToQueue = true;
         } else {
-            $matrixUser = $this->getMatrixCommunicator()->admin->loginUserWithAdmin(
+            $matrixUser = $this->getMatrixApi()->loginUserWithAdmin(
                 $user->getId(),
                 $userConfig->getMatrixUserId(),
             );
@@ -303,7 +309,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
                     $matrixUser
                     && !$courseSettings->getMatrixRoom()->isMember($matrixUser)
                 ) {
-                    if ($this->getMatrixCommunicator()->admin->addUserToRoom($matrixUser, $courseSettings->getMatrixRoom())) {
+                    if ($this->getMatrixApi()->addUserToRoom($matrixUser, $courseSettings->getMatrixRoom())) {
                         $this->userRoomAddQueueRepo->delete(new UserRoomAddQueue($user->getId(), $objRefId));
                     }
                 }
@@ -320,7 +326,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
                     && $courseSettings->getMatrixRoom()->exists()
                     && $matrixUser
                 ) {
-                    $this->getMatrixCommunicator()->admin->removeUserFromRoom(
+                    $this->getMatrixApi()->removeUserFromRoom(
                         $matrixUser,
                         $courseSettings->getMatrixRoom(),
                         "Removed from course/group"
