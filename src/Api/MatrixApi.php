@@ -425,23 +425,17 @@ class MatrixApi
     }
 
 
+    /**
+     * @throws MatrixApiException
+     */
     public function getMatrixUserProfile(string $matrixUserId): array
     {
-        $returnData = [
-            "avatar_url" => "",
-            "displayname" => ""
+        $response = $this->sendRequest("/_matrix/client/v3/profile/$matrixUserId", false);
+
+        return [
+            "avatar_url" => $response->getResponseDataValue("avatar_url") ?: "",
+            "displayname" => $response->getResponseDataValue("displayname") ?: ""
         ];
-
-        try {
-            $response = $this->sendRequest("/_matrix/client/v3/profile/$matrixUserId", false);
-        } catch (MatrixApiException $e) {
-            return $returnData;
-        }
-
-        $returnData["avatar_url"] = $response->getResponseDataValue("avatar_url") ?: "";
-        $returnData["displayname"] = $response->getResponseDataValue("displayname") ?: "";
-
-        return $returnData;
     }
 
     /**
