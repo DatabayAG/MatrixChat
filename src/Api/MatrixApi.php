@@ -147,17 +147,7 @@ class MatrixApi
     public function checkAdminUser(): bool
     {
         try {
-            $adminUser = $this->login(
-                $this->plugin->getPluginConfig()->getMatrixAdminUsername(),
-                $this->plugin->getPluginConfig()->getMatrixAdminPassword(),
-                "ilias_matrix_chat_device_admin"
-            );
-            if (!$adminUser) {
-                return false;
-            }
-
-            self::$adminUser = $adminUser;
-            return true;
+            return (bool) $this->getAdminUser()->getAccessToken();
         } catch (Throwable $ex) {
             return false;
         }
