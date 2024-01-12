@@ -108,7 +108,7 @@ class MatrixApi
             }
         }
 
-
+        $statusCode = "UNKNOWN";
         try {
             $request = $this->client->request($method, $this->getApiUrl($apiCall), $options);
             $statusCode = $request->getStatusCode();

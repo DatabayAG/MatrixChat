@@ -39,7 +39,7 @@ class MatrixApiException extends Exception
         $this->errorCode = $errorCode;
     }
 
-    private function getErrorCode() : string
+    public function getErrorCode() : string
     {
         return $this->errorCode;
     }
