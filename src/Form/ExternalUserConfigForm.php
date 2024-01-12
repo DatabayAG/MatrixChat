@@ -105,7 +105,7 @@ class ExternalUserConfigForm extends BaseUserConfigForm
         return $radioOption;
     }
 
-    protected function onAuthenticated(): bool
+    protected function onAuthenticated(string $selectedAccountOption): bool
     {
         $this->addItem($this->getConnectedMatrixHomeserverInput());
         $this->addItem($this->getMatrixAccountInput("matrix.user.account", "matrixAccount", true));

@@ -186,7 +186,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
         if (!$this->matrixApi && $this->isActive()) {
             $this->matrixApi = new MatrixApi(
                 $this->getPluginConfig()->getmatrixServerUrl(),
-                3,
+                200,
                 $this,
                 $this->dic->logger()->root()
 

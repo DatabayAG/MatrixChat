@@ -64,10 +64,8 @@ abstract class BaseUserConfigForm extends ilPropertyFormGUI
             true
         ));
 
-        if ($matrixAccountId && $selectedAccountOption === PluginConfigForm::CREATE_ON_CONFIGURED_HOMESERVER) {
-            if (!$this->onAuthenticated()) {
-                return;
-            }
+        if ($matrixAccountId && !$this->onAuthenticated($selectedAccountOption)) {
+            return;
         }
 
         $matrixAuthMethod = new ilRadioGroupInputGUI($this->plugin->txt("config.user.authMethod"), "authMethod");
@@ -124,6 +122,6 @@ abstract class BaseUserConfigForm extends ilPropertyFormGUI
 
     abstract protected function getSpecifyOtherMatrixAccountOption(): ilRadioOption;
 
-    abstract protected function onAuthenticated(): bool;
+    abstract protected function onAuthenticated(string $selectedAccountOption): bool;
 
 }

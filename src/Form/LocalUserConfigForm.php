@@ -99,16 +99,22 @@ class LocalUserConfigForm extends BaseUserConfigForm
         return $radioOption;
     }
 
-    protected function onAuthenticated(): bool
+    protected function onAuthenticated(string $selectedAccountOption): bool
     {
-        $this->addItem($this->getConnectedMatrixHomeserverInput());
-        $this->addItem($this->getMatrixAccountInput("matrix.user.account", "matrixAccount", true));
+        if ($selectedAccountOption === PluginConfigForm::CREATE_ON_CONFIGURED_HOMESERVER) {
+            $this->addItem($this->getConnectedMatrixHomeserverInput());
+            $this->addItem($this->getMatrixAccountInput("matrix.user.account", "matrixAccount", true));
 
-        $this->showCommandButton(true);
-        $this->addCommandButton(LocalUserConfigController::getCommand(
-            LocalUserConfigController::CMD_SHOW_PASSWORD_CHANGE),
-            $this->plugin->txt("config.user.changeLocalUserPassword.title")
-        );
+            $this->showCommandButton(true);
+            $this->addCommandButton(LocalUserConfigController::getCommand(
+                LocalUserConfigController::CMD_SHOW_PASSWORD_CHANGE),
+                $this->plugin->txt("config.user.changeLocalUserPassword.title")
+            );
+        } else {
+            $this->addItem($this->getMatrixAccountInput("matrix.user.account", "matrixAccount", true));
+            $this->showCommandButton(true);
+        }
+
         return false;
     }
 }

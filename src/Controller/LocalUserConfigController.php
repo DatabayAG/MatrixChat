@@ -117,7 +117,9 @@ class LocalUserConfigController extends BaseUserConfigController
                 ->setMatrixUsername($matrixUsername)
                 ->save();
         } else {
-            //ToDo: implement
+            $this->userConfig->setMatrixUserId(
+                $this->handleSpecifyOtherMatrixAccount($form->getInput("matrixAccount"))
+            )->save();
         }
 
         $this->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);

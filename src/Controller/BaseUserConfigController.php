@@ -25,8 +25,10 @@ use ILIAS\DI\Container;
 use ILIAS\Plugin\Libraries\ControllerHandler\BaseController;
 use ILIAS\Plugin\Libraries\ControllerHandler\ControllerHandler;
 use ILIAS\Plugin\MatrixChatClient\Api\MatrixApi;
+use ILIAS\Plugin\MatrixChatClient\Api\MatrixApiException;
 use ILIAS\Plugin\MatrixChatClient\Form\BaseUserConfigForm;
 use ILIAS\Plugin\MatrixChatClient\Model\UserConfig;
+use ilLogger;
 use ilMatrixChatClientPlugin;
 use ilMatrixChatClientUIHookGUI;
 use ilObjUser;
@@ -51,6 +53,7 @@ abstract class BaseUserConfigController extends BaseController
     protected ilTabsGUI $tabs;
     protected ilMatrixChatClientPlugin $plugin;
     protected MatrixApi $matrixApi;
+    protected ilLogger $logger;
 
     public function __construct(Container $dic, ControllerHandler $controllerHandler)
     {
@@ -61,6 +64,7 @@ abstract class BaseUserConfigController extends BaseController
         $this->plugin = ilMatrixChatClientPlugin::getInstance();
         $this->userConfig = (new UserConfig($this->user))->load();
         $this->matrixApi = $this->plugin->getMatrixApi();
+        $this->logger = $this->dic->logger()->root();
     }
 
     abstract public function showUserChatConfig(?BaseUserConfigForm $form = null): void;
@@ -95,6 +99,49 @@ abstract class BaseUserConfigController extends BaseController
         );
 
         $this->tabs->activateTab($selectedTabId);
+    }
+
+    public function handleSpecifyOtherMatrixAccount(string $matrixUserId): string
+    {
+        try {
+            $profileData = $this->matrixApi->getMatrixUserProfile($matrixUserId);
+            $this->uiUtil->sendFailure(
+                $this->plugin->txt("config.user.externalMatrixUserLookup.success"),
+                true
+            );
+        } catch (MatrixApiException $e) {
+            switch ($e->getErrorCode()) {
+                case "M_FORBIDDEN":
+                    $this->uiUtil->sendFailure(
+                        $this->plugin->txt("config.user.externalMatrixUserLookup.failure.lookupDisabled"),
+                        true
+                    );
+                    $this->logger->info("Unable to lookup profile for user {$matrixUserId}. Federation lookup disabled");
+                    break;
+                case "M_NOT_FOUND":
+                    $this->uiUtil->sendFailure(sprintf(
+                        $this->plugin->txt("config.user.externalMatrixUserLookup.failure.notExist"),
+                        $matrixUserId
+                    ), true);
+                    $this->logger->info("Unable to lookup profile for user $matrixUserId. Profile does not exist");
+                    break;
+                default:
+                    $this->uiUtil->sendFailure(
+                        $this->plugin->txt("config.user.externalMatrixUserLookup.failure.unknown"),
+                        true
+                    );
+                    break;
+            }
+
+            $this->uiUtil->sendInfo(
+                sprintf(
+                    $this->plugin->txt("config.user.externalMatrixUserLookup.info"),
+                    $this->plugin->txt("config.user.resetAccountSettings")
+                ),
+                true
+            );
+        }
+        return $matrixUserId;
     }
 
     public function getCtrlClassesForCommand(string $cmd): array
