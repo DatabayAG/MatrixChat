@@ -55,6 +55,7 @@ abstract class BaseUserConfigForm extends ilPropertyFormGUI
         $this->dic = $DIC;
         $this->plugin = ilMatrixChatClientPlugin::getInstance();
         $this->mainTpl = $this->dic->ui()->mainTemplate();
+        $this->mainTpl->addCss($this->plugin->cssFolder("userConfigForm.css"));
         $this->controller = $controller;
 
         $this->setTitle($this->plugin->txt("config.user.generalSettings"));
@@ -63,6 +64,21 @@ abstract class BaseUserConfigForm extends ilPropertyFormGUI
             [],
             true
         ));
+
+        $this->mainTpl->addOnLoadCode(
+            "window.userConfigFormConfig = " . json_encode([
+                "actions" => [
+                    "checkAccountOnMatrixServer" => $this->controller->getCommandLink(
+                        BaseUserConfigController::AJAX_CMD_CHECK_EXTERNAL_ACCOUNT
+                    ) . "&cmdMode=asynch"
+                ],
+                "translation" => [
+                    "checkAccountOnMatrixServer" => $this->plugin->txt("config.user.externalMatrixUserLookup.checkAccountOnMatrixServer")
+                ]
+            ], JSON_THROW_ON_ERROR)
+        );
+
+        $this->mainTpl->addJavaScript($this->plugin->jsFolder("userConfigForm.js"));
 
         if ($matrixAccountId && !$this->onAuthenticated($selectedAccountOption)) {
             return;

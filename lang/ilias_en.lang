@@ -59,11 +59,13 @@ config.user.changeLocalUserPassword.failure.userNotExist#:#Your password could n
 config.user.changeLocalUserPassword.failure.general#:#Your password could not be changed.
 config.user.changeLocalUserPassword.success#:#Your password was changed successfully. Your devices have been logged out!
 
+config.user.externalMatrixUserLookup.checkAccountOnMatrixServer#:#Check account on Matrix-Server
+
 config.user.externalMatrixUserLookup.failure.notExist#:#The homeserver responded that the user %s does not exist.
 config.user.externalMatrixUserLookup.failure.lookupDisabled#:#The homeserver does not allow querying of profiles through a different homeserver.
 config.user.externalMatrixUserLookup.failure.unknown#:#An unexpected error has occurred while querying the profile.
 config.user.externalMatrixUserLookup.success#:#A profile was found on the homeserver.
-config.user.externalMatrixUserLookup.info#:#The Matrix account you entered was saved despite an error occurring when checking the profile. <br> You may not be invited if there are further errors with this account. <br If you do not want this. Please press the <span style="color: blue;">%s</span> button.
+config.user.externalMatrixUserLookup.info#:#You can still save this value but you may not get invited if there are further errors with this account. <br If you do not want this. Please use the '%s' button and try a different account.
 
 config.user.register.success#:#Matrix-Account was created successfully.
 config.user.register.failure#:#Matrix-Account could not be created.

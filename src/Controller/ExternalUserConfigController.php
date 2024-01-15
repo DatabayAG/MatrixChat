@@ -135,9 +135,7 @@ class ExternalUserConfigController extends BaseUserConfigController
                 $this->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
             }
         } else {
-            $this->userConfig->setMatrixUserId(
-                $this->handleSpecifyOtherMatrixAccount($form->getInput("matrixAccount"))
-            )->save();
+            $this->userConfig->setMatrixUserId($form->getInput("matrixAccount"))->save();
         }
     }
 

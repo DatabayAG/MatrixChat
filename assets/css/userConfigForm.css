@@ -1,0 +1,6 @@
+
+
+#subform_authMethod_specifyOtherMatrixAccount > div > div.il_text {
+    display: flex;
+    gap: 1rem;
+}

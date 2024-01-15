@@ -60,11 +60,14 @@ config.user.changeLocalUserPassword.failure.userNotExist#:#Ihr passwort konnte n
 config.user.changeLocalUserPassword.failure.general#:#Ihr passwort konnte nicht geändert werden.
 config.user.changeLocalUserPassword.success#:#Ihr passwort wurde erfolgreich geändert. Ihre Geräte wurden ausgeloggt!
 
+config.user.externalMatrixUserLookup.checkAccountOnMatrixServer#:#Account auf Matrix Server prüfen
+config.user.externalMatrixUserLookup.missingMatrixUserIdInPost#:#Bei der Anfrage wurde die Matrix-Benutzer-ID nicht mitgeliefert.
+
 config.user.externalMatrixUserLookup.failure.notExist#:#Der angefragte Homeserver antwortete, das es den Benutzer %s nicht gibt.
 config.user.externalMatrixUserLookup.failure.lookupDisabled#:#Der angefragte Homeserver erlaubt das abfragen von Profilen durch einen anderen Homeserver nicht.
 config.user.externalMatrixUserLookup.failure.unknown#:#Ein unerwarteter Fehler ist beim abfragen des profils aufgetreten.
 config.user.externalMatrixUserLookup.success#:#Auf dem angefragten Homeserver wurde ein Profil gefunden.
-config.user.externalMatrixUserLookup.info#:#Ihr eingegebener Matrix-Account wurde trotz Fehler beim Prüfen des Profils gespeichert. <br> Eventuell werden sie nicht eingeladen, fall es mit dieser Angabe zu weiteren fehlern kommt. <br wenn sie dies nicht wünschen. Drücken sie bitte auf den <span style="color: blue;">%s</span> Button.
+config.user.externalMatrixUserLookup.info#:#Sie können diese Eingabe dennoch speichern, <br> eventuell werden sie dann jedoch nicht eingeladen, fall es mit dieser Angabe zu weiteren fehlern kommt. <br Wenn sie dies nicht wünschen. Verwenden Sie den '%s' Button.
 
 config.user.register.success#:#Matrix-Account erfolgreich registriert.
 config.user.register.failure#:#Matrix-Account konnte nicht registriert werden.
