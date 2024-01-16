@@ -23,15 +23,12 @@ namespace ILIAS\Plugin\MatrixChatClient\Controller;
 
 use Exception;
 use ilAccessHandler;
-use ilCourseParticipants;
 use ILIAS\DI\Container;
-use ILIAS\Plugin\LdapPasswordChange\Ui\UiUtils;
 use ILIAS\Plugin\Libraries\ControllerHandler\BaseController;
 use ILIAS\Plugin\Libraries\ControllerHandler\ControllerHandler;
 use ILIAS\Plugin\MatrixChatClient\Form\ChatSettingsForm;
 use ILIAS\Plugin\MatrixChatClient\Form\DisableChatIntegrationForm;
 use ILIAS\Plugin\MatrixChatClient\Model\CourseSettings;
-use ILIAS\Plugin\MatrixChatClient\Model\UserConfig;
 use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
 use ilInfoScreenGUI;
 use ilMatrixChatClientPlugin;
@@ -39,7 +36,7 @@ use ilMatrixChatClientUIHookGUI;
 use ilObjCourseGUI;
 use ilObject;
 use ilObjGroupGUI;
-use ilObjUser;
+use ilRepositoryGUI;
 use ilTabsGUI;
 use ilUIPluginRouterGUI;
 use ReflectionClass;
@@ -90,6 +87,7 @@ class ChatController extends BaseController
     public function showChat(): void
     {
         $this->checkPermissionOnObject("read");
+        $this->checkChatActivatedForObject();
 
         $this->injectTabs();
 
@@ -98,9 +96,11 @@ class ChatController extends BaseController
 
         $this->renderToMainTemplate($this->plugin->getPluginConfig()->getPageDesignerText());
     }
+
     public function showChatSettings(?ChatSettingsForm $form = null): void
     {
         $this->checkPermissionOnObject("write");
+        $this->checkChatActivatedForObject();
 
         $this->injectTabs();
 
@@ -128,6 +128,7 @@ class ChatController extends BaseController
     public function saveChatSettings(): void
     {
         $this->checkPermissionOnObject("write");
+        $this->checkChatActivatedForObject();
 
         $form = new ChatSettingsForm($this, $this->refId);
         $courseSettings = $this->courseSettings;
@@ -141,59 +142,59 @@ class ChatController extends BaseController
         $enableChatIntegration = (bool) $form->getInput("chatIntegrationEnabled");
 
         $courseSettings->setChatIntegrationEnabled($enableChatIntegration);
-/*
-        $room = $courseSettings->getMatrixRoom();
+        /*
+                $room = $courseSettings->getMatrixRoom();
 
-        if ($enableChatIntegration && (!$room || !$room->exists())) {
-            $room = $this->matrixApi->createRoom(ilObject::_lookupTitle(ilObject::_lookupObjId($courseSettings->getCourseId())));
-            $courseSettings->setMatrixRoom($room);
-        }
+                if ($enableChatIntegration && (!$room || !$room->exists())) {
+                    $room = $this->matrixApi->createRoom(ilObject::_lookupTitle(ilObject::_lookupObjId($courseSettings->getCourseId())));
+                    $courseSettings->setMatrixRoom($room);
+                }
 
-        if ($enableChatIntegration) {
-            if ($room) {
-                foreach ((ilCourseParticipants::getInstance($courseSettings->getCourseId()))->getParticipants() as $participantId) {
-                    $participantId = (int) $participantId;
-                    $userConfig = (new UserConfig(new ilObjUser($participantId)))->load();
+                if ($enableChatIntegration) {
+                    if ($room) {
+                        foreach ((ilCourseParticipants::getInstance($courseSettings->getCourseId()))->getParticipants() as $participantId) {
+                            $participantId = (int) $participantId;
+                            $userConfig = (new UserConfig(new ilObjUser($participantId)))->load();
 
-                    if (!$userConfig->getMatrixUserId()) {
-                        continue;
-                    }
+                            if (!$userConfig->getMatrixUserId()) {
+                                continue;
+                            }
 
-                    $matrixUser = $this->matrixApi->loginUserWithAdmin(
-                        $participantId,
-                        $userConfig->getMatrixUserId()
-                    );
-                    if (!$matrixUser) {
-                        continue;
-                    }
+                            $matrixUser = $this->matrixApi->loginUserWithAdmin(
+                                $participantId,
+                                $userConfig->getMatrixUserId()
+                            );
+                            if (!$matrixUser) {
+                                continue;
+                            }
 
-                    if (!$this->matrixApi->isUserMemberOfRoom($matrixUser, $room)) {
-                        $this->matrixApi->addUserToRoom($matrixUser, $room);
-                    }
+                            if (!$this->matrixApi->isUserMemberOfRoom($matrixUser, $room)) {
+                                $this->matrixApi->addUserToRoom($matrixUser, $room);
+                            }
 
-                    $userRoomAddQueue = $this->userRoomAddQueueRepo->read($participantId,
-                        $courseSettings->getCourseId());
-                    if ($userRoomAddQueue) {
-                        $this->userRoomAddQueueRepo->delete($userRoomAddQueue);
+                            $userRoomAddQueue = $this->userRoomAddQueueRepo->read($participantId,
+                                $courseSettings->getCourseId());
+                            if ($userRoomAddQueue) {
+                                $this->userRoomAddQueueRepo->delete($userRoomAddQueue);
+                            }
+                        }
                     }
                 }
-            }
-        }
-*/
+        */
         try {
             $this->courseSettingsRepo->save($courseSettings);
         } catch (Exception $ex) {
             $this->uiUtil->sendFailure($this->plugin->txt("general.update.failed"), true);
             $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS);
         }
-/*
-        if (!$enableChatIntegration && $room->exists()) {
-            $this->redirectToCommand(
-                "confirmDisableCourseChatIntegration",
-                ["ref_id" => $courseSettings->getCourseId()]
-            );
-        }
-*/
+        /*
+                if (!$enableChatIntegration && $room->exists()) {
+                    $this->redirectToCommand(
+                        "confirmDisableCourseChatIntegration",
+                        ["ref_id" => $courseSettings->getCourseId()]
+                    );
+                }
+        */
         $this->uiUtil->sendSuccess($this->plugin->txt("general.update.success"), true);
         $this->redirectToCommand(self::CMD_SHOW_CONFIRM_DISABLE_CHAT_INTEGRATION);
     }
@@ -201,6 +202,7 @@ class ChatController extends BaseController
     public function showConfirmDisableChatIntegration(?DisableChatIntegrationForm $form = null): void
     {
         $this->checkPermissionOnObject("write");
+        $this->checkChatActivatedForObject();
 
         if (!$form) {
             $form = new DisableChatIntegrationForm($this, $this->refId);
@@ -212,6 +214,7 @@ class ChatController extends BaseController
     public function disableChatIntegration(): void
     {
         $this->checkPermissionOnObject("write");
+        $this->checkChatActivatedForObject();
 
         $form = new DisableChatIntegrationForm($this, $this->refId);
         if (!$form->checkInput()) {
@@ -228,21 +231,39 @@ class ChatController extends BaseController
                 "ref_id" => $this->refId
             ]);
         }
-/*
-        if (
-            $this->courseSettings->getMatrixRoom()
-            && $this->courseSettings->getMatrixRoom()->exists()
-            && $this->matrixApi->deleteRoom($this->courseSettings->getMatrixRoom())
-        ) {
-            $this->courseSettings->setMatrixRoom(null);
-            if ($this->courseSettingsRepo->save($this->courseSettings)) {
-                $this->uiUtil->sendSuccess($this->plugin->txt("matrix.chat.room.delete.success"), true);
-                $this->redirectToCommand("showSettings", ["ref_id" => $this->courseSettings->getCourseId()]);
-            }
-        }*/
+        /*
+                if (
+                    $this->courseSettings->getMatrixRoom()
+                    && $this->courseSettings->getMatrixRoom()->exists()
+                    && $this->matrixApi->deleteRoom($this->courseSettings->getMatrixRoom())
+                ) {
+                    $this->courseSettings->setMatrixRoom(null);
+                    if ($this->courseSettingsRepo->save($this->courseSettings)) {
+                        $this->uiUtil->sendSuccess($this->plugin->txt("matrix.chat.room.delete.success"), true);
+                        $this->redirectToCommand("showSettings", ["ref_id" => $this->courseSettings->getCourseId()]);
+                    }
+                }*/
 
         $this->uiUtil->sendFailure($this->plugin->txt("matrix.chat.room.delete.failed"), true);
         $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS, ["ref_id" => $this->refId]);
+    }
+
+    public function checkChatActivatedForObject(bool $redirectToInfoScreenOnFail = true): bool
+    {
+        $activated = in_array(
+            ilObject::_lookupType($this->refId, true),
+            $this->plugin->getPluginConfig()->getActivateChat(),
+            true
+        );
+
+        if (!$activated && $redirectToInfoScreenOnFail) {
+            $this->uiUtil->sendFailure($this->dic->language()->txt("permission_denied"), true);
+            $this->ctrl->setParameterByClass(ilRepositoryGUI::class, "ref_id", $this->refId);
+            $this->ctrl->redirectByClass(ilRepositoryGUI::class, "view");
+            return false; //Never gets to here
+        }
+
+        return $activated;
     }
 
     public function checkPermissionOnObject(string $permission, bool $redirectToInfoScreenOnFail = true): bool
@@ -250,8 +271,8 @@ class ChatController extends BaseController
         $hasAccess = $this->access->checkAccess($permission, "", $this->refId);
         if (!$hasAccess && $redirectToInfoScreenOnFail) {
             $this->uiUtil->sendFailure($this->dic->language()->txt("permission_denied"), true);
-            $this->ctrl->setParameterByClass(ilInfoScreenGUI::class, "ref_id", $this->refId);
-            $this->ctrl->redirectByClass(ilInfoScreenGUI::class, "showSummary");
+            $this->ctrl->setParameterByClass(ilRepositoryGUI::class, "ref_id", $this->refId);
+            $this->ctrl->redirectByClass(ilRepositoryGUI::class, "view");
             return false; //Never gets to here
         }
 
@@ -286,33 +307,36 @@ class ChatController extends BaseController
             $this->dic['ilLocator']->addRepositoryItems($this->courseSettings->getCourseId());
         }
 
-        $this->tabs->clearSubTabs();
-        $this->tabs->addTab(
-            self::TAB_CHAT,
-            $this->plugin->txt("chat"),
-            $this->getCommandLink(self::CMD_SHOW_CHAT, [
-                "ref_id" => $this->refId
-            ])
-        );
-        $this->tabs->addSubTab(
-            self::TAB_CHAT,
-            $this->plugin->txt("chat"),
-            $this->getCommandLink(self::CMD_SHOW_CHAT, [
-                "ref_id" => $this->refId
-            ])
-        );
+        if ($this->checkChatActivatedForObject()) {
+            $this->tabs->clearSubTabs();
 
-        if ($this->checkPermissionOnObject("write", false)) {
-            $this->tabs->addSubTab(
-                self::SUB_TAB_CHAT_SETTINGS,
-                $this->plugin->txt("matrix.chat.course.settings"),
-                $this->getCommandLink(self::CMD_SHOW_CHAT_SETTINGS, [
-                    "ref_id" => $this->courseSettings->getCourseId()
+            $this->tabs->addTab(
+                self::TAB_CHAT,
+                $this->plugin->txt("chat"),
+                $this->getCommandLink(self::CMD_SHOW_CHAT, [
+                    "ref_id" => $this->refId
                 ])
             );
-        }
+            $this->tabs->addSubTab(
+                self::TAB_CHAT,
+                $this->plugin->txt("chat"),
+                $this->getCommandLink(self::CMD_SHOW_CHAT, [
+                    "ref_id" => $this->refId
+                ])
+            );
 
-        $this->tabs->setForcePresentationOfSingleTab(true);
+            if ($this->checkPermissionOnObject("write", false)) {
+                $this->tabs->addSubTab(
+                    self::SUB_TAB_CHAT_SETTINGS,
+                    $this->plugin->txt("matrix.chat.course.settings"),
+                    $this->getCommandLink(self::CMD_SHOW_CHAT_SETTINGS, [
+                        "ref_id" => $this->courseSettings->getCourseId()
+                    ])
+                );
+            }
+
+            $this->tabs->setForcePresentationOfSingleTab(true);
+        }
     }
 
     public function getCtrlClassesForCommand(string $cmd): array
