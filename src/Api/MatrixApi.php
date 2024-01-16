@@ -319,7 +319,7 @@ class MatrixApi
             ->setIliasUserId($iliasUserId)
             ->setMatrixUserId($matrixUserId)
             ->setMatrixUsername($matrixUserId)
-            ->setMatrixDisplayName($this->getMatrixUserProfile($response->getResponseDataValue("user_id"))["displayname"])
+            ->setMatrixDisplayName($this->getMatrixUserProfile($matrixUserId)["displayname"])
             ->setAccessToken($response->getResponseDataValue("access_token"))
             ->setDeviceId("ilias_auth_verification");
     }

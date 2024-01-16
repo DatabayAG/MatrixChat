@@ -114,6 +114,7 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
             ->setSharedSecret($sharedSecretValue)
             ->setExternalUserScheme($form->getInput("externalUserScheme"))
             ->setExternalUserOptions($form->getInput("externalUserOptions"))
+            ->setLocalUserScheme($form->getInput("localUserScheme"))
             ->setLocalUserOptions($form->getInput("localUserOptions"))
             ->setRoomPrefix($form->getInput("roomPrefix"))
             ->setActivateChat($form->getInput("activateChat"));

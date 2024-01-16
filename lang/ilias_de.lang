@@ -93,6 +93,7 @@ matrix.user.name#:#Matrix-Benutzername
 matrix.user.account#:#Matrix-Account
 matrix.user.password#:#Matrix-User Passwort
 matrix.user.password.external.required#:#Ihr "Erkannter Matrix-Account" existiert nicht. Bitte geben sie ein Passwort ein um diesen zu erstellen.
+matrix.user.password.local.required#:#Es existiert kein Matrix-Account mit diesem Benutzernamen. Bitte geben sie ein Passwort ein um diesen zu erstellen.
 
 matrix.admin.login.valid#:#Admin-Login gültig
 matrix.admin.login.invalid#:#Admin-Login ungültig

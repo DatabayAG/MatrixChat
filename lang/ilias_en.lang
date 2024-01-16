@@ -91,6 +91,7 @@ matrix.user.name#:#Matrix-Username
 matrix.user.account#:#Matrix-Account
 matrix.user.password#:#Matrix-User Password
 matrix.user.password.external.required#:#Your "Recognized Matrix account" does not exist. Please enter a passwort to create it.
+matrix.user.password.local.required#:#No Matrix-Account exists with this username yet. Please enter a passwort to create it.
 
 matrix.admin.login.valid#:#Admin-Login valid
 matrix.admin.login.invalid#:#Admin-Login invalid

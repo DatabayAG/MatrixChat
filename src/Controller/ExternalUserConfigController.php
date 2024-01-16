@@ -147,11 +147,4 @@ class ExternalUserConfigController extends BaseUserConfigController
         }
         return $username;
     }
-
-    protected function buildMatrixUserId(): string
-    {
-        $url = parse_url($this->plugin->getPluginConfig()->getMatrixServerUrl());
-
-        return "@{$this->buildUsername()}:{$url["host"]}";
-    }
 }

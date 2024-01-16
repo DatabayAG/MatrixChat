@@ -33,12 +33,16 @@ use ilRadioOption;
  */
 class LocalUserConfigForm extends BaseUserConfigForm
 {
+    private bool $passwordEnterNeeded;
+
     public function __construct(
         LocalUserConfigController $controller,
         ilObjUser $user,
         ?string $matrixAccountId = null,
-        ?string $selectedAccountOption = null
+        ?string $selectedAccountOption = null,
+        bool $passwordEnterNeeded = false
     ) {
+        $this->passwordEnterNeeded = $passwordEnterNeeded;
         parent::__construct($controller, $user, $matrixAccountId, $selectedAccountOption);
     }
 
@@ -72,14 +76,16 @@ class LocalUserConfigForm extends BaseUserConfigForm
             true
         ));
 
-        $matrixUserPassword = new ilPasswordInputGUI(
-            $this->plugin->txt("matrix.user.password"),
-            "matrixUserPassword"
-        );
-        $matrixUserPassword->setRequired(true);
-        $matrixUserPassword->setRetype(false);
+        if ($this->passwordEnterNeeded) {
+            $matrixUserPassword = new ilPasswordInputGUI(
+                $this->plugin->txt("matrix.user.password"),
+                "matrixUserPassword"
+            );
+            $matrixUserPassword->setInfo($this->plugin->txt("matrix.user.password.local.required"));
+            $matrixUserPassword->setRequired(true);
 
-        $radioOption->addSubItem($matrixUserPassword);
+            $radioOption->addSubItem($matrixUserPassword);
+        }
 
         return $radioOption;
     }

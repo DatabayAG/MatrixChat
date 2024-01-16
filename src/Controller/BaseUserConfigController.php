@@ -166,6 +166,13 @@ abstract class BaseUserConfigController extends BaseController
         $this->http->close();
     }
 
+    protected function buildMatrixUserId(): string
+    {
+        $url = parse_url($this->plugin->getPluginConfig()->getMatrixServerUrl());
+
+        return "@{$this->buildUsername()}:{$url["host"]}";
+    }
+
     public function getCtrlClassesForCommand(string $cmd): array
     {
         return [ilUIPluginRouterGUI::class, ilMatrixChatClientUIHookGUI::class];

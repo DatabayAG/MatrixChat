@@ -43,11 +43,14 @@ class LocalUserConfigController extends BaseUserConfigController
         $this->mainTpl->loadStandardTemplate();
 
         if (!$form) {
+            $username = $this->buildUsername();
+
             $form = new LocalUserConfigForm(
                 $this,
                 $this->user,
                 $this->userConfig->getMatrixUserId(),
-                $this->userConfig->getAuthMethod()
+                $this->userConfig->getAuthMethod(),
+                $this->matrixApi->usernameAvailable($username)
             );
 
             $form->setValuesByArray(array_merge(
@@ -65,7 +68,16 @@ class LocalUserConfigController extends BaseUserConfigController
 
     public function saveUserChatConfig(): void
     {
-        $form = new LocalUserConfigForm($this, $this->user);
+        $matrixUsername = $this->buildUsername();
+
+        $usernameAvailable = $this->matrixApi->usernameAvailable($matrixUsername);
+        $form = new LocalUserConfigForm(
+            $this,
+            $this->user,
+            null,
+            null,
+            $usernameAvailable
+        );
 
         if (!$form->checkInput()) {
             $form->setValuesByPost();
@@ -76,13 +88,12 @@ class LocalUserConfigController extends BaseUserConfigController
         $form->setValuesByPost();
 
         $authMethod = $form->getInput("authMethod");
-        $matrixUsername = $form->getInput("matrixUsername");
         $matrixUserPassword = $form->getInput("matrixUserPassword");
 
         $this->userConfig->setAuthMethod($form->getInput("authMethod"));
 
         if ($authMethod === PluginConfigForm::CREATE_ON_CONFIGURED_HOMESERVER) {
-            if ($this->matrixApi->usernameAvailable($matrixUsername)) {
+            if ($usernameAvailable) {
                 //user needs to be created
                 $matrixUser = $this->matrixApi->createUser(
                     $matrixUsername,
@@ -98,11 +109,7 @@ class LocalUserConfigController extends BaseUserConfigController
 
                 $this->uiUtil->sendSuccess($this->plugin->txt("config.user.register.success"), true);
             } else {
-                $matrixUser = $this->matrixApi->login(
-                    $matrixUsername,
-                    $matrixUserPassword,
-                    "ilias_auth_verification"
-                );
+                $matrixUser = $this->matrixApi->loginUserWithAdmin($this->user->getId(), $this->buildMatrixUserId());
 
                 if (!$matrixUser) {
                     $this->uiUtil->sendFailure($this->plugin->txt("config.user.auth.failure"), true);
