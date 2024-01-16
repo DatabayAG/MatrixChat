@@ -31,7 +31,6 @@ class MatrixRoom
 {
     private string $id;
     private string $name;
-    private bool $encrypted;
 
     /**
      * @var string[]
@@ -42,11 +41,10 @@ class MatrixRoom
     /**
      * @param string[] $members
      */
-    public function __construct(string $id, string $name, bool $encrypted, array $members)
+    public function __construct(string $id, string $name, array $members)
     {
         $this->id = $id;
         $this->name = $name;
-        $this->encrypted = $encrypted;
         $this->members = $members;
         $this->plugin = ilMatrixChatClientPlugin::getInstance();
     }
@@ -61,11 +59,6 @@ class MatrixRoom
     public function getName() : string
     {
         return $this->name;
-    }
-
-    public function isEncrypted() : bool
-    {
-        return $this->encrypted;
     }
 
     /**

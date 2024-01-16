@@ -190,7 +190,6 @@ class MatrixApi
             return new MatrixRoom(
                 $response->getResponseDataValue("room_id"),
                 $response->getResponseDataValue("name"),
-                $response->getResponseDataValue("encryption") !== null,
                 $this->getRoomMembers($matrixRoomId)
             );
         } catch (Throwable $e) {
@@ -416,7 +415,6 @@ class MatrixApi
         $matrixRoom = new MatrixRoom(
             $response->getResponseDataValue("room_id"),
             $name,
-            false,
             $this->getRoomMembers($response->getResponseDataValue("room_id"))
         );
 
