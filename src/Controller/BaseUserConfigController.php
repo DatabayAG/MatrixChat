@@ -127,7 +127,7 @@ abstract class BaseUserConfigController extends BaseController
         }
         try {
             $profileData = $this->matrixApi->getMatrixUserProfile($matrixUserId);
-            $content["message"]["failure"] = $this->plugin->txt("config.user.externalMatrixUserLookup.success");
+            $content["message"]["success"] = $this->plugin->txt("config.user.externalMatrixUserLookup.success");
         } catch (MatrixApiException $e) {
             switch ($e->getErrorCode()) {
                 case "M_FORBIDDEN":

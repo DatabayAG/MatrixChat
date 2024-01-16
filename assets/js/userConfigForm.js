@@ -36,7 +36,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 return response.json();
             })
 
-            console.log(response);
             let result = response.result;
             messageElm.innerText = response.message[result];
             messageElm.style.visibility = "visible";
