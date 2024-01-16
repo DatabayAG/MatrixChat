@@ -69,8 +69,8 @@ abstract class BaseUserConfigForm extends ilPropertyFormGUI
             "window.userConfigFormConfig = " . json_encode([
                 "actions" => [
                     "checkAccountOnMatrixServer" => $this->controller->getCommandLink(
-                        BaseUserConfigController::AJAX_CMD_CHECK_EXTERNAL_ACCOUNT
-                    ) . "&cmdMode=asynch"
+                            BaseUserConfigController::AJAX_CMD_CHECK_EXTERNAL_ACCOUNT
+                        ) . "&cmdMode=asynch"
                 ],
                 "translation" => [
                     "checkAccountOnMatrixServer" => $this->plugin->txt("config.user.externalMatrixUserLookup.checkAccountOnMatrixServer")
@@ -89,15 +89,19 @@ abstract class BaseUserConfigForm extends ilPropertyFormGUI
 
         if (in_array(
             PluginConfigForm::CREATE_ON_CONFIGURED_HOMESERVER,
-            $this->plugin->getPluginConfig()->getLocalUserOptions(),
+            $this instanceof LocalUserConfigForm
+                ? $this->plugin->getPluginConfig()->getLocalUserOptions()
+                : $this->plugin->getPluginConfig()->getExternalUserOptions(),
             true
         )) {
             $matrixAuthMethod->addOption($this->getCreateOnConfiguredHomeserverOption());
         }
 
         if (in_array(
-            PluginConfigForm::CREATE_ON_CONFIGURED_HOMESERVER,
-            $this->plugin->getPluginConfig()->getLocalUserOptions(),
+            PluginConfigForm::SPECIFY_OTHER_MATRIX_ACCOUNT,
+            $this instanceof LocalUserConfigForm
+                ? $this->plugin->getPluginConfig()->getLocalUserOptions()
+                : $this->plugin->getPluginConfig()->getExternalUserOptions(),
             true
         )) {
             $matrixAuthMethod->addOption($this->getSpecifyOtherMatrixAccountOption());
