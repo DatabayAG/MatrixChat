@@ -87,6 +87,8 @@ matrix.chat.room.delete.failed#:#Room could not be deleted
 matrix.chat.course.settings#:#Chat settings
 matrix.chat.course.enable#:#Activate Matrix-Chat Integration for the Course
 
+matrix.space.notFound#:#No Matrix-Space could be found to which the Matrix-Room can be added. Creation of room not possible.
+
 matrix.user.name#:#Matrix-Username
 matrix.user.account#:#Matrix-Account
 matrix.user.password#:#Matrix-User Password

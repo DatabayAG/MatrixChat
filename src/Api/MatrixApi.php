@@ -24,6 +24,7 @@ namespace ILIAS\Plugin\MatrixChatClient\Api;
 use Exception;
 use ILIAS\Plugin\MatrixChatClient\Model\MatrixRoom;
 use ILIAS\Plugin\MatrixChatClient\Model\MatrixUser;
+use ILIAS\Plugin\MatrixChatClient\Model\Room\MatrixSpace;
 use ilLogger;
 use ilMatrixChatClientPlugin;
 use JsonException;
@@ -94,7 +95,8 @@ class MatrixApi
                     || $body["device_id"] !== "ilias_matrix_chat_device_admin"
                 ) {
                     $this->logger->error("Matrix API request to `{$this->getApiUrl($apiCall)}` failed. Admin Access Token missing, the admin user could likely not be authenticated");
-                    throw new MatrixApiException("ADMIN_AUTH_ERROR", "Missing admin access token. Login probably failed.");
+                    throw new MatrixApiException("ADMIN_AUTH_ERROR",
+                        "Missing admin access token. Login probably failed.");
                 }
             }
             $options["auth_bearer"] = $adminAccessToken;
@@ -173,6 +175,29 @@ class MatrixApi
         }
 
         return self::$adminUser;
+    }
+
+    public function getSpace(string $matrixSpaceId): ?MatrixSpace
+    {
+        try {
+            $response = $this->sendRequest(
+                "/_synapse/admin/v1/rooms/$matrixSpaceId"
+            );
+        } catch (MatrixApiException $e) {
+            return null;
+        }
+
+
+        try {
+            return new MatrixSpace(
+                $response->getResponseDataValue("room_id"),
+                $response->getResponseDataValue("name"),
+                []
+            );
+        } catch (Throwable $e) {
+            $this->plugin->dic->logger()->root()->error($e->getMessage());
+            return null;
+        }
     }
 
     public function getRoom(string $matrixRoomId): ?MatrixRoom
@@ -400,7 +425,7 @@ class MatrixApi
             ->setDeviceId($deviceId);
     }
 
-    public function createRoom(string $name): MatrixRoom
+    public function createSpace(string $name): MatrixSpace
     {
         $response = $this->sendRequest(
             "/_matrix/client/v3/createRoom",
@@ -408,8 +433,59 @@ class MatrixApi
             "POST",
             [
                 "name" => $name,
-                "preset" => "private_chat"
+                "preset" => "private_chat",
+                "creation_content" => [
+                    "type" => "m.space"
+                ],
+                "power_level_content_override" => [
+                    "ban" => 100,
+                    "events_default" => 0,
+                    "invite" => 100,
+                    "kick" => 100,
+                    "redact" => 100,
+                    "state_default" => 100,
+                    "users_default" => 0
+                ]
             ],
+        );
+
+        return new MatrixSpace(
+            $response->getResponseDataValue("room_id"),
+            $name,
+            []
+        );
+    }
+
+    public function createRoom(string $name, ?MatrixSpace $parentSpace = null): MatrixRoom
+    {
+        $postData = [
+            "name" => $name,
+            "preset" => "private_chat",
+            "visibility" => "private",
+        ];
+
+
+        $url = parse_url($this->plugin->getPluginConfig()->getMatrixServerUrl());
+        $matrixServerName = $url["host"];
+
+        if ($parentSpace) {
+            $postData["initial_state"] = [
+                [
+                    "type" => "m.space.parent",
+                    "content" => [
+                        "via" => [$matrixServerName],
+                        "canonical" => true
+                    ],
+                    "state_key" => $parentSpace->getId()
+                ]
+            ];
+        }
+
+        $response = $this->sendRequest(
+            "/_matrix/client/v3/createRoom",
+            true,
+            "POST",
+            $postData,
         );
 
         $matrixRoom = new MatrixRoom(

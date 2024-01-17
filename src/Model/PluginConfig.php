@@ -39,7 +39,7 @@ class PluginConfig extends SettingsConfig
     private string $roomPrefix = "";
     private array $activateChat = [];
     private string $pageDesignerText = "";
-
+    private string $matrixSpaceId = "";
     public function getMatrixServerUrl(): string
     {
         return $this->matrixServerUrl;
@@ -158,6 +158,17 @@ class PluginConfig extends SettingsConfig
     public function setPageDesignerText(string $pageDesignerText): PluginConfig
     {
         $this->pageDesignerText = $pageDesignerText;
+        return $this;
+    }
+
+    public function getMatrixSpaceId(): string
+    {
+        return $this->matrixSpaceId;
+    }
+
+    public function setMatrixSpaceId(string $matrixSpaceId): PluginConfig
+    {
+        $this->matrixSpaceId = $matrixSpaceId;
         return $this;
     }
 

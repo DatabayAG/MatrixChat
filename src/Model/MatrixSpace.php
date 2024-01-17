@@ -1,27 +1,34 @@
 <?php
 
-declare(strict_types=1);
 /**
  * This file is part of ILIAS, a powerful learning management system
  * published by ILIAS open source e-Learning e.V.
+ *
  * ILIAS is licensed with the GPL-3.0,
  * see https://www.gnu.org/licenses/gpl-3.0.en.html
  * You should have received a copy of said license along with the
  * source code, too.
+ *
  * If this is not the case or you just want to try ILIAS, you'll find
  * us at:
  * https://www.ilias.de
  * https://github.com/ILIAS-eLearning
+ *
  *********************************************************************/
+
+declare(strict_types=1);
+
 
 namespace ILIAS\Plugin\MatrixChatClient\Model\Room;
 
+use ILIAS\Plugin\MatrixChatClient\Model\MatrixRoom;
+
 /**
- * Class RoomInvite
+ * Class MatrixSpace
  *
- * @package ILIAS\Plugin\MatrixChatClient\Model
+ * @package ILIAS\Plugin\MatrixChatClient\Model\Room
  * @author  Marvin Beym <mbeym@databay.de>
  */
-class RoomInvite extends RoomModel
+class MatrixSpace extends MatrixRoom
 {
 }

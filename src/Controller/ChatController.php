@@ -23,19 +23,22 @@ namespace ILIAS\Plugin\MatrixChatClient\Controller;
 
 use Exception;
 use ilAccessHandler;
+use ilCourseParticipants;
 use ILIAS\DI\Container;
 use ILIAS\Plugin\Libraries\ControllerHandler\BaseController;
 use ILIAS\Plugin\Libraries\ControllerHandler\ControllerHandler;
+use ILIAS\Plugin\MatrixChatClient\Api\MatrixApi;
 use ILIAS\Plugin\MatrixChatClient\Form\ChatSettingsForm;
 use ILIAS\Plugin\MatrixChatClient\Form\DisableChatIntegrationForm;
 use ILIAS\Plugin\MatrixChatClient\Model\CourseSettings;
+use ILIAS\Plugin\MatrixChatClient\Model\UserConfig;
 use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
-use ilInfoScreenGUI;
 use ilMatrixChatClientPlugin;
 use ilMatrixChatClientUIHookGUI;
 use ilObjCourseGUI;
 use ilObject;
 use ilObjGroupGUI;
+use ilObjUser;
 use ilRepositoryGUI;
 use ilTabsGUI;
 use ilUIPluginRouterGUI;
@@ -69,6 +72,7 @@ class ChatController extends BaseController
     private CourseSettings $courseSettings;
     private int $refId;
     private ilAccessHandler $access;
+    private MatrixApi $matrixApi;
 
     public function __construct(Container $dic, ControllerHandler $controllerHandler)
     {
@@ -77,6 +81,7 @@ class ChatController extends BaseController
         $this->plugin = ilMatrixChatClientPlugin::getInstance();
         $this->refId = (int) $this->controllerHandler->verifyQueryParameterExists("ref_id");
         $this->access = $this->dic->access();
+        $this->matrixApi = $this->plugin->getMatrixApi();
 
         $this->courseSettingsRepo = CourseSettingsRepository::getInstance($dic->database());
         $this->courseSettings = $this->courseSettingsRepo->read(
@@ -130,8 +135,9 @@ class ChatController extends BaseController
         $this->checkPermissionOnObject("write");
         $this->checkChatActivatedForObject();
 
-        $form = new ChatSettingsForm($this, $this->refId);
+        $pluginConfig = $this->plugin->getPluginConfig();
         $courseSettings = $this->courseSettings;
+        $form = new ChatSettingsForm($this, $this->refId);
         if (!$form->checkInput()) {
             $form->setValuesByPost();
             $this->showChatSettings($form);
@@ -142,45 +148,63 @@ class ChatController extends BaseController
         $enableChatIntegration = (bool) $form->getInput("chatIntegrationEnabled");
 
         $courseSettings->setChatIntegrationEnabled($enableChatIntegration);
-        /*
-                $room = $courseSettings->getMatrixRoom();
+        $room = $courseSettings->getMatrixRoom();
 
-                if ($enableChatIntegration && (!$room || !$room->exists())) {
-                    $room = $this->matrixApi->createRoom(ilObject::_lookupTitle(ilObject::_lookupObjId($courseSettings->getCourseId())));
-                    $courseSettings->setMatrixRoom($room);
-                }
+        if ($enableChatIntegration && (!$room || !$room->exists())) {
+            if (!$pluginConfig->getMatrixSpaceId()) {
+                $space = $this->matrixApi->createSpace("ILIAS");
+                $pluginConfig->setMatrixSpaceId($space->getId())->save();
+            } else {
+                $space = $this->matrixApi->getSpace($pluginConfig->getMatrixSpaceId());
+            }
 
-                if ($enableChatIntegration) {
-                    if ($room) {
-                        foreach ((ilCourseParticipants::getInstance($courseSettings->getCourseId()))->getParticipants() as $participantId) {
-                            $participantId = (int) $participantId;
-                            $userConfig = (new UserConfig(new ilObjUser($participantId)))->load();
+            if (!$space) {
+                $this->uiUtil->sendFailure($this->plugin->txt("matrix.space.notFound"), true);
+                $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS);
+            }
 
-                            if (!$userConfig->getMatrixUserId()) {
-                                continue;
-                            }
+            $room = $this->matrixApi->createRoom(
+                $this->plugin->getPluginConfig()->getRoomPrefix()
+                . ilObject::_lookupTitle(ilObject::_lookupObjId($courseSettings->getCourseId())),
+                $space
+            );
 
-                            $matrixUser = $this->matrixApi->loginUserWithAdmin(
-                                $participantId,
-                                $userConfig->getMatrixUserId()
-                            );
-                            if (!$matrixUser) {
-                                continue;
-                            }
+            $courseSettings->setMatrixRoom($room);
+        }
 
-                            if (!$this->matrixApi->isUserMemberOfRoom($matrixUser, $room)) {
-                                $this->matrixApi->addUserToRoom($matrixUser, $room);
-                            }
+        if ($enableChatIntegration) {
+            //Continue here
+            //ToDo: add showing matrix space room somehwere, (maybe plugin config, allowing to create it in there instead of creating when needed.
+            //ToDo: like a "Space" section with ajax call "Create Space".
+            if ($room) {
+                foreach ((ilCourseParticipants::getInstance($courseSettings->getCourseId()))->getParticipants() as $participantId) {
+                    $participantId = (int) $participantId;
+                    $userConfig = (new UserConfig(new ilObjUser($participantId)))->load();
 
-                            $userRoomAddQueue = $this->userRoomAddQueueRepo->read($participantId,
-                                $courseSettings->getCourseId());
-                            if ($userRoomAddQueue) {
-                                $this->userRoomAddQueueRepo->delete($userRoomAddQueue);
-                            }
-                        }
+                    if (!$userConfig->getMatrixUserId()) {
+                        continue;
+                    }
+
+                    $matrixUser = $this->matrixApi->loginUserWithAdmin(
+                        $participantId,
+                        $userConfig->getMatrixUserId()
+                    );
+                    if (!$matrixUser) {
+                        continue;
+                    }
+
+                    if (!$this->matrixApi->isUserMemberOfRoom($matrixUser, $room)) {
+                        $this->matrixApi->addUserToRoom($matrixUser, $room);
+                    }
+
+                    $userRoomAddQueue = $this->userRoomAddQueueRepo->read($participantId,
+                        $courseSettings->getCourseId());
+                    if ($userRoomAddQueue) {
+                        $this->userRoomAddQueueRepo->delete($userRoomAddQueue);
                     }
                 }
-        */
+            }
+        }
         try {
             $this->courseSettingsRepo->save($courseSettings);
         } catch (Exception $ex) {
