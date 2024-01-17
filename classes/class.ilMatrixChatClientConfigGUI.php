@@ -7,8 +7,10 @@ declare(strict_types=1);
 use ILIAS\DI\Container;
 use ILIAS\FileUpload\FileUpload;
 use ILIAS\Plugin\Libraries\ControllerHandler\UiUtils;
+use ILIAS\Plugin\MatrixChatClient\Api\MatrixApi;
 use ILIAS\Plugin\MatrixChatClient\Form\ChatPageDesignerForm;
 use ILIAS\Plugin\MatrixChatClient\Form\PluginConfigForm;
+
 ;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -41,6 +43,7 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
     protected ilLanguage $lng;
     private ilCtrl $ctrl;
     private UiUtils $uiUtil;
+    private MatrixApi $matrixApi;
 
     public function __construct()
     {
@@ -62,6 +65,9 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
         $this->plugin = $componentFactory->getPlugin("mcc");
 
         $this->plugin->denyConfigIfPluginNotActive();
+
+        $this->matrixApi = $this->plugin->getMatrixApi();
+
     }
 
     public function showSettings(?PluginConfigForm $form = null): void
@@ -107,6 +113,20 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
         }
 
         $sharedSecretValue = $sharedSecretValue ?: $this->plugin->getPluginConfig()->getSharedSecret();
+
+        $matrixSpaceName = $form->getInput("matrixSpaceName");
+        if ($matrixSpaceName !== $this->plugin->getPluginConfig()->getMatrixSpaceName()) {
+            //Create new Matrix Space
+            $space = $this->matrixApi->createSpace("ILIAS");
+            if (!$space) {
+                $this->uiUtil->sendFailure($this->plugin->txt("matrix.space.creation.failure"), true);
+                $this->ctrl->redirectByClass(self::class, self::CMD_SHOW_SETTINGS);
+            }
+
+            $this->plugin->getPluginConfig()
+                ->setMatrixSpaceName($matrixSpaceName)
+                ->setMatrixSpaceId($space->getId());
+        }
 
         $this->plugin->getPluginConfig()
             ->setMatrixServerUrl(rtrim($form->getInput("matrixServerUrl"), "/"))

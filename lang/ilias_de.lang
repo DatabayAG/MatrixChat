@@ -89,6 +89,11 @@ matrix.chat.room.delete.failed#:#Chatraum konnte nicht gelöscht werden
 matrix.chat.course.settings#:#Chat-Einstellungen
 matrix.chat.course.enable#:#Aktiviere Matrix-Chat Integration Für Den Kurs
 
+config.space.name#:#Name des Spaces
+config.space.name.info#:#Ändern des Namens führt dazu, das ein neuer Space erstellt wird (ID des Space verändert sich) <br>Räume im alten Space verbleiben in dem zuvor verwendeten!
+config.space.id#:#ID des Space
+
+matrix.space.creation.failure#:#Beim erstellen des Spaces ist ein Fehler aufgetreten.
 matrix.space.notFound#:#Es konnte kein Space gefunden werden, zu dem der Matrix-Raum hinzugefügt werden kann. Erstellen des Raumes nicht möglich.
 
 matrix.user.name#:#Matrix-Benutzername

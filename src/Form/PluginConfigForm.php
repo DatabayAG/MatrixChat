@@ -253,5 +253,18 @@ class PluginConfigForm extends ilPropertyFormGUI
             "roomPrefix"
         );
         $this->addItem($roomPrefix);
+
+        $spaceName = new ilTextInputGUI(
+            $this->plugin->txt("config.space.name"),
+            "matrixSpaceName"
+        );
+        $spaceName->setInfo($this->plugin->txt("config.space.name.info"));
+        $this->addItem($spaceName);
+        $matrixSpaceId = new ilTextInputGUI(
+            $this->plugin->txt("config.space.id"),
+            "matrixSpaceId"
+        );
+        $matrixSpaceId->setDisabled(true);
+        $this->addItem($matrixSpaceId);
     }
 }

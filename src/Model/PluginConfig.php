@@ -40,6 +40,8 @@ class PluginConfig extends SettingsConfig
     private array $activateChat = [];
     private string $pageDesignerText = "";
     private string $matrixSpaceId = "";
+    private string $matrixSpaceName = "";
+
     public function getMatrixServerUrl(): string
     {
         return $this->matrixServerUrl;
@@ -169,6 +171,17 @@ class PluginConfig extends SettingsConfig
     public function setMatrixSpaceId(string $matrixSpaceId): PluginConfig
     {
         $this->matrixSpaceId = $matrixSpaceId;
+        return $this;
+    }
+
+    public function getMatrixSpaceName(): string
+    {
+        return $this->matrixSpaceName;
+    }
+
+    public function setMatrixSpaceName(string $matrixSpaceName): PluginConfig
+    {
+        $this->matrixSpaceName = $matrixSpaceName;
         return $this;
     }
 
