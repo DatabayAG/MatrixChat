@@ -151,10 +151,8 @@ class ChatController extends BaseController
         $room = $courseSettings->getMatrixRoom();
 
         if ($enableChatIntegration && (!$room || !$room->exists())) {
-            if (!$pluginConfig->getMatrixSpaceId()) {
-                $space = $this->matrixApi->createSpace("ILIAS");
-                $pluginConfig->setMatrixSpaceId($space->getId())->save();
-            } else {
+            $space = null;
+            if ($pluginConfig->getMatrixSpaceId()) {
                 $space = $this->matrixApi->getSpace($pluginConfig->getMatrixSpaceId());
             }
 
