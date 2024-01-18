@@ -187,12 +187,13 @@ class MatrixApi
             return null;
         }
 
+        $matrixRoomId = $response->getResponseDataValue("room_id");
 
         try {
             return new MatrixSpace(
-                $response->getResponseDataValue("room_id"),
+                $matrixRoomId,
                 $response->getResponseDataValue("name"),
-                []
+                $this->getRoomMembers($matrixRoomId)
             );
         } catch (Throwable $e) {
             $this->plugin->dic->logger()->root()->error($e->getMessage());
@@ -449,10 +450,12 @@ class MatrixApi
             ],
         );
 
+        $matrixRoomId = $response->getResponseDataValue("room_id");
+
         return new MatrixSpace(
-            $response->getResponseDataValue("room_id"),
+            $matrixRoomId,
             $name,
-            []
+            $this->getRoomMembers($matrixRoomId)
         );
     }
 
