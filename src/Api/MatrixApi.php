@@ -510,6 +510,16 @@ class MatrixApi
             "visibility" => "private",
         ];
 
+        if ($enableEncryption) {
+            $postData["initial_state"][] = [
+                "type" => "m.room.encryption",
+                "state_key" => "",
+                "content" => [
+                    "algorithm" => "m.megolm.v1.aes-sha2"
+                ]
+            ];
+        }
+
 
         $url = parse_url($this->plugin->getPluginConfig()->getMatrixServerUrl());
         $matrixServerName = $url["host"];
