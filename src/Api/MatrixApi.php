@@ -238,6 +238,25 @@ class MatrixApi
         return $response->getResponseDataValue("members");
     }
 
+    public function inviteUserToRoom(MatrixUser $matrixUser, MatrixRoom $matrixRoom): bool
+    {
+        try {
+            $response = $this->sendRequest(
+                "/_matrix/client/v3/rooms/{$matrixRoom->getId()}/invite",
+                true,
+                "POST",
+                [
+                    "user_id" => $matrixUser->getMatrixUserId(),
+                ],
+            );
+            return $response->getStatusCode() === 200;
+        } catch (MatrixApiException $ex) {
+            return false;
+        }
+
+        return false;
+    }
+
     public function addUserToRoom(MatrixUser $matrixUser, MatrixRoom $matrixRoom): bool
     {
         try {
