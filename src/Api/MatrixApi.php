@@ -544,10 +544,12 @@ class MatrixApi
             $postData,
         );
 
+        $matrixRoomId = $response->getResponseDataValue("room_id");
+
         $matrixRoom = new MatrixRoom(
-            $response->getResponseDataValue("room_id"),
+            $matrixRoomId,
             $name,
-            $this->getRoomMembers($response->getResponseDataValue("room_id"))
+            $this->getRoomMembers($matrixRoomId)
         );
 
         $this->addUserToRoom($this->getAdminUser(), $matrixRoom);
