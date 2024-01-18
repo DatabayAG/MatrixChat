@@ -31,6 +31,7 @@ use ILIAS\Plugin\MatrixChatClient\Api\MatrixApi;
 use ILIAS\Plugin\MatrixChatClient\Form\ChatSettingsForm;
 use ILIAS\Plugin\MatrixChatClient\Form\DisableChatIntegrationForm;
 use ILIAS\Plugin\MatrixChatClient\Model\CourseSettings;
+use ILIAS\Plugin\MatrixChatClient\Model\MatrixUserPowerLevel;
 use ILIAS\Plugin\MatrixChatClient\Model\UserConfig;
 use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
 use ILIAS\Plugin\MatrixChatClient\Repository\UserRoomAddQueueRepository;
@@ -40,6 +41,7 @@ use ilObjCourseGUI;
 use ilObject;
 use ilObjGroupGUI;
 use ilObjUser;
+use ilParticipants;
 use ilRepositoryGUI;
 use ilTabsGUI;
 use ilUIPluginRouterGUI;
@@ -173,7 +175,10 @@ class ChatController extends BaseController
         }
 
         if ($enableChatIntegration && $room && $room->exists()) {
-            foreach ((ilCourseParticipants::getInstance($courseSettings->getCourseId()))->getParticipants() as $participantId) {
+            //ilCourseParticipants won't work for Groups.
+            $participants = ilCourseParticipants::getInstance($courseSettings->getCourseId());
+            $matrixUserPowerLevelMap = [];
+            foreach ($participants->getParticipants() as $participantId) {
                 $participantId = (int) $participantId;
                 $userConfig = (new UserConfig(new ilObjUser($participantId)))->load();
 
@@ -192,12 +197,20 @@ class ChatController extends BaseController
                 $this->matrixApi->inviteUserToRoom($matrixUser, $room);
                 $this->matrixApi->inviteUserToRoom($matrixUser, $space);
 
+
+                $matrixUserPowerLevelMap[] = new MatrixUserPowerLevel(
+                    $matrixUser->getMatrixUserId(),
+                    $this->determinePowerLevelOfParticipant($participants, $participantId)
+                );
+
                 $userRoomAddQueue = $this->userRoomAddQueueRepo->read($participantId, $courseSettings->getCourseId());
                 if ($userRoomAddQueue) {
                     //Remove user from queue when already on list
                     $this->userRoomAddQueueRepo->delete($userRoomAddQueue);
                 }
             }
+
+            $this->matrixApi->setUserPowerLevelOnRoom($room, $matrixUserPowerLevelMap);
         }
         try {
             $this->courseSettingsRepo->save($courseSettings);
@@ -214,6 +227,18 @@ class ChatController extends BaseController
         }
         $this->uiUtil->sendSuccess($this->plugin->txt("general.update.success"), true);
         $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS);
+    }
+
+    protected function determinePowerLevelOfParticipant(ilParticipants $participants, int $participantId): int
+    {
+        $powerLevel = 0;
+        if ($participants->isTutor($participantId)) {
+            $powerLevel = 50;
+        }
+        if ($participants->isAdmin($participantId)) {
+            $powerLevel = 100;
+        }
+        return $powerLevel;
     }
 
     public function showConfirmDisableChatIntegration(?DisableChatIntegrationForm $form = null): void
@@ -257,7 +282,8 @@ class ChatController extends BaseController
             $this->courseSettings->setMatrixRoom(null);
             if ($this->courseSettingsRepo->save($this->courseSettings)) {
                 $this->uiUtil->sendSuccess($this->plugin->txt("matrix.chat.room.delete.success"), true);
-                $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS, ["ref_id" => $this->courseSettings->getCourseId()]);
+                $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS,
+                    ["ref_id" => $this->courseSettings->getCourseId()]);
             }
         }
 

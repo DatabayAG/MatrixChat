@@ -530,6 +530,41 @@ class MatrixApi
         );
     }
 
+    /**
+     * @param MatrixUserPowerLevel[]|MatrixUserPowerLevel $matrixUserPowerLevelMap
+     */
+    public function setUserPowerLevelOnRoom(MatrixRoom $room, $matrixUserPowerLevelMap): bool
+    {
+        if (!is_array($matrixUserPowerLevelMap)) {
+            $matrixUserPowerLevelMap = [$matrixUserPowerLevelMap];
+        }
+
+        if ($matrixUserPowerLevelMap === []) {
+            return false;
+        }
+
+        try {
+            $state = $this->getRoomState($room, "m.room.power_levels");
+        } catch (MatrixApiException $e) {
+            $this->logger->error("Unable to retrieve current state of room '{$room->getId()}'");
+            return false;
+        }
+
+        if (!isset($state["users"]) || !is_array($state["users"])) {
+            $state["users"] = [];
+        }
+
+        foreach ($matrixUserPowerLevelMap as $matrixUserPowerLevel) {
+            $state["users"][$matrixUserPowerLevel->getMatrixUserId()] = $matrixUserPowerLevel->getPowerLevel();
+        }
+
+        try {
+            $response = $this->putRoomStateEvent($room, $state, "m.room.power_levels");
+            return $response->getStatusCode() === 200;
+        } catch (MatrixApiException $e) {
+            return false;
+        }
+    }
 
     public function createRoom(string $name, bool $enableEncryption, ?MatrixSpace $parentSpace = null): MatrixRoom
     {
