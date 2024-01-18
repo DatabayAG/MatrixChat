@@ -239,8 +239,8 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
                 }
 
                 if (!$room->isMember($matrixUser)) {
-                    if ($this->getMatrixApi()->addUserToRoom($matrixUser, $room)) {
-                        $this->userRoomAddQueueRepo->delete($userRoomAddQueue);
+                    if (!$this->getMatrixApi()->inviteUserToRoom($matrixUser, $room)) {
+                        $this->dic->logger()->root()->error("Inviting matrix-user '{$matrixUser->getMatrixUserId()}' to room '{$room->getId()}' failed");
                     }
                 } else {
                     $this->userRoomAddQueueRepo->delete($userRoomAddQueue);
@@ -309,8 +309,12 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
                     $matrixUser
                     && !$courseSettings->getMatrixRoom()->isMember($matrixUser)
                 ) {
-                    if ($this->getMatrixApi()->addUserToRoom($matrixUser, $courseSettings->getMatrixRoom())) {
-                        $this->userRoomAddQueueRepo->delete(new UserRoomAddQueue($user->getId(), $objRefId));
+                    if (!$this->getMatrixApi()->inviteUserToRoom($matrixUser, $courseSettings->getMatrixRoom())) {
+                        $this->dic->logger()->root()->error(sprintf(
+                            "Inviting matrix-user '%s' to room '%s' failed",
+                            $matrixUser->getMatrixUserId(),
+                            $courseSettings->getMatrixRoom()->getId()
+                        ));
                     }
                 }
             } else {
