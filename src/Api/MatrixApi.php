@@ -544,7 +544,7 @@ class MatrixApi
             $postData["initial_state"][] = [
                 "type" => "m.space.parent",
                 "content" => [
-                    "via" => [$matrixServerName],
+                    "via" => [$this->plugin->getPluginConfig()->getMatrixServerName()],
                     "canonical" => true
                 ],
                 "state_key" => $parentSpace->getId()

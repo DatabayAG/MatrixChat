@@ -219,4 +219,13 @@ class PluginConfig extends SettingsConfig
             }
         }
     }
+
+    public function getMatrixServerName(): string
+    {
+        if (!$this->getMatrixServerUrl()) {
+            return "";
+        }
+        $url = parse_url($this->getMatrixServerUrl());
+        return $url["host"] ?? "";
+    }
 }

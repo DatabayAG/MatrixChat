@@ -168,9 +168,7 @@ abstract class BaseUserConfigController extends BaseController
 
     protected function buildMatrixUserId(): string
     {
-        $url = parse_url($this->plugin->getPluginConfig()->getMatrixServerUrl());
-
-        return "@{$this->buildUsername()}:{$url["host"]}";
+        return "@{$this->buildUsername()}:{$this->plugin->getPluginConfig()->getMatrixServerName()}";
     }
 
     public function getCtrlClassesForCommand(string $cmd): array
