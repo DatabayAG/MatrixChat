@@ -253,8 +253,6 @@ class MatrixApi
         } catch (MatrixApiException $ex) {
             return false;
         }
-
-        return false;
     }
 
     public function addUserToRoom(MatrixUser $matrixUser, MatrixRoom $matrixRoom): bool
@@ -454,9 +452,19 @@ class MatrixApi
             [
                 "name" => $name,
                 "preset" => "private_chat",
+                "visibility" => "private",
                 "creation_content" => [
                     "type" => "m.space"
                 ],
+                "initial_state" => [
+                    [
+                        "type" => "m.room.history_visibility",
+                        "content" => [
+                            "history_visibility" => "invited"
+                        ]
+                    ]
+                ],
+                "topic" => "",
                 "power_level_content_override" => [
                     "ban" => 100,
                     "events_default" => 0,
@@ -466,7 +474,7 @@ class MatrixApi
                     "state_default" => 100,
                     "users_default" => 0
                 ]
-            ],
+            ]
         );
 
         $matrixRoomId = $response->getResponseDataValue("room_id");
@@ -508,6 +516,14 @@ class MatrixApi
             "name" => $name,
             "preset" => "private_chat",
             "visibility" => "private",
+            "initial_state" => [
+                [
+                    "type" => "m.room.history_visibility",
+                    "content" => [
+                        "history_visibility" => "invited"
+                    ]
+                ]
+            ]
         ];
 
         if ($enableEncryption) {
@@ -525,14 +541,25 @@ class MatrixApi
         $matrixServerName = $url["host"];
 
         if ($parentSpace) {
-            $postData["initial_state"] = [
-                [
-                    "type" => "m.space.parent",
-                    "content" => [
-                        "via" => [$matrixServerName],
-                        "canonical" => true
-                    ],
-                    "state_key" => $parentSpace->getId()
+            $postData["initial_state"][] = [
+                "type" => "m.space.parent",
+                "content" => [
+                    "via" => [$matrixServerName],
+                    "canonical" => true
+                ],
+                "state_key" => $parentSpace->getId()
+            ];
+
+            $postData["initial_state"][] = [
+                "type" => "m.room.join_rules",
+                "content" => [
+                    "join_rule" => "restricted",
+                    "allow" => [
+                        [
+                            "type" => "m.room_membership",
+                            "room_id" => $parentSpace->getId(),
+                        ]
+                    ]
                 ]
             ];
         }
