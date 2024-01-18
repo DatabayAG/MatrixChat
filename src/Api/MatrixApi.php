@@ -579,7 +579,7 @@ class MatrixApi
             $this->getRoomMembers($matrixRoomId)
         );
 
-        $this->addUserToRoom($this->getAdminUser(), $matrixRoom);
+        //$this->addUserToRoom($this->getAdminUser(), $matrixRoom); // Likely never needed as admin is the creator of the room.
 
         if ($parentSpace && !$this->addRoomToSpace($parentSpace, $matrixRoom)) {
             $this->logger->error(sprintf(
