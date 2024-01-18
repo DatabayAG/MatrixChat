@@ -24,6 +24,7 @@ namespace ILIAS\Plugin\MatrixChatClient\Api;
 use Exception;
 use ILIAS\Plugin\MatrixChatClient\Model\MatrixRoom;
 use ILIAS\Plugin\MatrixChatClient\Model\MatrixUser;
+use ILIAS\Plugin\MatrixChatClient\Model\MatrixUserPowerLevel;
 use ILIAS\Plugin\MatrixChatClient\Model\Room\MatrixSpace;
 use ilLogger;
 use ilMatrixChatClientPlugin;
@@ -488,27 +489,47 @@ class MatrixApi
 
     protected function addRoomToSpace(MatrixSpace $space, MatrixRoom $room): bool
     {
-        $url = parse_url($this->plugin->getPluginConfig()->getMatrixServerUrl());
-        $matrixServerName = $url["host"];
-
         try {
-            $response = $this->sendRequest(
-                "/_matrix/client/v3/rooms/{$space->getId()}/state/m.space.child/{$room->getId()}",
-                true,
-                "PUT",
-                [
-
-                    "via" => [
-                        $matrixServerName
-                    ],
-                    "suggested" => false,
-                ]
-            );
+            $response = $this->putRoomStateEvent($space, [
+                "via" => [
+                    $this->plugin->getPluginConfig()->getMatrixServerName()
+                ],
+                "suggested" => false,
+            ], "m.space.child", $room->getId());
             return $response->getStatusCode() === 200;
         } catch (MatrixApiException $ex) {
             return false;
         }
     }
+
+    /**
+     * @throws MatrixApiException
+     */
+    protected function getRoomState(MatrixRoom $room, string $eventType, string $stateKey = ""): array
+    {
+        $response = $this->sendRequest(
+            "/_matrix/client/v3/rooms/{$room->getId()}/state/$eventType" . ($stateKey ? "/$stateKey" : ""),
+        );
+        return $response->getResponseData();
+    }
+
+    /**
+     * @throws MatrixApiException
+     */
+    protected function putRoomStateEvent(
+        MatrixRoom $room,
+        array $data,
+        string $eventType,
+        string $stateKey = ""
+    ): MatrixApiResponse {
+        return $this->sendRequest(
+            "/_matrix/client/v3/rooms/{$room->getId()}/state/$eventType" . ($stateKey ? "/$stateKey" : ""),
+            true,
+            "PUT",
+            $data
+        );
+    }
+
 
     public function createRoom(string $name, bool $enableEncryption, ?MatrixSpace $parentSpace = null): MatrixRoom
     {
@@ -535,10 +556,6 @@ class MatrixApi
                 ]
             ];
         }
-
-
-        $url = parse_url($this->plugin->getPluginConfig()->getMatrixServerUrl());
-        $matrixServerName = $url["host"];
 
         if ($parentSpace) {
             $postData["initial_state"][] = [
