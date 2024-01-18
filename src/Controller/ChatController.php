@@ -191,9 +191,8 @@ class ChatController extends BaseController
                         continue;
                     }
 
-                    if (!$this->matrixApi->isUserMemberOfRoom($matrixUser, $room)) {
-                        $this->matrixApi->addUserToRoom($matrixUser, $room);
-                    }
+                $this->matrixApi->inviteUserToRoom($matrixUser, $room);
+                $this->matrixApi->inviteUserToRoom($matrixUser, $space);
 
                     $userRoomAddQueue = $this->userRoomAddQueueRepo->read($participantId,
                         $courseSettings->getCourseId());
