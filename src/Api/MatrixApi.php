@@ -478,7 +478,31 @@ class MatrixApi
         );
     }
 
-    public function createRoom(string $name, ?MatrixSpace $parentSpace = null): MatrixRoom
+    protected function addRoomToSpace(MatrixSpace $space, MatrixRoom $room): bool
+    {
+        $url = parse_url($this->plugin->getPluginConfig()->getMatrixServerUrl());
+        $matrixServerName = $url["host"];
+
+        try {
+            $response = $this->sendRequest(
+                "/_matrix/client/v3/rooms/{$space->getId()}/state/m.space.child/{$room->getId()}",
+                true,
+                "PUT",
+                [
+
+                    "via" => [
+                        $matrixServerName
+                    ],
+                    "suggested" => false,
+                ]
+            );
+            return $response->getStatusCode() === 200;
+        } catch (MatrixApiException $ex) {
+            return false;
+        }
+    }
+
+    public function createRoom(string $name, bool $enableEncryption, ?MatrixSpace $parentSpace = null): MatrixRoom
     {
         $postData = [
             "name" => $name,
@@ -517,6 +541,14 @@ class MatrixApi
         );
 
         $this->addUserToRoom($this->getAdminUser(), $matrixRoom);
+
+        if ($parentSpace && !$this->addRoomToSpace($parentSpace, $matrixRoom)) {
+            $this->logger->error(sprintf(
+                "Room was created but adding room to space as a child failed. Room will not show up under Space '%s'",
+                $parentSpace->getName()
+            ));
+        }
+
         return $matrixRoom;
     }
 

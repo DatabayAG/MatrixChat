@@ -156,15 +156,16 @@ class ChatController extends BaseController
             $space = $this->matrixApi->getSpace($pluginConfig->getMatrixSpaceId());
         }
 
-            if (!$space) {
-                $this->uiUtil->sendFailure($this->plugin->txt("matrix.space.notFound"), true);
-                $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS);
-            }
+        if (!$space) {
+            $this->uiUtil->sendFailure($this->plugin->txt("matrix.space.notFound"), true);
+            $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS);
+        }
 
         if ($enableChatIntegration && (!$room || !$room->exists())) {
             $room = $this->matrixApi->createRoom(
                 $this->plugin->getPluginConfig()->getRoomPrefix()
                 . ilObject::_lookupTitle(ilObject::_lookupObjId($courseSettings->getCourseId())),
+                $this->plugin->getPluginConfig()->isEnableRoomEncryption(),
                 $space
             );
 
@@ -176,17 +177,17 @@ class ChatController extends BaseController
                 $participantId = (int) $participantId;
                 $userConfig = (new UserConfig(new ilObjUser($participantId)))->load();
 
-                    if (!$userConfig->getMatrixUserId()) {
-                        continue;
-                    }
+                if (!$userConfig->getMatrixUserId()) {
+                    continue;
+                }
 
-                    $matrixUser = $this->matrixApi->loginUserWithAdmin(
-                        $participantId,
-                        $userConfig->getMatrixUserId()
-                    );
-                    if (!$matrixUser) {
-                        continue;
-                    }
+                $matrixUser = $this->matrixApi->loginUserWithAdmin(
+                    $participantId,
+                    $userConfig->getMatrixUserId()
+                );
+                if (!$matrixUser) {
+                    continue;
+                }
 
                 $this->matrixApi->inviteUserToRoom($matrixUser, $room);
                 $this->matrixApi->inviteUserToRoom($matrixUser, $space);
