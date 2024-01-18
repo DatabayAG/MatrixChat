@@ -41,6 +41,7 @@ class PluginConfig extends SettingsConfig
     private string $pageDesignerText = "";
     private string $matrixSpaceId = "";
     private string $matrixSpaceName = "";
+    private bool $enableRoomEncryption = false;
 
     public function getMatrixServerUrl(): string
     {
@@ -182,6 +183,17 @@ class PluginConfig extends SettingsConfig
     public function setMatrixSpaceName(string $matrixSpaceName): PluginConfig
     {
         $this->matrixSpaceName = $matrixSpaceName;
+        return $this;
+    }
+
+    public function isEnableRoomEncryption(): bool
+    {
+        return $this->enableRoomEncryption;
+    }
+
+    public function setEnableRoomEncryption(bool $enableRoomEncryption): PluginConfig
+    {
+        $this->enableRoomEncryption = $enableRoomEncryption;
         return $this;
     }
 

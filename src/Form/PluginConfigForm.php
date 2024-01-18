@@ -266,5 +266,12 @@ class PluginConfigForm extends ilPropertyFormGUI
         );
         $matrixSpaceId->setDisabled(true);
         $this->addItem($matrixSpaceId);
+
+        $enableRoomEncryption = new ilCheckboxInputGUI(
+            $this->plugin->txt("config.room.encryption.enable.title"),
+            "enableRoomEncryption"
+        );
+        $enableRoomEncryption->setInfo($this->plugin->txt("config.room.encryption.enable.info"));
+        $this->addItem($enableRoomEncryption);
     }
 }
