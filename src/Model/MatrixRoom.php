@@ -85,6 +85,6 @@ class MatrixRoom
 
     public function exists() : bool
     {
-        return $this->plugin->getMatrixApi()->roomExists($this->getId());
+        return (bool) $this->plugin->getMatrixApi()->getRoom($this->getId());
     }
 }
