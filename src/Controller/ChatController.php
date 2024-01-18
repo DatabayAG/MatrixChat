@@ -33,6 +33,7 @@ use ILIAS\Plugin\MatrixChatClient\Form\DisableChatIntegrationForm;
 use ILIAS\Plugin\MatrixChatClient\Model\CourseSettings;
 use ILIAS\Plugin\MatrixChatClient\Model\UserConfig;
 use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
+use ILIAS\Plugin\MatrixChatClient\Repository\UserRoomAddQueueRepository;
 use ilMatrixChatClientPlugin;
 use ilMatrixChatClientUIHookGUI;
 use ilObjCourseGUI;
@@ -73,6 +74,7 @@ class ChatController extends BaseController
     private int $refId;
     private ilAccessHandler $access;
     private MatrixApi $matrixApi;
+    private UserRoomAddQueueRepository $userRoomAddQueueRepo;
 
     public function __construct(Container $dic, ControllerHandler $controllerHandler)
     {
@@ -84,9 +86,8 @@ class ChatController extends BaseController
         $this->matrixApi = $this->plugin->getMatrixApi();
 
         $this->courseSettingsRepo = CourseSettingsRepository::getInstance($dic->database());
-        $this->courseSettings = $this->courseSettingsRepo->read(
-            $this->refId
-        );
+        $this->courseSettings = $this->courseSettingsRepo->read($this->refId);
+        $this->userRoomAddQueueRepo = UserRoomAddQueueRepository::getInstance();
     }
 
     public function showChat(): void
@@ -170,14 +171,10 @@ class ChatController extends BaseController
             $courseSettings->setMatrixRoom($room);
         }
 
-        if ($enableChatIntegration) {
-            //Continue here
-            //ToDo: add showing matrix space room somehwere, (maybe plugin config, allowing to create it in there instead of creating when needed.
-            //ToDo: like a "Space" section with ajax call "Create Space".
-            if ($room) {
-                foreach ((ilCourseParticipants::getInstance($courseSettings->getCourseId()))->getParticipants() as $participantId) {
-                    $participantId = (int) $participantId;
-                    $userConfig = (new UserConfig(new ilObjUser($participantId)))->load();
+        if ($enableChatIntegration && $room && $room->exists()) {
+            foreach ((ilCourseParticipants::getInstance($courseSettings->getCourseId()))->getParticipants() as $participantId) {
+                $participantId = (int) $participantId;
+                $userConfig = (new UserConfig(new ilObjUser($participantId)))->load();
 
                     if (!$userConfig->getMatrixUserId()) {
                         continue;
@@ -194,11 +191,10 @@ class ChatController extends BaseController
                 $this->matrixApi->inviteUserToRoom($matrixUser, $room);
                 $this->matrixApi->inviteUserToRoom($matrixUser, $space);
 
-                    $userRoomAddQueue = $this->userRoomAddQueueRepo->read($participantId,
-                        $courseSettings->getCourseId());
-                    if ($userRoomAddQueue) {
-                        $this->userRoomAddQueueRepo->delete($userRoomAddQueue);
-                    }
+                $userRoomAddQueue = $this->userRoomAddQueueRepo->read($participantId, $courseSettings->getCourseId());
+                if ($userRoomAddQueue) {
+                    //Remove user from queue when already on list
+                    $this->userRoomAddQueueRepo->delete($userRoomAddQueue);
                 }
             }
         }
@@ -216,6 +212,12 @@ class ChatController extends BaseController
                     );
                 }
         */
+
+        if (!$enableChatIntegration && $room && $room->exists()) {
+            $this->redirectToCommand(
+                ["ref_id" => $courseSettings->getCourseId()]
+            );
+        }
         $this->uiUtil->sendSuccess($this->plugin->txt("general.update.success"), true);
         $this->redirectToCommand(self::CMD_SHOW_CONFIRM_DISABLE_CHAT_INTEGRATION);
     }
