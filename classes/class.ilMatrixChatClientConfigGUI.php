@@ -117,7 +117,7 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
         $matrixSpaceName = $form->getInput("matrixSpaceName");
         if ($matrixSpaceName !== $this->plugin->getPluginConfig()->getMatrixSpaceName()) {
             //Create new Matrix Space
-            $space = $this->matrixApi->createSpace("ILIAS");
+            $space = $this->matrixApi->createSpace($matrixSpaceName);
             if (!$space) {
                 $this->uiUtil->sendFailure($this->plugin->txt("matrix.space.creation.failure"), true);
                 $this->ctrl->redirectByClass(self::class, self::CMD_SHOW_SETTINGS);
