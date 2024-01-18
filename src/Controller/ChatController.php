@@ -151,17 +151,17 @@ class ChatController extends BaseController
         $courseSettings->setChatIntegrationEnabled($enableChatIntegration);
         $room = $courseSettings->getMatrixRoom();
 
-        if ($enableChatIntegration && (!$room || !$room->exists())) {
-            $space = null;
-            if ($pluginConfig->getMatrixSpaceId()) {
-                $space = $this->matrixApi->getSpace($pluginConfig->getMatrixSpaceId());
-            }
+        $space = null;
+        if ($pluginConfig->getMatrixSpaceId()) {
+            $space = $this->matrixApi->getSpace($pluginConfig->getMatrixSpaceId());
+        }
 
             if (!$space) {
                 $this->uiUtil->sendFailure($this->plugin->txt("matrix.space.notFound"), true);
                 $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS);
             }
 
+        if ($enableChatIntegration && (!$room || !$room->exists())) {
             $room = $this->matrixApi->createRoom(
                 $this->plugin->getPluginConfig()->getRoomPrefix()
                 . ilObject::_lookupTitle(ilObject::_lookupObjId($courseSettings->getCourseId())),
@@ -204,22 +204,15 @@ class ChatController extends BaseController
             $this->uiUtil->sendFailure($this->plugin->txt("general.update.failed"), true);
             $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS);
         }
-        /*
-                if (!$enableChatIntegration && $room->exists()) {
-                    $this->redirectToCommand(
-                        "confirmDisableCourseChatIntegration",
-                        ["ref_id" => $courseSettings->getCourseId()]
-                    );
-                }
-        */
 
         if (!$enableChatIntegration && $room && $room->exists()) {
             $this->redirectToCommand(
+                self::CMD_SHOW_CONFIRM_DISABLE_CHAT_INTEGRATION,
                 ["ref_id" => $courseSettings->getCourseId()]
             );
         }
         $this->uiUtil->sendSuccess($this->plugin->txt("general.update.success"), true);
-        $this->redirectToCommand(self::CMD_SHOW_CONFIRM_DISABLE_CHAT_INTEGRATION);
+        $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS);
     }
 
     public function showConfirmDisableChatIntegration(?DisableChatIntegrationForm $form = null): void
@@ -254,18 +247,18 @@ class ChatController extends BaseController
                 "ref_id" => $this->refId
             ]);
         }
-        /*
-                if (
-                    $this->courseSettings->getMatrixRoom()
-                    && $this->courseSettings->getMatrixRoom()->exists()
-                    && $this->matrixApi->deleteRoom($this->courseSettings->getMatrixRoom())
-                ) {
-                    $this->courseSettings->setMatrixRoom(null);
-                    if ($this->courseSettingsRepo->save($this->courseSettings)) {
-                        $this->uiUtil->sendSuccess($this->plugin->txt("matrix.chat.room.delete.success"), true);
-                        $this->redirectToCommand("showSettings", ["ref_id" => $this->courseSettings->getCourseId()]);
-                    }
-                }*/
+
+        if (
+            $this->courseSettings->getMatrixRoom()
+            && $this->courseSettings->getMatrixRoom()->exists()
+            && $this->matrixApi->deleteRoom($this->courseSettings->getMatrixRoom())
+        ) {
+            $this->courseSettings->setMatrixRoom(null);
+            if ($this->courseSettingsRepo->save($this->courseSettings)) {
+                $this->uiUtil->sendSuccess($this->plugin->txt("matrix.chat.room.delete.success"), true);
+                $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS, ["ref_id" => $this->courseSettings->getCourseId()]);
+            }
+        }
 
         $this->uiUtil->sendFailure($this->plugin->txt("matrix.chat.room.delete.failed"), true);
         $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS, ["ref_id" => $this->refId]);
