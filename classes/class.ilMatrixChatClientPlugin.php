@@ -231,8 +231,8 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
 
             $courseSettings = $courseSettingsCache[$userRoomAddQueue->getRefId()];
 
-            if ($courseSettings->isChatIntegrationEnabled() && $courseSettings->getMatrixRoom()) {
-                $room = $courseSettings->getMatrixRoom();
+            if ($courseSettings->isChatIntegrationEnabled() && $courseSettings->getMatrixRoomId()) {
+                $room = $this->matrixApi->getRoom($courseSettings->getMatrixRoomId());
 
                 if (!$room) {
                     continue;
@@ -292,13 +292,14 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
             }
 
             $courseSettings = $courseSettingsCache[$objRefId];
+            $room = $this->matrixApi->getRoom($courseSettings->getMatrixRoomId());
 
             if ($a_event === "addParticipant") {
                 //Add participant
                 if (
                     !$courseSettings->isChatIntegrationEnabled()
-                    || !$courseSettings->getMatrixRoom()
-                    || !$courseSettings->getMatrixRoom()->exists()
+                    || !$room
+                    || !$room->exists()
                 ) {
                     continue;
                 }
@@ -307,13 +308,13 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
                     $this->userRoomAddQueueRepo->create(new UserRoomAddQueue($user->getId(), $objRefId));
                 } elseif (
                     $matrixUser
-                    && !$courseSettings->getMatrixRoom()->isMember($matrixUser)
+                    && !$room->isMember($matrixUser)
                 ) {
-                    if (!$this->getMatrixApi()->inviteUserToRoom($matrixUser, $courseSettings->getMatrixRoom())) {
+                    if (!$this->getMatrixApi()->inviteUserToRoom($matrixUser, $room)) {
                         $this->dic->logger()->root()->error(sprintf(
                             "Inviting matrix-user '%s' to room '%s' failed",
                             $matrixUser->getMatrixUserId(),
-                            $courseSettings->getMatrixRoom()->getId()
+                            $room->getId()
                         ));
                     }
                 }
@@ -326,13 +327,13 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
                 }
 
                 if (
-                    $courseSettings->getMatrixRoom()
-                    && $courseSettings->getMatrixRoom()->exists()
+                    $room
+                    && $room->exists()
                     && $matrixUser
                 ) {
                     $this->getMatrixApi()->removeUserFromRoom(
                         $matrixUser,
-                        $courseSettings->getMatrixRoom(),
+                        $room,
                         "Removed from course/group"
                     );
                 }

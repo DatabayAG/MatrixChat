@@ -28,17 +28,13 @@ class CourseSettings
 {
     private int $courseId;
     private bool $chatIntegrationEnabled = false;
-    private ilMatrixChatClientPlugin $plugin;
     private ?MatrixRoom $matrixRoom = null;
+    private ?string $matrixRoomId = null;
 
     public function __construct(int $courseId, ?string $matrixRoomId = null)
     {
         $this->courseId = $courseId;
-
-        $this->plugin = ilMatrixChatClientPlugin::getInstance();
-        if ($matrixRoomId) {
-            $this->matrixRoom = $this->plugin->getMatrixApi()->getRoom($matrixRoomId);
-        }
+        $this->matrixRoomId = $matrixRoomId;
     }
 
 
@@ -58,14 +54,14 @@ class CourseSettings
         return $this;
     }
 
-    public function getMatrixRoom() : ?MatrixRoom
+    public function getMatrixRoomId(): ?string
     {
-        return $this->matrixRoom;
+        return $this->matrixRoomId;
     }
 
-    public function setMatrixRoom(?MatrixRoom $matrixRoom) : CourseSettings
+    public function setMatrixRoomId(?string $matrixRoomId): CourseSettings
     {
-        $this->matrixRoom = $matrixRoom;
+        $this->matrixRoomId = $matrixRoomId;
         return $this;
     }
 }

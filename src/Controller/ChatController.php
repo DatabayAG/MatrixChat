@@ -116,11 +116,12 @@ class ChatController extends BaseController
         $this->tabs->activateSubTab(self::SUB_TAB_CHAT_SETTINGS);
 
         if (!$form) {
-            $form = new ChatSettingsForm($this, $this->refId);
+            $room = $this->matrixApi->getRoom($this->courseSettings->getMatrixRoomId());
+            $form = new ChatSettingsForm($this, $this->refId, $room);
 
             if (
                 $this->courseSettings->isChatIntegrationEnabled()
-                && !$this->courseSettings->getMatrixRoom()
+                && !$room
             ) {
                 $this->uiUtil->sendFailure($this->plugin->txt("matrix.chat.room.notFoundEvenThoughEnabled"), true);
             }
@@ -151,7 +152,7 @@ class ChatController extends BaseController
         $enableChatIntegration = (bool) $form->getInput("chatIntegrationEnabled");
 
         $courseSettings->setChatIntegrationEnabled($enableChatIntegration);
-        $room = $courseSettings->getMatrixRoom();
+        $room = $this->matrixApi->getRoom($courseSettings->getMatrixRoomId());
 
         $space = null;
         if ($pluginConfig->getMatrixSpaceId()) {
@@ -171,7 +172,7 @@ class ChatController extends BaseController
                 $space
             );
 
-            $courseSettings->setMatrixRoom($room);
+            $courseSettings->setMatrixRoomId($room->getId());
         }
 
         if ($enableChatIntegration && $room && $room->exists()) {
@@ -275,12 +276,14 @@ class ChatController extends BaseController
             ]);
         }
 
+        $room = $this->matrixApi->getRoom($this->courseSettings->getMatrixRoomId());
+
         if (
-            $this->courseSettings->getMatrixRoom()
-            && $this->courseSettings->getMatrixRoom()->exists()
-            && $this->matrixApi->deleteRoom($this->courseSettings->getMatrixRoom())
+            $room
+            && $room->exists()
+            && $this->matrixApi->deleteRoom($room)
         ) {
-            $this->courseSettings->setMatrixRoom(null);
+            $this->courseSettings->setMatrixRoomId(null);
             if ($this->courseSettingsRepo->save($this->courseSettings)) {
                 $this->uiUtil->sendSuccess($this->plugin->txt("matrix.chat.room.delete.success"), true);
                 $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS,

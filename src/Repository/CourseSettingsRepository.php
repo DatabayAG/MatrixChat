@@ -110,7 +110,7 @@ class CourseSettingsRepository
                 ],
                 [
                     $courseSettings->isChatIntegrationEnabled(),
-                    $courseSettings->getMatrixRoom() ? $courseSettings->getMatrixRoom()->getId() : null,
+                    $courseSettings->getMatrixRoomId() ?: null,
                     $courseSettings->getCourseId()
                 ]
             );
@@ -122,7 +122,7 @@ class CourseSettingsRepository
             ["integer", "integer", "text"],
             [$courseSettings->getCourseId(),
              $courseSettings->isChatIntegrationEnabled(),
-             $courseSettings->getMatrixRoom() ? $courseSettings->getMatrixRoom()->getId() : null
+             $courseSettings->getMatrixRoomId() ?: null
             ]
         );
         return $affectedRows === 1;
