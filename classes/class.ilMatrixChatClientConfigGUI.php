@@ -137,7 +137,8 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
             ->setLocalUserScheme($form->getInput("localUserScheme"))
             ->setLocalUserOptions($form->getInput("localUserOptions"))
             ->setRoomPrefix($form->getInput("roomPrefix"))
-            ->setActivateChat($form->getInput("activateChat"));
+            ->setActivateChat($form->getInput("activateChat"))
+            ->setEnableRoomEncryption((bool) $form->getInput("enableRoomEncryption"));
 
         $matrixAdminPassword = $form->getInput("matrixAdminPassword");
         if ($matrixAdminPassword !== "") {
