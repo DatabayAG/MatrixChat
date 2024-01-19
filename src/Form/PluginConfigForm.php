@@ -24,6 +24,7 @@ use ilGlobalPageTemplate;
 use ILIAS\DI\Container;
 use ilMatrixChatClientConfigGUI;
 use ilMatrixChatClientPlugin;
+use ilNumberInputGUI;
 use ilPasswordInputGUI;
 use ilPropertyFormGUI;
 use ilTextInputGUI;
@@ -273,5 +274,31 @@ class PluginConfigForm extends ilPropertyFormGUI
         );
         $enableRoomEncryption->setInfo($this->plugin->txt("config.room.encryption.enable.info"));
         $this->addItem($enableRoomEncryption);
+
+        $modifyParticipantPowerLevel = new ilCheckboxInputGUI(
+            $this->plugin->txt("config.room.powerLevel.modify.title"),
+            "modifyParticipantPowerLevel"
+        );
+        $modifyParticipantPowerLevel->setInfo($this->plugin->txt("config.room.powerLevel.modify.info"));
+        $this->addItem($modifyParticipantPowerLevel);
+
+        $adminPowerLevel = new ilNumberInputGUI(
+            $this->lng->txt("il_crs_admin"),
+            "adminPowerLevel"
+        );
+        $modifyParticipantPowerLevel->addSubItem($adminPowerLevel);
+
+        $tutorPowerLevel = new ilNumberInputGUI(
+            $this->lng->txt("il_crs_tutor"),
+            "tutorPowerLevel"
+        );
+        $modifyParticipantPowerLevel->addSubItem($tutorPowerLevel);
+
+        $memberPowerLevel = new ilNumberInputGUI(
+            $this->lng->txt("il_crs_member"),
+            "memberPowerLevel"
+        );
+        $modifyParticipantPowerLevel->addSubItem($memberPowerLevel);
+
     }
 }

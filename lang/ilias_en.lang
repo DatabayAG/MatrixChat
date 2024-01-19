@@ -23,6 +23,8 @@ config.usernameScheme.info#:#This scheme is used to create the matrix username,<
 config.room.prefix#:#Room Prefix
 config.room.encryption.enable.title#:#Activate End-to-End-Encryption
 config.room.encryption.enable.info#:#Newly created rooms will be created with End-to-End-Encryption enabled. <br>End-to-End-Encryption can not be deactivated for rooms after the room has been created with it enabled!
+config.room.powerLevel.modify.title#:#Adjust Power-Level of Course/Group Participants
+config.room.powerLevel.modify.info#:#Power-level of the different Course/Group participant roles can be adjusted here. <br>Will only be adopted for new assignments, existing power-levels won't be adjusted. <br> Defaults: <br>- Course Administrator: 100 (Administrator in Element) <br>- Course Tutor: 50 (Moderator in Element), <br>- Course Member: 0 (Default in Element)
 
 config.accountOptions.title#:#Account-Options
 config.accountOptions.createOnConfiguredHomeserver#:#Create and use account on configured homeserver.

@@ -42,6 +42,10 @@ class PluginConfig extends SettingsConfig
     private string $matrixSpaceId = "";
     private string $matrixSpaceName = "";
     private bool $enableRoomEncryption = false;
+    private bool $modifyParticipantPowerLevel = false;
+    private int $adminPowerLevel = 100;
+    private int $tutorPowerLevel = 50;
+    private int $memberPowerLevel = 0;
 
     public function getMatrixServerUrl(): string
     {
@@ -194,6 +198,50 @@ class PluginConfig extends SettingsConfig
     public function setEnableRoomEncryption(bool $enableRoomEncryption): PluginConfig
     {
         $this->enableRoomEncryption = $enableRoomEncryption;
+        return $this;
+    }
+
+    public function isModifyParticipantPowerLevel(): bool
+    {
+        return $this->modifyParticipantPowerLevel;
+    }
+
+    public function setModifyParticipantPowerLevel(bool $modifyParticipantPowerLevel): PluginConfig
+    {
+        $this->modifyParticipantPowerLevel = $modifyParticipantPowerLevel;
+        return $this;
+    }
+
+    public function getAdminPowerLevel(): int
+    {
+        return $this->adminPowerLevel;
+    }
+
+    public function setAdminPowerLevel(int $adminPowerLevel): PluginConfig
+    {
+        $this->adminPowerLevel = $adminPowerLevel;
+        return $this;
+    }
+
+    public function getTutorPowerLevel(): int
+    {
+        return $this->tutorPowerLevel;
+    }
+
+    public function setTutorPowerLevel(int $tutorPowerLevel): PluginConfig
+    {
+        $this->tutorPowerLevel = $tutorPowerLevel;
+        return $this;
+    }
+
+    public function getMemberPowerLevel(): int
+    {
+        return $this->memberPowerLevel;
+    }
+
+    public function setMemberPowerLevel(int $memberPowerLevel): PluginConfig
+    {
+        $this->memberPowerLevel = $memberPowerLevel;
         return $this;
     }
 

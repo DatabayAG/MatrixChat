@@ -231,12 +231,13 @@ class ChatController extends BaseController
 
     protected function determinePowerLevelOfParticipant(ilParticipants $participants, int $participantId): int
     {
-        $powerLevel = 0;
+        $pluginConfig = $this->plugin->getPluginConfig();
+        $powerLevel = $pluginConfig->isModifyParticipantPowerLevel() ? $pluginConfig->getMemberPowerLevel() : 0;
         if ($participants->isTutor($participantId)) {
-            $powerLevel = 50;
+            $powerLevel = $pluginConfig->isModifyParticipantPowerLevel() ? $pluginConfig->getTutorPowerLevel() : 50;
         }
         if ($participants->isAdmin($participantId)) {
-            $powerLevel = 100;
+            $powerLevel = $pluginConfig->isModifyParticipantPowerLevel() ? $pluginConfig->getAdminPowerLevel() : 100;
         }
         return $powerLevel;
     }
