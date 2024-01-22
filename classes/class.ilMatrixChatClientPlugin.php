@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 use ILIAS\DI\Container;
 use ILIAS\Plugin\Libraries\ControllerHandler\UiUtils;
+use ILIAS\Plugin\MatrixChatClient\Model\MatrixRoom;
 use ILIAS\Plugin\MatrixChatClient\Model\PluginConfig;
 use ILIAS\Plugin\MatrixChatClient\Api\MatrixApi;
 use ILIAS\Plugin\MatrixChatClient\Model\UserConfig;
@@ -231,7 +232,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
 
             $courseSettings = $courseSettingsCache[$userRoomAddQueue->getRefId()];
 
-            if ($courseSettings->isChatIntegrationEnabled() && $courseSettings->getMatrixRoomId()) {
+            if ($courseSettings->getMatrixRoomId()) {
                 $room = $this->matrixApi->getRoom($courseSettings->getMatrixRoomId());
 
                 if (!$room) {
@@ -284,6 +285,11 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
          */
         $courseSettingsCache = [];
 
+        /**
+         * @var array<string, MatrixRoom> $roomCache
+         */
+        $roomCache = [];
+
         foreach (ilObjCourse::_getAllReferences($objId) as $objRefId) {
             $objRefId = (int) $objRefId;
 
@@ -292,17 +298,28 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
             }
 
             $courseSettings = $courseSettingsCache[$objRefId];
-            $room = $this->matrixApi->getRoom($courseSettings->getMatrixRoomId());
+            $matrixRoomId = $courseSettings->getMatrixRoomId();
+
+            if (!$matrixRoomId) {
+                continue;
+            }
+
+            if (!array_key_exists($matrixRoomId, $roomCache)) {
+                $matrixRoom = $this->matrixApi->getRoom($matrixRoomId);
+                if ($matrixRoom) {
+                    $roomCache[$matrixRoomId] = $matrixRoom;
+                }
+            }
+
+            $room = $roomCache[$matrixRoomId] ?? null;
+
+            if (!$room) {
+                $this->dic->logger()->root()->error("Unable to process event '$a_event'. Matrix-Room-ID '$matrixRoomId' saved but retrieving room failed. Skipping");
+                continue;
+            }
 
             if ($a_event === "addParticipant") {
                 //Add participant
-                if (
-                    !$courseSettings->isChatIntegrationEnabled()
-                    || !$room
-                    || !$room->exists()
-                ) {
-                    continue;
-                }
 
                 if ($addToQueue) {
                     $this->userRoomAddQueueRepo->create(new UserRoomAddQueue($user->getId(), $objRefId));
@@ -326,11 +343,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
                     $this->userRoomAddQueueRepo->delete($userRoomAddQueue);
                 }
 
-                if (
-                    $room
-                    && $room->exists()
-                    && $matrixUser
-                ) {
+                if ($matrixUser) {
                     $this->getMatrixApi()->removeUserFromRoom(
                         $matrixUser,
                         $room,

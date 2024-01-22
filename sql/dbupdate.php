@@ -91,3 +91,14 @@ if (!$ilDB->tableExists("mcc_usr_room_add_queue")) {
     $ilDB->addPrimaryKey("mcc_usr_room_add_queue", ["user_id", "ref_id"]);
 }
 ?>
+<#6>
+<?php
+if (
+    $ilDB->tableExists("mcc_course_settings")
+    && $ilDB->tableColumnExists("mcc_course_settings", "chat_integration_enabled")) {
+    $ilDB->dropTableColumn(
+        "mcc_course_settings",
+        "chat_integration_enabled"
+    );
+}
+?>

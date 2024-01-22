@@ -96,10 +96,10 @@ class ChatSettingsForm extends ilPropertyFormGUI
 
         $roomName = new ilTextInputGUI($this->plugin->txt("config.room.name"));
         $roomName->setDisabled(true);
-        $this->addItem($roomName);
-
+        $roomName->setValue("");
         if ($matrixRoomId && $room) {
             $roomName->setValue($room->getName());
         }
+        $this->addItem($roomName);
     }
 }

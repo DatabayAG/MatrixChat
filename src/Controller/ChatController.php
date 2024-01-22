@@ -113,20 +113,10 @@ class ChatController extends BaseController
         $this->tabs->activateTab(self::TAB_CHAT);
         $this->tabs->activateSubTab(self::SUB_TAB_CHAT_SETTINGS);
 
+        $matrixRoomId = $this->courseSettings->getMatrixRoomId();
+
         if (!$form) {
-            $room = $this->matrixApi->getRoom($this->courseSettings->getMatrixRoomId());
-            $form = new ChatSettingsForm($this, $this->refId, $this->courseSettings->getMatrixRoomId());
-
-            if (
-                $this->courseSettings->isChatIntegrationEnabled()
-                && !$room
-            ) {
-                $this->uiUtil->sendFailure($this->plugin->txt("matrix.chat.room.notFoundEvenThoughEnabled"), true);
-            }
-
-            $form->setValuesByArray([
-                "chatIntegrationEnabled" => $this->courseSettings->isChatIntegrationEnabled(),
-            ], true);
+            $form = new ChatSettingsForm($this, $this->refId, $matrixRoomId);
         }
 
         $this->renderToMainTemplate($form->getHTML());
@@ -147,12 +137,9 @@ class ChatController extends BaseController
 
         $form->setValuesByPost();
 
-        $enableChatIntegration = (bool) $form->getInput("chatIntegrationEnabled");
-
-        $courseSettings->setChatIntegrationEnabled($enableChatIntegration);
         $room = $this->matrixApi->getRoom($courseSettings->getMatrixRoomId());
-
         $space = null;
+
         if ($pluginConfig->getMatrixSpaceId()) {
             $space = $this->matrixApi->getSpace($pluginConfig->getMatrixSpaceId());
         }
@@ -162,7 +149,7 @@ class ChatController extends BaseController
             $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS);
         }
 
-        if ($enableChatIntegration && (!$room || !$room->exists())) {
+        if (!$room) {
             $room = $this->matrixApi->createRoom(
                 $this->plugin->getPluginConfig()->getRoomPrefix()
                 . ilObject::_lookupTitle(ilObject::_lookupObjId($courseSettings->getCourseId())),
@@ -173,7 +160,7 @@ class ChatController extends BaseController
             $courseSettings->setMatrixRoomId($room->getId());
         }
 
-        if ($enableChatIntegration && $room && $room->exists()) {
+        if ($room) {
             //ilCourseParticipants won't work for Groups.
             $participants = ilCourseParticipants::getInstance($courseSettings->getCourseId());
             $matrixUserPowerLevelMap = [];

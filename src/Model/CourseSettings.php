@@ -43,17 +43,6 @@ class CourseSettings
         return $this->courseId;
     }
 
-    public function isChatIntegrationEnabled() : bool
-    {
-        return $this->chatIntegrationEnabled;
-    }
-
-    public function setChatIntegrationEnabled(bool $chatIntegrationEnabled) : self
-    {
-        $this->chatIntegrationEnabled = $chatIntegrationEnabled;
-        return $this;
-    }
-
     public function getMatrixRoomId(): ?string
     {
         return $this->matrixRoomId;
