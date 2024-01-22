@@ -29,7 +29,7 @@ use ILIAS\Plugin\Libraries\ControllerHandler\BaseController;
 use ILIAS\Plugin\Libraries\ControllerHandler\ControllerHandler;
 use ILIAS\Plugin\MatrixChatClient\Api\MatrixApi;
 use ILIAS\Plugin\MatrixChatClient\Form\ChatSettingsForm;
-use ILIAS\Plugin\MatrixChatClient\Form\DisableChatIntegrationForm;
+use ILIAS\Plugin\MatrixChatClient\Form\ConfirmDeleteRoomForm;
 use ILIAS\Plugin\MatrixChatClient\Model\CourseSettings;
 use ILIAS\Plugin\MatrixChatClient\Model\MatrixUserPowerLevel;
 use ILIAS\Plugin\MatrixChatClient\Model\UserConfig;
@@ -58,16 +58,14 @@ class ChatController extends BaseController
 {
     public const CMD_SHOW_CHAT = "showChat";
     public const CMD_SHOW_CHAT_SETTINGS = "showChatSettings";
-    public const CMD_SHOW_CONFIRM_DISABLE_CHAT_INTEGRATION = "showConfirmDisableChatIntegration";
-    public const CMD_DISABLE_CHAT_INTEGRATION = "disableChatIntegration";
-
-
-    public const CMD_SAVE_CHAT_SETTINGS = "saveChatSettings";
+    public const CMD_CREATE_ROOM = "createRoom";
+    public const CMD_SHOW_CONFIRM_DELETE_ROOM = "showConfirmDeleteRoom";
+    public const CMD_DELETE_ROOM = "deleteRoom";
 
     public const TAB_CHAT = "tab_chat";
     public const SUB_TAB_CHAT = "sub_tab_chat";
-
     public const SUB_TAB_CHAT_SETTINGS = "sub_tab_chat_settings";
+
 
     private ilTabsGUI $tabs;
     private ilMatrixChatClientPlugin $plugin;
@@ -117,7 +115,7 @@ class ChatController extends BaseController
 
         if (!$form) {
             $room = $this->matrixApi->getRoom($this->courseSettings->getMatrixRoomId());
-            $form = new ChatSettingsForm($this, $this->refId, $room);
+            $form = new ChatSettingsForm($this, $this->refId, $this->courseSettings->getMatrixRoomId());
 
             if (
                 $this->courseSettings->isChatIntegrationEnabled()
@@ -134,7 +132,7 @@ class ChatController extends BaseController
         $this->renderToMainTemplate($form->getHTML());
     }
 
-    public function saveChatSettings(): void
+    public function createRoom(): void
     {
         $this->checkPermissionOnObject("write");
         $this->checkChatActivatedForObject();
@@ -220,12 +218,6 @@ class ChatController extends BaseController
             $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS);
         }
 
-        if (!$enableChatIntegration && $room && $room->exists()) {
-            $this->redirectToCommand(
-                self::CMD_SHOW_CONFIRM_DISABLE_CHAT_INTEGRATION,
-                ["ref_id" => $courseSettings->getCourseId()]
-            );
-        }
         $this->uiUtil->sendSuccess($this->plugin->txt("general.update.success"), true);
         $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS);
     }
@@ -243,51 +235,60 @@ class ChatController extends BaseController
         return $powerLevel;
     }
 
-    public function showConfirmDisableChatIntegration(?DisableChatIntegrationForm $form = null): void
+    public function showConfirmDeleteRoom(?ConfirmDeleteRoomForm $form = null): void
     {
         $this->checkPermissionOnObject("write");
         $this->checkChatActivatedForObject();
 
         if (!$form) {
-            $form = new DisableChatIntegrationForm($this, $this->refId);
+            $form = new ConfirmDeleteRoomForm($this, $this->refId);
         }
         $this->mainTpl->setContent($form->getHTML());
         $this->mainTpl->printToStdOut();
     }
 
-    public function disableChatIntegration(): void
+    public function deleteRoom(): void
     {
         $this->checkPermissionOnObject("write");
         $this->checkChatActivatedForObject();
 
-        $form = new DisableChatIntegrationForm($this, $this->refId);
+        $form = new ConfirmDeleteRoomForm($this, $this->refId);
         if (!$form->checkInput()) {
             $form->setValuesByPost();
-            $this->showConfirmDisableChatIntegration($form);
+            $this->showConfirmDeleteRoom($form);
             return;
         }
 
         $form->setValuesByPost();
-        $deleteRoom = (bool) $form->getInput("deleteChatRoom");
-
-        if (!$deleteRoom) {
-            $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS, [
-                "ref_id" => $this->refId
-            ]);
-        }
 
         $room = $this->matrixApi->getRoom($this->courseSettings->getMatrixRoomId());
 
-        if (
-            $room
-            && $room->exists()
-            && $this->matrixApi->deleteRoom($room)
-        ) {
+        if (!$room) {
             $this->courseSettings->setMatrixRoomId(null);
             if ($this->courseSettingsRepo->save($this->courseSettings)) {
-                $this->uiUtil->sendSuccess($this->plugin->txt("matrix.chat.room.delete.success"), true);
+                $this->uiUtil->sendSuccess(
+                    $this->plugin->txt("matrix.chat.room.delete.success"),
+                    true
+                );
                 $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS,
-                    ["ref_id" => $this->courseSettings->getCourseId()]);
+                    ["ref_id" => $this->refId]);
+            }
+        }
+
+        if ($room) {
+            $deleteSuccess = $this->matrixApi->deleteRoom($room);
+            if ($deleteSuccess) {
+                $this->courseSettings->setMatrixRoomId(null);
+            }
+
+            if ($this->courseSettingsRepo->save($this->courseSettings)) {
+                if ($deleteSuccess) {
+                    $this->uiUtil->sendSuccess($this->plugin->txt("matrix.chat.room.delete.success"), true);
+                } else {
+                    $this->uiUtil->sendFailure($this->plugin->txt("matrix.chat.room.delete.failed"), true);
+                }
+                $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS,
+                    ["ref_id" => $this->refId]);
             }
         }
 

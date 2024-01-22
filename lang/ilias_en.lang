@@ -25,6 +25,14 @@ config.room.encryption.enable.title#:#Activate End-to-End-Encryption
 config.room.encryption.enable.info#:#Newly created rooms will be created with End-to-End-Encryption enabled. <br>End-to-End-Encryption can not be deactivated for rooms after the room has been created with it enabled!
 config.room.powerLevel.modify.title#:#Adjust Power-Level of Course/Group Participants
 config.room.powerLevel.modify.info#:#Power-level of the different Course/Group participant roles can be adjusted here. <br>Will only be adopted for new assignments, existing power-levels won't be adjusted. <br> Defaults: <br>- Course Administrator: 100 (Administrator in Element) <br>- Course Tutor: 50 (Moderator in Element), <br>- Course Member: 0 (Default in Element)
+config.room.status.title#:#Status of the Chat-Room
+config.room.status.info#:#Course participants are automatically added to the room or removed from it when they leave the course.
+config.room.status.disconnected#:#Not Connected/Set up
+config.room.status.connected#:#Connected
+config.room.status.faulty#:#Connection to the chat room is faulty. The room ID is saved, but no room with this ID could be found.
+config.room.name#:#Name of the Chat-Room
+config.room.create#:#Create Matrix-Chatroom
+config.room.delete#:#Decouple Matrix-Chatroom
 
 config.accountOptions.title#:#Account-Options
 config.accountOptions.createOnConfiguredHomeserver#:#Create and use account on configured homeserver.
@@ -84,7 +92,7 @@ matrix.server.unreachable#:#Server is unreachable
 matrix.chat.room.notFoundEvenThoughEnabled#:#The room was not found even though the integration is enabled for the course.<br>It's possible the room was deleted by an external client or the used administrator cannot access it anymore!<br><br>The integration probably needs to be deactivated (deleting the room if possible) and then reactivated.
 matrix.chat.room.notFound#:#Room could not be found.
 matrix.chat.room.memberAssignFailed#:#User could not be added to the room.
-matrix.chat.room.delete.confirm#:#Would you like to fully delete the associated chat room?
+matrix.chat.room.delete.confirm#:#Are you sure you want to delete the Matrix chat room? <br>All users will be removed from it!
 matrix.chat.room.delete.button#:#Delete chat room
 matrix.chat.room.delete.success#:#Room deleted successfully
 matrix.chat.room.delete.failed#:#Room could not be deleted

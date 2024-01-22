@@ -28,12 +28,12 @@ use ilMatrixChatClientPlugin;
 use ilPropertyFormGUI;
 
 /**
- * Class DisableChatIntegrationForm
+ * Class ConfirmDeleteRoomForm
  *
  * @package ILIAS\Plugin\MatrixChatClient\Form
  * @author  Marvin Beym <mbeym@databay.de>
  */
-class DisableChatIntegrationForm extends ilPropertyFormGUI
+class ConfirmDeleteRoomForm extends ilPropertyFormGUI
 {
     private ilMatrixChatClientPlugin $plugin;
     private UiUtils $uiUtil;
@@ -45,21 +45,18 @@ class DisableChatIntegrationForm extends ilPropertyFormGUI
         $this->uiUtil = new UiUtils();
         $this->uiUtil->sendQuestion($this->plugin->txt("matrix.chat.room.delete.confirm"));
 
-        $fullyDeleteChatRoom = new ilCheckboxInputGUI(
-            $this->plugin->txt("matrix.chat.room.delete.button"),
-            "deleteChatRoom"
-        );
-        $this->addItem($fullyDeleteChatRoom);
-
         $this->setFormAction($controller->getCommandLink(
             ChatController::CMD_SHOW_CHAT_SETTINGS,
             ["ref_id" => $refId],
             true
         ));
 
-        $this->addCommandButton(ChatController::getCommand(ChatController::CMD_SHOW_CHAT_SETTINGS), $this->lng->txt("cancel"));
         $this->addCommandButton(
-            ChatController::getCommand(ChatController::CMD_DISABLE_CHAT_INTEGRATION),
+            ChatController::getCommand(ChatController::CMD_SHOW_CHAT_SETTINGS),
+            $this->lng->txt("cancel")
+        );
+        $this->addCommandButton(
+            ChatController::getCommand(ChatController::CMD_DELETE_ROOM),
             $this->lng->txt("confirm")
         );
     }

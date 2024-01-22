@@ -20,10 +20,13 @@ use ilCheckboxInputGUI;
 use ILIAS\DI\Container;
 use ILIAS\HTTP\Wrapper\WrapperFactory;
 use ILIAS\Plugin\Libraries\ControllerHandler\UiUtils;
+use ILIAS\Plugin\MatrixChatClient\Api\MatrixApi;
 use ILIAS\Plugin\MatrixChatClient\Controller\ChatController;
+use ILIAS\Plugin\MatrixChatClient\Model\MatrixRoom;
 use ilMatrixChatClientPlugin;
 use ilMatrixChatClientUIHookGUI;
 use ilPropertyFormGUI;
+use ilTextInputGUI;
 
 ;
 
@@ -39,8 +42,9 @@ class ChatSettingsForm extends ilPropertyFormGUI
     private Container $dic;
     private UiUtils $uiUtil;
     private WrapperFactory $httpWrapper;
+    private MatrixApi $matrixApi;
 
-    public function __construct(ChatController $controller, int $refId)
+    public function __construct(ChatController $controller, int $refId, string $matrixRoomId = null)
     {
         parent::__construct();
         $this->plugin = ilMatrixChatClientPlugin::getInstance();
@@ -48,24 +52,54 @@ class ChatSettingsForm extends ilPropertyFormGUI
         $this->dic = $DIC;
         $this->uiUtil = new UiUtils();
         $this->httpWrapper = $this->dic->http()->wrapper();
+        $this->matrixApi = $this->plugin->getMatrixApi();
 
         $this->setTitle($this->plugin->txt("matrix.chat.course.settings"));
-
-        $enableChatIntegration = new ilCheckboxInputGUI(
-            $this->plugin->txt("matrix.chat.course.enable"),
-            "chatIntegrationEnabled"
-        );
-        $enableChatIntegration->setRequired(true);
-        $this->addItem($enableChatIntegration);
 
         $this->setFormAction($controller->getCommandLink(
             ChatController::CMD_SHOW_CHAT_SETTINGS,
             ["ref_id" => $refId], true
         ));
 
-        $this->addCommandButton(
-            ChatController::getCommand(ChatController::CMD_SAVE_CHAT_SETTINGS),
-            $this->lng->txt("save")
-        );
+        $room = null;
+        if ($matrixRoomId) {
+            $room = $this->matrixApi->getRoom($matrixRoomId);
+        }
+
+        $roomStatus = new ilTextInputGUI($this->plugin->txt("config.room.status.title"));
+        $roomStatus->setInfo($this->plugin->txt("config.room.status.info"));
+        $roomStatus->setDisabled(true);
+        $this->addItem($roomStatus);
+
+        if (!$matrixRoomId) {
+            $roomStatus->setValue($this->plugin->txt("config.room.status.disconnected"));
+
+            $this->addCommandButton(
+                ChatController::getCommand(ChatController::CMD_CREATE_ROOM),
+                $this->plugin->txt("config.room.create")
+            );
+        } else {
+            $this->addCommandButton(
+                ChatController::getCommand(ChatController::CMD_SHOW_CONFIRM_DELETE_ROOM),
+                $this->plugin->txt("config.room.delete")
+            );
+        }
+
+        if ($matrixRoomId && !$room) {
+            $roomStatus->setValue($this->plugin->txt("config.room.status.faulty"));
+        }
+
+        if ($room) {
+            $roomStatus->setCssClass("config_orange");
+            $roomStatus->setValue($this->plugin->txt("config.room.status.connected"));
+        }
+
+        $roomName = new ilTextInputGUI($this->plugin->txt("config.room.name"));
+        $roomName->setDisabled(true);
+        $this->addItem($roomName);
+
+        if ($matrixRoomId && $room) {
+            $roomName->setValue($room->getName());
+        }
     }
 }

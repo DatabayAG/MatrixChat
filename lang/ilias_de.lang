@@ -26,6 +26,14 @@ config.room.encryption.enable.title#:#Aktiviere Ende-zu-Ende-Verschlüsselung
 config.room.encryption.enable.info#:#Neu angelegte Räume werden mit Ende-zu-Ende-Verschlüsselung angelegt. <br>Ende-zu-Ende-Verschlüsselung kann für Räume nicht wieder deaktiviert werden!
 config.room.powerLevel.modify.title#:#Power-Level von Kurs/Gruppen Teilnehmern anpassen
 config.room.powerLevel.modify.info#:#Hier kann das Power-Level für die verschiedenen Rollen eines Kurs/Gruppen Teilnehmers angepasst werden. <br>Wird nur für neue Zuweisungen übernommen, existierende Power-Level werden nicht angepasst. <br> Standardwerte: <br>- Kursadministrator: 100 (Administrator in Element) <br>- Kurstutor: 50 (Moderator in Element), <br>- Kursmitglied: 0 (Standard in Element)
+config.room.status.title#:#Status des Chat-Raums
+config.room.status.info#:#Kursteilnehmer werden dem Raum automatisch hinzugefügt bzw. entfernt, wenn Sie den Kurs verlassen.
+config.room.status.disconnected#:#Nicht Verbunden/Eingerichtet
+config.room.status.connected#:#Verbunden
+config.room.status.faulty#:#Verbindung zum Chat-Raum ist fehlerhaft. Die ID des Raums ist gespeichert, es konnte jedoch kein Raum mit dieser ID gefunden werden.
+config.room.name#:#Name des Chat-Raums
+config.room.create#:#Matrix-Chatraum anlegen
+config.room.delete#:#Matrix-Chatraum entkoppeln
 
 config.accountOptions.title#:#Account-Optionen
 config.accountOptions.createOnConfiguredHomeserver#:#Account auf konfiguriertem Homeserver anlegen und nutzen.
@@ -86,7 +94,7 @@ matrix.server.unreachable#:#Server nicht erreichbar
 matrix.chat.room.notFoundEvenThoughEnabled#:#Der Raum wurde nicht gefunden, obwohl die Integration für den Kurs aktiviert ist.<br>Wahrscheinlich wurde der Raum durch einen externen Client gelöscht oder der genutzte Administrator kann nicht mehr auf diesen zugreifen!<br><br>Die Integration muss wahrscheinlich deaktiviert (und dabei der Raum gelöscht werden, falls möglich) und dann wieder aktiviert werden.
 matrix.chat.room.notFound#:#Raum konnte nicht gefunden werden.
 matrix.chat.room.memberAssignFailed#:#Benutzer konnte nicht zum Raum hinzugefügt werden.
-matrix.chat.room.delete.confirm#:#Möchten Sie auch den Chatraum löschen?
+matrix.chat.room.delete.confirm#:#Sind Sie sicher das Sie den Matrix-Chatraum löschen wollen? <br>Alle Benutzer werden aus diesem entfernt!
 matrix.chat.room.delete.button#:#Chatraum löschen
 matrix.chat.room.delete.success#:#Chatraum erfolgreich gelöscht
 matrix.chat.room.delete.failed#:#Chatraum konnte nicht gelöscht werden
