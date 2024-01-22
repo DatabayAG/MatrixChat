@@ -46,7 +46,7 @@ use ILIAS\Refinery\Factory;
  * @ilCtrl_Calls       ilMatrixChatClientUIHookGUI: ilObjectCustomUserFieldsGUI, ilMemberAgreementGUI,
  *                     ilSessionOverviewGUI
  * @ilCtrl_Calls       ilMatrixChatClientUIHookGUI: ilColumnGUI, ilContainerPageGUI
- * @ilCtrl_Calls       ilMatrixChatClientUIHookGUI: ilObjectCopyGUI, ilObjStyleSheetGUI
+ * @ilCtrl_Calls       ilMatrixChatClientUIHookGUI: ilObjectCopyGUI, ilObjectContentStyleSettingsGUI
  * @ilCtrl_Calls       ilMatrixChatClientUIHookGUI: ilCourseParticipantsGroupsGUI, ilExportGUI,
  *                     ilCommonActionDispatcherGUI
  * @ilCtrl_Calls       ilMatrixChatClientUIHookGUI: ilDidacticTemplateGUI, ilCertificateGUI, ilObjectServiceSettingsGUI
@@ -77,6 +77,10 @@ use ILIAS\Refinery\Factory;
  * @ilCtrl_Calls       ilMatrixChatClientUIHookGUI: ilPersonalSettingsGUI
  * @ilCtrl_Calls       ilMatrixChatClientUIHookGUI: ilMailOptionsGUI
  * @ilCtrl_Calls       ilMatrixChatClientUIHookGUI: ilObjFileUploadHandlerGUI
+ * @ilCtrl_Calls       ilMatrixChatClientUIHookGUI: ilFormPropertyDispatchGUI
+ * @ilCtrl_Calls       ilMatrixChatClientUIHookGUI: ilFormPropertyDispatchGUI
+ * @ilCtrl_Calls       ilMatrixChatClientUIHookGUI: ilObjectMetaDataGUI, ilAdvancedMDSettingsGUI, ilPropertyFormGUI,
+ *                     ilTaxMDGUI, ilObjTaxonomyGUI
  */
 class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
 {
@@ -156,12 +160,20 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
         );
 
         if ($nextClass) {
-            foreach ($this->dic->http()->request()->getQueryParams() as $key => $value) {
-                $this->ctrl->setParameterByClass($cmdClass, $key, $value);
-            }
+            $this->ctrl->setParameterByClass($cmdClass, "ref_id", $refId);
 
-            if ($nextClass === strtolower(ilPersonalSettingsGUI::class)) {
-                $this->ctrl->redirectByClass([ilDashboardGUI::class, $cmdClass], $cmd);
+            switch ($nextClass) {
+                case strtolower(ilPersonalSettingsGUI::class):
+                    $this->ctrl->redirectByClass([ilDashboardGUI::class, $cmdClass], $cmd);
+                    break;
+                case strtolower(ilObjectMetaDataGUI::class):
+                    $this->ctrl->redirectByClass([
+                        ilRepositoryGUI::class,
+                        ilObjCourseGUI::class,
+                        ilObjectMetaDataGUI::class,
+                        ilMDEditorGUI::class
+                    ], $cmd);
+                    break;
             }
 
             $objGuiClass = $this->plugin->getObjGUIClassByType(ilObject::_lookupType($refId, true));
@@ -170,7 +182,7 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
                 $this->plugin->redirectToHome();
             }
 
-            $this->ctrl->redirectByClass([ilRepositoryGUI::class, $objGuiClass, $cmdClass], $cmd);
+            $this->ctrl->redirectByClass(array_unique([ilRepositoryGUI::class, $objGuiClass, $cmdClass]), $cmd);
         }
 
         $this->controllerHandler->handleCommand($cmd);
