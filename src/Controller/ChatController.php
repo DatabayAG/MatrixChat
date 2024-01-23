@@ -137,8 +137,13 @@ class ChatController extends BaseController
 
         $form->setValuesByPost();
 
-        $room = $this->matrixApi->getRoom($courseSettings->getMatrixRoomId());
+        $matrixRoomId = $courseSettings->getMatrixRoomId();
+        $room = null;
         $space = null;
+
+        if ($matrixRoomId) {
+            $room = $this->matrixApi->getRoom($matrixRoomId);
+        }
 
         if ($pluginConfig->getMatrixSpaceId()) {
             $space = $this->matrixApi->getSpace($pluginConfig->getMatrixSpaceId());
