@@ -97,6 +97,34 @@ class ChatController extends BaseController
 
         $this->injectTabs();
 
+        $userConfig = (new UserConfig($this->dic->user()))->load();
+
+        $room = null;
+        $matrixRoomId = $this->courseSettings->getMatrixRoomId();
+        if ($matrixRoomId) {
+            $room = $this->matrixApi->getRoom($matrixRoomId);
+        }
+
+        if ($userConfig->getMatrixUserId()) {
+            $matrixUser = $this->matrixApi->getUser($userConfig->getMatrixUserId());
+            if (!$matrixUser) {
+                $this->uiUtil->sendInfo($this->plugin->txt("matrix.user.account.unknown"), true);
+            } elseif ($room) {
+                if ($room->isMember($matrixUser)) {
+                    $this->uiUtil->sendInfo(sprintf(
+                        $this->plugin->txt("matrix.user.account.joined"),
+                        $matrixUser->getMatrixUserId()
+                    ), true);
+                }
+                $this->uiUtil->sendInfo(sprintf(
+                    $this->plugin->txt("matrix.user.account.invited"),
+                    $matrixUser->getMatrixUserId()
+                ), true);
+            }
+        } else {
+            $this->uiUtil->sendInfo($this->plugin->txt("matrix.chat.user.account.unconfigured"), true);
+        }
+
         $this->tabs->activateTab(self::TAB_CHAT);
         $this->tabs->activateSubTab(self::TAB_CHAT);
 
@@ -138,6 +166,7 @@ class ChatController extends BaseController
         $form->setValuesByPost();
 
         $matrixRoomId = $courseSettings->getMatrixRoomId();
+        $matrixSpaceId = $pluginConfig->getMatrixSpaceId();
         $room = null;
         $space = null;
 
@@ -145,8 +174,8 @@ class ChatController extends BaseController
             $room = $this->matrixApi->getRoom($matrixRoomId);
         }
 
-        if ($pluginConfig->getMatrixSpaceId()) {
-            $space = $this->matrixApi->getSpace($pluginConfig->getMatrixSpaceId());
+        if ($matrixSpaceId) {
+            $space = $this->matrixApi->getSpace($matrixSpaceId);
         }
 
         if (!$space) {
