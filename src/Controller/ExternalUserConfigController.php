@@ -85,7 +85,7 @@ class ExternalUserConfigController extends BaseUserConfigController
 
         if ($authMethod === PluginConfigForm::CREATE_ON_CONFIGURED_HOMESERVER) {
             if ($this->matrixApi->userExists($matrixUserId)) {
-                $matrixUser = $this->matrixApi->loginUserWithAdmin($this->user->getId(), $matrixUserId);
+                $matrixUser = $this->matrixApi->loginUserWithAdmin($matrixUserId);
 
                 if (!$matrixUser) {
                     //Logging into user failed, even though it exists (should never happen)

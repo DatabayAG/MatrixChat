@@ -172,10 +172,8 @@ class ChatController extends BaseController
                     continue;
                 }
 
-                $matrixUser = $this->matrixApi->loginUserWithAdmin(
-                    $participantId,
-                    $userConfig->getMatrixUserId()
-                );
+                $matrixUser = $this->matrixApi->getUser($userConfig->getMatrixUserId());
+
                 if (!$matrixUser) {
                     continue;
                 }

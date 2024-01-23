@@ -109,7 +109,7 @@ class LocalUserConfigController extends BaseUserConfigController
 
                 $this->uiUtil->sendSuccess($this->plugin->txt("config.user.register.success"), true);
             } else {
-                $matrixUser = $this->matrixApi->loginUserWithAdmin($this->user->getId(), $this->buildMatrixUserId());
+                $matrixUser = $this->matrixApi->loginUserWithAdmin($this->buildMatrixUserId());
 
                 if (!$matrixUser) {
                     $this->uiUtil->sendFailure($this->plugin->txt("config.user.auth.failure"), true);

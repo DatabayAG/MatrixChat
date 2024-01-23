@@ -346,25 +346,15 @@ class MatrixApi
         return $this->login($username, $password, "ilias_auth_verification");
     }
 
-    public function loginUserWithAdmin(int $iliasUserId, string $matrixUserId): ?MatrixUser
+    public function getUser(string $matrixUserId): ?MatrixUser
     {
         try {
-            $response = $this->sendRequest(
-                "/_synapse/admin/v1/users/{$matrixUserId}/login",
-                true,
-                "POST"
-            );
+            $profile = $this->getMatrixUserProfile($matrixUserId);
         } catch (MatrixApiException $e) {
             return null;
         }
 
-        return (new MatrixUser())
-            ->setIliasUserId($iliasUserId)
-            ->setMatrixUserId($matrixUserId)
-            ->setMatrixUsername($matrixUserId)
-            ->setMatrixDisplayName($this->getMatrixUserProfile($matrixUserId)["displayname"])
-            ->setAccessToken($response->getResponseDataValue("access_token"))
-            ->setDeviceId("ilias_auth_verification");
+        return new MatrixUser($matrixUserId, $profile["displayname"]);
     }
 
     public function removeUserFromRoom(MatrixUser $matrixUser, MatrixRoom $room, string $reason): bool
@@ -436,12 +426,32 @@ class MatrixApi
             return null;
         }
 
-        return (new MatrixUser())
-            ->setMatrixUserId($response->getResponseDataValue("user_id"))
-            ->setMatrixUsername($username)
-            ->setMatrixDisplayName($this->getMatrixUserProfile($response->getResponseDataValue("user_id"))["displayname"])
-            ->setAccessToken($response->getResponseDataValue("access_token"))
-            ->setDeviceId($deviceId);
+        return new MatrixUser(
+            $response->getResponseDataValue("user_id"),
+            $this->getMatrixUserProfile($response->getResponseDataValue("user_id"))["displayname"]
+        );
+    }
+
+    public function loginUserWithAdmin(string $matrixUserId): ?MatrixUser
+    {
+        try {
+            $response = $this->sendRequest(
+                "/_synapse/admin/v1/users/{$matrixUserId}/login",
+                true,
+                "POST"
+            );
+        } catch (MatrixApiException $e) {
+            return null;
+        }
+
+        try {
+            $displayName = $this->getMatrixUserProfile($matrixUserId)["displayname"];
+        } catch (MatrixApiException $e) {
+            $displayName = "";
+        }
+
+
+        return (new MatrixUser($matrixUserId, $displayName));
     }
 
     public function createSpace(string $name): MatrixSpace

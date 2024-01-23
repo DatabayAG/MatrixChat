@@ -215,7 +215,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
     {
         $userConfig = (new UserConfig($user))->load();
 
-        $matrixUser = $this->getMatrixApi()->loginUserWithAdmin($user->getId(), $userConfig->getMatrixUserId());
+        $matrixUser = $this->getMatrixApi()->getUser($userConfig->getMatrixUserId());
         if (!$matrixUser) {
             return;
         }
@@ -270,10 +270,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
         if (!$userConfig->getMatrixUserId()) {
             $addToQueue = true;
         } else {
-            $matrixUser = $this->getMatrixApi()->loginUserWithAdmin(
-                $user->getId(),
-                $userConfig->getMatrixUserId(),
-            );
+            $matrixUser = $this->getMatrixApi()->getUser($userConfig->getMatrixUserId());
 
             if (!$matrixUser) {
                 $addToQueue = true;
