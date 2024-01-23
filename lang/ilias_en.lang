@@ -114,5 +114,8 @@ matrix.user.account.joined#
 matrix.user.account.invited#:#You have been invited to the chat with your Matrix user '%s'. However, you have not yet accepted this invitation. <br>>Please use the Matrix client of your choice. <br>With this you can both accept the invitation and write in the chat room.
 matrix.user.account.unconfigured#:#You have not yet configured a Matrix account. <br>Please configure a Matrix account in your user settings to be added to the chat room.
 matrix.user.account.unknown#:#No Matrix user profile could be found. <br>If you have used a user from another Matrix server for example, it is possible that this server does not allow the profile to be queried. <br><br>You can leave this setting as it is, but you may not be invited to the room if the user really does not exist.
+matrix.user.account.changeMatrixAccountSettings#:#Change Matrix-Account Settings
+matrix.user.account.setupMatrixAccount#:#Setup Matrix-Account
+
 matrix.admin.login.valid#:#Admin-Login valid
 matrix.admin.login.invalid#:#Admin-Login invalid

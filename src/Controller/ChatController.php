@@ -105,6 +105,24 @@ class ChatController extends BaseController
             $room = $this->matrixApi->getRoom($matrixRoomId);
         }
 
+        $uiRenderer = $this->dic->ui()->renderer();
+        $uiFactory = $this->dic->ui()->factory();
+        $toChatSettingsButton = null;
+
+        /**
+         * @var LocalUserConfigController $localUserConfigController
+         */
+        $localUserConfigController = $this->controllerHandler->getController(LocalUserConfigController::class);
+
+        /**
+         * @var ExternalUserConfigController $externalUserConfigController
+         */
+        $externalUserConfigController = $this->controllerHandler->getController(ExternalUserConfigController::class);
+
+        $toChatSettingsButtonLink = $this->dic->user()->getAuthMode() === "local"
+            ? $localUserConfigController->getCommandLink(BaseUserConfigController::CMD_SHOW_USER_CHAT_CONFIG)
+            : $externalUserConfigController->getCommandLink(BaseUserConfigController::CMD_SHOW_USER_CHAT_CONFIG);
+
         if ($userConfig->getMatrixUserId()) {
             $matrixUser = $this->matrixApi->getUser($userConfig->getMatrixUserId());
             if (!$matrixUser) {
@@ -121,14 +139,22 @@ class ChatController extends BaseController
                     $matrixUser->getMatrixUserId()
                 ), true);
             }
+            $toChatSettingsButton = $uiFactory->button()->standard(
+                $this->plugin->txt("matrix.user.account.changeMatrixAccountSettings"),
+                $toChatSettingsButtonLink
+            );
         } else {
             $this->uiUtil->sendInfo($this->plugin->txt("matrix.chat.user.account.unconfigured"), true);
+            $toChatSettingsButton = $uiFactory->button()->standard(
+                $this->plugin->txt("matrix.user.account.setupMatrixAccount"),
+                $toChatSettingsButtonLink
+            );
         }
 
         $this->tabs->activateTab(self::TAB_CHAT);
         $this->tabs->activateSubTab(self::TAB_CHAT);
 
-        $this->renderToMainTemplate($this->plugin->getPluginConfig()->getPageDesignerText());
+        $this->renderToMainTemplate($uiRenderer->render($toChatSettingsButton). $this->plugin->getPluginConfig()->getPageDesignerText());
     }
 
     public function showChatSettings(?ChatSettingsForm $form = null): void
