@@ -95,7 +95,7 @@ class ChatController extends BaseController
         $this->checkPermissionOnObject("read");
         $this->checkChatActivatedForObject();
 
-        $this->injectTabs();
+        $this->injectTabs(self::TAB_CHAT, self::SUB_TAB_CHAT);
 
         $userConfig = (new UserConfig($this->dic->user()))->load();
 
@@ -151,10 +151,7 @@ class ChatController extends BaseController
             );
         }
 
-        $this->tabs->activateTab(self::TAB_CHAT);
-        $this->tabs->activateSubTab(self::TAB_CHAT);
-
-        $this->renderToMainTemplate($uiRenderer->render($toChatSettingsButton). $this->plugin->getPluginConfig()->getPageDesignerText());
+        $this->renderToMainTemplate($uiRenderer->render($toChatSettingsButton) . $this->plugin->getPluginConfig()->getPageDesignerText());
     }
 
     public function showChatSettings(?ChatSettingsForm $form = null): void
@@ -162,10 +159,7 @@ class ChatController extends BaseController
         $this->checkPermissionOnObject("write");
         $this->checkChatActivatedForObject();
 
-        $this->injectTabs();
-
-        $this->tabs->activateTab(self::TAB_CHAT);
-        $this->tabs->activateSubTab(self::SUB_TAB_CHAT_SETTINGS);
+        $this->injectTabs(self::TAB_CHAT, self::SUB_TAB_CHAT_SETTINGS);
 
         $matrixRoomId = $this->courseSettings->getMatrixRoomId();
 
@@ -376,7 +370,7 @@ class ChatController extends BaseController
         $this->ctrl->redirectByClass(ilRepositoryGUI::class, "view");
     }
 
-    protected function injectTabs(): void
+    protected function injectTabs(string $activeTab = null, string $activeSubTab = null): void
     {
         $this->ctrl->setParameterByClass(ilUIPluginRouterGUI::class, "ref_id", $this->courseSettings->getCourseId());
         $gui = null;
@@ -415,7 +409,7 @@ class ChatController extends BaseController
                 ])
             );
             $this->tabs->addSubTab(
-                self::TAB_CHAT,
+                self::SUB_TAB_CHAT,
                 $this->plugin->txt("chat"),
                 $this->getCommandLink(self::CMD_SHOW_CHAT, [
                     "ref_id" => $this->refId
@@ -433,6 +427,14 @@ class ChatController extends BaseController
             }
 
             $this->tabs->setForcePresentationOfSingleTab(true);
+        }
+
+        if ($activeTab) {
+            $this->tabs->activateTab($activeTab);
+        }
+
+        if ($activeSubTab) {
+            $this->tabs->activateSubTab($activeSubTab);
         }
     }
 
