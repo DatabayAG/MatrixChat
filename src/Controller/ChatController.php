@@ -293,8 +293,7 @@ class ChatController extends BaseController
 
         if (!$activated && $redirectToInfoScreenOnFail) {
             $this->uiUtil->sendFailure($this->dic->language()->txt("permission_denied"), true);
-            $this->ctrl->setParameterByClass(ilRepositoryGUI::class, "ref_id", $this->refId);
-            $this->ctrl->redirectByClass(ilRepositoryGUI::class, "view");
+            $this->redirectToInfoTab();
             return false; //Never gets to here
         }
 
@@ -306,12 +305,17 @@ class ChatController extends BaseController
         $hasAccess = $this->access->checkAccess($permission, "", $this->refId);
         if (!$hasAccess && $redirectToInfoScreenOnFail) {
             $this->uiUtil->sendFailure($this->dic->language()->txt("permission_denied"), true);
-            $this->ctrl->setParameterByClass(ilRepositoryGUI::class, "ref_id", $this->refId);
-            $this->ctrl->redirectByClass(ilRepositoryGUI::class, "view");
+            $this->redirectToInfoTab();
             return false; //Never gets to here
         }
 
         return $hasAccess;
+    }
+
+    public function redirectToInfoTab(): void
+    {
+        $this->ctrl->setParameterByClass(ilRepositoryGUI::class, "ref_id", $this->refId);
+        $this->ctrl->redirectByClass(ilRepositoryGUI::class, "view");
     }
 
     protected function injectTabs(): void
