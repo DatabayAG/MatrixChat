@@ -426,10 +426,11 @@ class MatrixApi
             return null;
         }
 
-        return new MatrixUser(
+        return (new MatrixUser(
             $response->getResponseDataValue("user_id"),
             $this->getMatrixUserProfile($response->getResponseDataValue("user_id"))["displayname"]
-        );
+        ))->setAccessToken($response->getResponseDataValue("access_token"))
+            ->setDeviceId($deviceId);
     }
 
     public function loginUserWithAdmin(string $matrixUserId): ?MatrixUser

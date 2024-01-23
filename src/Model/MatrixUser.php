@@ -26,6 +26,8 @@ class MatrixUser
 {
     private string $matrixUserId;
     private string $matrixDisplayName;
+    private string $accessToken = "";
+    private string $deviceId = "ilias_auth_verification";
 
     /**
      * @param string $matrixUserId
@@ -45,5 +47,27 @@ class MatrixUser
     public function getMatrixDisplayName(): string
     {
         return $this->matrixDisplayName;
+    }
+
+    public function getAccessToken(): string
+    {
+        return $this->accessToken;
+    }
+
+    public function setAccessToken(string $accessToken): MatrixUser
+    {
+        $this->accessToken = $accessToken;
+        return $this;
+    }
+
+    public function getDeviceId(): string
+    {
+        return $this->deviceId;
+    }
+
+    public function setDeviceId(string $deviceId): MatrixUser
+    {
+        $this->deviceId = $deviceId;
+        return $this;
     }
 }
