@@ -16,6 +16,5 @@ return (new PhpCsFixer\Config())
         "concat_space" => ["spacing" => "one"],
         "unary_operator_spaces" => true,
         "function_typehint_space" => true,
-        "return_type_declaration" => ["space_before" => "one"],
         "binary_operator_spaces" => true,
     ]);
