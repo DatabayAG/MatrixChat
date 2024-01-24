@@ -92,9 +92,9 @@ class MatrixApi
                 if (
                     $apiCall === "/_matrix/client/v3/login"
                     || !isset($body["device_id"])
-                    || $body["device_id"] !== "ilias_matrix_chat_device_admin"
+                    || $body["device_id"] !== "ilias_matrix_chat_device_bot"
                 ) {
-                    $this->logger->error("Matrix API request to `{$this->getApiUrl($apiCall)}` failed. Admin Access Token missing, the admin user could likely not be authenticated");
+                    $this->logger->error("Matrix API request to `{$this->getApiUrl($apiCall)}` failed. Access token missing");
                     throw new MatrixApiException(
                         "ADMIN_AUTH_ERROR",
                         "Missing admin access token. Login probably failed."
@@ -172,7 +172,7 @@ class MatrixApi
             self::$adminUser = $this->login(
                 $this->plugin->getPluginConfig()->getMatrixAdminUsername(),
                 $this->plugin->getPluginConfig()->getMatrixAdminPassword(),
-                "ilias_matrix_chat_device_admin"
+                "ilias_matrix_chat_device_bot"
             );
         }
 
