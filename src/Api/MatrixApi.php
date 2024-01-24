@@ -265,7 +265,7 @@ class MatrixApi
     public function getRoomMembers(string $roomId): array
     {
         try {
-            $response = $this->sendRequest("/_synapse/admin/v1/rooms/$roomId/members", );
+            $response = $this->sendRequest("/_synapse/admin/v1/rooms/$roomId/members");
         } catch (MatrixApiException $e) {
             return [];
         }
@@ -283,6 +283,7 @@ class MatrixApi
                 [
                     "user_id" => $matrixUser->getMatrixUserId(),
                 ],
+                true
             );
             return $response->getStatusCode() === 200;
         } catch (MatrixApiException $ex) {
@@ -401,7 +402,7 @@ class MatrixApi
                 [
                     "reason" => $reason,
                     "user_id" => $matrixUser->getMatrixUserId(),
-                ]
+                ], true
             );
             return true;
         } catch (MatrixApiException $e) {
@@ -520,7 +521,7 @@ class MatrixApi
                     "state_default" => 100,
                     "users_default" => 0
                 ]
-            ]
+            ], true
         );
 
         $matrixRoomId = $response->getResponseDataValue("room_id");
@@ -554,6 +555,10 @@ class MatrixApi
     {
         $response = $this->sendRequest(
             "/_matrix/client/v3/rooms/{$room->getId()}/state/$eventType" . ($stateKey ? "/$stateKey" : ""),
+            true,
+            "GET",
+            [],
+            true
         );
         return $response->getResponseData();
     }
@@ -571,7 +576,8 @@ class MatrixApi
             "/_matrix/client/v3/rooms/{$room->getId()}/state/$eventType" . ($stateKey ? "/$stateKey" : ""),
             true,
             "PUT",
-            $data
+            $data,
+            true
         );
     }
 
@@ -634,6 +640,12 @@ class MatrixApi
                         "history_visibility" => "invited"
                     ]
                 ]
+            ],
+            "power_level_content_override" => [
+                "ban" => 50,
+                "invite" => 50,
+                "kick" => 50,
+                "state_default" => 100,
             ]
         ];
 
@@ -676,6 +688,7 @@ class MatrixApi
             true,
             "POST",
             $postData,
+            true
         );
 
         $matrixRoomId = $response->getResponseDataValue("room_id");
@@ -685,8 +698,6 @@ class MatrixApi
             $name,
             $this->getRoomMembers($matrixRoomId)
         );
-
-        //$this->addUserToRoom($this->getAdminUser(), $matrixRoom); // Likely never needed as admin is the creator of the room.
 
         if ($parentSpace && !$this->addRoomToSpace($parentSpace, $matrixRoom)) {
             $this->logger->error(sprintf(
@@ -704,25 +715,12 @@ class MatrixApi
      */
     public function getMatrixUserProfile(string $matrixUserId): array
     {
-        $response = $this->sendRequest("/_matrix/client/v3/profile/$matrixUserId", false);
+        $response = $this->sendRequest("/_matrix/client/v3/profile/$matrixUserId", false, "GET", [], true);
 
         return [
             "avatar_url" => $response->getResponseDataValue("avatar_url") ?: "",
             "displayname" => $response->getResponseDataValue("displayname") ?: ""
         ];
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getSupportedLoginMethods(): array
-    {
-        try {
-            $response = $this->sendRequest("/_matrix/client/v3/login");
-        } catch (MatrixApiException $e) {
-            return [];
-        }
-        return $response->getResponseDataValue("flows") ?? [];
     }
 
     /**
