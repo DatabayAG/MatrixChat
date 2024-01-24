@@ -98,7 +98,12 @@ matrix.chat.room.delete.button#:#Chatraum löschen
 matrix.chat.room.delete.success#:#Chatraum erfolgreich gelöscht
 matrix.chat.room.delete.failed#:#Chatraum konnte nicht gelöscht werden
 matrix.chat.course.settings#:#Chat-Einstellungen
+matrix.chat.course.members#:#Mitglieder
 matrix.chat.course.enable#:#Aktiviere Matrix-Chat Integration Für Den Kurs
+matrix.chat.invite#:#Einladen
+matrix.chat.status#:#Chat-Status
+matrix.chat.members#:#Chatteilnehmer
+
 
 config.space.name#:#Name des Spaces
 config.space.name.info#:#Ändern des Namens führt dazu, das ein neuer Space erstellt wird (ID des Space verändert sich) <br>Räume im alten Space verbleiben in dem zuvor verwendeten!
@@ -118,6 +123,17 @@ matrix.user.account.unconfigured#:#Sie haben noch keinen Matrix-Account konfigur
 matrix.user.account.unknown#:#Es konnte kein Matrix-Benutzer Profil gefunden werden. <br>Haben Sie z.B. einen Benutzer von einem anderen Matrix-Server verwendet, kann es sein das dieser das abfragen des Profils nicht erlaubt. <br><br>Sie können diese Einstellung belassen, werden aber vielleicht auch nicht in den Raum eingeladen, falls der Benutzer wirklich nicht existiert.
 matrix.user.account.changeMatrixAccountSettings#:#Matrix-Account Einstellungen ändern
 matrix.user.account.setupMatrixAccount#:#Matrix-Account einrichten
+matrix.user.account.invite.failed#:#Der Benutzer konnte nicht in den Raum eingeladen werden.
+matrix.user.account.invite.success#:#Der Benutzer wurde erfolgreich in den Raum eingeladen.
+matrix.user.account.invite.multiple.success#:#Alle ausgewählten Benutzer wurden eingeladen.
+matrix.user.account.invite.multiple.failure#:#Beim einladen der Benutzer ist ein Fehler aufgetreten, es wurden unter umständen nicht alle eingeladen.
+
+matrix.user.status.notInvite#:#Noch nicht eingeladen
+matrix.user.status.invite#:#Eingeladen
+matrix.user.status.join#:#Beigetreten
+matrix.user.status.leave#:#Verlassen
+matrix.user.status.ban#:#Gebannt
+matrix.user.status.queue#:#Auf Warteschlange für Einladung
 
 matrix.admin.login.valid#:#Admin-Login gültig
 matrix.admin.login.invalid#:#Admin-Login ungültig

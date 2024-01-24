@@ -31,8 +31,6 @@ use ILIAS\Plugin\MatrixChatClient\Controller\LocalUserConfigController;
 use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
 use ILIAS\Refinery\Factory;
 
-;
-
 /**
  * Class ilMatrixChatClientUIHookGUI
  *

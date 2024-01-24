@@ -25,16 +25,26 @@ use Exception;
 use ilAccessHandler;
 use ilCourseParticipants;
 use ILIAS\DI\Container;
+use ILIAS\Filesystem\Stream\Streams;
+use ILIAS\HTTP\Services;
+use ILIAS\HTTP\Wrapper\WrapperFactory;
 use ILIAS\Plugin\Libraries\ControllerHandler\BaseController;
 use ILIAS\Plugin\Libraries\ControllerHandler\ControllerHandler;
 use ILIAS\Plugin\MatrixChatClient\Api\MatrixApi;
 use ILIAS\Plugin\MatrixChatClient\Form\ChatSettingsForm;
 use ILIAS\Plugin\MatrixChatClient\Form\ConfirmDeleteRoomForm;
+use ILIAS\Plugin\MatrixChatClient\Model\ChatMember;
 use ILIAS\Plugin\MatrixChatClient\Model\CourseSettings;
+use ILIAS\Plugin\MatrixChatClient\Model\MatrixRoom;
 use ILIAS\Plugin\MatrixChatClient\Model\MatrixUserPowerLevel;
 use ILIAS\Plugin\MatrixChatClient\Model\UserConfig;
 use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
 use ILIAS\Plugin\MatrixChatClient\Repository\UserRoomAddQueueRepository;
+use ILIAS\Plugin\MatrixChatClient\Table\ChatMemberTable;
+use ILIAS\UI\Factory;
+use ILIAS\UI\Renderer;
+use ilLanguage;
+use ilLogger;
 use ilMatrixChatClientPlugin;
 use ilMatrixChatClientUIHookGUI;
 use ilObjCourseGUI;
@@ -47,6 +57,7 @@ use ilTabsGUI;
 use ilUIPluginRouterGUI;
 use ReflectionClass;
 use ReflectionMethod;
+use Throwable;
 
 /**
  * Class ChatController
@@ -61,11 +72,23 @@ class ChatController extends BaseController
     public const CMD_CREATE_ROOM = "createRoom";
     public const CMD_SHOW_CONFIRM_DELETE_ROOM = "showConfirmDeleteRoom";
     public const CMD_DELETE_ROOM = "deleteRoom";
+    public const CMD_SHOW_CHAT_MEMBERS = "showChatMembers";
+    public const CMD_INVITE_SELECTED_PARTICIPANTS = "inviteSelectedParticipants";
+    public const CMD_INVITE_PARTICIPANT = "inviteParticipant";
+    public const CMD_APPLY_MEMBER_TABLE_FILTER = "applyMemberTableFilter";
+    public const CMD_RESET_MEMBER_TABLE_FILTER = "resetMemberTableFilter";
 
     public const TAB_CHAT = "tab_chat";
     public const SUB_TAB_CHAT = "sub_tab_chat";
     public const SUB_TAB_CHAT_SETTINGS = "sub_tab_chat_settings";
+    public const SUB_TAB_MEMBERS = "sub_tab_chat_members";
 
+    public const USER_STATUS_NO_INVITE = "notInvite";
+    public const USER_STATUS_INVITE = "invite";
+    public const USER_STATUS_JOIN = "join";
+    public const USER_STATUS_LEAVE = "leave";
+    public const USER_STATUS_BAN = "ban";
+    public const USER_STATUS_QUEUE = "queue";
 
     private ilTabsGUI $tabs;
     private ilMatrixChatClientPlugin $plugin;
@@ -75,6 +98,13 @@ class ChatController extends BaseController
     private ilAccessHandler $access;
     private MatrixApi $matrixApi;
     private UserRoomAddQueueRepository $userRoomAddQueueRepo;
+    private ilLanguage $lng;
+    private Renderer $uiRenderer;
+    private Factory $uiFactory;
+    private \ILIAS\Refinery\Factory $refinery;
+    private WrapperFactory $httpWrapper;
+    private Services $http;
+    private ilLogger $logger;
 
     public function __construct(Container $dic, ControllerHandler $controllerHandler)
     {
@@ -84,6 +114,13 @@ class ChatController extends BaseController
         $this->refId = (int) $this->controllerHandler->verifyQueryParameterExists("ref_id");
         $this->access = $this->dic->access();
         $this->matrixApi = $this->plugin->getMatrixApi();
+        $this->lng = $this->dic->language();
+        $this->uiRenderer = $this->dic->ui()->renderer();
+        $this->uiFactory = $this->dic->ui()->factory();
+        $this->httpWrapper = $this->dic->http()->wrapper();
+        $this->refinery = $this->dic->refinery();
+        $this->http = $this->dic->http();
+        $this->logger = $this->dic->logger()->root();
 
         $this->courseSettingsRepo = CourseSettingsRepository::getInstance($dic->database());
         $this->courseSettings = $this->courseSettingsRepo->read($this->refId);
@@ -107,7 +144,6 @@ class ChatController extends BaseController
 
         $uiRenderer = $this->dic->ui()->renderer();
         $uiFactory = $this->dic->ui()->factory();
-        $toChatSettingsButton = null;
 
         /**
          * @var LocalUserConfigController $localUserConfigController
@@ -154,6 +190,22 @@ class ChatController extends BaseController
         $this->renderToMainTemplate($uiRenderer->render($toChatSettingsButton) . $this->plugin->getPluginConfig()->getPageDesignerText());
     }
 
+    public function applyMemberTableFilter(): void
+    {
+        $table = new ChatMemberTable($this->refId, $this);
+        $table->writeFilterToSession();
+        $table->resetOffset();
+        $this->showChatMembers();
+    }
+
+    public function resetMemberTableFilter(): void
+    {
+        $table = new ChatMemberTable($this->refId, $this);
+        $table->resetOffset();
+        $table->resetFilter();
+        $this->showChatMembers();
+    }
+
     public function showChatSettings(?ChatSettingsForm $form = null): void
     {
         $this->checkPermissionOnObject("write");
@@ -168,6 +220,201 @@ class ChatController extends BaseController
         }
 
         $this->renderToMainTemplate($form->getHTML());
+    }
+
+    public function showChatMembers(): void
+    {
+        $this->checkPermissionOnObject("write");
+        $this->checkChatActivatedForObject();
+
+        $this->injectTabs(self::TAB_CHAT, self::SUB_TAB_MEMBERS);
+
+        $table = new ChatMemberTable($this->refId, $this);
+
+        $room = null;
+        if ($this->courseSettings->getMatrixRoomId()) {
+            $room = $this->matrixApi->getRoom($this->courseSettings->getMatrixRoomId());
+        }
+
+        if (!$room) {
+            $this->uiUtil->sendFailure($this->plugin->txt("matrix.chat.room.notFound"), true);
+            $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS, ["ref_id" => $this->refId]);
+        }
+
+        $table->setData($table->buildTableData($this->getChatMembers($room)));
+
+        $this->renderToMainTemplate($table->getHTML());
+    }
+
+    public function inviteSelectedParticipants(): void
+    {
+        $this->checkPermissionOnObject("write");
+        $this->checkChatActivatedForObject();
+
+        $userIds = $this->httpWrapper->post()->retrieve(
+            'userId',
+            $this->refinery->byTrying([
+                $this->refinery->kindlyTo()->listOf($this->refinery->kindlyTo()->int()),
+                $this->refinery->always([])
+            ])
+        );
+
+        if ($userIds === []) {
+            $this->uiUtil->sendSuccess($this->plugin->txt("matrix.user.account.invite.multiple.success"), true);
+            $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
+        }
+
+        $room = null;
+        if ($this->courseSettings->getMatrixRoomId()) {
+            $room = $this->matrixApi->getRoom($this->courseSettings->getMatrixRoomId());
+        } else {
+            $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.account.invite.multiple.failure"), true);
+            $this->uiUtil->sendInfo($this->plugin->txt("config.room.status.disconnected"), true);
+            $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
+        }
+
+        if (!$room) {
+            $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.account.invite.multiple.failure"), true);
+            $this->uiUtil->sendInfo($this->plugin->txt("config.room.status.faulty"), true);
+            $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
+        }
+
+        $inviteFailed = false;
+        foreach ($userIds as $userId) {
+            try {
+                $user = new ilObjUser($userId);
+            } catch (Throwable $ex) {
+                $inviteFailed = true;
+                $this->logger->error("Unable to invite user with id '$userId', Not User seems to exist with that id");
+                continue;
+            }
+
+            $userConfig = (new UserConfig($user))->load();
+
+            $matrixUser = null;
+            if ($userConfig->getMatrixUserId()) {
+                $matrixUser = $this->matrixApi->getUser($userConfig->getMatrixUserId());
+            }
+
+            if (!$matrixUser) {
+                $inviteFailed = true;
+                $this->logger->error("Unable to get Matrix-User of ilias user with id '$userId'. Not configured or server problem");
+                continue;
+            }
+
+            if (!$this->matrixApi->inviteUserToRoom($matrixUser, $room)) {
+                $inviteFailed = true;
+                $this->logger->error("Inviting user '{$matrixUser->getMatrixUserId()}' to room '{$room->getId()}' failed.");
+            }
+        }
+
+        if ($inviteFailed) {
+            $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.account.invite.multiple.failure"), true);
+        } else {
+            $this->uiUtil->sendSuccess($this->plugin->txt("matrix.user.account.invite.multiple.success"), true);
+        }
+        $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
+    }
+
+    public function inviteParticipant(): void
+    {
+        $this->checkPermissionOnObject("write");
+        $this->checkChatActivatedForObject();
+
+        $userId = $this->httpWrapper->query()->retrieve(
+            'userId',
+            $this->refinery->byTrying([
+                $this->refinery->kindlyTo()->int(),
+                $this->refinery->always(null)
+            ])
+        );
+
+        if (!$userId) {
+            $this->uiUtil->sendFailure($this->plugin->txt("general.plugin.requiredParameterMissing"), true);
+            $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
+        }
+
+
+        $room = null;
+        if ($this->courseSettings->getMatrixRoomId()) {
+            $room = $this->matrixApi->getRoom($this->courseSettings->getMatrixRoomId());
+        } else {
+            $this->uiUtil->sendFailure($this->plugin->txt("config.room.status.disconnected"), true);
+            $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
+        }
+
+        if (!$room) {
+            $this->uiUtil->sendFailure($this->plugin->txt("config.room.status.faulty"), true);
+            $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
+        }
+
+        try {
+            $user = new ilObjUser($userId);
+        } catch (Throwable $ex) {
+            $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.account.invite.failed"), true);
+            $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
+            return;
+        }
+
+        $userConfig = (new UserConfig($user))->load();
+
+        $matrixUser = null;
+        if ($userConfig->getMatrixUserId()) {
+            $matrixUser = $this->matrixApi->getUser($userConfig->getMatrixUserId());
+        }
+
+        if (!$matrixUser) {
+            $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.account.unconfigured"), true);
+            $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
+        }
+
+        if (!$this->matrixApi->inviteUserToRoom($matrixUser, $room)) {
+            $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.account.invite.failed"), true);
+            $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
+        }
+
+        $this->uiUtil->sendSuccess($this->plugin->txt("matrix.user.account.invite.success"), true);
+        $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
+    }
+
+    /**
+     * @return ChatMember[]
+     */
+    protected function getChatMembers(MatrixRoom $room): array
+    {
+        $chatMembers = [];
+        $participants = ilCourseParticipants::getInstance($this->courseSettings->getCourseId());
+
+        foreach ($participants->getParticipants() as $participantId) {
+            $participantId = (int) $participantId;
+            $user = new ilObjUser($participantId);
+            $userConfig = (new UserConfig($user))->load();
+
+            $roleText = $this->lng->txt("il_crs_member");
+            if ($participants->isTutor($participantId)) {
+                $roleText = $this->lng->txt("il_crs_tutor");
+            }
+            if ($participants->isAdmin($participantId)) {
+                $roleText = $this->lng->txt("il_crs_admin");
+            }
+
+            $userRoomAddQueue = $this->userRoomAddQueueRepo->read($user->getId(), $this->refId);
+            if ($userRoomAddQueue) {
+                $status = "queue";
+            } else {
+                $status = $this->matrixApi->getStatusOfUserInRoom($room, $userConfig->getMatrixUserId()) ?: "notInvite";
+            }
+
+            $chatMembers[] = new ChatMember(
+                $user->getId(),
+                $user->getFullname(),
+                $user->getLogin(),
+                $roleText,
+                $status,
+                $userConfig->getMatrixUserId()
+            );
+        }
+        return $chatMembers;
     }
 
     public function createRoom(): void
@@ -200,7 +447,7 @@ class ChatController extends BaseController
 
         if (!$space) {
             $this->uiUtil->sendFailure($this->plugin->txt("matrix.space.notFound"), true);
-            $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS);
+            $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS, ["ref_id" => $this->refId]);
         }
 
         if (!$room) {
@@ -254,11 +501,11 @@ class ChatController extends BaseController
             $this->courseSettingsRepo->save($courseSettings);
         } catch (Exception $ex) {
             $this->uiUtil->sendFailure($this->plugin->txt("general.update.failed"), true);
-            $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS);
+            $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS, ["ref_id" => $this->refId]);
         }
 
         $this->uiUtil->sendSuccess($this->plugin->txt("general.update.success"), true);
-        $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS);
+        $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS, ["ref_id" => $this->refId]);
     }
 
     protected function determinePowerLevelOfParticipant(ilParticipants $participants, int $participantId): int
@@ -417,6 +664,14 @@ class ChatController extends BaseController
             );
 
             if ($this->checkPermissionOnObject("write", false)) {
+                $this->tabs->addSubTab(
+                    self::SUB_TAB_MEMBERS,
+                    $this->plugin->txt("matrix.chat.course.members"),
+                    $this->getCommandLink(self::CMD_SHOW_CHAT_MEMBERS, [
+                        "ref_id" => $this->courseSettings->getCourseId()
+                    ])
+                );
+
                 $this->tabs->addSubTab(
                     self::SUB_TAB_CHAT_SETTINGS,
                     $this->plugin->txt("matrix.chat.course.settings"),

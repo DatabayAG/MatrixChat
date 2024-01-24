@@ -19,6 +19,8 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChatClient\Model;
 
+use Exception;
+use ILIAS\Plugin\Libraries\IliasConfigLoader\Exception\ConfigLoadException;
 use ILIAS\Plugin\Libraries\IliasConfigLoader\Model\Config\UserPrefConfig;
 use ilObjUser;
 
@@ -40,43 +42,43 @@ class UserConfig extends UserPrefConfig
     }
 
 
-    public function getAuthMethod() : string
+    public function getAuthMethod(): string
     {
         return $this->authMethod;
     }
 
 
-    public function setAuthMethod(string $authMethod) : UserConfig
+    public function setAuthMethod(string $authMethod): UserConfig
     {
         $this->authMethod = $authMethod;
         return $this;
     }
 
 
-    public function getMatrixUsername() : string
+    public function getMatrixUsername(): string
     {
         return $this->matrixUsername;
     }
 
-    public function setMatrixUsername(string $matrixUsername) : UserConfig
+    public function setMatrixUsername(string $matrixUsername): UserConfig
     {
         $this->matrixUsername = $matrixUsername;
         return $this;
     }
 
 
-    public function getMatrixUserId() : string
+    public function getMatrixUserId(): string
     {
         return $this->matrixUserId;
     }
 
-    public function setMatrixUserId(string $matrixUserId) : UserConfig
+    public function setMatrixUserId(string $matrixUserId): UserConfig
     {
         $this->matrixUserId = $matrixUserId;
         return $this;
     }
 
-        public function save(): void
+    public function save(): void
     {
         try {
             parent::save();

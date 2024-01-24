@@ -96,7 +96,11 @@ matrix.chat.room.delete.button#:#Delete chat room
 matrix.chat.room.delete.success#:#Room deleted successfully
 matrix.chat.room.delete.failed#:#Room could not be deleted
 matrix.chat.course.settings#:#Chat settings
+matrix.chat.course.members#:#Members
 matrix.chat.course.enable#:#Activate Matrix-Chat Integration for the Course
+matrix.chat.invite#:#Invite
+matrix.chat.status#:#Chat-Status
+matrix.chat.members#:#Chat Participant
 
 config.space.name#:#Name of the Space
 config.space.name.info#:#Changing the name causes a new Space to be created (ID of the Space changes) <br>Rooms in the old Space remain in the previously used Space!
@@ -116,6 +120,17 @@ matrix.user.account.unconfigured#:#You have not yet configured a Matrix account.
 matrix.user.account.unknown#:#No Matrix user profile could be found. <br>If you have used a user from another Matrix server for example, it is possible that this server does not allow the profile to be queried. <br><br>You can leave this setting as it is, but you may not be invited to the room if the user really does not exist.
 matrix.user.account.changeMatrixAccountSettings#:#Change Matrix-Account Settings
 matrix.user.account.setupMatrixAccount#:#Setup Matrix-Account
+matrix.user.account.invite.failed#:#The User could not be invited to the room.
+matrix.user.account.invite.success#:#The User was successfully invited.
+matrix.user.account.invite.multiple.success#:#All selected users were invited.
+matrix.user.account.invite.multiple.failure#:#An error occurred while inviting the users. Some users may not have been invited.
+
+matrix.user.status.notInvite#:#Not yet invited
+matrix.user.status.invite#:#Invited
+matrix.user.status.join#:#Joined
+matrix.user.status.leave#:#Left
+matrix.user.status.ban#:#Banned
+matrix.user.status.queue#:#On Queue for invite
 
 matrix.admin.login.valid#:#Admin-Login valid
 matrix.admin.login.invalid#:#Admin-Login invalid
