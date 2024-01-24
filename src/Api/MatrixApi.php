@@ -541,6 +541,16 @@ class MatrixApi
         );
     }
 
+    public function getStatusOfUserInRoom(MatrixRoom $room, string $matrixUserId): string
+    {
+        try {
+            $state = $this->getRoomState($room, "m.room.member", $matrixUserId);
+            return $state["membership"];
+        } catch (MatrixApiException $e) {
+            return "";
+        }
+    }
+
     /**
      * @param MatrixUserPowerLevel[]|MatrixUserPowerLevel $matrixUserPowerLevelMap
      */
