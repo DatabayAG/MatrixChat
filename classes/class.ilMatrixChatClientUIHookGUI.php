@@ -108,7 +108,7 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
         );
     }
 
-    public function modifyGUI($a_comp, $a_part, $a_par = array()): void
+    public function modifyGUI($a_comp, $a_part, $a_par = array()) : void
     {
         if ($a_part !== "sub_tabs") {
             return;
@@ -131,7 +131,7 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
         parent::modifyGUI($a_comp, $a_part, $a_par);
     }
 
-    public function getHTML($a_comp, $a_part, $a_par = []): array
+    public function getHTML($a_comp, $a_part, $a_par = []) : array
     {
         $tplId = $a_par["tpl_id"] ?? null;
         $html = $a_par["html"] ?? null;
@@ -143,7 +143,7 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
         return $this->uiHookResponse();
     }
 
-    public function executeCommand(): void
+    public function executeCommand() : void
     {
         $cmdClass = $this->ctrl->getCmdClass();
         $nextClass = $this->ctrl->getNextClass();
@@ -166,7 +166,10 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
                     break;
                 case strtolower(ilMailOptionsGUI::class):
                     $this->ctrl->setParameterByClass($cmdClass, "referrer", ilPersonalSettingsGUI::class);
-                    $this->ctrl->redirectByClass([ilDashboardGUI::class, ilPersonalSettingsGUI::class, $cmdClass], $cmd);
+                    $this->ctrl->redirectByClass(
+                        [ilDashboardGUI::class, ilPersonalSettingsGUI::class, $cmdClass],
+                        $cmd
+                    );
                     break;
                 case strtolower(ilObjectMetaDataGUI::class):
                     $this->ctrl->redirectByClass([
@@ -190,7 +193,7 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
         $this->controllerHandler->handleCommand($cmd);
     }
 
-    private function injectChatUserConfigTab(Container $dic): void
+    private function injectChatUserConfigTab(Container $dic) : void
     {
         $tabs = $dic->tabs();
         $referrer = $this->httpWrapper->query()->retrieve(
@@ -241,7 +244,7 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
         );
     }
 
-    private function injectChatTab(Container $dic): void
+    private function injectChatTab(Container $dic) : void
     {
         $tabs = $dic->tabs();
 
@@ -295,7 +298,7 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
     /**
      * @return string[]
      */
-    protected function uiHookResponse(string $mode = ilUIHookPluginGUI::KEEP, string $html = ""): array
+    protected function uiHookResponse(string $mode = ilUIHookPluginGUI::KEEP, string $html = "") : array
     {
         return ['mode' => $mode, 'html' => $html];
     }

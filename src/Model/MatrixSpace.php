@@ -18,7 +18,6 @@
 
 declare(strict_types=1);
 
-
 namespace ILIAS\Plugin\MatrixChatClient\Model\Room;
 
 use ILIAS\Plugin\MatrixChatClient\Model\MatrixRoom;

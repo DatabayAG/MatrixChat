@@ -18,7 +18,6 @@
 
 declare(strict_types=1);
 
-
 namespace ILIAS\Plugin\MatrixChatClient\Model;
 
 /**
@@ -52,32 +51,32 @@ class ChatMember
         $this->matrixUserId = $matrixUserId;
     }
 
-    public function getUserId(): int
+    public function getUserId() : int
     {
         return $this->userId;
     }
 
-    public function getName(): string
+    public function getName() : string
     {
         return $this->name;
     }
 
-    public function getLogin(): string
+    public function getLogin() : string
     {
         return $this->login;
     }
 
-    public function getRoleText(): string
+    public function getRoleText() : string
     {
         return $this->roleText;
     }
 
-    public function getStatus(): string
+    public function getStatus() : string
     {
         return $this->status;
     }
 
-    public function getMatrixUserId(): string
+    public function getMatrixUserId() : string
     {
         return $this->matrixUserId;
     }

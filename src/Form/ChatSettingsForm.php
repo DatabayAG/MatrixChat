@@ -16,19 +16,14 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChatClient\Form;
 
-use ilCheckboxInputGUI;
 use ILIAS\DI\Container;
 use ILIAS\HTTP\Wrapper\WrapperFactory;
 use ILIAS\Plugin\Libraries\ControllerHandler\UiUtils;
 use ILIAS\Plugin\MatrixChatClient\Api\MatrixApi;
 use ILIAS\Plugin\MatrixChatClient\Controller\ChatController;
-use ILIAS\Plugin\MatrixChatClient\Model\MatrixRoom;
 use ilMatrixChatClientPlugin;
-use ilMatrixChatClientUIHookGUI;
 use ilPropertyFormGUI;
 use ilTextInputGUI;
-
-;
 
 /**
  * Class ChatSettingsForm
@@ -58,7 +53,8 @@ class ChatSettingsForm extends ilPropertyFormGUI
 
         $this->setFormAction($controller->getCommandLink(
             ChatController::CMD_SHOW_CHAT_SETTINGS,
-            ["ref_id" => $refId], true
+            ["ref_id" => $refId],
+            true
         ));
 
         $room = null;

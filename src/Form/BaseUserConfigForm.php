@@ -18,7 +18,6 @@
 
 declare(strict_types=1);
 
-
 namespace ILIAS\Plugin\MatrixChatClient\Form;
 
 use ilGlobalPageTemplate;
@@ -69,8 +68,8 @@ abstract class BaseUserConfigForm extends ilPropertyFormGUI
             "window.userConfigFormConfig = " . json_encode([
                 "actions" => [
                     "checkAccountOnMatrixServer" => $this->controller->getCommandLink(
-                            BaseUserConfigController::AJAX_CMD_CHECK_EXTERNAL_ACCOUNT
-                        ) . "&cmdMode=asynch"
+                        BaseUserConfigController::AJAX_CMD_CHECK_EXTERNAL_ACCOUNT
+                    ) . "&cmdMode=asynch"
                 ],
                 "translation" => [
                     "checkAccountOnMatrixServer" => $this->plugin->txt("config.user.externalMatrixUserLookup.checkAccountOnMatrixServer")
@@ -112,7 +111,7 @@ abstract class BaseUserConfigForm extends ilPropertyFormGUI
         $this->showCommandButton();
     }
 
-    public function getConnectedMatrixHomeserverInput(): ilTextInputGUI
+    public function getConnectedMatrixHomeserverInput() : ilTextInputGUI
     {
         $connectedMatrixHomeserver = new ilTextInputGUI(
             $this->plugin->txt("config.user.method.createOnConfiguredHomeserver.connectedHomeserver"),
@@ -126,7 +125,7 @@ abstract class BaseUserConfigForm extends ilPropertyFormGUI
         string $translationKey,
         string $postVar,
         bool $disabled = false
-    ): ilTextInputGUI {
+    ) : ilTextInputGUI {
         $matrixAccount = new ilTextInputGUI(
             $this->plugin->txt($translationKey),
             $postVar
@@ -136,12 +135,11 @@ abstract class BaseUserConfigForm extends ilPropertyFormGUI
         return $matrixAccount;
     }
 
-    abstract protected function showCommandButton(bool $reset = false): void;
+    abstract protected function showCommandButton(bool $reset = false) : void;
 
-    abstract protected function getCreateOnConfiguredHomeserverOption(): ilRadioOption;
+    abstract protected function getCreateOnConfiguredHomeserverOption() : ilRadioOption;
 
-    abstract protected function getSpecifyOtherMatrixAccountOption(): ilRadioOption;
+    abstract protected function getSpecifyOtherMatrixAccountOption() : ilRadioOption;
 
-    abstract protected function onAuthenticated(string $selectedAccountOption): bool;
-
+    abstract protected function onAuthenticated(string $selectedAccountOption) : bool;
 }

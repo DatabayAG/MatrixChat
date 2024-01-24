@@ -19,9 +19,6 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChatClient\Form;
 
-;
-
-use ilCheckboxInputGUI;
 use ILIAS\Plugin\Libraries\ControllerHandler\UiUtils;
 use ILIAS\Plugin\MatrixChatClient\Controller\ChatController;
 use ilMatrixChatClientPlugin;

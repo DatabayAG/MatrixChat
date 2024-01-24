@@ -18,7 +18,6 @@
 
 declare(strict_types=1);
 
-
 namespace ILIAS\Plugin\MatrixChatClient\Controller;
 
 use ILIAS\Plugin\MatrixChatClient\Form\BaseUserConfigForm;
@@ -33,7 +32,7 @@ use ILIAS\Plugin\MatrixChatClient\Form\PluginConfigForm;
  */
 class ExternalUserConfigController extends BaseUserConfigController
 {
-    public function showUserChatConfig(?BaseUserConfigForm $form = null): void
+    public function showUserChatConfig(?BaseUserConfigForm $form = null) : void
     {
         $this->injectTabs(self::TAB_USER_CHAT_CONFIG);
         $this->mainTpl->loadStandardTemplate();
@@ -60,7 +59,7 @@ class ExternalUserConfigController extends BaseUserConfigController
         $this->renderToMainTemplate($form->getHTML());
     }
 
-    public function saveUserChatConfig(): void
+    public function saveUserChatConfig() : void
     {
         $form = new ExternalUserConfigForm(
             $this,
@@ -139,7 +138,7 @@ class ExternalUserConfigController extends BaseUserConfigController
         }
     }
 
-    public function buildUsername(): string
+    public function buildUsername() : string
     {
         $username = $this->plugin->getPluginConfig()->getExternalUserScheme();
         foreach ($this->plugin->getUsernameSchemeVariables() as $key => $value) {

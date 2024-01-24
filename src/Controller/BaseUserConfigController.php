@@ -18,7 +18,6 @@
 
 declare(strict_types=1);
 
-
 namespace ILIAS\Plugin\MatrixChatClient\Controller;
 
 use ILIAS\DI\Container;
@@ -71,13 +70,13 @@ abstract class BaseUserConfigController extends BaseController
         $this->http = $this->dic->http();
     }
 
-    abstract public function showUserChatConfig(?BaseUserConfigForm $form = null): void;
+    abstract public function showUserChatConfig(?BaseUserConfigForm $form = null) : void;
 
-    abstract public function saveUserChatConfig(): void;
+    abstract public function saveUserChatConfig() : void;
 
-    abstract public function buildUsername(): string;
+    abstract public function buildUsername() : string;
 
-    public function resetAccountSettings(): void
+    public function resetAccountSettings() : void
     {
         $this->userConfig
             ->setMatrixUserId("")
@@ -88,7 +87,7 @@ abstract class BaseUserConfigController extends BaseController
         $this->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
     }
 
-    public function injectTabs(string $selectedTabId): void
+    public function injectTabs(string $selectedTabId) : void
     {
         $gui = new ilPersonalSettingsGUI();
         $gui->__initSubTabs("showPersonalData");
@@ -105,7 +104,7 @@ abstract class BaseUserConfigController extends BaseController
         $this->tabs->activateTab($selectedTabId);
     }
 
-    public function ajaxCheckExternalAccount(): void
+    public function ajaxCheckExternalAccount() : void
     {
         $post = json_decode(file_get_contents("php://input"), true);
 
@@ -120,7 +119,10 @@ abstract class BaseUserConfigController extends BaseController
         ];
         if (!$matrixUserId) {
             $content["message"]["failure"] = $this->plugin->txt("config.user.externalMatrixUserLookup.missingMatrixUserIdInPost");
-            $response = $this->http->response()->withBody(Streams::ofString(json_encode($content, JSON_THROW_ON_ERROR)));
+            $response = $this->http->response()->withBody(Streams::ofString(json_encode(
+                $content,
+                JSON_THROW_ON_ERROR
+            )));
             $this->http->saveResponse($response);
             $this->http->sendResponse();
             $this->http->close();
@@ -166,12 +168,12 @@ abstract class BaseUserConfigController extends BaseController
         $this->http->close();
     }
 
-    protected function buildMatrixUserId(): string
+    protected function buildMatrixUserId() : string
     {
         return "@{$this->buildUsername()}:{$this->plugin->getPluginConfig()->getMatrixServerName()}";
     }
 
-    public function getCtrlClassesForCommand(string $cmd): array
+    public function getCtrlClassesForCommand(string $cmd) : array
     {
         return [ilUIPluginRouterGUI::class, ilMatrixChatClientUIHookGUI::class];
     }

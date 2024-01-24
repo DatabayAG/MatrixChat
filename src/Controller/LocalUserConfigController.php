@@ -18,7 +18,6 @@
 
 declare(strict_types=1);
 
-
 namespace ILIAS\Plugin\MatrixChatClient\Controller;
 
 use ILIAS\Plugin\MatrixChatClient\Form\BaseUserConfigForm;
@@ -37,7 +36,7 @@ class LocalUserConfigController extends BaseUserConfigController
     public const CMD_SHOW_PASSWORD_CHANGE = "showPasswordChange";
     public const CMD_SAVE_PASSWORD_CHANGE = "savePasswordChange";
 
-    public function showUserChatConfig(?BaseUserConfigForm $form = null): void
+    public function showUserChatConfig(?BaseUserConfigForm $form = null) : void
     {
         $this->injectTabs(self::TAB_USER_CHAT_CONFIG);
         $this->mainTpl->loadStandardTemplate();
@@ -66,7 +65,7 @@ class LocalUserConfigController extends BaseUserConfigController
         $this->renderToMainTemplate($form->getHTML());
     }
 
-    public function saveUserChatConfig(): void
+    public function saveUserChatConfig() : void
     {
         $matrixUsername = $this->buildUsername();
 
@@ -130,7 +129,7 @@ class LocalUserConfigController extends BaseUserConfigController
         $this->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
     }
 
-    public function showPasswordChange(?LocalUserPasswordChangeForm $form = null): void
+    public function showPasswordChange(?LocalUserPasswordChangeForm $form = null) : void
     {
         $this->injectTabs(self::TAB_USER_CHAT_CONFIG);
         $this->mainTpl->loadStandardTemplate();
@@ -142,7 +141,7 @@ class LocalUserConfigController extends BaseUserConfigController
         $this->renderToMainTemplate($form->getHTML());
     }
 
-    public function savePasswordChange(): void
+    public function savePasswordChange() : void
     {
         $form = new LocalUserPasswordChangeForm($this, $this->userConfig);
 
@@ -158,8 +157,10 @@ class LocalUserConfigController extends BaseUserConfigController
         $matrixUserId = $this->userConfig->getMatrixUserId();
 
         if (!$this->matrixApi->userExists($matrixUserId)) {
-            $this->uiUtil->sendFailure($this->plugin->txt("config.user.changeLocalUserPassword.failure.userNotExist"),
-                true);
+            $this->uiUtil->sendFailure(
+                $this->plugin->txt("config.user.changeLocalUserPassword.failure.userNotExist"),
+                true
+            );
             $this->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
         }
 
@@ -172,7 +173,7 @@ class LocalUserConfigController extends BaseUserConfigController
         $this->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
     }
 
-    public function buildUsername(): string
+    public function buildUsername() : string
     {
         $username = $this->plugin->getPluginConfig()->getLocalUserScheme();
         foreach ($this->plugin->getUsernameSchemeVariables() as $key => $value) {

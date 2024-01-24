@@ -39,33 +39,33 @@ class MatrixUser
         $this->matrixDisplayName = $matrixDisplayName;
     }
 
-    public function getMatrixUserId(): string
+    public function getMatrixUserId() : string
     {
         return $this->matrixUserId;
     }
 
-    public function getMatrixDisplayName(): string
+    public function getMatrixDisplayName() : string
     {
         return $this->matrixDisplayName;
     }
 
-    public function getAccessToken(): string
+    public function getAccessToken() : string
     {
         return $this->accessToken;
     }
 
-    public function setAccessToken(string $accessToken): MatrixUser
+    public function setAccessToken(string $accessToken) : MatrixUser
     {
         $this->accessToken = $accessToken;
         return $this;
     }
 
-    public function getDeviceId(): string
+    public function getDeviceId() : string
     {
         return $this->deviceId;
     }
 
-    public function setDeviceId(string $deviceId): MatrixUser
+    public function setDeviceId(string $deviceId) : MatrixUser
     {
         $this->deviceId = $deviceId;
         return $this;

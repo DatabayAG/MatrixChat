@@ -45,7 +45,7 @@ class CourseSettingsRepository
         }
     }
 
-    public static function getInstance(?ilDBInterface $db = null): self
+    public static function getInstance(?ilDBInterface $db = null) : self
     {
         if (self::$instance) {
             return self::$instance;
@@ -56,7 +56,7 @@ class CourseSettingsRepository
     /**
      * @return CourseSettings[]
      */
-    public function readAll(): array
+    public function readAll() : array
     {
         $result = $this->db->query("SELECT * FROM " . self::TABLE_NAME);
 
@@ -69,7 +69,7 @@ class CourseSettingsRepository
         return $data;
     }
 
-    public function read(int $courseId): CourseSettings
+    public function read(int $courseId) : CourseSettings
     {
         $result = $this->db->queryF(
             "SELECT * FROM " . self::TABLE_NAME . " WHERE course_id = %s",
@@ -85,7 +85,7 @@ class CourseSettingsRepository
         return (new CourseSettings($courseId, $data["matrix_room_id"]));
     }
 
-    public function exists(int $courseId): bool
+    public function exists(int $courseId) : bool
     {
         $result = $this->db->queryF(
             "SELECT course_id FROM " . self::TABLE_NAME . " WHERE course_id = %s",
@@ -96,7 +96,7 @@ class CourseSettingsRepository
         return $result->numRows() === 1;
     }
 
-    public function save(CourseSettings $courseSettings): bool
+    public function save(CourseSettings $courseSettings) : bool
     {
         if ($this->exists($courseSettings->getCourseId())) {
             $affectedRows = (int) $this->db->manipulateF(

@@ -1,11 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
-    let config = {
-        status: {
-            invite: ""
-        }
-    };
-    let init = () => {
-        config = window.chatMembersTableConfig;
+        let config = {
+            status: {
+                invite: ""
+            }
+        };
+        let init = () => {
+            config = window.chatMembersTableConfig;
             let inviteButtonElms = document.querySelectorAll(".inviteButton-wrapper > button");
             inviteButtonElms.forEach((inviteButtonElm) => {
                 //Clearing all events

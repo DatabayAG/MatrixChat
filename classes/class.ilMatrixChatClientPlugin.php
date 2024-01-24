@@ -20,15 +20,14 @@ declare(strict_types=1);
 
 use ILIAS\DI\Container;
 use ILIAS\Plugin\Libraries\ControllerHandler\UiUtils;
+use ILIAS\Plugin\MatrixChatClient\Api\MatrixApi;
+use ILIAS\Plugin\MatrixChatClient\Model\CourseSettings;
 use ILIAS\Plugin\MatrixChatClient\Model\MatrixRoom;
 use ILIAS\Plugin\MatrixChatClient\Model\PluginConfig;
-use ILIAS\Plugin\MatrixChatClient\Api\MatrixApi;
 use ILIAS\Plugin\MatrixChatClient\Model\UserConfig;
+use ILIAS\Plugin\MatrixChatClient\Model\UserRoomAddQueue;
 use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
 use ILIAS\Plugin\MatrixChatClient\Repository\UserRoomAddQueueRepository;
-use ILIAS\Plugin\MatrixChatClient\Model\UserRoomAddQueue;
-use ILIAS\Plugin\MatrixChatClient\Model\CourseSettings;
-;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -75,7 +74,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
         return self::PNAME;
     }
 
-    public static function getInstance(): self
+    public static function getInstance() : self
     {
         if (self::$instance) {
             return self::$instance;
@@ -174,7 +173,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
         return version_compare(ILIAS_VERSION_NUMERIC, "6", ">=");
     }
 
-    public function denyConfigIfPluginNotActive(): void
+    public function denyConfigIfPluginNotActive() : void
     {
         if (!$this->isActive()) {
             $this->uiUtil->sendFailure($this->txt("general.plugin.notActivated"), true);
@@ -182,7 +181,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
         }
     }
 
-    public function getMatrixApi(): MatrixApi
+    public function getMatrixApi() : MatrixApi
     {
         if (!$this->matrixApi && $this->isActive()) {
             $this->matrixApi = new MatrixApi(
@@ -190,11 +189,9 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
                 200,
                 $this,
                 $this->dic->logger()->root()
-
             );
         }
         return $this->matrixApi;
-
     }
 
     protected function beforeUninstall() : bool
@@ -203,7 +200,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
         return parent::beforeUninstall();
     }
 
-    public function getPluginConfig(): PluginConfig
+    public function getPluginConfig() : PluginConfig
     {
         if (!$this->pluginConfig && $this->isActive()) {
             $this->pluginConfig = (new PluginConfig($this->settings))->load();

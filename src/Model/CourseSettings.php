@@ -16,8 +16,6 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChatClient\Model;
 
-use ilMatrixChatClientPlugin;
-
 /**
  * Class CourseSettings
  *
@@ -43,12 +41,12 @@ class CourseSettings
         return $this->courseId;
     }
 
-    public function getMatrixRoomId(): ?string
+    public function getMatrixRoomId() : ?string
     {
         return $this->matrixRoomId;
     }
 
-    public function setMatrixRoomId(?string $matrixRoomId): CourseSettings
+    public function setMatrixRoomId(?string $matrixRoomId) : CourseSettings
     {
         $this->matrixRoomId = $matrixRoomId;
         return $this;

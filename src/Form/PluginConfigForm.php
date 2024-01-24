@@ -53,9 +53,11 @@ class PluginConfigForm extends ilPropertyFormGUI
         $this->mainTpl = $this->dic->ui()->mainTemplate();
         $this->mainTpl->addCss($this->plugin->cssFolder("style.css"));
 
-        $this->setFormAction($this->ctrl->getFormActionByClass(
+        $this->setFormAction(
+            $this->ctrl->getFormActionByClass(
             ilMatrixChatClientConfigGUI::class,
-            ilMatrixChatClientConfigGUI::CMD_SHOW_SETTINGS)
+            ilMatrixChatClientConfigGUI::CMD_SHOW_SETTINGS
+        )
         );
         $this->setId("{$this->plugin->getId()}_{$this->plugin->getPluginName()}_plugin_config_form");
         $this->setTitle($this->plugin->txt("general.plugin.settings"));
@@ -75,8 +77,8 @@ class PluginConfigForm extends ilPropertyFormGUI
 
         $this->addCommandButton(ilMatrixChatClientConfigGUI::CMD_SAVE_SETTINGS, $this->lng->txt("save"));
     }
-    
-    protected function addGeneralSection(): void
+
+    protected function addGeneralSection() : void
     {
         $section = new ilFormSectionHeaderGUI();
         $section->setTitle($this->plugin->txt("config.section.general"));
@@ -99,7 +101,7 @@ class PluginConfigForm extends ilPropertyFormGUI
         $this->addItem($activateChat);
     }
 
-    protected function addServerSection($serverReachable): void
+    protected function addServerSection($serverReachable) : void
     {
         $section = new ilFormSectionHeaderGUI();
         if ($serverReachable) {
@@ -126,7 +128,7 @@ class PluginConfigForm extends ilPropertyFormGUI
         $this->addItem($sharedSecret);
     }
 
-    protected function addAdminUserSection(bool $serverReachable): void
+    protected function addAdminUserSection(bool $serverReachable) : void
     {
         $section = new ilFormSectionHeaderGUI();
         if ($this->plugin->getMatrixApi()->checkAdminUser()) {
@@ -167,7 +169,7 @@ class PluginConfigForm extends ilPropertyFormGUI
         $this->addItem($matrixAdminPassword);
     }
 
-    protected function addExternalUserSection(array $allowedCharacters): void
+    protected function addExternalUserSection(array $allowedCharacters) : void
     {
         $section = new ilFormSectionHeaderGUI();
         $section->setTitle($this->plugin->txt("config.section.user.external"));
@@ -182,7 +184,7 @@ class PluginConfigForm extends ilPropertyFormGUI
         $usernameScheme->setInfo(sprintf(
             $this->plugin->txt("config.usernameScheme.info"),
             implode(", ", $allowedCharacters),
-            "- " . implode("<br>- ", array_map(static function ($variable): string {
+            "- " . implode("<br>- ", array_map(static function ($variable) : string {
                 return "<span>{</span>$variable<span>}</span>";
             }, array_keys($this->plugin->getUsernameSchemeVariables())))
         ));
@@ -198,14 +200,14 @@ class PluginConfigForm extends ilPropertyFormGUI
             self::CREATE_ON_CONFIGURED_HOMESERVER
         ));
         $accountOptions->addOption(new ilCheckboxOption(
-                $this->plugin->txt("config.accountOptions.specifyOtherMatrixAccount"),
-                self::SPECIFY_OTHER_MATRIX_ACCOUNT
+            $this->plugin->txt("config.accountOptions.specifyOtherMatrixAccount"),
+            self::SPECIFY_OTHER_MATRIX_ACCOUNT
         ));
 
         $this->addItem($accountOptions);
     }
 
-    protected function addLocalUserSection(array $allowedCharacters): void
+    protected function addLocalUserSection(array $allowedCharacters) : void
     {
         $section = new ilFormSectionHeaderGUI();
         $section->setTitle($this->plugin->txt("config.section.user.local"));
@@ -220,7 +222,7 @@ class PluginConfigForm extends ilPropertyFormGUI
         $usernameScheme->setInfo(sprintf(
             $this->plugin->txt("config.usernameScheme.info"),
             implode(", ", $allowedCharacters),
-            "- " . implode("<br>- ", array_map(static function ($variable): string {
+            "- " . implode("<br>- ", array_map(static function ($variable) : string {
                 return "<span>{</span>$variable<span>}</span>";
             }, array_keys($this->plugin->getUsernameSchemeVariables())))
         ));
@@ -243,7 +245,7 @@ class PluginConfigForm extends ilPropertyFormGUI
         $this->addItem($accountOptions);
     }
 
-    protected function addRoomSection(): void
+    protected function addRoomSection() : void
     {
         $section = new ilFormSectionHeaderGUI();
         $section->setTitle($this->plugin->txt("config.section.room"));
@@ -299,6 +301,5 @@ class PluginConfigForm extends ilPropertyFormGUI
             "memberPowerLevel"
         );
         $modifyParticipantPowerLevel->addSubItem($memberPowerLevel);
-
     }
 }

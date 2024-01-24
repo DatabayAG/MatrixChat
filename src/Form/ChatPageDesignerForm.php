@@ -18,7 +18,6 @@
 
 declare(strict_types=1);
 
-
 namespace ILIAS\Plugin\MatrixChatClient\Form;
 
 use ilGlobalTemplateInterface;
@@ -57,9 +56,11 @@ class ChatPageDesignerForm extends ilPropertyFormGUI
 
         $this->addItem($chatPageText);
 
-        $this->setFormAction($this->ctrl->getFormActionByClass(
+        $this->setFormAction(
+            $this->ctrl->getFormActionByClass(
             ilMatrixChatClientConfigGUI::class,
-            ilMatrixChatClientConfigGUI::CMD_SHOW_CHAT_PAGE_DESIGNER)
+            ilMatrixChatClientConfigGUI::CMD_SHOW_CHAT_PAGE_DESIGNER
+        )
         );
         $this->setId("{$this->plugin->getId()}_{$this->plugin->getPluginName()}_chat_page_designer");
         $this->setTitle($this->plugin->txt("general.plugin.settings"));

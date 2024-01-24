@@ -75,8 +75,11 @@ class ChatMemberTable extends ilTable2GUI
         $this->setDefaultOrderDirection("desc");
         $this->setEnableHeader(true);
 
-        $this->setFormAction($controller->getCommandLink(ChatController::CMD_SHOW_CHAT_MEMBERS,
-            ["ref_id" => $this->refId], true));
+        $this->setFormAction($controller->getCommandLink(
+            ChatController::CMD_SHOW_CHAT_MEMBERS,
+            ["ref_id" => $this->refId],
+            true
+        ));
         $this->setRowTemplate($this->plugin->templatesFolder("table/tpl.chatMemberTable_row.html"));
 
         $this->addColumn('', '', "1%", true);
@@ -99,7 +102,7 @@ class ChatMemberTable extends ilTable2GUI
         $this->initFilter();
     }
 
-    private function addColumns(array $columns): void
+    private function addColumns(array $columns) : void
     {
         foreach ($columns as $text => $sortField) {
             $this->addColumn($text, $sortField);
@@ -109,7 +112,7 @@ class ChatMemberTable extends ilTable2GUI
     /**
      * @param ChatMember[] $chatMembers
      */
-    public function buildTableData(array $chatMembers): array
+    public function buildTableData(array $chatMembers) : array
     {
         $tableData = [];
 
@@ -120,7 +123,8 @@ class ChatMemberTable extends ilTable2GUI
                 [
                     ChatController::USER_STATUS_LEAVE,
                     ChatController::USER_STATUS_NO_INVITE,
-                ], true
+                ],
+                true
             )) {
                 $inviteButton = $this->uiFactory->button()->standard(
                     $this->plugin->txt("matrix.chat.invite"),
@@ -150,8 +154,11 @@ class ChatMemberTable extends ilTable2GUI
             }
 
             $tableData[] = [
-                "checkbox" => ilLegacyFormElementsUtil::formCheckbox(false, "userId[]",
-                    (string) $chatMember->getUserId()),
+                "checkbox" => ilLegacyFormElementsUtil::formCheckbox(
+                    false,
+                    "userId[]",
+                    (string) $chatMember->getUserId()
+                ),
                 "name" => $chatMember->getName(),
                 "username" => $chatMember->getLogin(),
                 "role" => $chatMember->getRoleText(),
@@ -167,7 +174,7 @@ class ChatMemberTable extends ilTable2GUI
      * @param ChatMember[] $chatMembers
      * @return ChatMember[]
      */
-    private function filterData(array $chatMembers): array
+    private function filterData(array $chatMembers) : array
     {
         $nameFilter = $this->getFilterValue($this->getFilterItemByPostVar("name"));
         $roleFilter = $this->getFilterValue($this->getFilterItemByPostVar("role"));
@@ -198,7 +205,7 @@ class ChatMemberTable extends ilTable2GUI
     /**
      * @throws Exception
      */
-    public function initFilter(): void
+    public function initFilter() : void
     {
         $name = new ilTextInputGUI($this->lng->txt("name"), "name");
 
