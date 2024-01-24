@@ -41,6 +41,7 @@ use Throwable;
 class MatrixApi
 {
     private static ?MatrixUser $adminUser = null;
+    private static ?MatrixUser $restApiUser = null;
     private HttpClientInterface $client;
     private ilMatrixChatClientPlugin $plugin;
     private string $matrixServerUrl;
@@ -76,16 +77,17 @@ class MatrixApi
         string $apiCall,
         bool $requiresAuth = true,
         string $method = "GET",
-        array $body = []
+        array $body = [],
+        bool $useRestApiUserAuth = false
     ): MatrixApiResponse {
         $options = [
             "timeout" => $this->requestTimeout
         ];
 
         if ($requiresAuth) {
-            $adminAccessToken = $this->getAdminAccessToken();
+            $accessToken = $useRestApiUserAuth ? $this->getRestApiUserAccessToken() : $this->getAdminAccessToken();
 
-            if (!$adminAccessToken) {
+            if (!$accessToken) {
                 //Don't log error when request send is trying to login the admin
                 //(As it's already clear the access token won't be available yet)
                 //In theory should never get called because login does not require prior auth,
@@ -101,7 +103,7 @@ class MatrixApi
                     );
                 }
             }
-            $options["auth_bearer"] = $adminAccessToken;
+            $options["auth_bearer"] = $accessToken;
         }
 
         if ($body !== []) {
@@ -148,6 +150,15 @@ class MatrixApi
         return $this->matrixServerUrl . "/" . ltrim($apiCall, "/");
     }
 
+    public function checkRestApiUser(): bool
+    {
+        try {
+            return (bool) $this->getRestApiUser()->getAccessToken();
+        } catch (Throwable $ex) {
+            return false;
+        }
+    }
+
     public function checkAdminUser(): bool
     {
         try {
@@ -164,6 +175,28 @@ class MatrixApi
         } catch (Throwable $ex) {
             return "";
         }
+    }
+
+    protected function getRestApiUserAccessToken(): string
+    {
+        try {
+            return $this->getRestApiUser()->getAccessToken();
+        } catch (Throwable $ex) {
+            return "";
+        }
+    }
+
+    public function getRestApiUser(): MatrixUser
+    {
+        if (self::$restApiUser === null) {
+            self::$restApiUser = $this->login(
+                $this->plugin->getPluginConfig()->getMatrixRestApiUserUsername(),
+                $this->plugin->getPluginConfig()->getMatrixRestApiUserPassword(),
+                "ilias_matrix_chat_device_bot"
+            );
+        }
+
+        return self::$restApiUser;
     }
 
     public function getAdminUser(): MatrixUser

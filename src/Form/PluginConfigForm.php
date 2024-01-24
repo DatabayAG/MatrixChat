@@ -71,6 +71,7 @@ class PluginConfigForm extends ilPropertyFormGUI
         $this->addGeneralSection();
         $this->addServerSection($serverReachable);
         $this->addAdminUserSection($serverReachable);
+        $this->addRestApiUserSection($serverReachable);
         $this->addExternalUserSection($allowedUsernameSchemeCharacters);
         $this->addLocalUserSection($allowedUsernameSchemeCharacters);
         $this->addRoomSection();
@@ -167,6 +168,45 @@ class PluginConfigForm extends ilPropertyFormGUI
         $matrixAdminPassword->setSkipSyntaxCheck(true);
         $matrixAdminPassword->setRetype(false);
         $this->addItem($matrixAdminPassword);
+    }
+
+    protected function addRestApiUserSection(bool $serverReachable): void
+    {
+        $section = new ilFormSectionHeaderGUI();
+        if ($this->plugin->getMatrixApi()->checkRestApiUser()) {
+            $section->setTitle(sprintf(
+                $this->plugin->txt("config.section.restApiAuthentication.valid"),
+                $this->plugin->txt("matrix.restApiUser.login.valid")
+            ));
+        } elseif (!$serverReachable) {
+            $section->setTitle(sprintf(
+                $this->plugin->txt("config.section.restApiAuthentication.invalid"),
+                $this->plugin->txt("matrix.server.unreachable")
+            ));
+        } else {
+            $section->setTitle(sprintf(
+                $this->plugin->txt("config.section.restApiAuthentication.invalid"),
+                $this->plugin->txt("matrix.restApiUser.login.invalid")
+            ));
+        }
+        $this->addItem($section);
+
+        $matrixRestApiUserUsername = new ilTextInputGUI(
+            $this->plugin->txt("config.restApiUser.username.title"),
+            "matrixRestApiUserUsername"
+        );
+        $matrixRestApiUserUsername->setRequired(true);
+        $matrixRestApiUserUsername->setInfo($this->plugin->txt("config.restApiUser.username.info"));
+        $this->addItem($matrixRestApiUserUsername);
+
+        $matrixRestApiUserPassword = new ilPasswordInputGUI(
+            $this->plugin->txt("config.restApiUser.password.title"),
+            "matrixRestApiUserPassword"
+        );
+        $matrixRestApiUserPassword->setInfo($this->plugin->txt("config.restApiUser.password.info"));
+        $matrixRestApiUserPassword->setSkipSyntaxCheck(true);
+        $matrixRestApiUserPassword->setRetype(false);
+        $this->addItem($matrixRestApiUserPassword);
     }
 
     protected function addExternalUserSection(array $allowedCharacters): void

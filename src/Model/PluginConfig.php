@@ -31,6 +31,8 @@ class PluginConfig extends SettingsConfig
     private string $matrixServerUrl = "";
     private string $matrixAdminUsername = "";
     private string $matrixAdminPassword = "";
+    private string $matrixRestApiUserUsername = "";
+    private string $matrixRestApiUserPassword = "";
     private string $sharedSecret = "";
     private string $externalUserScheme = "";
     private array $externalUserOptions = [];
@@ -77,6 +79,28 @@ class PluginConfig extends SettingsConfig
     public function setMatrixAdminPassword(string $matrixAdminPassword): PluginConfig
     {
         $this->matrixAdminPassword = $matrixAdminPassword;
+        return $this;
+    }
+
+    public function getMatrixRestApiUserUsername(): string
+    {
+        return $this->matrixRestApiUserUsername;
+    }
+
+    public function setMatrixRestApiUserUsername(string $matrixRestApiUserUsername): PluginConfig
+    {
+        $this->matrixRestApiUserUsername = $matrixRestApiUserUsername;
+        return $this;
+    }
+
+    public function getMatrixRestApiUserPassword(): string
+    {
+        return $this->matrixRestApiUserPassword;
+    }
+
+    public function setMatrixRestApiUserPassword(string $matrixRestApiUserPassword): PluginConfig
+    {
+        $this->matrixRestApiUserPassword = $matrixRestApiUserPassword;
         return $this;
     }
 
