@@ -60,6 +60,8 @@ config.restApiUser.username.info#:#Tragen Sie hier den Benutzer-Account ein, der
 config.restApiUser.password.title#:#Password vom Rest-API Benutzer
 config.restApiUser.password.info#:#Passwort Eingabefeld wird nach abspeichern des Passwortes geleert!
 
+config.removeRateLimit#:#Ratelimit von Benutzer entfernen
+config.removeRateLimit.info#:#Entfernt beim Speichern das Ratelimit des Benutzers. <br>Führt einen Request an die Matrix-Server API aus um das RateLimit für diesen Benutzer zu entfernen. <br>Benötigt funktionierenden "Matrix-Server Admin Benutzer"
 
 config.user.generalSettings#:#Allgemeine Einstellungen
 config.user.title#:#Chat Einstellungen

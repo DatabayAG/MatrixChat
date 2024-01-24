@@ -168,6 +168,13 @@ class PluginConfigForm extends ilPropertyFormGUI
         $matrixAdminPassword->setSkipSyntaxCheck(true);
         $matrixAdminPassword->setRetype(false);
         $this->addItem($matrixAdminPassword);
+
+        $matrixAdminPasswordRemoveRateLimit = new ilCheckboxInputGUI(
+            $this->plugin->txt("config.removeRateLimit"),
+            "matrixAdminPasswordRemoveRateLimit"
+        );
+        $matrixAdminPasswordRemoveRateLimit->setInfo($this->plugin->txt("config.removeRateLimit.info"));
+        $this->addItem($matrixAdminPasswordRemoveRateLimit);
     }
 
     protected function addRestApiUserSection(bool $serverReachable): void
@@ -207,6 +214,13 @@ class PluginConfigForm extends ilPropertyFormGUI
         $matrixRestApiUserPassword->setSkipSyntaxCheck(true);
         $matrixRestApiUserPassword->setRetype(false);
         $this->addItem($matrixRestApiUserPassword);
+
+        $matrixRestApiUserRemoveRateLimit = new ilCheckboxInputGUI(
+            $this->plugin->txt("config.removeRateLimit"),
+            "matrixRestApiUserRemoveRateLimit"
+        );
+        $matrixRestApiUserRemoveRateLimit->setInfo($this->plugin->txt("config.removeRateLimit.info"));
+        $this->addItem($matrixRestApiUserRemoveRateLimit);
     }
 
     protected function addExternalUserSection(array $allowedCharacters): void

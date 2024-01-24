@@ -152,6 +152,23 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
             $this->plugin->getPluginConfig()->setMatrixRestApiUserPassword($matrixRestApiUserPassword);
         }
 
+        $matrixAdminPasswordRemoveRateLimit = (bool) $form->getInput("matrixAdminPasswordRemoveRateLimit");
+        $matrixRestApiUserRemoveRateLimit = (bool) $form->getInput("matrixRestApiUserRemoveRateLimit");
+
+        if ($matrixAdminPasswordRemoveRateLimit) {
+            $matrixAdminUser = $this->matrixApi->getAdminUser();
+            if ($matrixAdminUser) {
+                $this->matrixApi->setOverrideRateLimit($matrixAdminUser, 0, 0);
+            }
+        }
+
+        if ($matrixRestApiUserRemoveRateLimit) {
+            $matrixRestApiUser = $this->matrixApi->getRestApiUser();
+            if ($matrixRestApiUser) {
+                $this->matrixApi->setOverrideRateLimit($matrixRestApiUser, 0, 0);
+            }
+        }
+
         try {
             $this->plugin->getPluginConfig()->save();
             $this->uiUtil->sendSuccess($this->plugin->txt("general.update.success"), true);
