@@ -36,17 +36,17 @@ class CourseSettings
     }
 
 
-    public function getCourseId() : int
+    public function getCourseId(): int
     {
         return $this->courseId;
     }
 
-    public function getMatrixRoomId() : ?string
+    public function getMatrixRoomId(): ?string
     {
         return $this->matrixRoomId;
     }
 
-    public function setMatrixRoomId(?string $matrixRoomId) : CourseSettings
+    public function setMatrixRoomId(?string $matrixRoomId): CourseSettings
     {
         $this->matrixRoomId = $matrixRoomId;
         return $this;

@@ -50,13 +50,13 @@ class MatrixRoom
     }
 
 
-    public function getId() : string
+    public function getId(): string
     {
         return $this->id;
     }
 
 
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -64,7 +64,7 @@ class MatrixRoom
     /**
      * @return string[]
      */
-    public function getMembers() : array
+    public function getMembers(): array
     {
         return $this->members;
     }
@@ -72,18 +72,18 @@ class MatrixRoom
     /**
      * @param string[] $members
      */
-    public function setMembers(array $members) : MatrixRoom
+    public function setMembers(array $members): MatrixRoom
     {
         $this->members = $members;
         return $this;
     }
 
-    public function isMember(MatrixUser $matrixUser) : bool
+    public function isMember(MatrixUser $matrixUser): bool
     {
         return in_array($matrixUser->getMatrixUserId(), $this->getMembers(), true);
     }
 
-    public function exists() : bool
+    public function exists(): bool
     {
         return (bool) $this->plugin->getMatrixApi()->getRoom($this->getId());
     }

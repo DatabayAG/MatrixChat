@@ -58,9 +58,9 @@ class ChatPageDesignerForm extends ilPropertyFormGUI
 
         $this->setFormAction(
             $this->ctrl->getFormActionByClass(
-            ilMatrixChatClientConfigGUI::class,
-            ilMatrixChatClientConfigGUI::CMD_SHOW_CHAT_PAGE_DESIGNER
-        )
+                ilMatrixChatClientConfigGUI::class,
+                ilMatrixChatClientConfigGUI::CMD_SHOW_CHAT_PAGE_DESIGNER
+            )
         );
         $this->setId("{$this->plugin->getId()}_{$this->plugin->getPluginName()}_chat_page_designer");
         $this->setTitle($this->plugin->txt("general.plugin.settings"));

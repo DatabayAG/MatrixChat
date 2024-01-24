@@ -69,12 +69,12 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
         parent::__construct($db, $component_repository, $id);
     }
 
-    public function getPluginName() : string
+    public function getPluginName(): string
     {
         return self::PNAME;
     }
 
-    public static function getInstance() : self
+    public static function getInstance(): self
     {
         if (self::$instance) {
             return self::$instance;
@@ -90,32 +90,32 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
         return self::$instance;
     }
 
-    public function assetsFolder(string $file = "") : string
+    public function assetsFolder(string $file = ""): string
     {
         return $this->getDirectory() . "/assets/$file";
     }
 
-    public function cssFolder(string $file = "") : string
+    public function cssFolder(string $file = ""): string
     {
         return $this->assetsFolder("css/$file");
     }
 
-    public function imagesFolder(string $file = "") : string
+    public function imagesFolder(string $file = ""): string
     {
         return $this->assetsFolder("images/$file");
     }
 
-    public function templatesFolder(string $file = "") : string
+    public function templatesFolder(string $file = ""): string
     {
         return $this->assetsFolder("templates/$file");
     }
 
-    public function jsFolder(string $file = "") : string
+    public function jsFolder(string $file = ""): string
     {
         return $this->assetsFolder("js/$file");
     }
 
-    public function getUsernameSchemeVariables() : array
+    public function getUsernameSchemeVariables(): array
     {
         return [
             "CLIENT_ID" => CLIENT_ID,
@@ -124,7 +124,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
         ];
     }
 
-    public function getObjGUIClassByType(string $type) : ?string
+    public function getObjGUIClassByType(string $type): ?string
     {
         switch ($type) {
             case "crs":
@@ -136,7 +136,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
         }
     }
 
-    public function redirectToHome() : void
+    public function redirectToHome(): void
     {
         if ($this->isAtLeastIlias6()) {
             $this->ctrl->redirectByClass("ilDashboardGUI", "show");
@@ -145,7 +145,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
         }
     }
 
-    public function isUserAdmin(?int $userId = null, ?int $roleId = null) : bool
+    public function isUserAdmin(?int $userId = null, ?int $roleId = null): bool
     {
         if ($userId === null) {
             $userId = $this->dic->user->getId();
@@ -168,12 +168,12 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
         return in_array($roleId, $roleIds, true);
     }
 
-    public function isAtLeastIlias6() : bool
+    public function isAtLeastIlias6(): bool
     {
         return version_compare(ILIAS_VERSION_NUMERIC, "6", ">=");
     }
 
-    public function denyConfigIfPluginNotActive() : void
+    public function denyConfigIfPluginNotActive(): void
     {
         if (!$this->isActive()) {
             $this->uiUtil->sendFailure($this->txt("general.plugin.notActivated"), true);
@@ -181,7 +181,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
         }
     }
 
-    public function getMatrixApi() : MatrixApi
+    public function getMatrixApi(): MatrixApi
     {
         if (!$this->matrixApi && $this->isActive()) {
             $this->matrixApi = new MatrixApi(
@@ -194,13 +194,13 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
         return $this->matrixApi;
     }
 
-    protected function beforeUninstall() : bool
+    protected function beforeUninstall(): bool
     {
         $this->settings->deleteAll();
         return parent::beforeUninstall();
     }
 
-    public function getPluginConfig() : PluginConfig
+    public function getPluginConfig(): PluginConfig
     {
         if (!$this->pluginConfig && $this->isActive()) {
             $this->pluginConfig = (new PluginConfig($this->settings))->load();
@@ -208,7 +208,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
         return $this->pluginConfig;
     }
 
-    public function processUserRoomAddQueue(ilObjUser $user) : void
+    public function processUserRoomAddQueue(ilObjUser $user): void
     {
         $userConfig = (new UserConfig($user))->load();
 
@@ -247,7 +247,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
         }
     }
 
-    public function handleEvent(string $a_component, string $a_event, $a_parameter) : void
+    public function handleEvent(string $a_component, string $a_event, $a_parameter): void
     {
         if (!in_array($a_event, ["addParticipant", "deleteParticipant"], true)) {
             return;

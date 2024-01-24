@@ -37,13 +37,13 @@ class UserRoomAddQueue
     }
 
 
-    public function getUserId() : int
+    public function getUserId(): int
     {
         return $this->userId;
     }
 
 
-    public function getRefId() : int
+    public function getRefId(): int
     {
         return $this->refId;
     }

@@ -45,7 +45,7 @@ class UserRoomAddQueueRepository
         }
     }
 
-    public static function getInstance(?ilDBInterface $db = null) : self
+    public static function getInstance(?ilDBInterface $db = null): self
     {
         if (self::$instance) {
             return self::$instance;
@@ -53,7 +53,7 @@ class UserRoomAddQueueRepository
         return self::$instance = new self($db);
     }
 
-    public function exists(int $userId, int $refId) : bool
+    public function exists(int $userId, int $refId): bool
     {
         $result = $this->db->queryF(
             "SELECT * FROM " . self::TABLE_NAME . " WHERE user_id = %s AND ref_id = %s",
@@ -64,7 +64,7 @@ class UserRoomAddQueueRepository
         return $result->numRows() === 1;
     }
 
-    public function create(UserRoomAddQueue $userRoomAddQueue) : bool
+    public function create(UserRoomAddQueue $userRoomAddQueue): bool
     {
         if ($this->exists($userRoomAddQueue->getUserId(), $userRoomAddQueue->getRefId())) {
             return false;
@@ -81,7 +81,7 @@ class UserRoomAddQueueRepository
         return $affectedRows === 1;
     }
 
-    public function delete(UserRoomAddQueue $userRoomAddQueue) : void
+    public function delete(UserRoomAddQueue $userRoomAddQueue): void
     {
         $this->db->manipulateF(
             "DELETE FROM " . self::TABLE_NAME . " WHERE user_id = %s AND ref_id = %s",
@@ -93,7 +93,7 @@ class UserRoomAddQueueRepository
         );
     }
 
-    public function read(int $userId, int $objRefId) : ?UserRoomAddQueue
+    public function read(int $userId, int $objRefId): ?UserRoomAddQueue
     {
         $result = $this->db->queryF(
             "SELECT * FROM " . self::TABLE_NAME . " WHERE user_id = %s AND ref_id = %s",
@@ -113,7 +113,7 @@ class UserRoomAddQueueRepository
     /**
      * @return UserRoomAddQueue[]
      */
-    public function readAllByUserId(int $userId) : array
+    public function readAllByUserId(int $userId): array
     {
         $result = $this->db->queryF(
             "SELECT * FROM " . self::TABLE_NAME . " WHERE user_id = %s",

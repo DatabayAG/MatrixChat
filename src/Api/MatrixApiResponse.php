@@ -50,12 +50,12 @@ class MatrixApiResponse
         return $this->getResponseData()[$key] ?? null;
     }
 
-    public function getStatusCode() : int
+    public function getStatusCode(): int
     {
         return $this->statusCode;
     }
 
-    public function getResponseData() : array
+    public function getResponseData(): array
     {
         return $this->responseData;
     }

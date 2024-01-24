@@ -102,7 +102,7 @@ class ChatMemberTable extends ilTable2GUI
         $this->initFilter();
     }
 
-    private function addColumns(array $columns) : void
+    private function addColumns(array $columns): void
     {
         foreach ($columns as $text => $sortField) {
             $this->addColumn($text, $sortField);
@@ -112,7 +112,7 @@ class ChatMemberTable extends ilTable2GUI
     /**
      * @param ChatMember[] $chatMembers
      */
-    public function buildTableData(array $chatMembers) : array
+    public function buildTableData(array $chatMembers): array
     {
         $tableData = [];
 
@@ -174,7 +174,7 @@ class ChatMemberTable extends ilTable2GUI
      * @param ChatMember[] $chatMembers
      * @return ChatMember[]
      */
-    private function filterData(array $chatMembers) : array
+    private function filterData(array $chatMembers): array
     {
         $nameFilter = $this->getFilterValue($this->getFilterItemByPostVar("name"));
         $roleFilter = $this->getFilterValue($this->getFilterItemByPostVar("role"));
@@ -205,7 +205,7 @@ class ChatMemberTable extends ilTable2GUI
     /**
      * @throws Exception
      */
-    public function initFilter() : void
+    public function initFilter(): void
     {
         $name = new ilTextInputGUI($this->lng->txt("name"), "name");
 

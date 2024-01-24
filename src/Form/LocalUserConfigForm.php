@@ -46,7 +46,7 @@ class LocalUserConfigForm extends BaseUserConfigForm
         parent::__construct($controller, $user, $matrixAccountId, $selectedAccountOption);
     }
 
-    protected function showCommandButton(bool $reset = false) : void
+    protected function showCommandButton(bool $reset = false): void
     {
         if ($reset) {
             $this->addCommandButton(
@@ -56,14 +56,14 @@ class LocalUserConfigForm extends BaseUserConfigForm
         } else {
             $this->addCommandButton(
                 LocalUserConfigController::getCommand(
-                BaseUserConfigController::CMD_SAVE_USER_CHAT_CONFIG
-            ),
+                    BaseUserConfigController::CMD_SAVE_USER_CHAT_CONFIG
+                ),
                 $this->lng->txt("save")
             );
         }
     }
 
-    public function getCreateOnConfiguredHomeserverOption() : ilRadioOption
+    public function getCreateOnConfiguredHomeserverOption(): ilRadioOption
     {
         $radioOption = new ilRadioOption(
             $this->plugin->txt("config.user.method.createOnConfiguredHomeserver"),
@@ -92,7 +92,7 @@ class LocalUserConfigForm extends BaseUserConfigForm
         return $radioOption;
     }
 
-    public function getSpecifyOtherMatrixAccountOption() : ilRadioOption
+    public function getSpecifyOtherMatrixAccountOption(): ilRadioOption
     {
         $radioOption = new ilRadioOption(
             $this->plugin->txt("config.user.method.specifyOtherMatrixAccount"),
@@ -107,7 +107,7 @@ class LocalUserConfigForm extends BaseUserConfigForm
         return $radioOption;
     }
 
-    protected function onAuthenticated(string $selectedAccountOption) : bool
+    protected function onAuthenticated(string $selectedAccountOption): bool
     {
         if ($selectedAccountOption === PluginConfigForm::CREATE_ON_CONFIGURED_HOMESERVER) {
             $this->addItem($this->getConnectedMatrixHomeserverInput());
@@ -116,8 +116,8 @@ class LocalUserConfigForm extends BaseUserConfigForm
             $this->showCommandButton(true);
             $this->addCommandButton(
                 LocalUserConfigController::getCommand(
-                LocalUserConfigController::CMD_SHOW_PASSWORD_CHANGE
-            ),
+                    LocalUserConfigController::CMD_SHOW_PASSWORD_CHANGE
+                ),
                 $this->plugin->txt("config.user.changeLocalUserPassword.title")
             );
         } else {

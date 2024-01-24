@@ -41,12 +41,12 @@ class MatrixUserPowerLevel
         $this->powerLevel = $powerLevel;
     }
 
-    public function getMatrixUserId() : string
+    public function getMatrixUserId(): string
     {
         return $this->matrixUserId;
     }
 
-    public function getPowerLevel() : int
+    public function getPowerLevel(): int
     {
         return $this->powerLevel;
     }

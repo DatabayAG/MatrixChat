@@ -125,7 +125,7 @@ class ChatController extends BaseController
         $this->userRoomAddQueueRepo = UserRoomAddQueueRepository::getInstance();
     }
 
-    public function showChat() : void
+    public function showChat(): void
     {
         $this->checkPermissionOnObject("read");
         $this->checkChatActivatedForObject();
@@ -188,7 +188,7 @@ class ChatController extends BaseController
         $this->renderToMainTemplate($uiRenderer->render($toChatSettingsButton) . $this->plugin->getPluginConfig()->getPageDesignerText());
     }
 
-    public function applyMemberTableFilter() : void
+    public function applyMemberTableFilter(): void
     {
         $table = new ChatMemberTable($this->refId, $this);
         $table->writeFilterToSession();
@@ -196,7 +196,7 @@ class ChatController extends BaseController
         $this->showChatMembers();
     }
 
-    public function resetMemberTableFilter() : void
+    public function resetMemberTableFilter(): void
     {
         $table = new ChatMemberTable($this->refId, $this);
         $table->resetOffset();
@@ -204,7 +204,7 @@ class ChatController extends BaseController
         $this->showChatMembers();
     }
 
-    public function showChatSettings(?ChatSettingsForm $form = null) : void
+    public function showChatSettings(?ChatSettingsForm $form = null): void
     {
         $this->checkPermissionOnObject("write");
         $this->checkChatActivatedForObject();
@@ -220,7 +220,7 @@ class ChatController extends BaseController
         $this->renderToMainTemplate($form->getHTML());
     }
 
-    public function showChatMembers() : void
+    public function showChatMembers(): void
     {
         $this->checkPermissionOnObject("write");
         $this->checkChatActivatedForObject();
@@ -244,7 +244,7 @@ class ChatController extends BaseController
         $this->renderToMainTemplate($table->getHTML());
     }
 
-    public function inviteSelectedParticipants() : void
+    public function inviteSelectedParticipants(): void
     {
         $this->checkPermissionOnObject("write");
         $this->checkChatActivatedForObject();
@@ -314,7 +314,7 @@ class ChatController extends BaseController
         $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
     }
 
-    public function inviteParticipant() : void
+    public function inviteParticipant(): void
     {
         $this->checkPermissionOnObject("write");
         $this->checkChatActivatedForObject();
@@ -378,7 +378,7 @@ class ChatController extends BaseController
     /**
      * @return ChatMember[]
      */
-    protected function getChatMembers(MatrixRoom $room) : array
+    protected function getChatMembers(MatrixRoom $room): array
     {
         $chatMembers = [];
         $participants = ilCourseParticipants::getInstance($this->courseSettings->getCourseId());
@@ -415,7 +415,7 @@ class ChatController extends BaseController
         return $chatMembers;
     }
 
-    public function createRoom() : void
+    public function createRoom(): void
     {
         $this->checkPermissionOnObject("write");
         $this->checkChatActivatedForObject();
@@ -506,7 +506,7 @@ class ChatController extends BaseController
         $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS, ["ref_id" => $this->refId]);
     }
 
-    protected function determinePowerLevelOfParticipant(ilParticipants $participants, int $participantId) : int
+    protected function determinePowerLevelOfParticipant(ilParticipants $participants, int $participantId): int
     {
         $pluginConfig = $this->plugin->getPluginConfig();
         $powerLevel = $pluginConfig->isModifyParticipantPowerLevel() ? $pluginConfig->getMemberPowerLevel() : 0;
@@ -519,7 +519,7 @@ class ChatController extends BaseController
         return $powerLevel;
     }
 
-    public function showConfirmDeleteRoom(?ConfirmDeleteRoomForm $form = null) : void
+    public function showConfirmDeleteRoom(?ConfirmDeleteRoomForm $form = null): void
     {
         $this->checkPermissionOnObject("write");
         $this->checkChatActivatedForObject();
@@ -531,7 +531,7 @@ class ChatController extends BaseController
         $this->mainTpl->printToStdOut();
     }
 
-    public function deleteRoom() : void
+    public function deleteRoom(): void
     {
         $this->checkPermissionOnObject("write");
         $this->checkChatActivatedForObject();
@@ -584,7 +584,7 @@ class ChatController extends BaseController
         $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS, ["ref_id" => $this->refId]);
     }
 
-    public function checkChatActivatedForObject(bool $redirectToInfoScreenOnFail = true) : bool
+    public function checkChatActivatedForObject(bool $redirectToInfoScreenOnFail = true): bool
     {
         $activated = in_array(
             ilObject::_lookupType($this->refId, true),
@@ -601,7 +601,7 @@ class ChatController extends BaseController
         return $activated;
     }
 
-    public function checkPermissionOnObject(string $permission, bool $redirectToInfoScreenOnFail = true) : bool
+    public function checkPermissionOnObject(string $permission, bool $redirectToInfoScreenOnFail = true): bool
     {
         $hasAccess = $this->access->checkAccess($permission, "", $this->refId);
         if (!$hasAccess && $redirectToInfoScreenOnFail) {
@@ -613,13 +613,13 @@ class ChatController extends BaseController
         return $hasAccess;
     }
 
-    public function redirectToInfoTab() : void
+    public function redirectToInfoTab(): void
     {
         $this->ctrl->setParameterByClass(ilRepositoryGUI::class, "ref_id", $this->refId);
         $this->ctrl->redirectByClass(ilRepositoryGUI::class, "view");
     }
 
-    protected function injectTabs(string $activeTab = null, string $activeSubTab = null) : void
+    protected function injectTabs(string $activeTab = null, string $activeSubTab = null): void
     {
         $this->ctrl->setParameterByClass(ilUIPluginRouterGUI::class, "ref_id", $this->courseSettings->getCourseId());
         $gui = null;
@@ -695,7 +695,7 @@ class ChatController extends BaseController
         }
     }
 
-    public function getCtrlClassesForCommand(string $cmd) : array
+    public function getCtrlClassesForCommand(string $cmd): array
     {
         return [ilUIPluginRouterGUI::class, ilMatrixChatClientUIHookGUI::class];
     }

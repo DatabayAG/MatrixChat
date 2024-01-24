@@ -67,7 +67,7 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
         $this->matrixApi = $this->plugin->getMatrixApi();
     }
 
-    public function showSettings(?PluginConfigForm $form = null) : void
+    public function showSettings(?PluginConfigForm $form = null): void
     {
         $this->injectTabs(self::TAB_PLUGIN_SETTINGS);
         if ($form === null) {
@@ -82,7 +82,7 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
         $this->mainTpl->setContent($form->getHTML());
     }
 
-    public function saveSettings() : void
+    public function saveSettings(): void
     {
         $form = new PluginConfigForm();
 
@@ -156,7 +156,7 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
     }
 
 
-    public function showChatPageDesigner(?ChatPageDesignerForm $form = null) : void
+    public function showChatPageDesigner(?ChatPageDesignerForm $form = null): void
     {
         $this->injectTabs(self::TAB_CHAT_PAGE_DESIGNER);
 
@@ -171,7 +171,7 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
         $this->mainTpl->setContent($form->getHTML());
     }
 
-    public function saveChatPageDesigner() : void
+    public function saveChatPageDesigner(): void
     {
         $form = new ChatPageDesignerForm();
 
@@ -196,7 +196,7 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
         $this->ctrl->redirectByClass(self::class, self::CMD_SHOW_CHAT_PAGE_DESIGNER);
     }
 
-    public function injectTabs(?string $tabId = null) : void
+    public function injectTabs(?string $tabId = null): void
     {
         $this->tabs->addTab(
             self::TAB_PLUGIN_SETTINGS,
@@ -214,7 +214,7 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
         }
     }
 
-    public function performCommand(string $cmd) : void
+    public function performCommand(string $cmd): void
     {
         $cmd = $cmd === "configure" ? $this->getDefaultCommand() : $cmd;
 
@@ -226,7 +226,7 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
         }
     }
 
-    protected function getDefaultCommand() : string
+    protected function getDefaultCommand(): string
     {
         return self::CMD_SHOW_SETTINGS;
     }

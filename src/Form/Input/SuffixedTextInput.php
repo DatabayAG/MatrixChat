@@ -29,7 +29,7 @@ use ilTextInputGUI;
  */
 class SuffixedTextInput extends ilTextInputGUI
 {
-    public function render($a_mode = "") : string
+    public function render($a_mode = ""): string
     {
         $suffix = $this->getSuffix();
         $this->setSuffix("");
