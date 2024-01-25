@@ -331,7 +331,10 @@ class ChatController extends BaseController
         );
 
         if (!$userId) {
-            $this->uiUtil->sendFailure($this->plugin->txt("general.plugin.requiredParameterMissing"), true);
+            $this->uiUtil->sendFailure(sprintf(
+                $this->plugin->txt("general.plugin.requiredParameterMissing"),
+                "userId"
+            ), true);
             $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
         }
 
