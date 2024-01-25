@@ -34,6 +34,8 @@ class ExternalUserConfigController extends BaseUserConfigController
 {
     public function showUserChatConfig(?BaseUserConfigForm $form = null): void
     {
+        $this->verifyCorrectController();
+
         $this->injectTabs(self::TAB_USER_CHAT_CONFIG);
         $this->mainTpl->loadStandardTemplate();
 
@@ -61,6 +63,8 @@ class ExternalUserConfigController extends BaseUserConfigController
 
     public function saveUserChatConfig(): void
     {
+        $this->verifyCorrectController();
+
         $form = new ExternalUserConfigForm(
             $this,
             $this->user,

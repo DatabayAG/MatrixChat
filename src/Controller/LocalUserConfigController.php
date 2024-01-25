@@ -38,6 +38,7 @@ class LocalUserConfigController extends BaseUserConfigController
 
     public function showUserChatConfig(?BaseUserConfigForm $form = null): void
     {
+        $this->verifyCorrectController();
         $this->injectTabs(self::TAB_USER_CHAT_CONFIG);
         $this->mainTpl->loadStandardTemplate();
 
@@ -67,6 +68,7 @@ class LocalUserConfigController extends BaseUserConfigController
 
     public function saveUserChatConfig(): void
     {
+        $this->verifyCorrectController();
         $matrixUsername = $this->buildUsername();
 
         $usernameAvailable = $this->matrixApi->usernameAvailable($matrixUsername);
@@ -131,6 +133,8 @@ class LocalUserConfigController extends BaseUserConfigController
 
     public function showPasswordChange(?LocalUserPasswordChangeForm $form = null): void
     {
+        $this->verifyCorrectController();
+
         $this->injectTabs(self::TAB_USER_CHAT_CONFIG);
         $this->mainTpl->loadStandardTemplate();
 
@@ -143,6 +147,8 @@ class LocalUserConfigController extends BaseUserConfigController
 
     public function savePasswordChange(): void
     {
+        $this->verifyCorrectController();
+
         $form = new LocalUserPasswordChangeForm($this, $this->userConfig);
 
         if (!$form->checkInput()) {

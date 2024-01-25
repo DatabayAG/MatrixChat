@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChatClient\Controller;
 
+use ilAuthUtils;
 use ILIAS\DI\Container;
 use ILIAS\Filesystem\Stream\Streams;
 use ILIAS\Plugin\Libraries\ControllerHandler\BaseController;
@@ -68,6 +69,25 @@ abstract class BaseUserConfigController extends BaseController
         $this->matrixApi = $this->plugin->getMatrixApi();
         $this->logger = $this->dic->logger()->root();
         $this->http = $this->dic->http();
+    }
+
+    protected function verifyCorrectController(): void
+    {
+        if ($this instanceof LocalUserConfigController && (int) $this->user->getAuthMode(true) !== ilAuthUtils::AUTH_LOCAL) {
+            /**
+             * @var ExternalUserConfigController $externalUserConfigController
+             */
+            $externalUserConfigController = $this->controllerHandler->getController(ExternalUserConfigController::class);
+            $externalUserConfigController->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
+        }
+
+        if ($this instanceof ExternalUserConfigController && (int) $this->user->getAuthMode(true) === ilAuthUtils::AUTH_LOCAL) {
+            /**
+             * @var LocalUserConfigController $localUserConfigController
+             */
+            $localUserConfigController = $this->controllerHandler->getController(LocalUserConfigController::class);
+            $localUserConfigController->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
+        }
     }
 
     abstract public function showUserChatConfig(?BaseUserConfigForm $form = null): void;
