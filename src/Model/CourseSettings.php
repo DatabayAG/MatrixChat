@@ -25,7 +25,6 @@ namespace ILIAS\Plugin\MatrixChatClient\Model;
 class CourseSettings
 {
     private int $courseId;
-    private bool $chatIntegrationEnabled = false;
     private ?MatrixRoom $matrixRoom = null;
     private ?string $matrixRoomId = null;
 
