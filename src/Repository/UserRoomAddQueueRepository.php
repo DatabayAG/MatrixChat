@@ -107,7 +107,7 @@ class UserRoomAddQueueRepository
             return null;
         }
 
-        return new UserRoomAddQueue((int) $result["user_id"], (int) $result["ref_id"]);
+        return new UserRoomAddQueue((int) $data["user_id"], (int) $data["ref_id"]);
     }
 
     /**
