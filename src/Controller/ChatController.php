@@ -152,6 +152,9 @@ class ChatController extends BaseController
          */
         $externalUserConfigController = $this->controllerHandler->getController(ExternalUserConfigController::class);
 
+        $this->ctrl->clearParameterByClass(ilMatrixChatClientUIHookGUI::class, "ref_id");
+        $this->ctrl->clearParameterByClass(ilUIPluginRouterGUI::class, "ref_id");
+
         $toChatSettingsButtonLink = $this->dic->user()->getAuthMode() === "local"
             ? $localUserConfigController->getCommandLink(BaseUserConfigController::CMD_SHOW_USER_CHAT_CONFIG)
             : $externalUserConfigController->getCommandLink(BaseUserConfigController::CMD_SHOW_USER_CHAT_CONFIG);
