@@ -361,7 +361,8 @@ class ChatController extends BaseController
         }
 
         if (!$matrixUser) {
-            $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.account.unconfigured"), true);
+            $this->logger->info("Unable to invite user to room '{$room->getId()}'. User to be invited has not configured a matrix user yet.");
+            $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.account.invite.failed"), true);
             $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
         }
 
