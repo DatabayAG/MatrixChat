@@ -144,7 +144,7 @@ matrix.user.status.leave#:#Left
 matrix.user.status.ban#:#Banned
 matrix.user.status.queue#:#On Queue for invite
 
-matrix.user.queue.inviteProcessResult#:#You have been automatically invited to the following chat rooms: <br><br><table class="table table-striped fullwidth_invisible"><thead><tr><th>Object-Type</th><th>Object-Title</th><th>Chatroom-Name</th></tr></thead><tbody>%s</tbody></table>
+matrix.user.queue.inviteProcessResult#:#You have been automatically invited to the following chat rooms <br>Use the Matrix Client of your choice to accept them.: <br><br><table class="table table-striped fullwidth_invisible"><thead><tr><th>Object-Type</th><th>Object-Title</th><th>Chatroom-Name</th></tr></thead><tbody>%s</tbody></table>
 
 matrix.admin.login.valid#:#Admin-Login valid
 matrix.admin.login.invalid#:#Admin-Login invalid
