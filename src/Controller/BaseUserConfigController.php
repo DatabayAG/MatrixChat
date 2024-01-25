@@ -169,7 +169,9 @@ abstract class BaseUserConfigController extends BaseController
                 }
             }
         }
-
+        if ($processResults === []) {
+            return "";
+        }
         return sprintf($resultText, implode("\n", $processResults));
     }
 
