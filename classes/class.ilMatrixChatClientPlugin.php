@@ -210,6 +210,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
 
     public function processUserRoomAddQueue(ilObjUser $user): void
     {
+        $matrixApi = $this->getMatrixApi();
         $userConfig = (new UserConfig($user))->load();
 
         $matrixUser = $this->getMatrixApi()->getUser($userConfig->getMatrixUserId());
@@ -230,7 +231,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
             $courseSettings = $courseSettingsCache[$userRoomAddQueue->getRefId()];
 
             if ($courseSettings->getMatrixRoomId()) {
-                $room = $this->matrixApi->getRoom($courseSettings->getMatrixRoomId());
+                $room = $matrixApi->getRoom($courseSettings->getMatrixRoomId());
 
                 if (!$room) {
                     continue;
@@ -252,6 +253,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
         if (!in_array($a_event, ["addParticipant", "deleteParticipant"], true)) {
             return;
         }
+        $matrixApi = $this->getMatrixApi();
 
         $objId = $a_parameter["obj_id"];
         $user = new ilObjUser($a_parameter["usr_id"]);
@@ -299,7 +301,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
             }
 
             if (!array_key_exists($matrixRoomId, $roomCache)) {
-                $matrixRoom = $this->matrixApi->getRoom($matrixRoomId);
+                $matrixRoom = $matrixApi->getRoom($matrixRoomId);
                 if ($matrixRoom) {
                     $roomCache[$matrixRoomId] = $matrixRoom;
                 }
