@@ -162,6 +162,8 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
             $this->plugin->redirectToHome();
         }
 
+        $objType = ilObject::_lookupType($refId, true);
+
         if ($nextClass) {
             $this->ctrl->setParameterByClass($cmdClass, "ref_id", $refId);
 
@@ -179,14 +181,14 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
                 case strtolower(ilObjectMetaDataGUI::class):
                     $this->ctrl->redirectByClass([
                         ilRepositoryGUI::class,
-                        ilObjCourseGUI::class,
+                        $objType === "crs" ? ilObjCourseGUI::class : ilObjGroupGUI::class,
                         ilObjectMetaDataGUI::class,
                         ilMDEditorGUI::class
                     ], $cmd);
                     break;
             }
 
-            $objGuiClass = $this->plugin->getObjGUIClassByType(ilObject::_lookupType($refId, true));
+            $objGuiClass = $this->plugin->getObjGUIClassByType($objType);
             if (!$objGuiClass) {
                 $this->dic->logger()->root()->error("Unable to redirect to gui class. Type '{$refId}' is not supported");
                 $this->plugin->redirectToHome();
