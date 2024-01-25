@@ -22,7 +22,6 @@ namespace ILIAS\Plugin\MatrixChatClient\Controller;
 
 use Exception;
 use ilAccessHandler;
-use ilCourseParticipants;
 use ILIAS\DI\Container;
 use ILIAS\HTTP\Services;
 use ILIAS\HTTP\Wrapper\WrapperFactory;
@@ -381,7 +380,7 @@ class ChatController extends BaseController
     protected function getChatMembers(MatrixRoom $room): array
     {
         $chatMembers = [];
-        $participants = ilCourseParticipants::getInstance($this->courseSettings->getCourseId());
+        $participants = ilParticipants::getInstance($this->courseSettings->getCourseId());
 
         foreach ($participants->getParticipants() as $participantId) {
             $participantId = (int) $participantId;
@@ -460,8 +459,7 @@ class ChatController extends BaseController
         }
 
         if ($room) {
-            //ilCourseParticipants won't work for Groups.
-            $participants = ilCourseParticipants::getInstance($courseSettings->getCourseId());
+            $participants = ilParticipants::getInstance($courseSettings->getCourseId());
             $matrixUserPowerLevelMap = [];
             foreach ($participants->getParticipants() as $participantId) {
                 $participantId = (int) $participantId;
