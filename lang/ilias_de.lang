@@ -119,6 +119,8 @@ matrix.chat.members#:#Chatteilnehmer
 config.space.name#:#Name des Spaces
 config.space.name.info#:#Ändern des Namens führt dazu, das ein neuer Space erstellt wird (ID des Space verändert sich) <br>Räume im alten Space verbleiben in dem zuvor verwendeten!
 config.space.id#:#ID des Space
+config.space.status.faulty#:#Verbindung zum Chat-Space ist fehlerhaft. Die ID des Spaces ist gespeichert, es konnte jedoch kein Space mit dieser ID gefunden werden.
+config.space.status.disconnected#:#Space nicht Verbunden/Eingerichtet
 
 matrix.space.creation.failure#:#Beim erstellen des Spaces ist ein Fehler aufgetreten.
 matrix.space.notFound#:#Es konnte kein Space gefunden werden, zu dem der Matrix-Raum hinzugefügt werden kann. Erstellen des Raumes nicht möglich.

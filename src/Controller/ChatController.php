@@ -265,7 +265,23 @@ class ChatController extends BaseController
             $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
         }
 
+        $space = null;
         $room = null;
+
+        if ($this->plugin->getPluginConfig()->getMatrixSpaceId()) {
+            $space = $this->matrixApi->getSpace($this->plugin->getPluginConfig()->getMatrixSpaceId());
+        } else {
+            $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.account.invite.multiple.failure"), true);
+            $this->uiUtil->sendInfo($this->plugin->txt("config.space.status.disconnected"), true);
+            $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
+        }
+
+        if (!$space) {
+            $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.account.invite.multiple.failure"), true);
+            $this->uiUtil->sendInfo($this->plugin->txt("config.space.status.faulty"), true);
+            $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
+        }
+
         if ($this->courseSettings->getMatrixRoomId()) {
             $room = $this->matrixApi->getRoom($this->courseSettings->getMatrixRoomId());
         } else {
@@ -305,6 +321,11 @@ class ChatController extends BaseController
                 $inviteFailed = true;
                 $this->logger->error("Unable to get Matrix-User of ilias user with id '$userId'. Not configured or server problem");
                 continue;
+            }
+
+            if (!$this->matrixApi->inviteUserToRoom($matrixUser, $space)) {
+                $inviteFailed = true;
+                $this->logger->error("Inviting user '{$matrixUser->getMatrixUserId()}' to space '{$space->getId()}' failed.");
             }
 
             if (!$this->matrixApi->inviteUserToRoom($matrixUser, $room)) {
@@ -347,7 +368,21 @@ class ChatController extends BaseController
             $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
         }
 
+        $space = null;
         $room = null;
+
+        if ($this->plugin->getPluginConfig()->getMatrixSpaceId()) {
+            $space = $this->matrixApi->getRoom($this->plugin->getPluginConfig()->getMatrixSpaceId());
+        } else {
+            $this->uiUtil->sendFailure($this->plugin->txt("config.space.status.disconnected"), true);
+            $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
+        }
+
+        if (!$space) {
+            $this->uiUtil->sendFailure($this->plugin->txt("config.space.status.faulty"), true);
+            $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
+        }
+
         if ($this->courseSettings->getMatrixRoomId()) {
             $room = $this->matrixApi->getRoom($this->courseSettings->getMatrixRoomId());
         } else {
@@ -377,6 +412,11 @@ class ChatController extends BaseController
 
         if (!$matrixUser) {
             $this->logger->info("Unable to invite user to room '{$room->getId()}'. User to be invited has not configured a matrix user yet.");
+            $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.account.invite.failed"), true);
+            $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
+        }
+
+        if (!$this->matrixApi->inviteUserToRoom($matrixUser, $space)) {
             $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.account.invite.failed"), true);
             $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
         }
@@ -491,20 +531,26 @@ class ChatController extends BaseController
                     continue;
                 }
 
-                $this->matrixApi->inviteUserToRoom($matrixUser, $room);
-                $this->matrixApi->inviteUserToRoom($matrixUser, $space);
+                if (!$this->matrixApi->inviteUserToRoom($matrixUser, $space)) {
+                    $this->logger->error(sprintf(
+                        "Inviting matrix-user '%s' to space '%s' failed.",
+                        $matrixUser->getMatrixUserId(),
+                        $space->getId()
+                    ));
+                }
+                if (!$this->matrixApi->inviteUserToRoom($matrixUser, $room)) {
+                    $this->logger->error(sprintf(
+                        "Inviting matrix-user '%s' to room '%s' failed.",
+                        $matrixUser->getMatrixUserId(),
+                        $room->getId()
+                    ));
+                }
 
 
                 $matrixUserPowerLevelMap[] = new MatrixUserPowerLevel(
                     $matrixUser->getMatrixUserId(),
                     $this->determinePowerLevelOfParticipant($participants, $participantId)
                 );
-
-                $userRoomAddQueue = $this->userRoomAddQueueRepo->read($participantId, $courseSettings->getCourseId());
-                if ($userRoomAddQueue) {
-                    //Remove user from queue when already on list
-                    $this->userRoomAddQueueRepo->delete($userRoomAddQueue);
-                }
             }
 
             $this->matrixApi->setUserPowerLevelOnRoom($room, $matrixUserPowerLevelMap);

@@ -30,7 +30,7 @@ config.room.powerLevel.modify.title#:#Adjust Power-Level of Course/Group Partici
 config.room.powerLevel.modify.info#:#Power-level of the different Course/Group participant roles can be adjusted here. <br>Will only be adopted for new assignments, existing power-levels won't be adjusted. <br> Defaults: <br>- Course Administrator: 100 (Administrator in Element) <br>- Course Tutor: 50 (Moderator in Element), <br>- Course Member: 0 (Default in Element)
 config.room.status.title#:#Status of the Chat-Room
 config.room.status.info#:#Course participants are automatically added to the room or removed from it when they leave the course.
-config.room.status.disconnected#:#Not Connected/Set up
+config.room.status.disconnected#:#Not Connected/Setup
 config.room.status.connected#:#Connected
 config.room.status.faulty#:#Connection to the chat room is faulty. The room ID is saved, but no room with this ID could be found.
 config.room.name#:#Name of the Chat-Room
@@ -117,6 +117,8 @@ matrix.chat.members#:#Chat Participant
 config.space.name#:#Name of the Space
 config.space.name.info#:#Changing the name causes a new Space to be created (ID of the Space changes) <br>Rooms in the old Space remain in the previously used Space!
 config.space.id#:#ID of the Space
+config.space.status.faulty#:#Connection to the space is faulty. The space ID is saved, but no space with this ID could be found.
+config.space.status.disconnected#:#Space not Connected/Setup
 
 matrix.space.creation.failure#:#An error occurred while trying to create MatrixSpace.
 matrix.space.notFound#:#No Matrix-Space could be found to which the Matrix-Room can be added. Creation of room not possible.

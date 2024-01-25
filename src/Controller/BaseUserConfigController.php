@@ -126,6 +126,17 @@ abstract class BaseUserConfigController extends BaseController
         $resultText = $this->plugin->txt("matrix.user.queue.inviteProcessResult");
 
         $processResults = [];
+
+        $space = null;
+        $matrixSpaceId = $this->plugin->getPluginConfig()->getMatrixSpaceId();
+        if ($matrixSpaceId) {
+            $space = $this->matrixApi->getSpace($matrixSpaceId);
+        }
+        if (!$space) {
+            $this->logger->error("Unable to get space with id '$matrixSpaceId'");
+            return "";
+        }
+
         foreach ($this->userRoomAddQueueRepo->readAllByUserId($user->getId()) as $userRoomAddQueue) {
             if (!array_key_exists($userRoomAddQueue->getRefId(), $courseSettingsCache)) {
                 $courseSettingsCache[$userRoomAddQueue->getRefId()] = $this->courseSettingsRepo->read($userRoomAddQueue->getRefId());
@@ -145,12 +156,14 @@ abstract class BaseUserConfigController extends BaseController
 
             if ($courseSettings->getMatrixRoomId()) {
                 $room = $this->matrixApi->getRoom($courseSettings->getMatrixRoomId());
-
                 if (!$room) {
                     continue;
                 }
 
                 if (!$room->isMember($matrixUser)) {
+                    if (!$this->matrixApi->inviteUserToRoom($matrixUser, $space)) {
+                        $this->dic->logger()->root()->error("Inviting matrix-user '{$matrixUser->getMatrixUserId()}' to space '{$space->getId()}' failed");
+                    }
                     if (!$this->matrixApi->inviteUserToRoom($matrixUser, $room)) {
                         $this->dic->logger()->root()->error("Inviting matrix-user '{$matrixUser->getMatrixUserId()}' to room '{$room->getId()}' failed");
                     }

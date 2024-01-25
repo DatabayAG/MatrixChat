@@ -24,6 +24,7 @@ use ILIAS\Plugin\MatrixChatClient\Api\MatrixApi;
 use ILIAS\Plugin\MatrixChatClient\Model\CourseSettings;
 use ILIAS\Plugin\MatrixChatClient\Model\MatrixRoom;
 use ILIAS\Plugin\MatrixChatClient\Model\PluginConfig;
+use ILIAS\Plugin\MatrixChatClient\Model\Room\MatrixSpace;
 use ILIAS\Plugin\MatrixChatClient\Model\UserConfig;
 use ILIAS\Plugin\MatrixChatClient\Model\UserRoomAddQueue;
 use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
@@ -246,6 +247,12 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
          */
         $roomCache = [];
 
+
+        /**
+         * @var array<string, MatrixSpace> $spaceCache
+         */
+        $spaceCache = [];
+
         foreach (ilObjCourse::_getAllReferences($objId) as $objRefId) {
             $objRefId = (int) $objRefId;
 
@@ -255,8 +262,15 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
 
             $courseSettings = $courseSettingsCache[$objRefId];
             $matrixRoomId = $courseSettings->getMatrixRoomId();
+            $matrixSpaceId = $this->pluginConfig->getMatrixSpaceId();
 
             if (!$matrixRoomId) {
+                $this->dic->logger()->root()->error("Unable to continue handling event '$a_event'. No Matrix-Room-ID found in setting of object with ref_id '$objRefId'");
+                continue;
+            }
+
+            if (!$matrixSpaceId) {
+                $this->dic->logger()->root()->error("Unable to continue handling event '$a_event'. No Matrix-Space-ID found");
                 continue;
             }
 
@@ -269,8 +283,22 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
 
             $room = $roomCache[$matrixRoomId] ?? null;
 
+            if (!array_key_exists($matrixSpaceId, $spaceCache)) {
+                $matrixSpace = $matrixApi->getRoom($matrixSpaceId);
+                if ($matrixSpace) {
+                    $spaceCache[$matrixSpaceId] = $matrixSpace;
+                }
+            }
+
+            $space = $spaceCache[$matrixSpaceId] ?? null;
+
             if (!$room) {
-                $this->dic->logger()->root()->error("Unable to process event '$a_event'. Matrix-Room-ID '$matrixRoomId' saved but retrieving room failed. Skipping");
+                $this->dic->logger()->root()->error("Unable to continue handling event '$a_event'. Matrix-Room-ID '$matrixRoomId' saved but retrieving room failed. Skipping");
+                continue;
+            }
+
+            if (!$space) {
+                $this->dic->logger()->root()->error("Unable to continue handling event '$a_event'. Matrix-Space-ID '$matrixSpaceId' saved but retrieving space failed. Skipping");
                 continue;
             }
 
@@ -283,6 +311,14 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
                     $matrixUser
                     && !$room->isMember($matrixUser)
                 ) {
+                    if (!$this->getMatrixApi()->inviteUserToRoom($matrixUser, $space)) {
+                        $this->dic->logger()->root()->error(sprintf(
+                            "Inviting matrix-user '%s' to space '%s' failed",
+                            $matrixUser->getMatrixUserId(),
+                            $space->getId()
+                        ));
+                    }
+
                     if (!$this->getMatrixApi()->inviteUserToRoom($matrixUser, $room)) {
                         $this->dic->logger()->root()->error(sprintf(
                             "Inviting matrix-user '%s' to room '%s' failed",
