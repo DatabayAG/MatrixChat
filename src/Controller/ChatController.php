@@ -177,7 +177,7 @@ class ChatController extends BaseController
                 $toChatSettingsButtonLink
             );
         } else {
-            $this->uiUtil->sendInfo($this->plugin->txt("matrix.chat.user.account.unconfigured"), true);
+            $this->uiUtil->sendInfo($this->plugin->txt("matrix.user.account.unconfigured"), true);
             $toChatSettingsButton = $uiFactory->button()->standard(
                 $this->plugin->txt("matrix.user.account.setupMatrixAccount"),
                 $toChatSettingsButtonLink
