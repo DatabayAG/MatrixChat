@@ -115,7 +115,7 @@ class CourseSettingsRepository
 
         $affectedRows = (int) $this->db->manipulateF(
             "INSERT INTO " . self::TABLE_NAME . " (course_id, matrix_room_id) VALUES (%s, %s)",
-            ["integer", "integer", "text"],
+            ["integer", "text"],
             [
                 $courseSettings->getCourseId(),
                 $courseSettings->getMatrixRoomId() ?: null
