@@ -278,6 +278,10 @@ class ChatController extends BaseController
 
         $inviteFailed = false;
         foreach ($userIds as $userId) {
+            if (!ilParticipants::_isParticipant($this->refId, $userId)) {
+                $this->logger->error("Unable to invite user with id '$userId' to room '{$room->getId()}'. User is not a member of the Course/Group with id '{$this->refId}'");
+                continue;
+            }
             try {
                 $user = new ilObjUser($userId);
             } catch (Throwable $ex) {
@@ -331,6 +335,10 @@ class ChatController extends BaseController
             $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
         }
 
+        if (!ilParticipants::_isParticipant($this->refId, $userId)) {
+            $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.account.invite.failed.userNotMember"), true);
+            $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
+        }
 
         $room = null;
         if ($this->courseSettings->getMatrixRoomId()) {

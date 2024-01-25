@@ -134,6 +134,7 @@ matrix.user.account.unknown#:#Es konnte kein Matrix-Benutzer Profil gefunden wer
 matrix.user.account.changeMatrixAccountSettings#:#Matrix-Account Einstellungen ändern
 matrix.user.account.setupMatrixAccount#:#Matrix-Account einrichten
 matrix.user.account.invite.failed#:#Der Benutzer konnte nicht in den Raum eingeladen werden.
+matrix.user.account.invite.failed.userNotMember#:#Der Benutzer ist kein Mitglied des Kurses/Gruppe.
 matrix.user.account.invite.success#:#Der Benutzer wurde erfolgreich in den Raum eingeladen.
 matrix.user.account.invite.multiple.success#:#Alle ausgewählten Benutzer wurden eingeladen.
 matrix.user.account.invite.multiple.failure#:#Beim einladen der Benutzer ist ein Fehler aufgetreten, es wurden unter umständen nicht alle eingeladen.
