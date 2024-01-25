@@ -157,6 +157,11 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
             ])
         );
 
+        if (!$refId) {
+            $this->uiUtil->sendFailure($this->plugin->txt("general.plugin.requiredParameterMissing"), true);
+            $this->plugin->redirectToHome();
+        }
+
         if ($nextClass) {
             $this->ctrl->setParameterByClass($cmdClass, "ref_id", $refId);
 
