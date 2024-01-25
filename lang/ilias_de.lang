@@ -111,6 +111,7 @@ matrix.chat.course.settings#:#Chat-Einstellungen
 matrix.chat.course.members#:#Mitglieder
 matrix.chat.course.enable#:#Aktiviere Matrix-Chat Integration Für Den Kurs
 matrix.chat.invite#:#Einladen
+matrix.chat.invite.notPossible#:#Einladen nicht möglich
 matrix.chat.status#:#Chat-Status
 matrix.chat.members#:#Chatteilnehmer
 

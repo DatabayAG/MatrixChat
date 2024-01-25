@@ -153,6 +153,13 @@ class ChatMemberTable extends ilTable2GUI
                     break;
             }
 
+            $inviteText = "";
+            if ($inviteButton && $chatMember->getMatrixUserId()) {
+                $inviteText = "<span class='inviteButton-wrapper'>{$this->uiRenderer->render($inviteButton)}</span>";
+            } elseif(!$chatMember->getMatrixUserId()) {
+                $inviteText = $this->plugin->txt("matrix.chat.invite.notPossible");
+            }
+
             $tableData[] = [
                 "checkbox" => ilLegacyFormElementsUtil::formCheckbox(
                     false,
@@ -164,7 +171,7 @@ class ChatMemberTable extends ilTable2GUI
                 "role" => $chatMember->getRoleText(),
                 "status" => $this->uiRenderer->render($statusIcon) . " " . $this->plugin->txt("matrix.user.status.{$chatMember->getStatus()}"),
                 "matrixUserId" => $chatMember->getMatrixUserId(),
-                "invite" => $inviteButton ? "<span class='inviteButton-wrapper'>{$this->uiRenderer->render($inviteButton)}</span>" : "",
+                "invite" => $inviteText
             ];
         }
         return $tableData;
