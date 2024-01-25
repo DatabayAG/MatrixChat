@@ -22,6 +22,7 @@ namespace ILIAS\Plugin\MatrixChatClient\Controller;
 
 use Exception;
 use ilAccessHandler;
+use ilAuthUtils;
 use ILIAS\DI\Container;
 use ILIAS\HTTP\Services;
 use ILIAS\HTTP\Wrapper\WrapperFactory;
@@ -155,7 +156,7 @@ class ChatController extends BaseController
         $this->ctrl->clearParameterByClass(ilMatrixChatClientUIHookGUI::class, "ref_id");
         $this->ctrl->clearParameterByClass(ilUIPluginRouterGUI::class, "ref_id");
 
-        $toChatSettingsButtonLink = $this->dic->user()->getAuthMode() === "local"
+        $toChatSettingsButtonLink = (int) $this->dic->user()->getAuthMode(true) === ilAuthUtils::AUTH_LOCAL
             ? $localUserConfigController->getCommandLink(BaseUserConfigController::CMD_SHOW_USER_CHAT_CONFIG)
             : $externalUserConfigController->getCommandLink(BaseUserConfigController::CMD_SHOW_USER_CHAT_CONFIG);
 

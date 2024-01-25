@@ -248,7 +248,7 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
         $tabs->addTab(
             BaseUserConfigController::TAB_USER_CHAT_CONFIG,
             $this->plugin->txt("config.user.title"),
-            $this->dic->user()->getAuthMode() === "local"
+            (int) $this->dic->user()->getAuthMode() === ilAuthUtils::AUTH_LOCAL
                 ? $localUserConfigController->getCommandLink(BaseUserConfigController::CMD_SHOW_USER_CHAT_CONFIG)
                 : $externalUserConfigController->getCommandLink(BaseUserConfigController::CMD_SHOW_USER_CHAT_CONFIG)
         );
