@@ -300,11 +300,23 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
                 }
 
                 if ($matrixUser) {
-                    $this->getMatrixApi()->removeUserFromRoom(
+                    if (!$this->getMatrixApi()->removeUserFromRoom(
                         $matrixUser,
                         $room,
                         "Removed from course/group"
-                    );
+                    )) {
+                        $this->dic->logger()->root()->error(sprintf(
+                            "Removing matrixuser '%s' from room '%s'. with Reason 'Removed from Course/Group object' failed.",
+                            $matrixUser->getMatrixUserId(),
+                            $room->getId()
+                        ));
+                    }
+
+                    $this->dic->logger()->root()->info(sprintf(
+                        "Removed matrix user '%s' from room '%s'. Reason: Removed from Course/Group object.",
+                        $matrixUser->getMatrixUserId(),
+                        $room->getId()
+                    ));
                 }
             }
         }
