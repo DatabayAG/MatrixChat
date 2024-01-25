@@ -23,17 +23,26 @@ namespace ILIAS\Plugin\MatrixChatClient\Controller;
 use ilAuthUtils;
 use ILIAS\DI\Container;
 use ILIAS\Filesystem\Stream\Streams;
+use ILIAS\HTTP\Services;
 use ILIAS\Plugin\Libraries\ControllerHandler\BaseController;
 use ILIAS\Plugin\Libraries\ControllerHandler\ControllerHandler;
 use ILIAS\Plugin\MatrixChatClient\Api\MatrixApi;
 use ILIAS\Plugin\MatrixChatClient\Api\MatrixApiException;
 use ILIAS\Plugin\MatrixChatClient\Form\BaseUserConfigForm;
+use ILIAS\Plugin\MatrixChatClient\Model\CourseSettings;
 use ILIAS\Plugin\MatrixChatClient\Model\UserConfig;
+use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
+use ILIAS\Plugin\MatrixChatClient\Repository\UserRoomAddQueueRepository;
+use ilLanguage;
 use ilLogger;
 use ilMatrixChatClientPlugin;
 use ilMatrixChatClientUIHookGUI;
+use ilObject;
 use ilObjUser;
+use ilParticipant;
+use ilParticipants;
 use ilPersonalSettingsGUI;
+use ilRepositoryGUI;
 use ilTabsGUI;
 use ilUIPluginRouterGUI;
 
@@ -56,12 +65,16 @@ abstract class BaseUserConfigController extends BaseController
     protected ilMatrixChatClientPlugin $plugin;
     protected MatrixApi $matrixApi;
     protected ilLogger $logger;
-    private \ILIAS\HTTP\Services $http;
+    private Services $http;
+    protected UserRoomAddQueueRepository $userRoomAddQueueRepo;
+    protected CourseSettingsRepository $courseSettingsRepo;
+    private ilLanguage $lng;
 
     public function __construct(Container $dic, ControllerHandler $controllerHandler)
     {
         parent::__construct($dic, $controllerHandler);
 
+        $this->lng = $this->dic->language();
         $this->user = $this->dic->user();
         $this->tabs = $this->dic->tabs();
         $this->plugin = ilMatrixChatClientPlugin::getInstance();
@@ -69,6 +82,8 @@ abstract class BaseUserConfigController extends BaseController
         $this->matrixApi = $this->plugin->getMatrixApi();
         $this->logger = $this->dic->logger()->root();
         $this->http = $this->dic->http();
+        $this->userRoomAddQueueRepo = UserRoomAddQueueRepository::getInstance($this->dic->database());
+        $this->courseSettingsRepo = CourseSettingsRepository::getInstance();
     }
 
     protected function verifyCorrectController(): void
@@ -88,6 +103,74 @@ abstract class BaseUserConfigController extends BaseController
             $localUserConfigController = $this->controllerHandler->getController(LocalUserConfigController::class);
             $localUserConfigController->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
         }
+    }
+
+    public function processUserRoomAddQueue(ilObjUser $user): ?string
+    {
+        $userConfig = (new UserConfig($user))->load();
+
+        if (!$userConfig->getMatrixUserId()) {
+            return null;
+        }
+
+        $matrixUser = $this->matrixApi->getUser($userConfig->getMatrixUserId());
+        if (!$matrixUser) {
+            return null;
+        }
+
+        /**
+         * @var array<int, CourseSettings> $courseSettingsCache
+         */
+        $courseSettingsCache = [];
+
+        $resultText = $this->plugin->txt("matrix.user.queue.inviteProcessResult");
+
+        $processResults = [];
+        foreach ($this->userRoomAddQueueRepo->readAllByUserId($user->getId()) as $userRoomAddQueue) {
+            if (!array_key_exists($userRoomAddQueue->getRefId(), $courseSettingsCache)) {
+                $courseSettingsCache[$userRoomAddQueue->getRefId()] = $this->courseSettingsRepo->read($userRoomAddQueue->getRefId());
+            }
+
+            if (!ilParticipants::_isParticipant($userRoomAddQueue->getRefId(), $user->getId())) {
+                $this->logger->error(sprintf(
+                    "Unable to continue processing queue entry of user with id '%s' to object with ref-id '%s'. User is not a participant of this object",
+                    $user->getId(),
+                    $userRoomAddQueue->getRefId()
+                ));
+                $this->userRoomAddQueueRepo->delete($userRoomAddQueue);
+                continue;
+            }
+
+            $courseSettings = $courseSettingsCache[$userRoomAddQueue->getRefId()];
+
+            if ($courseSettings->getMatrixRoomId()) {
+                $room = $this->matrixApi->getRoom($courseSettings->getMatrixRoomId());
+
+                if (!$room) {
+                    continue;
+                }
+
+                if (!$room->isMember($matrixUser)) {
+                    if (!$this->matrixApi->inviteUserToRoom($matrixUser, $room)) {
+                        $this->dic->logger()->root()->error("Inviting matrix-user '{$matrixUser->getMatrixUserId()}' to room '{$room->getId()}' failed");
+                    }
+                    $this->ctrl->setParameterByClass(ilRepositoryGUI::class, "ref_id", $courseSettings->getCourseId());
+                    $objectLink =$this->ctrl->getLinkTargetByClass(ilRepositoryGUI::class, "view");
+
+                    $processResults[] = sprintf(
+                        "<tr><td>%s</td><td><a href='%s'>%s</a></td><td>%s</td></tr>",
+                        $this->lng->txt(ilObject::_lookupType($courseSettings->getCourseId(), true)),
+                        $objectLink,
+                        ilObject::_lookupTitle(ilObject::_lookupObjId($courseSettings->getCourseId())),
+                        $room->getName()
+                    );
+                } else {
+                    $this->userRoomAddQueueRepo->delete($userRoomAddQueue);
+                }
+            }
+        }
+
+        return sprintf($resultText, implode("\n", $processResults));
     }
 
     abstract public function showUserChatConfig(?BaseUserConfigForm $form = null): void;

@@ -128,6 +128,10 @@ class LocalUserConfigController extends BaseUserConfigController
             $this->userConfig->setMatrixUserId($form->getInput("matrixAccount"))->save();
         }
 
+        $result = $this->processUserRoomAddQueue($this->user);
+        if ($result) {
+            $this->uiUtil->sendInfo($result, true);
+        }
         $this->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
     }
 

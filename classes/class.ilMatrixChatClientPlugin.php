@@ -208,46 +208,6 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
         return $this->pluginConfig;
     }
 
-    public function processUserRoomAddQueue(ilObjUser $user): void
-    {
-        $matrixApi = $this->getMatrixApi();
-        $userConfig = (new UserConfig($user))->load();
-
-        $matrixUser = $this->getMatrixApi()->getUser($userConfig->getMatrixUserId());
-        if (!$matrixUser) {
-            return;
-        }
-
-        /**
-         * @var array<int, CourseSettings> $courseSettingsCache
-         */
-        $courseSettingsCache = [];
-
-        foreach ($this->userRoomAddQueueRepo->readAllByUserId($user->getId()) as $userRoomAddQueue) {
-            if (!array_key_exists($userRoomAddQueue->getRefId(), $courseSettingsCache)) {
-                $courseSettingsCache[$userRoomAddQueue->getRefId()] = $this->courseSettingsRepo->read($userRoomAddQueue->getRefId());
-            }
-
-            $courseSettings = $courseSettingsCache[$userRoomAddQueue->getRefId()];
-
-            if ($courseSettings->getMatrixRoomId()) {
-                $room = $matrixApi->getRoom($courseSettings->getMatrixRoomId());
-
-                if (!$room) {
-                    continue;
-                }
-
-                if (!$room->isMember($matrixUser)) {
-                    if (!$this->getMatrixApi()->inviteUserToRoom($matrixUser, $room)) {
-                        $this->dic->logger()->root()->error("Inviting matrix-user '{$matrixUser->getMatrixUserId()}' to room '{$room->getId()}' failed");
-                    }
-                } else {
-                    $this->userRoomAddQueueRepo->delete($userRoomAddQueue);
-                }
-            }
-        }
-    }
-
     public function handleEvent(string $a_component, string $a_event, $a_parameter): void
     {
         if (!in_array($a_event, ["addParticipant", "deleteParticipant"], true)) {

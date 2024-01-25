@@ -146,6 +146,8 @@ matrix.user.status.leave#:#Verlassen
 matrix.user.status.ban#:#Gebannt
 matrix.user.status.queue#:#Auf Warteschlange für Einladung
 
+matrix.user.queue.inviteProcessResult#:#Sie wurden automatisch zu folgenden Chaträumen eingeladen: <br><br><table class="table table-striped fullwidth_invisible"><thead><tr><th>Object-Typ</th><th>Object-Titel</th><th>Chatraum-Name</th></tr></thead><tbody>%s</tbody></table>
+
 matrix.admin.login.valid#:#Admin-Login gültig
 matrix.admin.login.invalid#:#Admin-Login ungültig
 matrix.restApiUser.login.valid#:#Rest-API Login gültig

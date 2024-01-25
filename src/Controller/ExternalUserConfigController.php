@@ -135,11 +135,16 @@ class ExternalUserConfigController extends BaseUserConfigController
                     ->save();
 
                 $this->uiUtil->sendSuccess($this->plugin->txt("config.user.register.success"), true);
-                $this->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
             }
         } else {
             $this->userConfig->setMatrixUserId($form->getInput("matrixAccount"))->save();
         }
+
+        $result = $this->processUserRoomAddQueue($this->user);
+        if ($result) {
+            $this->uiUtil->sendInfo($result, true);
+        }
+        $this->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
     }
 
     public function buildUsername(): string
