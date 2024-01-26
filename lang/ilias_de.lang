@@ -102,6 +102,7 @@ matrix.server.reachable#:#Server erreichbar
 matrix.server.unreachable#:#Server nicht erreichbar
 
 matrix.chat.room.notFound#:#Raum konnte nicht gefunden werden.
+matrix.chat.room.creation.failure#:#Ein Fehler ist beim erstellen des Raumes aufgetreten.
 matrix.chat.room.memberAssignFailed#:#Benutzer konnte nicht zum Raum hinzugefügt werden.
 matrix.chat.room.delete.confirm#:#Sind Sie sicher das Sie den Matrix-Chatraum löschen wollen? <br>Alle Benutzer werden aus diesem entfernt!
 matrix.chat.room.delete.button#:#Chatraum löschen

@@ -509,6 +509,10 @@ class ChatController extends BaseController
                 $this->plugin->getPluginConfig()->isEnableRoomEncryption(),
                 $space
             );
+            if (!$room) {
+                $this->uiUtil->sendFailure($this->plugin->txt("matrix.space.creation.failure"), true);
+                $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS, ["ref_id" => $this->refId]);
+            }
 
             $courseSettings->setMatrixRoomId($room->getId());
         }
