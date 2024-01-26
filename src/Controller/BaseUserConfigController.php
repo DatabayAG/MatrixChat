@@ -31,6 +31,7 @@ use ILIAS\Plugin\MatrixChatClient\Api\MatrixApiException;
 use ILIAS\Plugin\MatrixChatClient\Form\BaseUserConfigForm;
 use ILIAS\Plugin\MatrixChatClient\Model\CourseSettings;
 use ILIAS\Plugin\MatrixChatClient\Model\UserConfig;
+use ILIAS\Plugin\MatrixChatClient\Model\UserRoomAddQueue;
 use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
 use ILIAS\Plugin\MatrixChatClient\Repository\UserRoomAddQueueRepository;
 use ilLanguage;
@@ -39,7 +40,6 @@ use ilMatrixChatClientPlugin;
 use ilMatrixChatClientUIHookGUI;
 use ilObject;
 use ilObjUser;
-use ilParticipant;
 use ilParticipants;
 use ilPersonalSettingsGUI;
 use ilRepositoryGUI;
@@ -168,7 +168,7 @@ abstract class BaseUserConfigController extends BaseController
                         $this->logger->error("Inviting matrix-user '{$matrixUser->getMatrixUserId()}' to room '{$room->getId()}' failed");
                     }
                     $this->ctrl->setParameterByClass(ilRepositoryGUI::class, "ref_id", $courseSettings->getCourseId());
-                    $objectLink =$this->ctrl->getLinkTargetByClass(ilRepositoryGUI::class, "view");
+                    $objectLink = $this->ctrl->getLinkTargetByClass(ilRepositoryGUI::class, "view");
 
                     $processResults[] = sprintf(
                         "<tr><td>%s</td><td><a href='%s'>%s</a></td><td>%s</td></tr>",
@@ -196,6 +196,68 @@ abstract class BaseUserConfigController extends BaseController
 
     public function resetAccountSettings(): void
     {
+        $oldMatrixUserId = $this->userConfig->getMatrixUserId();
+        $matrixUser = $this->matrixApi->getUser($oldMatrixUserId);
+        if ($matrixUser) {
+            foreach ($this->courseSettingsRepo->readAll() as $courseSetting) {
+                if (!$courseSetting->getMatrixRoomId()) {
+                    //No need to remove user from room because no room configured
+                    continue;
+                }
+
+                $matrixRoom = $this->matrixApi->getRoom($courseSetting->getMatrixRoomId());
+                if (!$matrixRoom) {
+                    //No need to remove user from room because no room found/configured
+                    continue;
+                }
+
+                if ($matrixRoom->isMember($matrixUser)) {
+                    $reason = "Removed Matrix-Account from ILIAS-Plattform";
+                    if (!$this->matrixApi->removeUserFromRoom($matrixUser, $matrixRoom, $reason)) {
+                        $this->logger->error(sprintf(
+                            "Removing user '%s' from room '%s' for reason '%s' failed.",
+                            $matrixUser->getMatrixUserId(),
+                            $matrixRoom->getId(),
+                            $reason
+                        ));
+                    }
+
+                    //If no entry in the queue exists anymore,
+                    //create a new one so the user gets re-added to the matrix room once the matrix-account is configured again
+                    if (
+                        !$this->userRoomAddQueueRepo->exists($this->user->getId(), $courseSetting->getCourseId())
+                        && !$this->userRoomAddQueueRepo->create(new UserRoomAddQueue(
+                            $this->user->getId(),
+                            $courseSetting->getCourseId()
+                        ))
+                    ) {
+                        $this->logger->error(sprintf(
+                            "ILIAS-User with id '%s' (matrix: '%s') could not be added back to queue after removing user from room '%s' when user reset matrix-account settings",
+                            $this->user->getId(),
+                            $matrixUser->getMatrixUserId(),
+                            $matrixRoom->getId()
+                        ));
+                    }
+                }
+
+                $statusOfUserInRoom = $this->matrixApi->getStatusOfUserInRoom($matrixRoom,
+                    $matrixUser->getMatrixUserId());
+
+                if ($statusOfUserInRoom === ChatController::USER_STATUS_INVITE
+                    && !$this->matrixApi->removeUserFromRoom(
+                        $matrixUser,
+                        $matrixRoom, "Invite redacted because Matrix-Account of user was reset")
+                ) {
+                    $this->logger->error(sprintf(
+                        "Error occurred while trying to remove invited user '%s' from room '%s' after matrix-account of user was reset",
+                        $matrixUser->getMatrixUserId(),
+                        $matrixRoom->getId()
+                    ));
+                }
+            }
+        }
+
+
         $this->userConfig
             ->setMatrixUserId("")
             ->setAuthMethod("")
