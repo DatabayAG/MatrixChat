@@ -242,7 +242,10 @@ class MatrixApi
             $response = $this->sendRequest(
                 "/_synapse/admin/v1/rooms/$matrixRoomId"
             );
-        } catch (MatrixApiException $ex) {
+            if ($response->getResponseDataValue("room_type") === null && $response->getResponseDataValue("name") === null) {
+                throw new Exception("Faulty room");
+            }
+        } catch (MatrixApiException|Exception $ex) {
             $this->logger->error("Error occurred while trying to retrieve room '$matrixRoomId'.");
             return null;
         }
