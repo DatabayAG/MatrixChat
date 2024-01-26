@@ -283,7 +283,7 @@ class MatrixApi
                 true,
                 "POST",
                 [
-                    "user_id" => $matrixUser->getMatrixUserId(),
+                    "user_id" => $matrixUser->getId(),
                 ],
                 true
             );
@@ -294,7 +294,7 @@ class MatrixApi
 
             $this->logger->error(sprintf(
                 "Error occurred while trying to invite user '%s' to $roomType '%s'",
-                $matrixUser->getMatrixUserId(),
+                $matrixUser->getId(),
                 $matrixRoom->getId()
             ));
             return false;
@@ -309,7 +309,7 @@ class MatrixApi
                 true,
                 "POST",
                 [
-                    "user_id" => $matrixUser->getMatrixUserId(),
+                    "user_id" => $matrixUser->getId(),
                 ],
             );
         } catch (MatrixApiException $ex) {
@@ -416,14 +416,14 @@ class MatrixApi
                 "POST",
                 [
                     "reason" => $reason,
-                    "user_id" => $matrixUser->getMatrixUserId(),
+                    "user_id" => $matrixUser->getId(),
                 ], true
             );
             return true;
         } catch (MatrixApiException $ex) {
             $this->logger->error(sprintf(
                 "Error occurred while trying to remove user '%s' from room '%s' with reason '%s'.",
-                $matrixUser->getMatrixUserId(),
+                $matrixUser->getId(),
                 $room->getId(),
                 $reason
             ));
@@ -758,7 +758,7 @@ class MatrixApi
     {
         try {
             $response = $this->sendRequest(
-                "/_synapse/admin/v1/users/{$matrixUser->getMatrixUserId()}/override_ratelimit",
+                "/_synapse/admin/v1/users/{$matrixUser->getId()}/override_ratelimit",
                 true,
                 "POST",
                 [
@@ -770,7 +770,7 @@ class MatrixApi
         } catch (MatrixApiException $ex) {
             $this->logger->error(sprintf(
                 "Error occurred while trying to set overwrite_ratelimit for user '%s', messages_per_second = %s & burst_count = %s",
-                $matrixUser->getMatrixUserId(),
+                $matrixUser->getId(),
                 $messagesPerSecond,
                 $burstCount
             ));

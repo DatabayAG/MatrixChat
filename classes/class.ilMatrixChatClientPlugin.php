@@ -318,7 +318,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
                     if (!$this->getMatrixApi()->inviteUserToRoom($matrixUser, $space)) {
                         $this->logger->error(sprintf(
                             "Inviting matrix-user '%s' to space '%s' failed",
-                            $matrixUser->getMatrixUserId(),
+                            $matrixUser->getId(),
                             $space->getId()
                         ));
                     }
@@ -326,7 +326,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
                     if (!$this->getMatrixApi()->inviteUserToRoom($matrixUser, $room)) {
                         $this->logger->error(sprintf(
                             "Inviting matrix-user '%s' to room '%s' failed",
-                            $matrixUser->getMatrixUserId(),
+                            $matrixUser->getId(),
                             $room->getId()
                         ));
                     }
@@ -347,14 +347,14 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
                     )) {
                         $this->logger->error(sprintf(
                             "Removing matrixuser '%s' from room '%s'. with Reason 'Removed from Course/Group object' failed.",
-                            $matrixUser->getMatrixUserId(),
+                            $matrixUser->getId(),
                             $room->getId()
                         ));
                     }
 
                     $this->logger->info(sprintf(
                         "Removed matrix user '%s' from room '%s'. Reason: Removed from Course/Group object.",
-                        $matrixUser->getMatrixUserId(),
+                        $matrixUser->getId(),
                         $room->getId()
                     ));
                 }

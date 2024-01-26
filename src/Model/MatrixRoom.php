@@ -80,7 +80,7 @@ class MatrixRoom
 
     public function isMember(MatrixUser $matrixUser): bool
     {
-        return in_array($matrixUser->getMatrixUserId(), $this->getMembers(), true);
+        return in_array($matrixUser->getId(), $this->getMembers(), true);
     }
 
     public function exists(): bool

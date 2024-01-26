@@ -97,7 +97,7 @@ class ExternalUserConfigController extends BaseUserConfigController
                 }
 
                 $this->userConfig
-                    ->setMatrixUserId($matrixUser->getMatrixUserId())
+                    ->setMatrixUserId($matrixUser->getId())
                     ->save();
 
                 $this->uiUtil->sendSuccess($this->plugin->txt("config.user.auth.success"), true);
@@ -131,7 +131,7 @@ class ExternalUserConfigController extends BaseUserConfigController
                 }
 
                 $this->userConfig
-                    ->setMatrixUserId($matrixUser->getMatrixUserId())
+                    ->setMatrixUserId($matrixUser->getId())
                     ->save();
 
                 $this->uiUtil->sendSuccess($this->plugin->txt("config.user.register.success"), true);

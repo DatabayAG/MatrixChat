@@ -121,7 +121,7 @@ class LocalUserConfigController extends BaseUserConfigController
             }
 
             $this->userConfig
-                ->setMatrixUserId($matrixUser->getMatrixUserId())
+                ->setMatrixUserId($matrixUser->getId())
                 ->setMatrixUsername($matrixUsername)
                 ->save();
         } else {

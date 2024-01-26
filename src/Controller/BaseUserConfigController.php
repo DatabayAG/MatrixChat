@@ -162,10 +162,10 @@ abstract class BaseUserConfigController extends BaseController
 
                 if (!$room->isMember($matrixUser)) {
                     if (!$this->matrixApi->inviteUserToRoom($matrixUser, $space)) {
-                        $this->logger->error("Inviting matrix-user '{$matrixUser->getMatrixUserId()}' to space '{$space->getId()}' failed");
+                        $this->logger->error("Inviting matrix-user '{$matrixUser->getId()}' to space '{$space->getId()}' failed");
                     }
                     if (!$this->matrixApi->inviteUserToRoom($matrixUser, $room)) {
-                        $this->logger->error("Inviting matrix-user '{$matrixUser->getMatrixUserId()}' to room '{$room->getId()}' failed");
+                        $this->logger->error("Inviting matrix-user '{$matrixUser->getId()}' to room '{$room->getId()}' failed");
                     }
                     $this->ctrl->setParameterByClass(ilRepositoryGUI::class, "ref_id", $courseSettings->getCourseId());
                     $objectLink = $this->ctrl->getLinkTargetByClass(ilRepositoryGUI::class, "view");
@@ -216,7 +216,7 @@ abstract class BaseUserConfigController extends BaseController
                     if (!$this->matrixApi->removeUserFromRoom($matrixUser, $matrixRoom, $reason)) {
                         $this->logger->error(sprintf(
                             "Removing user '%s' from room '%s' for reason '%s' failed.",
-                            $matrixUser->getMatrixUserId(),
+                            $matrixUser->getId(),
                             $matrixRoom->getId(),
                             $reason
                         ));
@@ -234,14 +234,14 @@ abstract class BaseUserConfigController extends BaseController
                         $this->logger->error(sprintf(
                             "ILIAS-User with id '%s' (matrix: '%s') could not be added back to queue after removing user from room '%s' when user reset matrix-account settings",
                             $this->user->getId(),
-                            $matrixUser->getMatrixUserId(),
+                            $matrixUser->getId(),
                             $matrixRoom->getId()
                         ));
                     }
                 }
 
                 $statusOfUserInRoom = $this->matrixApi->getStatusOfUserInRoom($matrixRoom,
-                    $matrixUser->getMatrixUserId());
+                    $matrixUser->getId());
 
                 if ($statusOfUserInRoom === ChatController::USER_STATUS_INVITE
                     && !$this->matrixApi->removeUserFromRoom(
@@ -250,7 +250,7 @@ abstract class BaseUserConfigController extends BaseController
                 ) {
                     $this->logger->error(sprintf(
                         "Error occurred while trying to remove invited user '%s' from room '%s' after matrix-account of user was reset",
-                        $matrixUser->getMatrixUserId(),
+                        $matrixUser->getId(),
                         $matrixRoom->getId()
                     ));
                 }

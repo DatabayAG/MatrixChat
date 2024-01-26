@@ -24,29 +24,29 @@ namespace ILIAS\Plugin\MatrixChatClient\Model;
  */
 class MatrixUser
 {
-    private string $matrixUserId;
-    private string $matrixDisplayName;
+    private string $id;
+    private string $displayName;
     private string $accessToken = "";
     private string $deviceId = "ilias_auth_verification";
 
     /**
-     * @param string $matrixUserId
-     * @param string $matrixDisplayName
+     * @param string $id
+     * @param string $displayName
      */
-    public function __construct(string $matrixUserId, string $matrixDisplayName)
+    public function __construct(string $id, string $displayName)
     {
-        $this->matrixUserId = $matrixUserId;
-        $this->matrixDisplayName = $matrixDisplayName;
+        $this->id = $id;
+        $this->displayName = $displayName;
     }
 
-    public function getMatrixUserId(): string
+    public function getId(): string
     {
-        return $this->matrixUserId;
+        return $this->id;
     }
 
-    public function getMatrixDisplayName(): string
+    public function getDisplayName(): string
     {
-        return $this->matrixDisplayName;
+        return $this->displayName;
     }
 
     public function getAccessToken(): string

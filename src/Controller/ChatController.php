@@ -167,12 +167,12 @@ class ChatController extends BaseController
                 if ($room->isMember($matrixUser)) {
                     $this->uiUtil->sendInfo(sprintf(
                         $this->plugin->txt("matrix.user.account.joined"),
-                        $matrixUser->getMatrixUserId()
+                        $matrixUser->getId()
                     ), true);
                 }
                 $this->uiUtil->sendInfo(sprintf(
                     $this->plugin->txt("matrix.user.account.invited"),
-                    $matrixUser->getMatrixUserId()
+                    $matrixUser->getId()
                 ), true);
             }
             $toChatSettingsButton = $this->uiFactory->button()->standard(
@@ -324,12 +324,12 @@ class ChatController extends BaseController
 
             if (!$this->matrixApi->inviteUserToRoom($matrixUser, $space)) {
                 $inviteFailed = true;
-                $this->logger->error("Inviting user '{$matrixUser->getMatrixUserId()}' to space '{$space->getId()}' failed.");
+                $this->logger->error("Inviting user '{$matrixUser->getId()}' to space '{$space->getId()}' failed.");
             }
 
             if (!$this->matrixApi->inviteUserToRoom($matrixUser, $room)) {
                 $inviteFailed = true;
-                $this->logger->error("Inviting user '{$matrixUser->getMatrixUserId()}' to room '{$room->getId()}' failed.");
+                $this->logger->error("Inviting user '{$matrixUser->getId()}' to room '{$room->getId()}' failed.");
             }
         }
 
@@ -537,21 +537,21 @@ class ChatController extends BaseController
                 if (!$this->matrixApi->inviteUserToRoom($matrixUser, $space)) {
                     $this->logger->error(sprintf(
                         "Inviting matrix-user '%s' to space '%s' failed.",
-                        $matrixUser->getMatrixUserId(),
+                        $matrixUser->getId(),
                         $space->getId()
                     ));
                 }
                 if (!$this->matrixApi->inviteUserToRoom($matrixUser, $room)) {
                     $this->logger->error(sprintf(
                         "Inviting matrix-user '%s' to room '%s' failed.",
-                        $matrixUser->getMatrixUserId(),
+                        $matrixUser->getId(),
                         $room->getId()
                     ));
                 }
 
 
                 $matrixUserPowerLevelMap[] = new MatrixUserPowerLevel(
-                    $matrixUser->getMatrixUserId(),
+                    $matrixUser->getId(),
                     $this->determinePowerLevelOfParticipant($participants, $participantId)
                 );
             }
