@@ -274,6 +274,9 @@ class MatrixApi
 
     public function inviteUserToRoom(MatrixUser $matrixUser, MatrixRoom $matrixRoom): bool
     {
+        if ($matrixRoom->isMember($matrixUser)) {
+            return true;
+        }
         try {
             $response = $this->sendRequest(
                 "/_matrix/client/v3/rooms/{$matrixRoom->getId()}/invite",
