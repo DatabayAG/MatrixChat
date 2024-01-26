@@ -162,10 +162,10 @@ abstract class BaseUserConfigController extends BaseController
 
                 if (!$room->isMember($matrixUser)) {
                     if (!$this->matrixApi->inviteUserToRoom($matrixUser, $space)) {
-                        $this->dic->logger()->root()->error("Inviting matrix-user '{$matrixUser->getMatrixUserId()}' to space '{$space->getId()}' failed");
+                        $this->logger->error("Inviting matrix-user '{$matrixUser->getMatrixUserId()}' to space '{$space->getId()}' failed");
                     }
                     if (!$this->matrixApi->inviteUserToRoom($matrixUser, $room)) {
-                        $this->dic->logger()->root()->error("Inviting matrix-user '{$matrixUser->getMatrixUserId()}' to room '{$room->getId()}' failed");
+                        $this->logger->error("Inviting matrix-user '{$matrixUser->getMatrixUserId()}' to room '{$room->getId()}' failed");
                     }
                     $this->ctrl->setParameterByClass(ilRepositoryGUI::class, "ref_id", $courseSettings->getCourseId());
                     $objectLink =$this->ctrl->getLinkTargetByClass(ilRepositoryGUI::class, "view");

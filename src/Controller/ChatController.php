@@ -103,6 +103,7 @@ class ChatController extends BaseController
     private WrapperFactory $httpWrapper;
     private Services $http;
     private ilLogger $logger;
+    private ilObjUser $user;
 
     public function __construct(Container $dic, ControllerHandler $controllerHandler)
     {
@@ -119,6 +120,7 @@ class ChatController extends BaseController
         $this->refinery = $this->dic->refinery();
         $this->http = $this->dic->http();
         $this->logger = $this->dic->logger()->root();
+        $this->user = $this->dic->user();
 
         $this->courseSettingsRepo = CourseSettingsRepository::getInstance($dic->database());
         $this->courseSettings = $this->courseSettingsRepo->read($this->refId);
@@ -132,17 +134,14 @@ class ChatController extends BaseController
 
         $this->injectTabs(self::TAB_CHAT, self::SUB_TAB_CHAT);
 
-        $userConfig = (new UserConfig($this->dic->user()))->load();
+        $userConfig = (new UserConfig($this->user))->load();
 
         $room = null;
         $matrixRoomId = $this->courseSettings->getMatrixRoomId();
         if ($matrixRoomId) {
             $room = $this->matrixApi->getRoom($matrixRoomId);
         }
-
-        $uiRenderer = $this->dic->ui()->renderer();
-        $uiFactory = $this->dic->ui()->factory();
-
+        
         /**
          * @var LocalUserConfigController $localUserConfigController
          */
@@ -156,7 +155,7 @@ class ChatController extends BaseController
         $this->ctrl->clearParameterByClass(ilMatrixChatClientUIHookGUI::class, "ref_id");
         $this->ctrl->clearParameterByClass(ilUIPluginRouterGUI::class, "ref_id");
 
-        $toChatSettingsButtonLink = (int) $this->dic->user()->getAuthMode(true) === ilAuthUtils::AUTH_LOCAL
+        $toChatSettingsButtonLink = (int) $this->user->getAuthMode(true) === ilAuthUtils::AUTH_LOCAL
             ? $localUserConfigController->getCommandLink(BaseUserConfigController::CMD_SHOW_USER_CHAT_CONFIG)
             : $externalUserConfigController->getCommandLink(BaseUserConfigController::CMD_SHOW_USER_CHAT_CONFIG);
 
@@ -176,19 +175,19 @@ class ChatController extends BaseController
                     $matrixUser->getMatrixUserId()
                 ), true);
             }
-            $toChatSettingsButton = $uiFactory->button()->standard(
+            $toChatSettingsButton = $this->uiFactory->button()->standard(
                 $this->plugin->txt("matrix.user.account.changeMatrixAccountSettings"),
                 $toChatSettingsButtonLink
             );
         } else {
             $this->uiUtil->sendInfo($this->plugin->txt("matrix.user.account.unconfigured"), true);
-            $toChatSettingsButton = $uiFactory->button()->standard(
+            $toChatSettingsButton = $this->uiFactory->button()->standard(
                 $this->plugin->txt("matrix.user.account.setupMatrixAccount"),
                 $toChatSettingsButtonLink
             );
         }
 
-        $this->renderToMainTemplate($uiRenderer->render($toChatSettingsButton) . $this->plugin->getPluginConfig()->getPageDesignerText());
+        $this->renderToMainTemplate($this->uiRenderer->render($toChatSettingsButton) . $this->plugin->getPluginConfig()->getPageDesignerText());
     }
 
     public function applyMemberTableFilter(): void
@@ -653,7 +652,7 @@ class ChatController extends BaseController
         );
 
         if (!$activated && $redirectToInfoScreenOnFail) {
-            $this->uiUtil->sendFailure($this->dic->language()->txt("permission_denied"), true);
+            $this->uiUtil->sendFailure($this->lng->txt("permission_denied"), true);
             $this->redirectToInfoTab();
             return false; //Never gets to here
         }
@@ -665,7 +664,7 @@ class ChatController extends BaseController
     {
         $hasAccess = $this->access->checkAccess($permission, "", $this->refId);
         if (!$hasAccess && $redirectToInfoScreenOnFail) {
-            $this->uiUtil->sendFailure($this->dic->language()->txt("permission_denied"), true);
+            $this->uiUtil->sendFailure($this->lng->txt("permission_denied"), true);
             $this->redirectToInfoTab();
             return false; //Never gets to here
         }

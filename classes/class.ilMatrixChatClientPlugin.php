@@ -56,6 +56,8 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
     private ilCtrl $ctrl;
     public ilSetting $settings;
     private UiUtils $uiUtil;
+    private ilObjUser $user;
+    private ilLogger $logger;
 
     public function __construct(ilDBInterface $db, ilComponentRepositoryWrite $component_repository, string $id)
     {
@@ -66,6 +68,8 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
         $this->userRoomAddQueueRepo = UserRoomAddQueueRepository::getInstance($this->dic->database());
         $this->courseSettingsRepo = CourseSettingsRepository::getInstance($this->dic->database());
         $this->uiUtil = new UiUtils();
+        $this->user = $this->dic->user();
+        $this->logger = $this->dic->logger()->root();
 
         parent::__construct($db, $component_repository, $id);
     }
@@ -120,8 +124,8 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
     {
         return [
             "CLIENT_ID" => CLIENT_ID,
-            "LOGIN" => $this->dic->user()->getLogin(),
-            "EXTERNAL_ACCOUNT" => $this->dic->user()->getExternalAccount()
+            "LOGIN" => $this->user->getLogin(),
+            "EXTERNAL_ACCOUNT" => $this->user->getExternalAccount()
         ];
     }
 
@@ -149,7 +153,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
     public function isUserAdmin(?int $userId = null, ?int $roleId = null): bool
     {
         if ($userId === null) {
-            $userId = $this->dic->user->getId();
+            $userId = $this->user->getId();
         }
 
         if ($roleId === null) {
@@ -178,7 +182,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
     {
         if (!$this->isActive()) {
             $this->uiUtil->sendFailure($this->txt("general.plugin.notActivated"), true);
-            $this->dic->ctrl()->redirectByClass(ilObjComponentSettingsGUI::class, "view");
+            $this->ctrl->redirectByClass(ilObjComponentSettingsGUI::class, "view");
         }
     }
 
@@ -189,7 +193,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
                 $this->getPluginConfig()->getmatrixServerUrl(),
                 200,
                 $this,
-                $this->dic->logger()->root()
+                $this->logger
             );
         }
         return $this->matrixApi;
@@ -265,12 +269,12 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
             $matrixSpaceId = $this->pluginConfig->getMatrixSpaceId();
 
             if (!$matrixRoomId) {
-                $this->dic->logger()->root()->error("Unable to continue handling event '$a_event'. No Matrix-Room-ID found in setting of object with ref_id '$objRefId'");
+                $this->logger->error("Unable to continue handling event '$a_event'. No Matrix-Room-ID found in setting of object with ref_id '$objRefId'");
                 continue;
             }
 
             if (!$matrixSpaceId) {
-                $this->dic->logger()->root()->error("Unable to continue handling event '$a_event'. No Matrix-Space-ID found");
+                $this->logger->error("Unable to continue handling event '$a_event'. No Matrix-Space-ID found");
                 continue;
             }
 
@@ -293,12 +297,12 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
             $space = $spaceCache[$matrixSpaceId] ?? null;
 
             if (!$room) {
-                $this->dic->logger()->root()->error("Unable to continue handling event '$a_event'. Matrix-Room-ID '$matrixRoomId' saved but retrieving room failed. Skipping");
+                $this->logger->error("Unable to continue handling event '$a_event'. Matrix-Room-ID '$matrixRoomId' saved but retrieving room failed. Skipping");
                 continue;
             }
 
             if (!$space) {
-                $this->dic->logger()->root()->error("Unable to continue handling event '$a_event'. Matrix-Space-ID '$matrixSpaceId' saved but retrieving space failed. Skipping");
+                $this->logger->error("Unable to continue handling event '$a_event'. Matrix-Space-ID '$matrixSpaceId' saved but retrieving space failed. Skipping");
                 continue;
             }
 
@@ -312,7 +316,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
                     && !$room->isMember($matrixUser)
                 ) {
                     if (!$this->getMatrixApi()->inviteUserToRoom($matrixUser, $space)) {
-                        $this->dic->logger()->root()->error(sprintf(
+                        $this->logger->error(sprintf(
                             "Inviting matrix-user '%s' to space '%s' failed",
                             $matrixUser->getMatrixUserId(),
                             $space->getId()
@@ -320,7 +324,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
                     }
 
                     if (!$this->getMatrixApi()->inviteUserToRoom($matrixUser, $room)) {
-                        $this->dic->logger()->root()->error(sprintf(
+                        $this->logger->error(sprintf(
                             "Inviting matrix-user '%s' to room '%s' failed",
                             $matrixUser->getMatrixUserId(),
                             $room->getId()
@@ -341,14 +345,14 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
                         $room,
                         "Removed from course/group"
                     )) {
-                        $this->dic->logger()->root()->error(sprintf(
+                        $this->logger->error(sprintf(
                             "Removing matrixuser '%s' from room '%s'. with Reason 'Removed from Course/Group object' failed.",
                             $matrixUser->getMatrixUserId(),
                             $room->getId()
                         ));
                     }
 
-                    $this->dic->logger()->root()->info(sprintf(
+                    $this->logger->info(sprintf(
                         "Removed matrix user '%s' from room '%s'. Reason: Removed from Course/Group object.",
                         $matrixUser->getMatrixUserId(),
                         $room->getId()
