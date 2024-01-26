@@ -371,7 +371,7 @@ class ChatController extends BaseController
         $room = null;
 
         if ($this->plugin->getPluginConfig()->getMatrixSpaceId()) {
-            $space = $this->matrixApi->getRoom($this->plugin->getPluginConfig()->getMatrixSpaceId());
+            $space = $this->matrixApi->getSpace($this->plugin->getPluginConfig()->getMatrixSpaceId());
         } else {
             $this->uiUtil->sendFailure($this->plugin->txt("config.space.status.disconnected"), true);
             $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
