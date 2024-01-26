@@ -697,13 +697,7 @@ class MatrixApi
                 [
                     "type" => "m.room.join_rules",
                     "content" => [
-                        "join_rule" => "restricted",
-                        "allow" => [
-                            [
-                                "type" => "m.room_membership",
-                                "room_id" => $parentSpace->getId(),
-                            ]
-                        ]
+                        "join_rule" => "invite"
                     ]
                 ]
             ],
