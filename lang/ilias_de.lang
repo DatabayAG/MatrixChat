@@ -154,3 +154,7 @@ matrix.admin.login.valid#:#Admin-Login gültig
 matrix.admin.login.invalid#:#Admin-Login ungültig
 matrix.restApiUser.login.valid#:#Rest-API Login gültig
 matrix.restApiUser.login.invalid#:#Rest-API Login ungültig
+
+job.title#:#Matrix-Raum Einladungen in der Warteschlange verarbeiten/prüfen
+job.description#:#Prüft alle Matrix-Raum Einladungen ob die Benutzer nun eingeladen werden können.
+job.result#:#%s Einladungen in der Warteschlange. <br>%s Einladungen übersprungen. <br>%s Einladungen gesendet. <br> %s Einladungen nicht erfolgreich.

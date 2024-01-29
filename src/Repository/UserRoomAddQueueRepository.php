@@ -81,16 +81,16 @@ class UserRoomAddQueueRepository
         return $affectedRows === 1;
     }
 
-    public function delete(UserRoomAddQueue $userRoomAddQueue): void
+    public function delete(UserRoomAddQueue $userRoomAddQueue): bool
     {
-        $this->db->manipulateF(
+        return (int) $this->db->manipulateF(
             "DELETE FROM " . self::TABLE_NAME . " WHERE user_id = %s AND ref_id = %s",
             ["integer", "integer"],
             [
                 $userRoomAddQueue->getUserId(),
                 $userRoomAddQueue->getRefId(),
             ]
-        );
+        ) === 1;
     }
 
     public function read(int $userId, int $objRefId): ?UserRoomAddQueue
@@ -124,6 +124,27 @@ class UserRoomAddQueueRepository
         $data = [];
         while ($row = $this->db->fetchAssoc($result)) {
             $data[] = new UserRoomAddQueue((int) $row["user_id"], (int) $row["ref_id"]);
+        }
+        return $data;
+    }
+
+    /**
+     * @return array<int, list<UserRoomAddQueue>
+     */
+    public function readAllGroupedByRefId(): array
+    {
+        $result = $this->db->query(
+            "SELECT * FROM " . self::TABLE_NAME
+        );
+
+        $data = [];
+        while ($row = $this->db->fetchAssoc($result)) {
+            $refId = (int) $row["ref_id"];
+            if (!array_key_exists($refId, $data)) {
+                $data[$refId] = [];
+            }
+
+            $data[$refId][] = new UserRoomAddQueue((int) $row["user_id"], $refId);
         }
         return $data;
     }

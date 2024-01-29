@@ -21,6 +21,7 @@ declare(strict_types=1);
 use ILIAS\DI\Container;
 use ILIAS\Plugin\Libraries\ControllerHandler\UiUtils;
 use ILIAS\Plugin\MatrixChatClient\Api\MatrixApi;
+use ILIAS\Plugin\MatrixChatClient\Job\ProcessQueuedInvitesJob;
 use ILIAS\Plugin\MatrixChatClient\Model\CourseSettings;
 use ILIAS\Plugin\MatrixChatClient\Model\MatrixRoom;
 use ILIAS\Plugin\MatrixChatClient\Model\PluginConfig;
@@ -35,7 +36,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 /**
  * Class ilMatrixChatClientPlugin
  */
-class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
+class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin implements ilCronJobProvider
 {
     /** @var string */
     public const CTYPE = "Services";
@@ -367,5 +368,25 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
                 }
             }
         }
+    }
+
+    public function getCronJobInstances(): array
+    {
+        return [
+            new ProcessQueuedInvitesJob($this->dic, $this)
+        ];
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getCronJobInstance(string $jobId): ilCronJob
+    {
+        foreach ($this->getCronJobInstances() as $cronJobInstance) {
+            if ($cronJobInstance->getId() === $jobId) {
+                return $cronJobInstance;
+            }
+        }
+        throw new Exception("No cron job found with the id '$jobId'.");
     }
 }

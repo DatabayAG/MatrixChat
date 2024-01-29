@@ -305,7 +305,7 @@ class ChatController extends BaseController
                 $user = new ilObjUser($userId);
             } catch (Throwable $ex) {
                 $inviteFailed = true;
-                $this->logger->error("Unable to invite user with id '$userId', Not User seems to exist with that id");
+                $this->logger->error("Unable to invite user with id '$userId', No User seems to exist with that id");
                 continue;
             }
 
