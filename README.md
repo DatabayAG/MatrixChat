@@ -14,58 +14,67 @@
 * [UIHook Plugin - MatrixChatClient](#uihook-plugin---matrixchatclient)
   * [Requirements](#requirements)
   * [Table of contents](#table-of-contents)
+  * [Notes](#notes)
   * [Installation](#installation)
-  * [Inner Workings](#inner-workings)
-    * [Adding User to Course](#adding-user-to-course)
-    * [Removing User from Course](#removing-user-from-course)
-    * [Opening the Chat Window](#opening-the-chat-window)
+    * [Adding User to Course/Group](#adding-user-to-coursegroup)
+    * [Removing User from Course/Group](#removing-user-from-coursegroup)
   * [Usage](#usage)
     * [User Configuration](#user-configuration)
       * [Authentication Methods](#authentication-methods)
-  * [Matrix-Setup](docs/Matrix-Setup.md)
-  * [Roadmap](docs/ROADMAP.md)
 <!-- TOC -->
 
 ---
 
+## Notes
+
+1. Matrix has rate limiting for API-Requests. This may lead to the users used by the plugin   
+   (an admin user & a normal user who creates the room) to be blocked from further API-Requests
+   - The Plugin-Configuration has two checkboxes that will remove this rate limiting.
+2. Another homeserver may restrict the amount of invitations that can be send by a user.
+   This may lead to users of a different homeserver (for example `@user:matrix2.myDomain.de`) to not be invitable for a period of time.
+3. The plugin uses **inviting** only for rooms.   
+   The only user immediately added to the room is the user who created the room.
+4. Users are invited to the **room** of the course/group as well as a **space** that groups all rooms.
+   - Changing the name configured in the Plugin-Configuration will lead to a new **Space** being created.  
+     - Rooms will not be transferred to the new space.
+     - The old space will not be deleted.
+5. Users may choose to not accept the invitation to the space. This is optional,   
+   the room will then not be grouped in clients.
+
 ## Installation
 
-1. Clone this repository to **/var/www/ilias7/Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/MatrixChatClient**
+1. Clone this repository to **Customizing/Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/MatrixChatClient**
 2. Install the Composer dependencies
    ```bash
-   cd /var/www/ilias7/Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/MatrixChatClient
+   cd Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/MatrixChatClient
    composer install --no-dev
    ```
    Developers **MUST** omit the `--no-dev` argument.
-
 
 3. Login to ILIAS with an administrator account (e.g. root)
 4. Select **Plugins** in **Extending ILIAS** inside the **Administration** main menu.
 5. Search for the **MatrixChatClient** plugin in the list of plugin and choose **Install** from the **Actions** drop-down.
 6. Choose **Activate** from the **Actions** dropdown.
 
+### Adding User to Course/Group
 
-## Inner Workings
-
-### Adding User to Course
-
-- When an ILIAS user is added to a course  
-  The plugin checks if the user has already (successfully) configured chat authentication (See [User Configuration](#user-configuration).
-  - If the user has configured authentication:  
-    - The user is immediately invited to the chat room of the course.
-  - If the user has not yet configured authentication:  
+- When an ILIAS user is added to a course/group  
+  The plugin checks if the user has already (successfully) configured a Matrix-Account (See [User Configuration](#user-configuration).
+  - If the user has configured a Matrix-Account:  
+    - The user is immediately invited to the chatroom of the course/group.
+  - If the user has not yet configured a Matrix-Account:  
     - The user is added to a waiting list.   
-    - Once the user completes the configuration. The user is invited to the chat room of the course.
+    - Once the user completes the configuration. The user is invited to the chatroom of the course/group.
+      - Alternatively:
+        - A User with **write** permission on the course/group can manually   
+        invite members into the chatroom using the **Members** sub-tab of the **Chat** Tab.
+        - A Cronjob periodically goes through all queued invitations   
+        and invites users if they can be invited.
+        
+### Removing User from Course/Group
 
-### Removing User from Course
-
-- When an ILIAS user is removed from a course  
-  The user will be removed from the chat room of the course as well.
-
-### Opening the Chat Window
-
-- If a user hasn't configured authentication or the authentication with the Matrix server failed.  
-  The user is redirected to the [User Configuration](#user-configuration) page.
+- When an ILIAS user is removed from a course/group.  
+  The user will be removed from the chatroom as well.
 
 ## Usage
 
@@ -75,19 +84,18 @@
 2. Select **Settings** from the dropdown.
 3. Select the **Chat Settings** Tab.
 
-- The page shows the status of the authentication above the form.
-- In the **General settings** sub tab. Select your authentication method.
+- This tab shows the current Matrix-Account status.
+- If not yet configured. The tab will show a form with different options for configuring a Matrix-Account.
 
 #### Authentication Methods
-- Use External Account
-  - Uses the **External Account** field of your ILIAS account to authenticate.
-- Authentication With Existing Account or Creation of New Account Using Naming Scheme
-  - Two sub tabs will be shown.
-    - Authenticate With Existing Account
-      - Enter the username and password of your Matrix account.
-    - Create Account Using Naming Scheme
-      - Enter a username, a predefined suffix will be added after your entered name to avoid conflicts.  
-        (This combination is the actual username, not what was entered in the field)
-      - Enter the password for your new Matrix-User.
-      - Enter the password again to confirm.
-    - In both cases if authentication was successful. A message will be shown with your username and Matrix-User-ID.
+
+- Use account on the connected homeserver
+  - The username field is fixed and cannot be changed. This is set based on a scheme defined in the plugin configuration.
+  - If a user with this username already exists. The form can immediately be saved.
+  - If a user with this username does not exist. You will be asked to enter a password. A new user will be created on the configured homeserver.
+- Use another Matrix account
+  - The shown input field mus contain the entire Matrix-User-ID of the user. The user may be located on a different matrix-server.
+  - Example: ``@user:matrix2.myDomain.de``
+  - The button **Check account on Matrix-Server** can be used to check if a profile exists on the homeserver of the account **(matrix2.myDomain.de)**.
+    - The other Matrix-Server may not allow looking up a users profile through another homeserver. The **Check account on Matrix-Account** may fail.   
+      You can still decide to save this matrix-account if you are sure it exists and can be invited.
