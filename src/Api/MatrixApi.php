@@ -456,6 +456,14 @@ class MatrixApi
     public function deleteRoom(MatrixRoom $room, string $reason = ""): bool
     {
         try {
+            foreach ($room->getMembers() as $matrixAccountId) {
+                if (!$this->removeUserFromRoom($matrixAccountId, $room, "Room deleted")) {
+                    $this->logger->error(sprintf(
+                        "Error occurred while trying to delete room '%s'. Unable to remove user '%s'. From room before deleting room. Room may still exist after deletion as not every user was removed first",
+                        $room->getId(), $matrixAccountId
+                    ));
+                }
+            }
             $response = $this->sendRequest(
                 "/_synapse/admin/v1/rooms/{$room->getId()}",
                 true,
