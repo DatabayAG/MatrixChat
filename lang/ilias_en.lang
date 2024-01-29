@@ -24,6 +24,7 @@ config.usernameScheme.local#:#Scheme for connecting ILIAS users with an local ac
 config.usernameScheme.info#:#This scheme is used to create the matrix username,<br>when externally authenticated ILIAS users want to join a Matrix chat but do not have a user yet.<br><br>The scheme may only contain the characters %s.<br>Uppercase letters are converted to lowercase!<br><br>Supported variables: <br>%s
 
 config.room.prefix#:#Room Prefix
+config.room.prefix.info#:#This scheme is used to create the prefix for the naming of the Matrix-Chatroom. <br>This prefix is put in front of the name of the course this chatroom is assigned to/created by. <br><br>Supported variables: <br>%s
 config.room.encryption.enable.title#:#Activate End-to-End-Encryption
 config.room.encryption.enable.info#:#Newly created rooms will be created with End-to-End-Encryption enabled. <br>End-to-End-Encryption can not be deactivated for rooms after the room has been created with it enabled!
 config.room.powerLevel.modify.title#:#Adjust Power-Level of Course/Group Participants

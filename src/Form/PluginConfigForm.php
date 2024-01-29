@@ -309,6 +309,12 @@ class PluginConfigForm extends ilPropertyFormGUI
             $this->plugin->txt("config.room.prefix"),
             "roomPrefix"
         );
+        $roomPrefix->setInfo(sprintf(
+            $this->plugin->txt("config.room.prefix.info"),
+            "- " . implode("<br>- ", array_map(static function ($variable): string {
+                return "<span>{</span>$variable<span>}</span>";
+            }, array_keys($this->plugin->getRoomSchemeVariables())))
+        ));
         $this->addItem($roomPrefix);
 
         $spaceName = new ilTextInputGUI(

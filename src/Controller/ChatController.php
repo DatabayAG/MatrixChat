@@ -504,8 +504,7 @@ class ChatController extends BaseController
 
         if (!$room) {
             $room = $this->matrixApi->createRoom(
-                $this->plugin->getPluginConfig()->getRoomPrefix()
-                . ilObject::_lookupTitle(ilObject::_lookupObjId($courseSettings->getCourseId())),
+                $this->buildRoomPrefix($courseSettings->getCourseId()),
                 $this->plugin->getPluginConfig()->isEnableRoomEncryption(),
                 $space
             );
@@ -567,6 +566,17 @@ class ChatController extends BaseController
 
         $this->uiUtil->sendSuccess($this->plugin->txt("general.update.success"), true);
         $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS, ["ref_id" => $this->refId]);
+    }
+
+    protected function buildRoomPrefix(int $objRefId): string
+    {
+        $objTitle = ilObject::_lookupTitle(ilObject::_lookupObjId($objRefId));
+        $roomPrefix = $this->plugin->getPluginConfig()->getRoomPrefix();
+
+        foreach ($this->plugin->getRoomSchemeVariables() as $key => $value) {
+            $roomPrefix = str_replace("{" . $key . "}", $value, $roomPrefix);
+        }
+        return $roomPrefix . $objTitle;
     }
 
     protected function determinePowerLevelOfParticipant(ilParticipants $participants, int $participantId): int

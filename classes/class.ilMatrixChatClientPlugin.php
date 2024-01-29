@@ -129,6 +129,13 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
         ];
     }
 
+    public function getRoomSchemeVariables(): array
+    {
+        return [
+            "CLIENT_ID" => CLIENT_ID
+        ];
+    }
+
     public function getObjGUIClassByType(string $type): ?string
     {
         switch ($type) {
@@ -341,7 +348,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin
 
                 if ($matrixUser) {
                     if (!$this->getMatrixApi()->removeUserFromRoom(
-                        $matrixUser,
+                        $matrixUser->getId(),
                         $room,
                         "Removed from course/group"
                     )) {
