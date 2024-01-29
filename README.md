@@ -18,6 +18,7 @@
   * [Installation](#installation)
     * [Adding User to Course/Group](#adding-user-to-coursegroup)
     * [Removing User from Course/Group](#removing-user-from-coursegroup)
+    * [Setting up a Homeserver](#setting-up-a-homeserver)
   * [Usage](#usage)
     * [User Configuration](#user-configuration)
       * [Authentication Methods](#authentication-methods)
@@ -75,6 +76,10 @@
 
 - When an ILIAS user is removed from a course/group.  
   The user will be removed from the chatroom as well.
+
+### Setting up a Homeserver
+
+See [For instructions on how to setup a synapse homeserver](https://matrix-org.github.io/synapse/latest/setup/installation.html#installation-instructions)
 
 ## Usage
 
