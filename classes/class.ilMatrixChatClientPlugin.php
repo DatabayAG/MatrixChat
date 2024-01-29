@@ -29,7 +29,7 @@ use ILIAS\Plugin\MatrixChatClient\Model\Room\MatrixSpace;
 use ILIAS\Plugin\MatrixChatClient\Model\UserConfig;
 use ILIAS\Plugin\MatrixChatClient\Model\UserRoomAddQueue;
 use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
-use ILIAS\Plugin\MatrixChatClient\Repository\UserRoomAddQueueRepository;
+use ILIAS\Plugin\MatrixChatClient\Repository\QueuedInvitesRepository;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -50,7 +50,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin implements ilCr
 
     private static ?ilMatrixChatClientPlugin $instance = null;
     private ?PluginConfig $pluginConfig = null;
-    private UserRoomAddQueueRepository $userRoomAddQueueRepo;
+    private QueuedInvitesRepository $queuedInvitesRepo;
     private CourseSettingsRepository $courseSettingsRepo;
     protected ?MatrixApi $matrixApi = null;
     public Container $dic;
@@ -66,7 +66,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin implements ilCr
         $this->dic = $DIC;
         $this->ctrl = $this->dic->ctrl();
         $this->settings = new ilSetting(self::class);
-        $this->userRoomAddQueueRepo = UserRoomAddQueueRepository::getInstance($this->dic->database());
+        $this->queuedInvitesRepo = QueuedInvitesRepository::getInstance($this->dic->database());
         $this->courseSettingsRepo = CourseSettingsRepository::getInstance($this->dic->database());
         $this->uiUtil = new UiUtils();
         $this->user = $this->dic->user();
@@ -318,7 +318,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin implements ilCr
                 //Add participant
 
                 if ($addToQueue) {
-                    $this->userRoomAddQueueRepo->create(new UserRoomAddQueue($user->getId(), $objRefId));
+                    $this->queuedInvitesRepo->create(new UserRoomAddQueue($user->getId(), $objRefId));
                 } elseif (
                     $matrixUser
                     && !$room->isMember($matrixUser)
@@ -341,10 +341,10 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin implements ilCr
                 }
             } else {
                 //Remove participant
-                $userRoomAddQueue = $this->userRoomAddQueueRepo->read($user->getId(), $objRefId);
+                $userRoomAddQueue = $this->queuedInvitesRepo->read($user->getId(), $objRefId);
 
                 if ($userRoomAddQueue) {
-                    $this->userRoomAddQueueRepo->delete($userRoomAddQueue);
+                    $this->queuedInvitesRepo->delete($userRoomAddQueue);
                 }
 
                 if ($matrixUser) {

@@ -102,3 +102,9 @@ if (
     );
 }
 ?>
+<#7>
+<?php
+if ($ilDB->tableExists("mcc_usr_room_add_queue")) {
+    $ilDB->renameTable("mcc_usr_room_add_queue", "mcc_queued_invites");
+}
+?>

@@ -20,20 +20,20 @@ use ilDBInterface;
 use ILIAS\Plugin\MatrixChatClient\Model\UserRoomAddQueue;
 
 /**
- * Class UserRoomAddQueueRepository
+ * Class QueuedInvitesRepository
  *
  * @package ILIAS\Plugin\MatrixChatClient\Repository
  * @author  Marvin Beym <mbeym@databay.de>
  */
-class UserRoomAddQueueRepository
+class QueuedInvitesRepository
 {
-    private static ?UserRoomAddQueueRepository $instance = null;
+    private static ?QueuedInvitesRepository $instance = null;
     protected ilDBInterface $db;
 
     /**
      * @var string
      */
-    protected const TABLE_NAME = "mcc_usr_room_add_queue";
+    protected const TABLE_NAME = "mcc_queued_invites";
 
     public function __construct(?ilDBInterface $db = null)
     {

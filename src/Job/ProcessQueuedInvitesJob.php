@@ -28,7 +28,7 @@ use ILIAS\Plugin\MatrixChatClient\Controller\ChatController;
 use ILIAS\Plugin\MatrixChatClient\Model\UserConfig;
 use ILIAS\Plugin\MatrixChatClient\Model\UserRoomAddQueue;
 use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
-use ILIAS\Plugin\MatrixChatClient\Repository\UserRoomAddQueueRepository;
+use ILIAS\Plugin\MatrixChatClient\Repository\QueuedInvitesRepository;
 use ilLogger;
 use ilMatrixChatClientPlugin;
 use ilObject;
@@ -47,7 +47,7 @@ class ProcessQueuedInvitesJob extends ilCronJob
     private Container $dic;
     private ilMatrixChatClientPlugin $plugin;
     private ilLogger $logger;
-    private UserRoomAddQueueRepository $userRoomAddQueueRepo;
+    private QueuedInvitesRepository $queuedInvitesRepo;
     private CourseSettingsRepository $courseSettingsRepo;
 
     public function __construct(Container $dic, ilMatrixChatClientPlugin $plugin)
@@ -55,7 +55,7 @@ class ProcessQueuedInvitesJob extends ilCronJob
         $this->dic = $dic;
         $this->plugin = $plugin;
         $this->logger = $this->dic->logger()->root();
-        $this->userRoomAddQueueRepo = UserRoomAddQueueRepository::getInstance($this->dic->database());
+        $this->queuedInvitesRepo = QueuedInvitesRepository::getInstance($this->dic->database());
         $this->courseSettingsRepo = CourseSettingsRepository::getInstance();
     }
 
@@ -108,7 +108,7 @@ class ProcessQueuedInvitesJob extends ilCronJob
         /**
          * @var UserRoomAddQueue[] $queuedInvites
          */
-        foreach ($this->userRoomAddQueueRepo->readAllGroupedByRefId() as $refId => $queuedInvites) {
+        foreach ($this->queuedInvitesRepo->readAllGroupedByRefId() as $refId => $queuedInvites) {
             $total += count($queuedInvites);
 
             if (!ilObject::_exists($refId, true)) {
@@ -139,7 +139,7 @@ class ProcessQueuedInvitesJob extends ilCronJob
                         $queuedInvite->getUserId(),
                         $refId
                     ));
-                    if (!$this->userRoomAddQueueRepo->delete($queuedInvite)) {
+                    if (!$this->queuedInvitesRepo->delete($queuedInvite)) {
                         $this->logger->error(sprintf(
                             "Error occurred while trying to remove queued invite of user with id '%s' to course with ref-id '%s'",
                             $queuedInvite->getUserId(),
@@ -182,7 +182,7 @@ class ProcessQueuedInvitesJob extends ilCronJob
                         $refId
                     ));
 
-                    if (!$this->userRoomAddQueueRepo->delete($queuedInvite)) {
+                    if (!$this->queuedInvitesRepo->delete($queuedInvite)) {
                         $this->logger->error(sprintf(
                             "Error occurred while trying to remove queued invite of user with id '%s' to course with ref-id '%s'",
                             $queuedInvite->getUserId(),

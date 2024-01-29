@@ -37,7 +37,7 @@ use ILIAS\Plugin\MatrixChatClient\Model\MatrixRoom;
 use ILIAS\Plugin\MatrixChatClient\Model\MatrixUserPowerLevel;
 use ILIAS\Plugin\MatrixChatClient\Model\UserConfig;
 use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
-use ILIAS\Plugin\MatrixChatClient\Repository\UserRoomAddQueueRepository;
+use ILIAS\Plugin\MatrixChatClient\Repository\QueuedInvitesRepository;
 use ILIAS\Plugin\MatrixChatClient\Table\ChatMemberTable;
 use ILIAS\UI\Factory;
 use ILIAS\UI\Renderer;
@@ -95,7 +95,7 @@ class ChatController extends BaseController
     private int $refId;
     private ilAccessHandler $access;
     private MatrixApi $matrixApi;
-    private UserRoomAddQueueRepository $userRoomAddQueueRepo;
+    private QueuedInvitesRepository $queuedInvitesRepo;
     private ilLanguage $lng;
     private Renderer $uiRenderer;
     private Factory $uiFactory;
@@ -124,7 +124,7 @@ class ChatController extends BaseController
 
         $this->courseSettingsRepo = CourseSettingsRepository::getInstance($dic->database());
         $this->courseSettings = $this->courseSettingsRepo->read($this->refId);
-        $this->userRoomAddQueueRepo = UserRoomAddQueueRepository::getInstance();
+        $this->queuedInvitesRepo = QueuedInvitesRepository::getInstance();
     }
 
     public function showChat(): void
@@ -450,7 +450,7 @@ class ChatController extends BaseController
                 $roleText = $this->lng->txt("il_crs_admin");
             }
 
-            $userRoomAddQueue = $this->userRoomAddQueueRepo->read($user->getId(), $this->refId);
+            $userRoomAddQueue = $this->queuedInvitesRepo->read($user->getId(), $this->refId);
             if ($userRoomAddQueue) {
                 $status = "queue";
             } else {

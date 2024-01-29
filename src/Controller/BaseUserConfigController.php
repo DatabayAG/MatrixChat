@@ -33,7 +33,7 @@ use ILIAS\Plugin\MatrixChatClient\Model\CourseSettings;
 use ILIAS\Plugin\MatrixChatClient\Model\UserConfig;
 use ILIAS\Plugin\MatrixChatClient\Model\UserRoomAddQueue;
 use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
-use ILIAS\Plugin\MatrixChatClient\Repository\UserRoomAddQueueRepository;
+use ILIAS\Plugin\MatrixChatClient\Repository\QueuedInvitesRepository;
 use ilLanguage;
 use ilLogger;
 use ilMatrixChatClientPlugin;
@@ -66,7 +66,7 @@ abstract class BaseUserConfigController extends BaseController
     protected MatrixApi $matrixApi;
     protected ilLogger $logger;
     private Services $http;
-    protected UserRoomAddQueueRepository $userRoomAddQueueRepo;
+    protected QueuedInvitesRepository $queuedInvitesRepo;
     protected CourseSettingsRepository $courseSettingsRepo;
     private ilLanguage $lng;
 
@@ -82,7 +82,7 @@ abstract class BaseUserConfigController extends BaseController
         $this->matrixApi = $this->plugin->getMatrixApi();
         $this->logger = $this->dic->logger()->root();
         $this->http = $this->dic->http();
-        $this->userRoomAddQueueRepo = UserRoomAddQueueRepository::getInstance($this->dic->database());
+        $this->queuedInvitesRepo = QueuedInvitesRepository::getInstance($this->dic->database());
         $this->courseSettingsRepo = CourseSettingsRepository::getInstance();
     }
 
@@ -137,14 +137,14 @@ abstract class BaseUserConfigController extends BaseController
             return "";
         }
 
-        foreach ($this->userRoomAddQueueRepo->readAllByUserId($user->getId()) as $userRoomAddQueue) {
+        foreach ($this->queuedInvitesRepo->readAllByUserId($user->getId()) as $userRoomAddQueue) {
             if (!ilObject::_exists($userRoomAddQueue->getRefId(), true)) {
                 $this->logger->error(sprintf(
                     "Unable to continue processing queue entry of user with id '%s' to object with ref-id '%s'. Object does not exist",
                     $user->getId(),
                     $userRoomAddQueue->getRefId()
                 ));
-                $this->userRoomAddQueueRepo->delete($userRoomAddQueue);
+                $this->queuedInvitesRepo->delete($userRoomAddQueue);
                 continue;
             }
             if (!array_key_exists($userRoomAddQueue->getRefId(), $courseSettingsCache)) {
@@ -157,7 +157,7 @@ abstract class BaseUserConfigController extends BaseController
                     $user->getId(),
                     $userRoomAddQueue->getRefId()
                 ));
-                $this->userRoomAddQueueRepo->delete($userRoomAddQueue);
+                $this->queuedInvitesRepo->delete($userRoomAddQueue);
                 continue;
             }
 
@@ -187,7 +187,7 @@ abstract class BaseUserConfigController extends BaseController
                         $room->getName()
                     );
                 } else {
-                    $this->userRoomAddQueueRepo->delete($userRoomAddQueue);
+                    $this->queuedInvitesRepo->delete($userRoomAddQueue);
                 }
             }
         }
@@ -234,8 +234,8 @@ abstract class BaseUserConfigController extends BaseController
                     //If no entry in the queue exists anymore,
                     //create a new one so the user gets re-added to the matrix room once the matrix-account is configured again
                     if (
-                        !$this->userRoomAddQueueRepo->exists($this->user->getId(), $courseSetting->getCourseId())
-                        && !$this->userRoomAddQueueRepo->create(new UserRoomAddQueue(
+                        !$this->queuedInvitesRepo->exists($this->user->getId(), $courseSetting->getCourseId())
+                        && !$this->queuedInvitesRepo->create(new UserRoomAddQueue(
                             $this->user->getId(),
                             $courseSetting->getCourseId()
                         ))
