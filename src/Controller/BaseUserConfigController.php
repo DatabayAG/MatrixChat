@@ -138,6 +138,15 @@ abstract class BaseUserConfigController extends BaseController
         }
 
         foreach ($this->userRoomAddQueueRepo->readAllByUserId($user->getId()) as $userRoomAddQueue) {
+            if (!ilObject::_exists($userRoomAddQueue->getRefId(), true)) {
+                $this->logger->error(sprintf(
+                    "Unable to continue processing queue entry of user with id '%s' to object with ref-id '%s'. Object does not exist",
+                    $user->getId(),
+                    $userRoomAddQueue->getRefId()
+                ));
+                $this->userRoomAddQueueRepo->delete($userRoomAddQueue);
+                continue;
+            }
             if (!array_key_exists($userRoomAddQueue->getRefId(), $courseSettingsCache)) {
                 $courseSettingsCache[$userRoomAddQueue->getRefId()] = $this->courseSettingsRepo->read($userRoomAddQueue->getRefId());
             }
