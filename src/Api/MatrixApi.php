@@ -456,7 +456,12 @@ class MatrixApi
     public function deleteRoom(MatrixRoom $room, string $reason = ""): bool
     {
         try {
+            //Kick users before removing room, otherwise users are not removed from the room (except user that created the room)
             foreach ($room->getMembers() as $matrixAccountId) {
+                if ($matrixAccountId === $this->getRestApiUser()->getId()) {
+                    //skip the user that created the room
+                    continue;
+                }
                 if (!$this->removeUserFromRoom($matrixAccountId, $room, "Room deleted")) {
                     $this->logger->error(sprintf(
                         "Error occurred while trying to delete room '%s'. Unable to remove user '%s'. From room before deleting room. Room may still exist after deletion as not every user was removed first",
