@@ -121,9 +121,9 @@ class ChatMemberTable extends ilTable2GUI
             if (in_array(
                 $chatMember->getStatus(),
                 [
-                    ChatController::USER_STATUS_LEAVE,
-                    ChatController::USER_STATUS_NO_INVITE,
-                ],
+                        ChatController::USER_STATUS_LEAVE,
+                        ChatController::USER_STATUS_NO_INVITE,
+                    ],
                 true
             ) || ($chatMember->getStatus() === ChatController::USER_STATUS_QUEUE && $chatMember->getMatrixUserId())) {
                 $inviteButton = $this->uiFactory->button()->standard(
@@ -156,7 +156,7 @@ class ChatMemberTable extends ilTable2GUI
             $inviteText = "";
             if ($inviteButton && $chatMember->getMatrixUserId()) {
                 $inviteText = "<span class='inviteButton-wrapper'>{$this->uiRenderer->render($inviteButton)}</span>";
-            } elseif(!$chatMember->getMatrixUserId()) {
+            } elseif (!$chatMember->getMatrixUserId()) {
                 $inviteText = $this->plugin->txt("matrix.chat.invite.notPossible");
             }
 

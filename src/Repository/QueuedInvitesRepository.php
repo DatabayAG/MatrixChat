@@ -87,9 +87,9 @@ class QueuedInvitesRepository
             "DELETE FROM " . self::TABLE_NAME . " WHERE user_id = %s AND ref_id = %s",
             ["integer", "integer"],
             [
-                $userRoomAddQueue->getUserId(),
-                $userRoomAddQueue->getRefId(),
-            ]
+                    $userRoomAddQueue->getUserId(),
+                    $userRoomAddQueue->getRefId(),
+                ]
         ) === 1;
     }
 

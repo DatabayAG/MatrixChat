@@ -249,13 +249,17 @@ abstract class BaseUserConfigController extends BaseController
                     }
                 }
 
-                $statusOfUserInRoom = $this->matrixApi->getStatusOfUserInRoom($matrixRoom,
-                    $matrixUser->getId());
+                $statusOfUserInRoom = $this->matrixApi->getStatusOfUserInRoom(
+                    $matrixRoom,
+                    $matrixUser->getId()
+                );
 
                 if ($statusOfUserInRoom === ChatController::USER_STATUS_INVITE
                     && !$this->matrixApi->removeUserFromRoom(
                         $matrixUser->getId(),
-                        $matrixRoom, "Invite redacted because Matrix-Account of user was reset")
+                        $matrixRoom,
+                        "Invite redacted because Matrix-Account of user was reset"
+                    )
                 ) {
                     $this->logger->error(sprintf(
                         "Error occurred while trying to remove invited user '%s' from room '%s' after matrix-account of user was reset",

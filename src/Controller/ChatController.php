@@ -141,7 +141,7 @@ class ChatController extends BaseController
         if ($matrixRoomId) {
             $room = $this->matrixApi->getRoom($matrixRoomId);
         }
-        
+
         /**
          * @var LocalUserConfigController $localUserConfigController
          */

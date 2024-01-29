@@ -128,16 +128,21 @@ class MatrixApi
         try {
             $responseData = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
         } catch (JsonException $ex) {
-            $this->logError($apiCall, "Error occurred while decoding response json data | Status-Code: $statusCode",
-                $ex);
+            $this->logError(
+                $apiCall,
+                "Error occurred while decoding response json data | Status-Code: $statusCode",
+                $ex
+            );
             throw new MatrixApiException("JSON_ERROR", $ex->getMessage(), $ex->getCode());
         }
 
         if (isset($responseData["errcode"])) {
             $ex = new MatrixApiException($responseData["errcode"], $responseData["error"]);
             if ($responseData["errcode"] === "M_LIMIT_EXCEEDED") {
-                $this->logError($apiCall,
-                    "Matrix API Request limit reached. Consider removing ratelimit for admin & rest-api user");
+                $this->logError(
+                    $apiCall,
+                    "Matrix API Request limit reached. Consider removing ratelimit for admin & rest-api user"
+                );
             } else {
                 $this->logError($apiCall, "Matrix-Error Code '{$responseData["errcode"]}'", $ex);
             }
@@ -326,8 +331,8 @@ class MatrixApi
     {
         try {
             return $this->sendRequest(
-                    "/_synapse/admin/v2/users/$matrixUserId"
-                )->getResponseData() !== [];
+                "/_synapse/admin/v2/users/$matrixUserId"
+            )->getResponseData() !== [];
         } catch (MatrixApiException $ex) {
             $this->logger->error("Error occurred while trying to check if user '$matrixUserId' exists.");
             return false;
@@ -416,7 +421,8 @@ class MatrixApi
                 [
                     "reason" => $reason,
                     "user_id" => $matrixUserId,
-                ], true
+                ],
+                true
             );
             return true;
         } catch (MatrixApiException $ex) {
@@ -465,7 +471,8 @@ class MatrixApi
                 if (!$this->removeUserFromRoom($matrixAccountId, $room, "Room deleted")) {
                     $this->logger->error(sprintf(
                         "Error occurred while trying to delete room '%s'. Unable to remove user '%s'. From room before deleting room. Room may still exist after deletion as not every user was removed first",
-                        $room->getId(), $matrixAccountId
+                        $room->getId(),
+                        $matrixAccountId
                     ));
                 }
             }
@@ -570,7 +577,8 @@ class MatrixApi
                         "state_default" => 100,
                         "users_default" => 0
                     ]
-                ], true
+                ],
+                true
             );
         } catch (MatrixApiException $e) {
             $this->logger->error("Error occurred while trying to create space with name '$name'");

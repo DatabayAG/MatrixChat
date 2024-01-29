@@ -18,7 +18,6 @@
 
 declare(strict_types=1);
 
-
 namespace ILIAS\Plugin\MatrixChatClient\Job;
 
 use ilCronJob;
@@ -208,7 +207,10 @@ class ProcessQueuedInvitesJob extends ilCronJob
                 }
 
                 if (!$space->isMember($matrixUser)) {
-                    if ($matrixApi->getStatusOfUserInRoom($space, $matrixUser->getId()) === ChatController::USER_STATUS_INVITE) {
+                    if ($matrixApi->getStatusOfUserInRoom(
+                        $space,
+                        $matrixUser->getId()
+                    ) === ChatController::USER_STATUS_INVITE) {
                         $this->logger->info(sprintf(
                             "Skipping inviting user '%s' to space '%s'. User already invited",
                             $matrixUser->getId(),
@@ -227,7 +229,10 @@ class ProcessQueuedInvitesJob extends ilCronJob
                     }
                 }
 
-                if ($matrixApi->getStatusOfUserInRoom($room, $matrixUser->getId()) === ChatController::USER_STATUS_INVITE) {
+                if ($matrixApi->getStatusOfUserInRoom(
+                    $room,
+                    $matrixUser->getId()
+                ) === ChatController::USER_STATUS_INVITE) {
                     $this->logger->info(sprintf(
                         "Skipping inviting user '%s' to room '%s'. User already invited",
                         $matrixUser->getId(),
