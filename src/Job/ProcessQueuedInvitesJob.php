@@ -105,6 +105,20 @@ class ProcessQueuedInvitesJob extends ilCronJob
         $invited = 0;
         $failed = 0;
 
+        if (!$this->plugin->getPluginConfig()->getMatrixSpaceId()) {
+            $this->logger->error("Unable to continue processing queued invitations. Space not configured");
+            $cronResult->setMessage($this->plugin->txt("config.space.status.disconnected"));
+            $cronResult->setStatus(ilCronJobResult::STATUS_FAIL);
+            return $cronResult;
+        }
+        $space = $matrixApi->getSpace($this->plugin->getPluginConfig()->getMatrixSpaceId());
+        if (!$space) {
+            $this->logger->error("Unable to continue processing queued invitations. Space configured but not found");
+            $cronResult->setMessage($this->plugin->txt("config.space.status.faulty"));
+            $cronResult->setStatus(ilCronJobResult::STATUS_FAIL);
+            return $cronResult;
+        }
+
         /**
          * @var UserRoomAddQueue[] $queuedInvites
          */
@@ -191,6 +205,26 @@ class ProcessQueuedInvitesJob extends ilCronJob
                     }
                     $skipped++;
                     continue;
+                }
+
+                if (!$space->isMember($matrixUser)) {
+                    if ($matrixApi->getStatusOfUserInRoom($space, $matrixUser->getId()) === ChatController::USER_STATUS_INVITE) {
+                        $this->logger->info(sprintf(
+                            "Skipping inviting user '%s' to space '%s'. User already invited",
+                            $matrixUser->getId(),
+                            $space->getId()
+                        ));
+                        $skipped++;
+                        continue;
+                    }
+
+                    if ($matrixApi->inviteUserToRoom($matrixUser, $space)) {
+                        $this->logger->info(sprintf(
+                            "Invited user '%s' to space '%s'",
+                            $matrixUser->getId(),
+                            $room->getId()
+                        ));
+                    }
                 }
 
                 if ($matrixApi->getStatusOfUserInRoom($room, $matrixUser->getId()) === ChatController::USER_STATUS_INVITE) {
