@@ -407,7 +407,7 @@ class MatrixApi
         return new MatrixUser($matrixUserId, $profile["displayname"]);
     }
 
-    public function removeUserFromRoom(MatrixUser $matrixUser, MatrixRoom $room, string $reason): bool
+    public function removeUserFromRoom(string $matrixUserId, MatrixRoom $room, string $reason): bool
     {
         try {
             $response = $this->sendRequest(
@@ -416,14 +416,14 @@ class MatrixApi
                 "POST",
                 [
                     "reason" => $reason,
-                    "user_id" => $matrixUser->getId(),
+                    "user_id" => $matrixUserId,
                 ], true
             );
             return true;
         } catch (MatrixApiException $ex) {
             $this->logger->error(sprintf(
                 "Error occurred while trying to remove user '%s' from room '%s' with reason '%s'.",
-                $matrixUser->getId(),
+                $matrixUserId,
                 $room->getId(),
                 $reason
             ));

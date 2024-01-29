@@ -213,7 +213,7 @@ abstract class BaseUserConfigController extends BaseController
 
                 if ($matrixRoom->isMember($matrixUser)) {
                     $reason = "Removed Matrix-Account from ILIAS-Plattform";
-                    if (!$this->matrixApi->removeUserFromRoom($matrixUser, $matrixRoom, $reason)) {
+                    if (!$this->matrixApi->removeUserFromRoom($matrixUser->getId(), $matrixRoom, $reason)) {
                         $this->logger->error(sprintf(
                             "Removing user '%s' from room '%s' for reason '%s' failed.",
                             $matrixUser->getId(),
@@ -245,7 +245,7 @@ abstract class BaseUserConfigController extends BaseController
 
                 if ($statusOfUserInRoom === ChatController::USER_STATUS_INVITE
                     && !$this->matrixApi->removeUserFromRoom(
-                        $matrixUser,
+                        $matrixUser->getId(),
                         $matrixRoom, "Invite redacted because Matrix-Account of user was reset")
                 ) {
                     $this->logger->error(sprintf(
