@@ -125,7 +125,7 @@ class ChatMemberTable extends ilTable2GUI
                     ChatController::USER_STATUS_NO_INVITE,
                 ],
                 true
-            )) {
+            ) || ($chatMember->getStatus() === ChatController::USER_STATUS_QUEUE && $chatMember->getMatrixUserId())) {
                 $inviteButton = $this->uiFactory->button()->standard(
                     $this->plugin->txt("matrix.chat.invite"),
                     $this->controller->getCommandLink(ChatController::CMD_INVITE_PARTICIPANT, [
