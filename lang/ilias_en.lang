@@ -68,7 +68,7 @@ config.user.generalSettings#:#General settings
 config.user.title#:#Chat Settings
 config.user.authMethod#:#Matrix Authentication Method
 
-config.user.method.createOnConfiguredHomeserver#:#Use account on the connected home server
+config.user.method.createOnConfiguredHomeserver#:#Use account on the connected homeserver
 config.user.method.createOnConfiguredHomeserver.connectedHomeserver#:#Connected Matrix Homeserver
 config.user.method.createOnConfiguredHomeserver.detectedMatrixAccount#:#Recognized Matrix account
 
