@@ -120,10 +120,6 @@ class MatrixApi
             $request = $this->client->request($method, $this->getApiUrl($apiCall), $options);
             $statusCode = $request->getStatusCode();
             $content = $request->getContent(false);
-            if ($request->getStatusCode() >= 500) {
-                $this->logError($apiCall, "Received Status code of $statusCode");
-                throw new Exception("Received Status code of $statusCode",);
-            }
         } catch (Throwable $ex) {
             $this->logError($apiCall, " | Status-Code: $statusCode", $ex);
             throw new MatrixApiException("REQUEST_ERROR", $ex->getMessage(), $ex->getCode());
@@ -138,11 +134,14 @@ class MatrixApi
         }
 
         if (isset($responseData["errcode"])) {
+            $ex = new MatrixApiException($responseData["errcode"], $responseData["error"]);
             if ($responseData["errcode"] === "M_LIMIT_EXCEEDED") {
                 $this->logError($apiCall,
                     "Matrix API Request limit reached. Consider removing ratelimit for admin & rest-api user");
+            } else {
+                $this->logError($apiCall, "Matrix-Error Code '{$responseData["errcode"]}'", $ex);
             }
-            throw new MatrixApiException($responseData["errcode"], $responseData["error"]);
+            throw $ex;
         }
         return new MatrixApiResponse($statusCode, $responseData);
     }
