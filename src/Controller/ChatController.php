@@ -453,8 +453,10 @@ class ChatController extends BaseController
             $userRoomAddQueue = $this->queuedInvitesRepo->read($user->getId(), $this->refId);
             if ($userRoomAddQueue) {
                 $status = "queue";
+            } elseif ($room->isMember($userConfig->getMatrixUserId())) {
+                $status = self::USER_STATUS_JOIN;
             } else {
-                $status = $this->matrixApi->getStatusOfUserInRoom($room, $userConfig->getMatrixUserId()) ?: "notInvite";
+                $status = $this->matrixApi->getStatusOfUserInRoom($room, $userConfig->getMatrixUserId()) ?: self::USER_STATUS_NO_INVITE;
             }
 
             $chatMembers[] = new ChatMember(

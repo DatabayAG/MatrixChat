@@ -78,9 +78,14 @@ class MatrixRoom
         return $this;
     }
 
-    public function isMember(MatrixUser $matrixUser): bool
+    /**
+     * @param MatrixUser|string $matrixUserOrId
+     * @return bool
+     */
+    public function isMember($matrixUserOrId): bool
     {
-        return in_array($matrixUser->getId(), $this->getMembers(), true);
+        $matrixUserID = $matrixUserOrId instanceof MatrixUser ? $matrixUserOrId->getId() : $matrixUserOrId;
+        return in_array($matrixUserID, $this->getMembers(), true);
     }
 
     public function exists(): bool
