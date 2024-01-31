@@ -44,6 +44,7 @@ config.accountOptions.createOnConfiguredHomeserver#:#Create and use account on c
 config.accountOptions.specifyOtherMatrixAccount#:#Specify another Matrix account.
 
 config.supportedObjectTypes.title#:#Supported Object Types
+config.supportedObjectTypes.info#:#Please choose the object types the matrix chat should be supported by
 
 config.sharedSecret.title#:#Shared Secret
 config.sharedSecret.info#:#'registration_shared_secret' from the Synapse-Homeserver configuration (homeserver.yaml)<br><br>This field will be cleared after the form submission.

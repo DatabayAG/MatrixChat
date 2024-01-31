@@ -89,6 +89,7 @@ class PluginConfigForm extends ilPropertyFormGUI
             $this->plugin->txt("config.supportedObjectTypes.title"),
             "supportedObjectTypes"
         );
+        $supportedObjectTypes->setInfo($this->plugin->txt("config.supportedObjectTypes.info"));
 
         $supportedObjectTypes->addOption(new ilCheckboxOption(
             $this->lng->txt("crs"),

@@ -45,6 +45,7 @@ config.accountOptions.createOnConfiguredHomeserver#:#Account auf konfiguriertem 
 config.accountOptions.specifyOtherMatrixAccount#:#Anderen Matrix Account angeben.
 
 config.supportedObjectTypes.title#:#Unterstützte Objekttypen
+config.supportedObjectTypes.info#:#Bitte wählen Sie die Objekttypen aus, von denen der Matrix-Chat unterstützt werden soll
 
 config.sharedSecret.title#:#Gemeinsames Geheimnis
 config.sharedSecret.info#:#'registration_shared_secret' aus der Synapse-Homeserver konfiguration (homeserver.yaml)<br><br>Dieses Feld wird nach dem Absenden des Formulars wieder gelöscht.
