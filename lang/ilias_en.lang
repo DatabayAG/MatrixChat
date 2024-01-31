@@ -15,7 +15,7 @@ config.section.adminAuthentication.invalid#:#<span class='sectionTitleWithStatus
 config.section.restApiAuthentication.valid#:#<span class='sectionTitleWithStatus'>Rest-API Authentication <span class='alert alert-success sectionStatus'>%s</span></span>
 config.section.restApiAuthentication.invalid#:#<span class='sectionTitleWithStatus'>Rest-API Authentication <span class='alert alert-danger sectionStatus'>%s</span></span>
 config.section.user.external#:#Externally Authenticated ILIAS Users
-config.section.user.local#:#Local ILIAS users
+config.section.user.local#:#Local ILIAS Users
 config.section.room#:#Room
 config.section.general#:#General Settings
 
@@ -29,19 +29,19 @@ config.room.encryption.enable.title#:#Activate End-to-End-Encryption
 config.room.encryption.enable.info#:#Newly created rooms will be created with End-to-End-Encryption enabled. <br>End-to-End-Encryption can not be deactivated for rooms after the room has been created with it enabled!
 config.room.powerLevel.modify.title#:#Adjust Power-Level of Course/Group Participants
 config.room.powerLevel.modify.info#:#Power-level of the different Course/Group participant roles can be adjusted here. <br>Will only be adopted for new assignments, existing power-levels won't be adjusted. <br> Defaults: <br>- Course/Group Administrator: 100 (Administrator in Element) <br>- Course Tutor: 50 (Moderator in Element), <br>- Course/Group Member: 0 (Default in Element)
-config.room.status.title#:#Status of the Chat-Room
+config.room.status.title#:#Status of the Chatroom
 config.room.status.info#:#Course/Group participants are automatically added to the room or removed from it when they leave the course/group.
 config.room.status.disconnected#:#Not Connected/Setup
 config.room.status.connected#:#Connected
 config.room.status.restApiUserMissingInRoom#:#Connected but Rest-API User not in room. Inviting not possible. Room faulty.
 config.room.status.faulty#:#Connection to the chat room is faulty. The room ID is saved, but no room with this ID could be found.
-config.room.name#:#Name of the Chat-Room
+config.room.name#:#Name of the Chatroom
 config.room.create#:#Create Matrix-Chatroom
 config.room.delete#:#Decouple Matrix-Chatroom
 
 config.accountOptions.title#:#Account-Options
-config.accountOptions.createOnConfiguredHomeserver#:#Create and use account on configured homeserver.
-config.accountOptions.specifyOtherMatrixAccount#:#Specify another Matrix account.
+config.accountOptions.createOnConfiguredHomeserver#:#Create and Use Account on Configured Homeserver.
+config.accountOptions.specifyOtherMatrixAccount#:#Specify another Matrix Account.
 
 config.supportedObjectTypes.title#:#Supported Object Types
 config.supportedObjectTypes.info#:#Please choose the object types the matrix chat should be supported by
@@ -58,34 +58,34 @@ config.admin.username.info#:#Will be used to do administrator tasks like checkin
 config.admin.password.title#:#Password of the Matrix-Server Admin User
 config.admin.password.info#:#Password Input-Field will be cleared for security reasons once saved.
 
-config.restApiUser.username.title#:#Username of the Matrix-Server Admin User Rest-API User
+config.restApiUser.username.title#:#Username of the Matrix-Server  Rest-API User
 config.restApiUser.username.info#:#Enter the user account that creates and manages the chat rooms here. This user does not require any special privileges.
-config.restApiUser.password.title#:#Password of the Matrix-Server Admin User Rest-API User
+config.restApiUser.password.title#:#Password of the Matrix-Server Rest-API User
 config.restApiUser.password.info#:#Password Input-Field will be cleared for security reasons once saved.
 
 config.removeRateLimit#:#Remove Ratelimit of User
 config.removeRateLimit.info#:#The ratelimit of the user will be removed once the form is saved. <br>This sends a request to the Matrix-Server API to remove the ratelimit of this user. <br>Requires functioning "Matrix-Server Admin User"
 
-config.user.generalSettings#:#General settings
+config.user.generalSettings#:#General Settings
 config.user.title#:#Matrix Chat Settings
 config.user.authMethod#:#Matrix Authentication Method
 
-config.user.method.createOnConfiguredHomeserver#:#Use account on the connected homeserver
+config.user.method.createOnConfiguredHomeserver#:#Use Account on the Connected Homeserver
 config.user.method.createOnConfiguredHomeserver.connectedHomeserver#:#Connected Matrix Homeserver
-config.user.method.createOnConfiguredHomeserver.detectedMatrixAccount#:#Recognized Matrix account
+config.user.method.createOnConfiguredHomeserver.detectedMatrixAccount#:#Recognized Matrix Account
 
-config.user.method.specifyOtherMatrixAccount#:#Use another Matrix account
+config.user.method.specifyOtherMatrixAccount#:#Use another Matrix Account
 config.user.method.specifyOtherMatrixAccount.accountName#:#Account-Name (Including Homeserver)
 
 config.user.resetAccountSettings#:#Reset Matrix Account Settings
 config.user.resetAccountSettings.success#:#Matrix account settings were reset
 
-config.user.changeLocalUserPassword.title#:#Change password of locally connected Matrix-User
+config.user.changeLocalUserPassword.title#:#Change Password of Locally Connected Matrix-User
 config.user.changeLocalUserPassword.failure.userNotExist#:#Your password could not be changed. Your user does not exist!
 config.user.changeLocalUserPassword.failure.general#:#Your password could not be changed.
 config.user.changeLocalUserPassword.success#:#Your password was changed successfully. Your devices have been logged out!
 
-config.user.externalMatrixUserLookup.checkAccountOnMatrixServer#:#Check account on Matrix-Server
+config.user.externalMatrixUserLookup.checkAccountOnMatrixServer#:#Check Account on Matrix-Server
 config.user.externalMatrixUserLookup.missingMatrixUserIdInPost#:#The Matrix-User-ID was not transmitted in the request.
 
 config.user.externalMatrixUserLookup.failure.notExist#:#The homeserver responded that the user %s does not exist.

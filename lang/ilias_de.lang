@@ -19,8 +19,8 @@ config.section.user.local#:#Lokale ILIAS-Benutzer
 config.section.room#:#Raum
 config.section.general#:#Allgemeine Einstellungen
 
-config.usernameScheme.external#:#Schema zum Verbinden von ILIAS-Usern mit externem Account
-config.usernameScheme.local#:#Schema zum Verbinden von ILIAS-Usern mit lokalem Account
+config.usernameScheme.external#:#Schema zum Verbinden von ILIAS-Benutzern mit externem ILIAS-Account
+config.usernameScheme.local#:#Schema zum Verbinden von ILIAS-Usern mit lokalem ILIAS-Account
 config.usernameScheme.info#:#Dieses Schema wird verwendet, um den Matrix-Benutzernamen zu erzeugen,<br>wenn extern authentifizierte ILIAS-Benutzer einem Matrix-Chat beitreten wollen, aber bisher keinen Benutzer haben. <br><br>Das Schema darf nur die folgenden Zeichen enthalten %s.<br>Großbuchstaben werden in Kleinbuchstaben umgewandelt!<br><br>Unterstützte Variablen: <br>%s
 
 config.room.prefix#:#Raumpräfix
@@ -30,13 +30,13 @@ config.room.encryption.enable.title#:#Aktiviere Ende-zu-Ende-Verschlüsselung
 config.room.encryption.enable.info#:#Neu angelegte Räume werden mit Ende-zu-Ende-Verschlüsselung angelegt. <br>Ende-zu-Ende-Verschlüsselung kann für Räume nicht wieder deaktiviert werden!
 config.room.powerLevel.modify.title#:#Power-Level von Kurs/Gruppen Teilnehmern anpassen
 config.room.powerLevel.modify.info#:#Hier kann das Power-Level für die verschiedenen Rollen eines Kurs/einer Gruppe Teilnehmers angepasst werden. <br>Wird nur für neue Zuweisungen übernommen, existierende Power-Level werden nicht angepasst. <br> Standardwerte: <br>- Kurs/Gruppen Administrator: 100 (Administrator in Element) <br>- Kurstutor: 50 (Moderator in Element), <br>- Kurs/Gruppen Mitglied: 0 (Standard in Element)
-config.room.status.title#:#Status des Chat-Raums
+config.room.status.title#:#Status vom Chatraum
 config.room.status.info#:#Kurs/Gruppen Teilnehmer werden dem Raum automatisch hinzugefügt bzw. entfernt, wenn Sie den Kurs/die Gruppe verlassen.
 config.room.status.disconnected#:#Nicht Verbunden/Eingerichtet
 config.room.status.connected#:#Verbunden
 config.room.status.restApiUserMissingInRoom#:#Raum verbunden aber Rest-API Benutzer nicht im Raum. Einladen nicht möglich. Raum fehlerhaft.
-config.room.status.faulty#:#Verbindung zum Chat-Raum ist fehlerhaft. Die ID des Raums ist gespeichert, es konnte jedoch kein Raum mit dieser ID gefunden werden.
-config.room.name#:#Name des Chat-Raums
+config.room.status.faulty#:#Verbindung zum Chatraum ist fehlerhaft. Die ID des Raums ist gespeichert, es konnte jedoch kein Raum mit dieser ID gefunden werden.
+config.room.name#:#Name vom Chatraum
 config.room.create#:#Matrix-Chatraum anlegen
 config.room.delete#:#Matrix-Chatraum entkoppeln
 
