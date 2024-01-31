@@ -34,6 +34,7 @@ config.room.status.title#:#Status des Chat-Raums
 config.room.status.info#:#Kursteilnehmer werden dem Raum automatisch hinzugefügt bzw. entfernt, wenn Sie den Kurs verlassen.
 config.room.status.disconnected#:#Nicht Verbunden/Eingerichtet
 config.room.status.connected#:#Verbunden
+config.room.status.restApiUserMissingInRoom#:#Raum verbunden aber Rest-API Benutzer nicht im Raum. Einladen nicht möglich. Raum fehlerhaft.
 config.room.status.faulty#:#Verbindung zum Chat-Raum ist fehlerhaft. Die ID des Raums ist gespeichert, es konnte jedoch kein Raum mit dieser ID gefunden werden.
 config.room.name#:#Name des Chat-Raums
 config.room.create#:#Matrix-Chatraum anlegen

@@ -345,7 +345,6 @@ class MatrixApi
             $response = $this->sendRequest("/_synapse/admin/v1/username_available?username=$username");
             return $response->getResponseDataValue("available");
         } catch (MatrixApiException $ex) {
-            $this->logger->error("Error occurred while trying to check if username '$username' is available.");
             return false;
         }
     }

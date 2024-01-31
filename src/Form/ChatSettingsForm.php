@@ -86,8 +86,11 @@ class ChatSettingsForm extends ilPropertyFormGUI
         }
 
         if ($room) {
-            $roomStatus->setCssClass("config_orange");
-            $roomStatus->setValue($this->plugin->txt("config.room.status.connected"));
+            if (!$room->isMember($this->matrixApi->getRestApiUser())) {
+                $roomStatus->setValue($this->plugin->txt("config.room.status.restApiUserMissingInRoom"));
+            } else {
+                $roomStatus->setValue($this->plugin->txt("config.room.status.connected"));
+            }
         }
 
         $roomName = new ilTextInputGUI($this->plugin->txt("config.room.name"));

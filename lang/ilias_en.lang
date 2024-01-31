@@ -33,6 +33,7 @@ config.room.status.title#:#Status of the Chat-Room
 config.room.status.info#:#Course participants are automatically added to the room or removed from it when they leave the course.
 config.room.status.disconnected#:#Not Connected/Setup
 config.room.status.connected#:#Connected
+config.room.status.restApiUserMissingInRoom#:#Connected but Rest-API User not in room. Inviting not possible. Room faulty.
 config.room.status.faulty#:#Connection to the chat room is faulty. The room ID is saved, but no room with this ID could be found.
 config.room.name#:#Name of the Chat-Room
 config.room.create#:#Create Matrix-Chatroom
