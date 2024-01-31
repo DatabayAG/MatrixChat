@@ -87,7 +87,7 @@ See [For instructions on how to setup a synapse homeserver](https://matrix-org.g
 
 1. Click the Profile image in the top right corner of the ILIAS UI.
 2. Select **Settings** from the dropdown.
-3. Select the **Chat Settings** Tab.
+3. Select the **Matrix Chat Setting** Tab.
 
 - This tab shows the current Matrix-Account status.
 - If not yet configured. The tab will show a form with different options for configuring a Matrix-Account.

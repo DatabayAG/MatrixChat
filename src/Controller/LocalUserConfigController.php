@@ -58,7 +58,8 @@ class LocalUserConfigController extends BaseUserConfigController
                 [
                     "connectedHomeserver" => $this->plugin->getPluginConfig()->getMatrixServerUrl(),
                     "matrixUsername" => $this->buildUsername(),
-                    "matrixAccount" => $this->userConfig->getMatrixUserId()
+                    "matrixAccount" => $this->userConfig->getMatrixUserId(),
+                    "authMethod" => PluginConfigForm::CREATE_ON_CONFIGURED_HOMESERVER
                 ]
             ), true);
         }

@@ -53,7 +53,8 @@ class ExternalUserConfigController extends BaseUserConfigController
                 [
                     "connectedHomeserver" => $this->plugin->getPluginConfig()->getMatrixServerUrl(),
                     "matrixUsername" => $this->buildMatrixUserId(),
-                    "matrixAccount" => $this->userConfig->getMatrixUserId()
+                    "matrixAccount" => $this->userConfig->getMatrixUserId(),
+                    "authMethod" => PluginConfigForm::CREATE_ON_CONFIGURED_HOMESERVER
                 ]
             ), true);
         }

@@ -328,6 +328,8 @@ class PluginConfigForm extends ilPropertyFormGUI
             $this->plugin->txt("config.space.id"),
             "matrixSpaceId"
         );
+        $matrixSpaceId->setInfo($this->plugin->txt("config.space.id.info"));
+
         $matrixSpaceId->setDisabled(true);
         $this->addItem($matrixSpaceId);
 
@@ -346,7 +348,7 @@ class PluginConfigForm extends ilPropertyFormGUI
         $this->addItem($modifyParticipantPowerLevel);
 
         $adminPowerLevel = new ilNumberInputGUI(
-            $this->lng->txt("il_crs_admin"),
+            $this->lng->txt("il_crs_admin") . " | " . $this->lng->txt("il_grp_admin"),
             "adminPowerLevel"
         );
         $modifyParticipantPowerLevel->addSubItem($adminPowerLevel);
@@ -358,7 +360,7 @@ class PluginConfigForm extends ilPropertyFormGUI
         $modifyParticipantPowerLevel->addSubItem($tutorPowerLevel);
 
         $memberPowerLevel = new ilNumberInputGUI(
-            $this->lng->txt("il_crs_member"),
+            $this->lng->txt("il_crs_member") . " | " . $this->lng->txt("il_grp_member"),
             "memberPowerLevel"
         );
         $modifyParticipantPowerLevel->addSubItem($memberPowerLevel);

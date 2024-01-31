@@ -68,16 +68,18 @@ class ExternalUserConfigForm extends BaseUserConfigForm
     {
         $radioOption = new ilRadioOption(
             $this->plugin->txt("config.user.method.createOnConfiguredHomeserver"),
-            "createOnConfiguredHomeserver"
+            PluginConfigForm::CREATE_ON_CONFIGURED_HOMESERVER
         );
 
 
         $radioOption->addSubItem($this->getConnectedMatrixHomeserverInput());
-        $radioOption->addSubItem($this->getMatrixAccountInput(
+        $matrixAccountInput = $this->getMatrixAccountInput(
             "config.user.method.createOnConfiguredHomeserver.detectedMatrixAccount",
             "matrixUsername",
             true
-        ));
+        );
+        $matrixAccountInput->setInfo($this->plugin->txt("matrix.user.name.info"));
+        $radioOption->addSubItem($matrixAccountInput);
 
         if ($this->passwordEnterNeeded) {
             $matrixUserPassword = new ilPasswordInputGUI(
@@ -97,7 +99,7 @@ class ExternalUserConfigForm extends BaseUserConfigForm
     {
         $radioOption = new ilRadioOption(
             $this->plugin->txt("config.user.method.specifyOtherMatrixAccount"),
-            "specifyOtherMatrixAccount"
+            PluginConfigForm::SPECIFY_OTHER_MATRIX_ACCOUNT
         );
 
         $radioOption->addSubItem($this->getMatrixAccountInput(

@@ -49,7 +49,7 @@ class ChatSettingsForm extends ilPropertyFormGUI
         $this->httpWrapper = $this->dic->http()->wrapper();
         $this->matrixApi = $this->plugin->getMatrixApi();
 
-        $this->setTitle($this->plugin->txt("matrix.chat.course.settings"));
+        $this->setTitle($this->plugin->txt("matrix.chat.settings"));
 
         $this->setFormAction($controller->getCommandLink(
             ChatController::CMD_SHOW_CHAT_SETTINGS,

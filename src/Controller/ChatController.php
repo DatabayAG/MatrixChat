@@ -23,6 +23,7 @@ namespace ILIAS\Plugin\MatrixChatClient\Controller;
 use Exception;
 use ilAccessHandler;
 use ilAuthUtils;
+use ilCourseParticipants;
 use ILIAS\DI\Container;
 use ILIAS\HTTP\Services;
 use ILIAS\HTTP\Wrapper\WrapperFactory;
@@ -436,29 +437,29 @@ class ChatController extends BaseController
     {
         $chatMembers = [];
         $participants = ilParticipants::getInstance($this->courseSettings->getCourseId());
-
+        $isCrs = $participants instanceof ilCourseParticipants;
         foreach ($participants->getParticipants() as $participantId) {
             $participantId = (int) $participantId;
             $user = new ilObjUser($participantId);
             $userConfig = (new UserConfig($user))->load();
 
-            $roleText = $this->lng->txt("il_crs_member");
+            $roleText = $this->lng->txt($isCrs ? "il_crs_member" : "il_grp_member");
             if ($participants->isTutor($participantId)) {
                 $roleText = $this->lng->txt("il_crs_tutor");
             }
             if ($participants->isAdmin($participantId)) {
-                $roleText = $this->lng->txt("il_crs_admin");
-            }
-
-            $userRoomAddQueue = $this->queuedInvitesRepo->read($user->getId(), $this->refId);
-            if ($userRoomAddQueue) {
-                $status = "queue";
+                $roleText = $this->lng->txt($isCrs ? "il_crs_admin" : "il_grp_admin");
             }
 
             if ($room->isMember($userConfig->getMatrixUserId())) {
                 $status = self::USER_STATUS_JOIN;
             } else {
                 $status = $this->matrixApi->getStatusOfUserInRoom($room, $userConfig->getMatrixUserId()) ?: self::USER_STATUS_NO_INVITE;
+            }
+
+            $userRoomAddQueue = $this->queuedInvitesRepo->read($user->getId(), $this->refId);
+            if ($userRoomAddQueue) {
+                $status = "queue";
             }
 
             $chatMembers[] = new ChatMember(
@@ -745,7 +746,7 @@ class ChatController extends BaseController
             if ($this->checkPermissionOnObject("write", false)) {
                 $this->tabs->addSubTab(
                     self::SUB_TAB_MEMBERS,
-                    $this->plugin->txt("matrix.chat.course.members"),
+                    $this->plugin->txt("matrix.chat.members"),
                     $this->getCommandLink(self::CMD_SHOW_CHAT_MEMBERS, [
                         "ref_id" => $this->courseSettings->getCourseId()
                     ])
@@ -753,7 +754,7 @@ class ChatController extends BaseController
 
                 $this->tabs->addSubTab(
                     self::SUB_TAB_CHAT_SETTINGS,
-                    $this->plugin->txt("matrix.chat.course.settings"),
+                    $this->plugin->txt("matrix.chat.settings"),
                     $this->getCommandLink(self::CMD_SHOW_CHAT_SETTINGS, [
                         "ref_id" => $this->courseSettings->getCourseId()
                     ])

@@ -24,13 +24,13 @@ config.usernameScheme.local#:#Scheme for connecting ILIAS users with an local ac
 config.usernameScheme.info#:#This scheme is used to create the matrix username,<br>when externally authenticated ILIAS users want to join a Matrix chat but do not have a user yet.<br><br>The scheme may only contain the characters %s.<br>Uppercase letters are converted to lowercase!<br><br>Supported variables: <br>%s
 
 config.room.prefix#:#Room Prefix
-config.room.prefix.info#:#This scheme is used to create the prefix for the naming of the Matrix-Chatroom. <br>This prefix is put in front of the name of the course this chatroom is assigned to/created by. <br><br>Supported variables: <br>%s
+config.room.prefix.info#:#This scheme is used to create the prefix for the naming of the Matrix-Chatroom. <br>This prefix is put in front of the name of the course/group this chatroom is assigned to/created by. <br><br>Supported variables: <br>%s
 config.room.encryption.enable.title#:#Activate End-to-End-Encryption
 config.room.encryption.enable.info#:#Newly created rooms will be created with End-to-End-Encryption enabled. <br>End-to-End-Encryption can not be deactivated for rooms after the room has been created with it enabled!
 config.room.powerLevel.modify.title#:#Adjust Power-Level of Course/Group Participants
-config.room.powerLevel.modify.info#:#Power-level of the different Course/Group participant roles can be adjusted here. <br>Will only be adopted for new assignments, existing power-levels won't be adjusted. <br> Defaults: <br>- Course Administrator: 100 (Administrator in Element) <br>- Course Tutor: 50 (Moderator in Element), <br>- Course Member: 0 (Default in Element)
+config.room.powerLevel.modify.info#:#Power-level of the different Course/Group participant roles can be adjusted here. <br>Will only be adopted for new assignments, existing power-levels won't be adjusted. <br> Defaults: <br>- Course/Group Administrator: 100 (Administrator in Element) <br>- Course Tutor: 50 (Moderator in Element), <br>- Course/Group Member: 0 (Default in Element)
 config.room.status.title#:#Status of the Chat-Room
-config.room.status.info#:#Course participants are automatically added to the room or removed from it when they leave the course.
+config.room.status.info#:#Course/Group participants are automatically added to the room or removed from it when they leave the course/group.
 config.room.status.disconnected#:#Not Connected/Setup
 config.room.status.connected#:#Connected
 config.room.status.restApiUserMissingInRoom#:#Connected but Rest-API User not in room. Inviting not possible. Room faulty.
@@ -47,7 +47,7 @@ config.supportedObjectTypes.title#:#Supported Object Types
 config.supportedObjectTypes.info#:#Please choose the object types the matrix chat should be supported by
 
 config.sharedSecret.title#:#Shared Secret
-config.sharedSecret.info#:#'registration_shared_secret' from the Synapse-Homeserver configuration (homeserver.yaml)<br><br>This field will be cleared after the form submission.
+config.sharedSecret.info#:#Please provide the shared secret required for registering new users on the configured homeserver. <br>This value can be found inside the 'homeserver.yaml' of the homeserver under registration_shared_secret'. <br><br>For security reasons, this field will be cleared once saved.
 config.sharedSecret.empty#:#This field is required if it has not been saved yet!
 
 config.pageDesignerText.title#:#Design Matrix Chat Page
@@ -56,18 +56,18 @@ config.pageDesignerText.info#:#Text is displayed on the chat tab within courses 
 config.admin.username.title#:#Username of the Matrix-Server Admin User
 config.admin.username.info#:#Will be used to do administrator tasks like checking user accounts.
 config.admin.password.title#:#Password of the Matrix-Server Admin User
-config.admin.password.info#:#Password Input-Field will be cleared after saving the password!
+config.admin.password.info#:#Password Input-Field will be cleared for security reasons once saved.
 
 config.restApiUser.username.title#:#Username of the Matrix-Server Admin User Rest-API User
 config.restApiUser.username.info#:#Enter the user account that creates and manages the chat rooms here. This user does not require any special privileges.
 config.restApiUser.password.title#:#Password of the Matrix-Server Admin User Rest-API User
-config.restApiUser.password.info#:#Password Input-Field will be cleared after saving the password!
+config.restApiUser.password.info#:#Password Input-Field will be cleared for security reasons once saved.
 
 config.removeRateLimit#:#Remove Ratelimit of User
-config.removeRateLimit.info#:#Removes the ratelimit of the user when saving. <br>Sends a request to the Matrix-Server API to remove the ratelimit of this user. <br>Requires functioning "Matrix-Server Admin User"
+config.removeRateLimit.info#:#The ratelimit of the user will be removed once the form is saved. <br>This sends a request to the Matrix-Server API to remove the ratelimit of this user. <br>Requires functioning "Matrix-Server Admin User"
 
 config.user.generalSettings#:#General settings
-config.user.title#:#Chat Settings
+config.user.title#:#Matrix Chat Settings
 config.user.authMethod#:#Matrix Authentication Method
 
 config.user.method.createOnConfiguredHomeserver#:#Use account on the connected homeserver
@@ -108,16 +108,17 @@ matrix.chat.room.notFound#:#Room could not be found.
 matrix.chat.room.delete.confirm#:#Are you sure you want to delete the Matrix chat room? <br>All users will be removed from it!
 matrix.chat.room.delete.success#:#Room deleted successfully
 matrix.chat.room.delete.failed#:#Room could not be deleted
-matrix.chat.course.settings#:#Chat settings
-matrix.chat.course.members#:#Members
+matrix.chat.settings#:#Matrix Chat Settings
+matrix.chat.members#:#Members
 matrix.chat.invite#:#Invite
 matrix.chat.invite.notPossible#:#Invite not possible
 matrix.chat.status#:#Chat-Status
-matrix.chat.members#:#Chat Participant
+matrix.chat.members#:#Chat Participants
 
 config.space.name#:#Name of the Space
 config.space.name.info#:#Changing the name causes a new Space to be created (ID of the Space changes) <br>Rooms in the old Space remain in the previously used Space!
 config.space.id#:#ID of the Space
+config.space.id.info#:#Not editable. This value changes when the 'Name of the Space' above is changed.
 config.space.status.faulty#:#Connection to the space is faulty. The space ID is saved, but no space with this ID could be found.
 config.space.status.disconnected#:#Space not Connected/Setup
 
@@ -125,6 +126,7 @@ matrix.space.creation.failure#:#An error occurred while trying to create MatrixS
 matrix.space.notFound#:#No Matrix-Space could be found to which the Matrix-Room can be added. Creation of room not possible.
 
 matrix.user.name#:#Matrix-Username
+matrix.user.name.info#:#Not editable. Predefined by server.
 matrix.user.account#:#Matrix-Account
 matrix.user.password#:#Matrix-User Password
 matrix.user.password.external.required#:#Your "Recognized Matrix account" does not exist. Please enter a passwort to create it.
