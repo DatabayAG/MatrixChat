@@ -665,7 +665,7 @@ class ChatController extends BaseController
     {
         $activated = in_array(
             ilObject::_lookupType($this->refId, true),
-            $this->plugin->getPluginConfig()->getActivateChat(),
+            $this->plugin->getPluginConfig()->getSupportedObjectTypes(),
             true
         );
 

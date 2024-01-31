@@ -274,7 +274,7 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
         $pluginConfig = $this->plugin->getPluginConfig();
 
         $objType = ilObject::_lookupType($refId, true);
-        if (!in_array($objType, $pluginConfig->getActivateChat(), true)) {
+        if (!in_array($objType, $pluginConfig->getSupportedObjectTypes(), true)) {
             return;
         }
 

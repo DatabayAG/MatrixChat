@@ -135,7 +135,7 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
             ->setLocalUserScheme($form->getInput("localUserScheme"))
             ->setLocalUserOptions($form->getInput("localUserOptions"))
             ->setRoomPrefix($form->getInput("roomPrefix"))
-            ->setActivateChat($form->getInput("activateChat"))
+            ->setSupportedObjectTypes($form->getInput("supportedObjectTypes"))
             ->setEnableRoomEncryption((bool) $form->getInput("enableRoomEncryption"))
             ->setModifyParticipantPowerLevel((bool) $form->getInput("modifyParticipantPowerLevel"))
             ->setAdminPowerLevel((int) $form->getInput("adminPowerLevel"))

@@ -85,21 +85,21 @@ class PluginConfigForm extends ilPropertyFormGUI
         $section->setTitle($this->plugin->txt("config.section.general"));
         $this->addItem($section);
 
-        $activateChat = new ilCheckboxGroupInputGUI(
-            $this->plugin->txt("config.activateChat.title"),
-            "activateChat"
+        $supportedObjectTypes = new ilCheckboxGroupInputGUI(
+            $this->plugin->txt("config.supportedObjectTypes.title"),
+            "supportedObjectTypes"
         );
 
-        $activateChat->addOption(new ilCheckboxOption(
+        $supportedObjectTypes->addOption(new ilCheckboxOption(
             $this->lng->txt("crs"),
             "crs"
         ));
 
-        $activateChat->addOption(new ilCheckboxOption(
+        $supportedObjectTypes->addOption(new ilCheckboxOption(
             $this->lng->txt("grp"),
             "grp"
         ));
-        $this->addItem($activateChat);
+        $this->addItem($supportedObjectTypes);
     }
 
     protected function addServerSection($serverReachable): void

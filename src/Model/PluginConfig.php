@@ -39,7 +39,7 @@ class PluginConfig extends SettingsConfig
     private string $localUserScheme = "";
     private array $localUserOptions = [];
     private string $roomPrefix = "";
-    private array $activateChat = [];
+    private array $supportedObjectTypes = [];
     private string $pageDesignerText = "";
     private string $matrixSpaceId = "";
     private string $matrixSpaceName = "";
@@ -170,14 +170,14 @@ class PluginConfig extends SettingsConfig
         return $this;
     }
 
-    public function getActivateChat(): array
+    public function getSupportedObjectTypes(): array
     {
-        return $this->activateChat;
+        return $this->supportedObjectTypes;
     }
 
-    public function setActivateChat(array $activateChat): PluginConfig
+    public function setSupportedObjectTypes(array $supportedObjectTypes): PluginConfig
     {
-        $this->activateChat = $activateChat;
+        $this->supportedObjectTypes = $supportedObjectTypes;
         return $this;
     }
 
