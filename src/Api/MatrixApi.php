@@ -432,10 +432,11 @@ class MatrixApi
     public function changePassword(string $matrixUserId, $newPassword): bool
     {
         try {
+            //Trying to update a non-existing user will create a new user.
             if (!$this->userExists($matrixUserId)) {
                 return false;
-                //Trying to update a non-existing user will create a new user.
             }
+
             $response = $this->sendRequest(
                 "/_synapse/admin/v2/users/$matrixUserId",
                 true,
