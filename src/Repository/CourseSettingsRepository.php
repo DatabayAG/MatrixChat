@@ -19,12 +19,6 @@ namespace ILIAS\Plugin\MatrixChatClient\Repository;
 use ilDBInterface;
 use ILIAS\Plugin\MatrixChatClient\Model\CourseSettings;
 
-/**
- * Class CourseSettingsRepository
- *
- * @package ILIAS\Plugin\MatrixChatClient\Repository
- * @author  Marvin Beym <mbeym@databay.de>
- */
 class CourseSettingsRepository
 {
     private static ?CourseSettingsRepository $instance = null;

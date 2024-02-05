@@ -25,12 +25,6 @@ use ilObjUser;
 use ilPasswordInputGUI;
 use ilRadioOption;
 
-/**
- * Class LocalAuthModeRegisterForm
- *
- * @package ILIAS\Plugin\MatrixChatClient\Form
- * @author  Marvin Beym <mbeym@databay.de>
- */
 class LocalUserConfigForm extends BaseUserConfigForm
 {
     private bool $passwordEnterNeeded;

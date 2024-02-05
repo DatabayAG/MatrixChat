@@ -21,12 +21,6 @@ namespace ILIAS\Plugin\MatrixChatClient\Model;
 
 use ilMatrixChatClientPlugin;
 
-/**
- * Class MatrixRoom
- *
- * @package ILIAS\Plugin\MatrixChatClient\Model
- * @author  Marvin Beym <mbeym@databay.de>
- */
 class MatrixRoom
 {
     private string $id;

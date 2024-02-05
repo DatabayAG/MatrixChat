@@ -16,12 +16,6 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChatClient\Model;
 
-/**
- * Class MatrixUser
- *
- * @package ILIAS\Plugin\MatrixChatClient\Model
- * @author  Marvin Beym <mbeym@databay.de>
- */
 class MatrixUser
 {
     private string $id;

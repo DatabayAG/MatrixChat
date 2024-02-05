@@ -29,12 +29,6 @@ use ilPasswordInputGUI;
 use ilPropertyFormGUI;
 use ilTextInputGUI;
 
-/**
- * Class LocalUserPasswordChangeForm
- *
- * @package ILIAS\Plugin\MatrixChatClient\Form
- * @author  Marvin Beym <mbeym@databay.de>
- */
 class LocalUserPasswordChangeForm extends ilPropertyFormGUI
 {
     protected ilMatrixChatClientPlugin $plugin;

@@ -18,12 +18,6 @@ namespace ILIAS\Plugin\MatrixChatClient\Api;
 
 use Exception;
 
-/**
- * Class MatrixApiException
- *
- * @package ILIAS\Plugin\MatrixChatClient\Api
- * @author  Marvin Beym <mbeym@databay.de>
- */
 class MatrixApiException extends Exception
 {
     private string $errorCode;

@@ -24,12 +24,6 @@ use ILIAS\Plugin\Libraries\IliasConfigLoader\Exception\ConfigLoadException;
 use ILIAS\Plugin\Libraries\IliasConfigLoader\Model\Config\UserPrefConfig;
 use ilObjUser;
 
-/**
- * Class UserConfig
- *
- * @package ILIAS\Plugin\MatrixChatClient\Model
- * @author  Marvin Beym <mbeym@databay.de>
- */
 class UserConfig extends UserPrefConfig
 {
     private string $authMethod = "";

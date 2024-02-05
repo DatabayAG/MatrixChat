@@ -32,8 +32,6 @@ use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
 use ILIAS\Refinery\Factory;
 
 /**
- * Class ilMatrixChatClientUIHookGUI
- *
  * @ilCtrl_isCalledBy  ilMatrixChatClientUIHookGUI: ilUIPluginRouterGUI
  * @ilCtrl_Calls       ilMatrixChatClientUIHookGUI: ilObjCourseGUI
  * @ilCtrl_Calls       ilMatrixChatClientUIHookGUI: ilCourseRegistrationGUI, ilCourseObjectivesGUI

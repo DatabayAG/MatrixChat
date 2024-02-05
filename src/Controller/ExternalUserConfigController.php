@@ -24,12 +24,6 @@ use ILIAS\Plugin\MatrixChatClient\Form\BaseUserConfigForm;
 use ILIAS\Plugin\MatrixChatClient\Form\ExternalUserConfigForm;
 use ILIAS\Plugin\MatrixChatClient\Form\PluginConfigForm;
 
-/**
- * Class ExternalUserConfigController
- *
- * @package ILIAS\Plugin\MatrixChatClient\Controller
- * @author  Marvin Beym <mbeym@databay.de>
- */
 class ExternalUserConfigController extends BaseUserConfigController
 {
     public function showUserChatConfig(?BaseUserConfigForm $form = null): void

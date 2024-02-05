@@ -20,12 +20,6 @@ use Exception;
 use ILIAS\Plugin\Libraries\IliasConfigLoader\Exception\ConfigLoadException;
 use ILIAS\Plugin\Libraries\IliasConfigLoader\Model\Config\SettingsConfig;
 
-/**
- * Class PluginConfig
- *
- * @package ILIAS\Plugin\MatrixChatClient\Model
- * @author  Marvin Beym <mbeym@databay.de>
- */
 class PluginConfig extends SettingsConfig
 {
     private string $matrixServerUrl = "";

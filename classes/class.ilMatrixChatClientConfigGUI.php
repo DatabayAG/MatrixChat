@@ -14,9 +14,6 @@ use ILIAS\Plugin\MatrixChatClient\Form\PluginConfigForm;
 require_once __DIR__ . '/../vendor/autoload.php';
 
 /**
- * Class ilMatrixChatClientConfigGUI
- *
- * @author            Marvin Beym <mbeym@databay.de>
  * @ilCtrl_Calls      ilMatrixChatClientConfigGUI: ilPropertyFormGUI
  * @ilCtrl_Calls      ilMatrixChatClientConfigGUI: ilAdministrationGUI
  * @ilCtrl_IsCalledBy ilMatrixChatClientConfigGUI: ilObjComponentSettingsGUI

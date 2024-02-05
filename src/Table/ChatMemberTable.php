@@ -36,12 +36,6 @@ use ilSelectInputGUI;
 use ilTable2GUI;
 use ilTextInputGUI;
 
-/**
- * Class ChatMemberTable
- *
- * @package ILIAS\Plugin\MatrixChatClient\Table
- * @author  Marvin Beym <mbeym@databay.de>
- */
 class ChatMemberTable extends ilTable2GUI
 {
     private ilMatrixChatClientPlugin $plugin;

@@ -46,12 +46,6 @@ use ilRepositoryGUI;
 use ilTabsGUI;
 use ilUIPluginRouterGUI;
 
-/**
- * Class BaseUserConfigController
- *
- * @package ILIAS\Plugin\MatrixChatClient\Controller
- * @author  Marvin Beym <mbeym@databay.de>
- */
 abstract class BaseUserConfigController extends BaseController
 {
     public const TAB_USER_CHAT_CONFIG = "user-chat-config";

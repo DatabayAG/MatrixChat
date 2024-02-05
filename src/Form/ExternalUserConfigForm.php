@@ -25,12 +25,6 @@ use ilObjUser;
 use ilPasswordInputGUI;
 use ilRadioOption;
 
-/**
- * Class ExternalUserConfigForm
- *
- * @package ILIAS\Plugin\MatrixChatClient\Form
- * @author  Marvin Beym <mbeym@databay.de>
- */
 class ExternalUserConfigForm extends BaseUserConfigForm
 {
     private bool $passwordEnterNeeded;

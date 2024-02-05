@@ -58,12 +58,6 @@ use ReflectionClass;
 use ReflectionMethod;
 use Throwable;
 
-/**
- * Class ChatController
- *
- * @package ILIAS\Plugin\MatrixChatClient\Controller
- * @author  Marvin Beym <mbeym@databay.de>
- */
 class ChatController extends BaseController
 {
     public const CMD_SHOW_CHAT = "showChat";

@@ -33,9 +33,6 @@ use ILIAS\Plugin\MatrixChatClient\Repository\QueuedInvitesRepository;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-/**
- * Class ilMatrixChatClientPlugin
- */
 class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin implements ilCronJobProvider
 {
     /** @var string */

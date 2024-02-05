@@ -21,12 +21,6 @@ namespace ILIAS\Plugin\MatrixChatClient\Form\Input;
 
 use ilTextInputGUI;
 
-/**
- * Class SuffixedTextInput
- *
- * @package ILIAS\Plugin\MatrixChatClient\Form\Input
- * @author  Marvin Beym <mbeym@databay.de>
- */
 class SuffixedTextInput extends ilTextInputGUI
 {
     public function render($a_mode = ""): string

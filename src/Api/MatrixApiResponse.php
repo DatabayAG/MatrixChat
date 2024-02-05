@@ -20,12 +20,6 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChatClient\Api;
 
-/**
- * Class MatrixApiResponse
- *
- * @package ILIAS\Plugin\MatrixChatClient\Api
- * @author  Marvin Beym <mbeym@databay.de>
- */
 class MatrixApiResponse
 {
     private int $statusCode;

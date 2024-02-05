@@ -30,12 +30,6 @@ use ilRadioGroupInputGUI;
 use ilRadioOption;
 use ilTextInputGUI;
 
-/**
- * Class BaseUserConfigForm
- *
- * @package ILIAS\Plugin\MatrixChatClient\Form
- * @author  Marvin Beym <mbeym@databay.de>
- */
 abstract class BaseUserConfigForm extends ilPropertyFormGUI
 {
     protected ilMatrixChatClientPlugin $plugin;

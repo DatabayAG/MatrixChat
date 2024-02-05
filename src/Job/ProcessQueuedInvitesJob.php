@@ -35,12 +35,6 @@ use ilObjUser;
 use ReflectionClass;
 use Throwable;
 
-/**
- * Class ProcessQueuedInvitesJob
- *
- * @package ILIAS\Plugin\MatrixChatClient\Job
- * @author  Marvin Beym <mbeym@databay.de>
- */
 class ProcessQueuedInvitesJob extends ilCronJob
 {
     private Container $dic;

@@ -25,12 +25,6 @@ use ilMatrixChatClientPlugin;
 use ilPropertyFormGUI;
 use ilTextInputGUI;
 
-/**
- * Class ChatSettingsForm
- *
- * @package ILIAS\Plugin\MatrixChatClient\Form
- * @author  Marvin Beym <mbeym@databay.de>
- */
 class ChatSettingsForm extends ilPropertyFormGUI
 {
     private ilMatrixChatClientPlugin $plugin;

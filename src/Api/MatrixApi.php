@@ -32,12 +32,6 @@ use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Throwable;
 
-/**
- * Class MatrixApi
- *
- * @package ILIAS\Plugin\MatrixChatClient\Api
- * @author  Marvin Beym <mbeym@databay.de>
- */
 class MatrixApi
 {
     private static ?MatrixUser $adminUser = null;

@@ -25,12 +25,6 @@ use ILIAS\Plugin\MatrixChatClient\Form\LocalUserConfigForm;
 use ILIAS\Plugin\MatrixChatClient\Form\LocalUserPasswordChangeForm;
 use ILIAS\Plugin\MatrixChatClient\Form\PluginConfigForm;
 
-/**
- * Class LocalUserConfigController
- *
- * @package ILIAS\Plugin\MatrixChatClient\Controller
- * @author  Marvin Beym <mbeym@databay.de>
- */
 class LocalUserConfigController extends BaseUserConfigController
 {
     public const CMD_SHOW_PASSWORD_CHANGE = "showPasswordChange";

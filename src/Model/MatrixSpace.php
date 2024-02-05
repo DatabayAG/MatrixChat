@@ -22,12 +22,6 @@ namespace ILIAS\Plugin\MatrixChatClient\Model\Room;
 
 use ILIAS\Plugin\MatrixChatClient\Model\MatrixRoom;
 
-/**
- * Class MatrixSpace
- *
- * @package ILIAS\Plugin\MatrixChatClient\Model\Room
- * @author  Marvin Beym <mbeym@databay.de>
- */
 class MatrixSpace extends MatrixRoom
 {
 }

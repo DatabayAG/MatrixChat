@@ -30,12 +30,6 @@ use ilPropertyFormGUI;
 use ilTextInputGUI;
 use ilUriInputGUI;
 
-/**
- * Class PluginConfigForm
- *
- * @package ILIAS\Plugin\MatrixChatClient\Form
- * @author  Marvin Beym <mbeym@databay.de>
- */
 class PluginConfigForm extends ilPropertyFormGUI
 {
     private ilMatrixChatClientPlugin $plugin;

@@ -24,12 +24,6 @@ use ILIAS\Plugin\MatrixChatClient\Controller\ChatController;
 use ilMatrixChatClientPlugin;
 use ilPropertyFormGUI;
 
-/**
- * Class ConfirmDeleteRoomForm
- *
- * @package ILIAS\Plugin\MatrixChatClient\Form
- * @author  Marvin Beym <mbeym@databay.de>
- */
 class ConfirmDeleteRoomForm extends ilPropertyFormGUI
 {
     private ilMatrixChatClientPlugin $plugin;
