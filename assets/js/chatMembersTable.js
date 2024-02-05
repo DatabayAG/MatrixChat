@@ -42,6 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 inviteButton.remove();
             }
         }
-        init();
+        il.Util.addOnLoad(init);
     }
 );

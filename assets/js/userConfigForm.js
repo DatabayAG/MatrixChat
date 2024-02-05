@@ -45,6 +45,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         };
 
-        init();
+        il.Util.addOnLoad(init);
     }
 );
