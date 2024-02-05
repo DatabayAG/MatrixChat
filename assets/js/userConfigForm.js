@@ -3,28 +3,28 @@ document.addEventListener("DOMContentLoaded", () => {
         let init = () => {
             config = window.userConfigFormConfig;
 
-            let specifyOtherMatrixAccountAuthMethodElm = document.querySelector("#subform_authMethod_specifyOtherMatrixAccount")
-            let matrixAccountInputFieldElm = specifyOtherMatrixAccountAuthMethodElm.querySelector("div > div > input#matrixAccount");
-            let checkAccountButtonElm = document.createElement("button");
-            checkAccountButtonElm.innerText = config.translation.checkAccountOnMatrixServer;
-            checkAccountButtonElm.classList = "btn btn-default btn-sm";
-            let messageElm = document.createElement("span");
-            messageElm.style.visibility = "hidden";
-            messageElm.innerText = "info_text"
-            messageElm.classList = "col-sm-9";
+            let specifyOtherMatrixAccountAuthMethod = document.querySelector("#subform_authMethod_specifyOtherMatrixAccount")
+            let matrixAccountInputField = specifyOtherMatrixAccountAuthMethod.querySelector("div > div > input#matrixAccount");
+            let checkAccountButton = document.createElement("button");
+            checkAccountButton.innerText = config.translation.checkAccountOnMatrixServer;
+            checkAccountButton.classList = "btn btn-default btn-sm";
+            let message = document.createElement("span");
+            message.style.visibility = "hidden";
+            message.innerText = "info_text"
+            message.classList = "col-sm-9";
 
-            checkAccountButtonElm.addEventListener("click", (event) => {
+            checkAccountButton.addEventListener("click", (event) => {
                 event.preventDefault();
-                messageElm.style.visibility = "hidden";
-                onCheckExternalAccount(matrixAccountInputFieldElm.value, messageElm);
+                message.style.visibility = "hidden";
+                onCheckExternalAccount(matrixAccountInputField.value, message);
             });
-            matrixAccountInputFieldElm.parentElement.insertBefore(checkAccountButtonElm, matrixAccountInputFieldElm.nextSibling);
+            matrixAccountInputField.parentElement.insertBefore(checkAccountButton, matrixAccountInputField.nextSibling);
 
-            let inputWrapperElm = checkAccountButtonElm.parentElement.parentElement;
-            inputWrapperElm.append(messageElm);
+            let inputWrapper = checkAccountButton.parentElement.parentElement;
+            inputWrapper.append(message);
         }
 
-        let onCheckExternalAccount = async (value, messageElm) => {
+        let onCheckExternalAccount = async (value, message) => {
             if (!value || !value.startsWith("@")) {
                 return;
             }
@@ -37,11 +37,11 @@ document.addEventListener("DOMContentLoaded", () => {
             })
 
             let result = response.result;
-            messageElm.innerText = response.message[result];
-            messageElm.style.visibility = "visible";
-            messageElm.style.color = result === "failure" ? "red" : "green";
+            message.innerText = response.message[result];
+            message.style.visibility = "visible";
+            message.style.color = result === "failure" ? "red" : "green";
             if (response.message.info) {
-                messageElm.innerHTML += `<br><span style='color: blue'>${response.message.info}</span>`
+                message.innerHTML += `<br><span style='color: blue'>${response.message.info}</span>`
             }
         };
 

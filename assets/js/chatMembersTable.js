@@ -6,21 +6,21 @@ document.addEventListener("DOMContentLoaded", () => {
         };
         let init = () => {
             config = window.chatMembersTableConfig;
-            let inviteButtonElms = document.querySelectorAll(".inviteButton-wrapper > button");
-            inviteButtonElms.forEach((inviteButtonElm) => {
+            let inviteButtons = document.querySelectorAll(".inviteButton-wrapper > button");
+            inviteButtons.forEach((inviteButton) => {
                 //Clearing all events
-                let inviteButtonElmClone = inviteButtonElm.cloneNode(true);
-                inviteButtonElm.parentElement.replaceChild(inviteButtonElmClone, inviteButtonElm);
-                inviteButtonElm = inviteButtonElmClone;
-                inviteButtonElm.addEventListener("click", (event) => {
+                let inviteButtonClone = inviteButton.cloneNode(true);
+                inviteButton.parentElement.replaceChild(inviteButtonClone, inviteButton);
+                inviteButton = inviteButtonClone;
+                inviteButton.addEventListener("click", (event) => {
                     event.preventDefault();
                     onInviteButtonClick(event.target);
                 })
             })
         }
 
-        let onInviteButtonClick = async (inviteButtonElm) => {
-            let actionUrl = inviteButtonElm.getAttribute("data-action");
+        let onInviteButtonClick = async (inviteButton) => {
+            let actionUrl = inviteButton.getAttribute("data-action");
 
             if (!actionUrl) {
                 return;
@@ -35,11 +35,11 @@ document.addEventListener("DOMContentLoaded", () => {
             if (response.error) {
                 console.error(response.error);
             } else {
-                let chatStatusElm = inviteButtonElm.parentElement.parentElement.parentElement.querySelector("td > a.glyph");
-                if (chatStatusElm) {
-                    chatStatusElm.parentElement.innerHTML = config.status.invite;
+                let chatStatus = inviteButton.parentElement.parentElement.parentElement.querySelector("td > a.glyph");
+                if (chatStatus) {
+                    chatStatus.parentElement.innerHTML = config.status.invite;
                 }
-                inviteButtonElm.remove();
+                inviteButton.remove();
             }
         }
         init();
