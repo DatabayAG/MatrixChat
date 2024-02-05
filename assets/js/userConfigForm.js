@@ -1,14 +1,14 @@
 document.addEventListener("DOMContentLoaded", () => {
         let config = {};
-        let init = () => {
+        const init = () => {
             config = window.userConfigFormConfig;
 
-            let specifyOtherMatrixAccountAuthMethod = document.querySelector("#subform_authMethod_specifyOtherMatrixAccount")
-            let matrixAccountInputField = specifyOtherMatrixAccountAuthMethod.querySelector("div > div > input#matrixAccount");
-            let checkAccountButton = document.createElement("button");
+            const specifyOtherMatrixAccountAuthMethod = document.querySelector("#subform_authMethod_specifyOtherMatrixAccount")
+            const matrixAccountInputField = specifyOtherMatrixAccountAuthMethod.querySelector("div > div > input#matrixAccount");
+            const checkAccountButton = document.createElement("button");
             checkAccountButton.innerText = config.translation.checkAccountOnMatrixServer;
             checkAccountButton.classList = "btn btn-default btn-sm";
-            let message = document.createElement("span");
+            const message = document.createElement("span");
             message.style.visibility = "hidden";
             message.innerText = "info_text"
             message.classList = "col-sm-9";
@@ -20,23 +20,23 @@ document.addEventListener("DOMContentLoaded", () => {
             });
             matrixAccountInputField.parentElement.insertBefore(checkAccountButton, matrixAccountInputField.nextSibling);
 
-            let inputWrapper = checkAccountButton.parentElement.parentElement;
+            const inputWrapper = checkAccountButton.parentElement.parentElement;
             inputWrapper.append(message);
         }
 
-        let onCheckExternalAccount = async (value, message) => {
+        const onCheckExternalAccount = async (value, message) => {
             if (!value || !value.startsWith("@")) {
                 return;
             }
 
-            let response = await fetch(config.actions.checkAccountOnMatrixServer, {
+            const response = await fetch(config.actions.checkAccountOnMatrixServer, {
                 method: "POST",
                 body: JSON.stringify({matrixUserId: value})
             }).then((response) => {
                 return response.json();
             })
 
-            let result = response.result;
+            const result = response.result;
             message.innerText = response.message[result];
             message.style.visibility = "visible";
             message.style.color = result === "failure" ? "red" : "green";

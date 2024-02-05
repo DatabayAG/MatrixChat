@@ -4,12 +4,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 invite: ""
             }
         };
-        let init = () => {
+        const init = () => {
             config = window.chatMembersTableConfig;
-            let inviteButtons = document.querySelectorAll(".inviteButton-wrapper > button");
+            const inviteButtons = document.querySelectorAll(".inviteButton-wrapper > button");
             inviteButtons.forEach((inviteButton) => {
                 //Clearing all events
-                let inviteButtonClone = inviteButton.cloneNode(true);
+                const inviteButtonClone = inviteButton.cloneNode(true);
                 inviteButton.parentElement.replaceChild(inviteButtonClone, inviteButton);
                 inviteButton = inviteButtonClone;
                 inviteButton.addEventListener("click", (event) => {
@@ -19,14 +19,14 @@ document.addEventListener("DOMContentLoaded", () => {
             })
         }
 
-        let onInviteButtonClick = async (inviteButton) => {
+        const onInviteButtonClick = async (inviteButton) => {
             let actionUrl = inviteButton.getAttribute("data-action");
 
             if (!actionUrl) {
                 return;
             }
 
-            let response = await fetch(actionUrl, {
+            const response = await fetch(actionUrl, {
                 method: "GET"
             }).then((response) => {
                 return response.json();
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (response.error) {
                 console.error(response.error);
             } else {
-                let chatStatus = inviteButton.parentElement.parentElement.parentElement.querySelector("td > a.glyph");
+                const chatStatus = inviteButton.parentElement.parentElement.parentElement.querySelector("td > a.glyph");
                 if (chatStatus) {
                     chatStatus.parentElement.innerHTML = config.status.invite;
                 }
