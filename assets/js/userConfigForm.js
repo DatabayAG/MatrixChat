@@ -41,7 +41,11 @@ document.addEventListener("DOMContentLoaded", () => {
             message.style.visibility = "visible";
             message.style.color = result === "failure" ? "red" : "green";
             if (response.message.info) {
-                message.innerHTML += `<br><span style='color: blue'>${response.message.info}</span>`
+                const responseMessage = document.createElement("span");
+                responseMessage.style.color = "blue";
+                responseMessage.innerText = response.message.info;
+                message.innerHTML = "<br>";
+                message.append(responseMessage);
             }
         };
 
