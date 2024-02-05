@@ -42,7 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 inviteButtonElm.remove();
             }
         }
-
-        il.Util.addOnLoad(init);
+        init();
     }
 );
