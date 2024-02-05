@@ -21,6 +21,7 @@ use Exception;
 use ILIAS\Plugin\MatrixChat\Model\MatrixRoom;
 use ILIAS\Plugin\MatrixChat\Model\MatrixUser;
 use ILIAS\Plugin\MatrixChat\Model\MatrixUserPowerLevel;
+use ILIAS\Plugin\MatrixChat\Model\PluginConfig;
 use ILIAS\Plugin\MatrixChat\Model\Room\MatrixSpace;
 use ilLogger;
 use ilMatrixChatPlugin;
@@ -35,18 +36,18 @@ class MatrixApi
     private static ?MatrixUser $restApiUser = null;
     private HttpClientInterface $client;
     private ilMatrixChatPlugin $plugin;
-    private string $matrixServerUrl;
+    private PluginConfig $pluginConfig;
     private float $requestTimeout;
     private ilLogger $logger;
 
     public function __construct(
-        string $matrixServerUrl,
+        PluginConfig $pluginConfig,
         float $requestTimeout = 3,
         ?ilMatrixChatPlugin $plugin = null,
         ?ilLogger $logger = null
     ) {
         $this->client = HttpClient::create();
-        $this->matrixServerUrl = $matrixServerUrl;
+        $this->pluginConfig = $pluginConfig;
         $this->requestTimeout = $requestTimeout;
 
         if (!$plugin) {
@@ -144,7 +145,7 @@ class MatrixApi
 
     private function getApiUrl(string $apiCall): string
     {
-        return $this->matrixServerUrl . "/" . ltrim($apiCall, "/");
+        return $this->pluginConfig->getMatrixServerUrl() . "/" . ltrim($apiCall, "/");
     }
 
     public function checkRestApiUser(): bool

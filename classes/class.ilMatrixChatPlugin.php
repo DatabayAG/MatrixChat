@@ -190,7 +190,7 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
     {
         if (!$this->matrixApi && $this->isActive()) {
             $this->matrixApi = new MatrixApi(
-                $this->getPluginConfig()->getmatrixServerUrl(),
+                $this->getPluginConfig(),
                 200,
                 $this,
                 $this->logger
