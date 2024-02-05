@@ -264,7 +264,6 @@ abstract class BaseUserConfigController extends BaseController
             }
         }
 
-
         $this->userConfig
             ->setMatrixUserId("")
             ->setAuthMethod("")
