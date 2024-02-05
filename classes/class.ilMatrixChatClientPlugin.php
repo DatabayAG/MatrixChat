@@ -247,7 +247,6 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin implements ilCr
         /** @var array<string, MatrixRoom> $roomCache */
         $roomCache = [];
 
-
         /** @var array<string, MatrixSpace> $spaceCache */
         $spaceCache = [];
 

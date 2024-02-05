@@ -28,12 +28,10 @@ class UserRoomAddQueue
         $this->refId = $refId;
     }
 
-
     public function getUserId(): int
     {
         return $this->userId;
     }
-
 
     public function getRefId(): int
     {

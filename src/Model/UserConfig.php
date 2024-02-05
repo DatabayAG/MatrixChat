@@ -33,19 +33,16 @@ class UserConfig extends UserPrefConfig
         parent::__construct($user, "mcc_");
     }
 
-
     public function getAuthMethod(): string
     {
         return $this->authMethod;
     }
-
 
     public function setAuthMethod(string $authMethod): UserConfig
     {
         $this->authMethod = $authMethod;
         return $this;
     }
-
 
     public function getMatrixUsername(): string
     {
@@ -57,7 +54,6 @@ class UserConfig extends UserPrefConfig
         $this->matrixUsername = $matrixUsername;
         return $this;
     }
-
 
     public function getMatrixUserId(): string
     {

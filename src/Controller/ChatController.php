@@ -538,7 +538,6 @@ class ChatController extends BaseController
                     ));
                 }
 
-
                 $matrixUserPowerLevelMap[] = new MatrixUserPowerLevel(
                     $matrixUser->getId(),
                     $this->determinePowerLevelOfParticipant($participants, $participantId)

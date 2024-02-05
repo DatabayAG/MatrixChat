@@ -255,7 +255,6 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
             ])
         );
 
-
         if (!$refId) {
             return;
         }

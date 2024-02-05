@@ -37,12 +37,10 @@ class MatrixRoom
         $this->plugin = ilMatrixChatClientPlugin::getInstance();
     }
 
-
     public function getId(): string
     {
         return $this->id;
     }
-
 
     public function getName(): string
     {

@@ -284,7 +284,6 @@ class MatrixApi
         } catch (MatrixApiException $ex) {
             $roomType = $matrixRoom instanceof MatrixSpace ? "space" : "room";
 
-
             $this->logger->error(sprintf(
                 "Error occurred while trying to invite user '%s' to $roomType '%s'",
                 $matrixUser->getId(),
@@ -529,7 +528,6 @@ class MatrixApi
             $displayName = "";
             $this->logger->error("Error occurred while trying to retrieve profile for user '$matrixUserId'. Assuming displayname as empty");
         }
-
 
         return (new MatrixUser($matrixUserId, $displayName));
     }

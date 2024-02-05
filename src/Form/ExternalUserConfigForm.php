@@ -57,14 +57,12 @@ class ExternalUserConfigForm extends BaseUserConfigForm
         }
     }
 
-
     public function getCreateOnConfiguredHomeserverOption(): ilRadioOption
     {
         $radioOption = new ilRadioOption(
             $this->plugin->txt("config.user.method.createOnConfiguredHomeserver"),
             PluginConfigForm::CREATE_ON_CONFIGURED_HOMESERVER
         );
-
 
         $radioOption->addSubItem($this->getConnectedMatrixHomeserverInput());
         $matrixAccountInput = $this->getMatrixAccountInput(

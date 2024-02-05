@@ -184,7 +184,6 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
         $this->ctrl->redirectByClass(self::class, self::CMD_SHOW_SETTINGS);
     }
 
-
     public function showChatPageDesigner(?ChatPageDesignerForm $form = null): void
     {
         $this->injectTabs(self::TAB_CHAT_PAGE_DESIGNER);

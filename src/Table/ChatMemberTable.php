@@ -177,7 +177,6 @@ class ChatMemberTable extends ilTable2GUI
         $nameFilter = $this->getFilterValue($this->getFilterItemByPostVar("name"));
         $roleFilter = $this->getFilterValue($this->getFilterItemByPostVar("role"));
 
-
         $filteredChatMembers = [];
         foreach ($chatMembers as $chatMember) {
             if ($nameFilter === "" || str_contains($chatMember->getName(), $nameFilter)) {

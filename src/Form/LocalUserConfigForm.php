@@ -62,7 +62,6 @@ class LocalUserConfigForm extends BaseUserConfigForm
             PluginConfigForm::CREATE_ON_CONFIGURED_HOMESERVER
         );
 
-
         $radioOption->addSubItem($this->getConnectedMatrixHomeserverInput());
         $matrixAccountInput = $this->getMatrixAccountInput(
             "matrix.user.name",
@@ -92,7 +91,6 @@ class LocalUserConfigForm extends BaseUserConfigForm
             $this->plugin->txt("config.user.method.specifyOtherMatrixAccount"),
             PluginConfigForm::SPECIFY_OTHER_MATRIX_ACCOUNT
         );
-
 
         $radioOption->addSubItem($this->getMatrixAccountInput(
             "config.user.method.specifyOtherMatrixAccount.accountName",

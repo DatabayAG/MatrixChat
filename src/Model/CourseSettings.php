@@ -29,7 +29,6 @@ class CourseSettings
         $this->matrixRoomId = $matrixRoomId;
     }
 
-
     public function getCourseId(): int
     {
         return $this->courseId;
