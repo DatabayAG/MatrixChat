@@ -29,7 +29,7 @@
 ## Notes
 
 1. Matrix has rate limiting for API-Requests. This may lead to the users used by the plugin   
-   (an admin user & a normal user who creates the room) to be blocked from further API-Requests
+   (an admin user & a normal user who creates the room) to be blocked from further API-Requests.
    - The Plugin-Configuration has two checkboxes that will remove this rate limiting.
 2. Another homeserver may restrict the amount of invitations that can be send by a user.
    This may lead to users of a different homeserver (for example `@user:matrix2.myDomain.de`) to not be invitable for a period of time.
@@ -44,7 +44,7 @@
 
 ## Installation
 
-1. Clone this repository to **Customizing/Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/MatrixChatClient**
+1. Clone this repository to **Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/MatrixChatClient**
 2. Install the Composer dependencies
    ```bash
    cd Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/MatrixChatClient
@@ -60,7 +60,7 @@
 ### Adding User to Course/Group
 
 - When an ILIAS user is added to a course/group  
-  The plugin checks if the user has already (successfully) configured a Matrix-Account (See [User Configuration](#user-configuration).
+  the plugin checks if the user has already (successfully) configured a Matrix-Account (See [User Configuration](#user-configuration).
   - If the user has configured a Matrix-Account:  
     - The user is immediately invited to the chatroom of the course/group.
   - If the user has not yet configured a Matrix-Account:  
