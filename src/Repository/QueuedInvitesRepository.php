@@ -63,20 +63,19 @@ class QueuedInvitesRepository
             return false;
         }
 
-        $affectedRows = (int) $this->db->manipulateF(
+        return $this->db->manipulateF(
             "INSERT INTO " . self::TABLE_NAME . " (user_id, ref_id) VALUES (%s, %s)",
             ["integer", "integer"],
             [
                 $userRoomAddQueue->getUserId(),
                 $userRoomAddQueue->getRefId(),
             ]
-        );
-        return $affectedRows === 1;
+        ) === 1;
     }
 
     public function delete(UserRoomAddQueue $userRoomAddQueue): bool
     {
-        return (int) $this->db->manipulateF(
+        return $this->db->manipulateF(
             "DELETE FROM " . self::TABLE_NAME . " WHERE user_id = %s AND ref_id = %s",
             ["integer", "integer"],
             [

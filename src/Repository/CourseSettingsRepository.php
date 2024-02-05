@@ -90,7 +90,7 @@ class CourseSettingsRepository
     public function save(CourseSettings $courseSettings): bool
     {
         if ($this->exists($courseSettings->getCourseId())) {
-            $affectedRows = (int) $this->db->manipulateF(
+            return $this->db->manipulateF(
                 "UPDATE " . self::TABLE_NAME . " SET matrix_room_id = %s WHERE course_id = %s",
                 [
                     "text",
@@ -100,18 +100,16 @@ class CourseSettingsRepository
                     $courseSettings->getMatrixRoomId() ?: null,
                     $courseSettings->getCourseId()
                 ]
-            );
-            return $affectedRows === 1;
+            ) === 1;
         }
 
-        $affectedRows = (int) $this->db->manipulateF(
+        return $this->db->manipulateF(
             "INSERT INTO " . self::TABLE_NAME . " (course_id, matrix_room_id) VALUES (%s, %s)",
             ["integer", "text"],
             [
                 $courseSettings->getCourseId(),
                 $courseSettings->getMatrixRoomId() ?: null
             ]
-        );
-        return $affectedRows === 1;
+        ) === 1;
     }
 }
