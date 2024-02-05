@@ -117,20 +117,6 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
 
         $sharedSecretValue = $sharedSecretValue ?: $this->plugin->getPluginConfig()->getSharedSecret();
 
-        $matrixSpaceName = $form->getInput("matrixSpaceName");
-        if ($matrixSpaceName !== $this->plugin->getPluginConfig()->getMatrixSpaceName()) {
-            //Create new Matrix Space
-            $space = $this->matrixApi->createSpace($matrixSpaceName);
-            if (!$space) {
-                $this->uiUtil->sendFailure($this->plugin->txt("matrix.space.creation.failure"), true);
-                $this->ctrl->redirectByClass(self::class, self::CMD_SHOW_SETTINGS);
-            }
-
-            $this->plugin->getPluginConfig()
-                ->setMatrixSpaceName($matrixSpaceName)
-                ->setMatrixSpaceId($space->getId());
-        }
-
         $this->plugin->getPluginConfig()
             ->setMatrixServerUrl(rtrim($form->getInput("matrixServerUrl"), "/"))
             ->setMatrixAdminUsername($form->getInput("matrixAdminUsername"))
@@ -173,6 +159,20 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
             if ($matrixRestApiUser) {
                 $this->matrixApi->setOverrideRateLimit($matrixRestApiUser, 0, 0);
             }
+        }
+
+        $matrixSpaceName = $form->getInput("matrixSpaceName");
+        if ($matrixSpaceName && $matrixSpaceName !== $this->plugin->getPluginConfig()->getMatrixSpaceName()) {
+            //Create new Matrix Space
+            $space = $this->matrixApi->createSpace($matrixSpaceName);
+            if (!$space) {
+                $this->uiUtil->sendFailure($this->plugin->txt("matrix.space.creation.failure"), true);
+                $this->ctrl->redirectByClass(self::class, self::CMD_SHOW_SETTINGS);
+            }
+
+            $this->plugin->getPluginConfig()
+                ->setMatrixSpaceName($matrixSpaceName)
+                ->setMatrixSpaceId($space->getId());
         }
 
         try {
