@@ -112,9 +112,7 @@ class ProcessQueuedInvitesJob extends ilCronJob
             return $cronResult;
         }
 
-        /**
-         * @var UserRoomAddQueue[] $queuedInvites
-         */
+        /** @var UserRoomAddQueue[] $queuedInvites */
         foreach ($this->queuedInvitesRepo->readAllGroupedByRefId() as $refId => $queuedInvites) {
             $total += count($queuedInvites);
 

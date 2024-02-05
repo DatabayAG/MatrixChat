@@ -95,9 +95,7 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
         $sharedSecretValue = $form->getInput("sharedSecret");
 
         if (!$sharedSecretValue && !$this->plugin->getPluginConfig()->getSharedSecret()) {
-            /**
-             * @var ilPasswordInputGUI $sharedSecret
-             */
+            /** @var ilPasswordInputGUI $sharedSecret */
             $sharedSecret = $form->getItemByPostVar("sharedSecret");
             $sharedSecret->setRequired(true);
             $this->uiUtil->sendFailure($this->lng->txt("form_input_not_valid"), true);

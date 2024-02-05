@@ -137,14 +137,10 @@ class ChatController extends BaseController
             $room = $this->matrixApi->getRoom($matrixRoomId);
         }
 
-        /**
-         * @var LocalUserConfigController $localUserConfigController
-         */
+        /** @var LocalUserConfigController $localUserConfigController */
         $localUserConfigController = $this->controllerHandler->getController(LocalUserConfigController::class);
 
-        /**
-         * @var ExternalUserConfigController $externalUserConfigController
-         */
+        /** @var ExternalUserConfigController $externalUserConfigController */
         $externalUserConfigController = $this->controllerHandler->getController(ExternalUserConfigController::class);
 
         $this->ctrl->clearParameterByClass(ilMatrixChatClientUIHookGUI::class, "ref_id");
@@ -424,9 +420,7 @@ class ChatController extends BaseController
         $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
     }
 
-    /**
-     * @return ChatMember[]
-     */
+    /** @return ChatMember[] */
     protected function getChatMembers(MatrixRoom $room): array
     {
         $chatMembers = [];

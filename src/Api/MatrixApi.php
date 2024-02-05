@@ -255,9 +255,7 @@ class MatrixApi
         );
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     public function getRoomMembers(string $roomId): array
     {
         try {
@@ -805,9 +803,7 @@ class MatrixApi
         ];
     }
 
-    /**
-     * @return array{name:String, version:String}|null
-     */
+    /** @return array{name:String, version:String}|null */
     public function getServerVersionInfo(): ?array
     {
         try {

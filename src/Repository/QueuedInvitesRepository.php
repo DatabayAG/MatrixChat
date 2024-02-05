@@ -24,9 +24,7 @@ class QueuedInvitesRepository
     private static ?QueuedInvitesRepository $instance = null;
     protected ilDBInterface $db;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected const TABLE_NAME = "mcc_queued_invites";
 
     public function __construct(?ilDBInterface $db = null)
@@ -104,9 +102,7 @@ class QueuedInvitesRepository
         return new UserRoomAddQueue((int) $data["user_id"], (int) $data["ref_id"]);
     }
 
-    /**
-     * @return UserRoomAddQueue[]
-     */
+    /** @return UserRoomAddQueue[] */
     public function readAllByUserId(int $userId): array
     {
         $result = $this->db->queryF(
@@ -122,9 +118,7 @@ class QueuedInvitesRepository
         return $data;
     }
 
-    /**
-     * @return array<int, list<UserRoomAddQueue>
-     */
+    /** @return array<int, list<UserRoomAddQueue> */
     public function readAllGroupedByRefId(): array
     {
         $result = $this->db->query(

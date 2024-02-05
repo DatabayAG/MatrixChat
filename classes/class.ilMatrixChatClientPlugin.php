@@ -85,9 +85,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin implements ilCr
 
         global $DIC;
 
-        /**
-         * @var ilComponentFactory $componentFactory
-         */
+        /** @var ilComponentFactory $componentFactory */
         $componentFactory = $DIC["component.factory"];
         self::$instance = $componentFactory->getPlugin("mcc");
         return self::$instance;
@@ -246,20 +244,14 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin implements ilCr
             }
         }
 
-        /**
-         * @var array<int, CourseSettings> $courseSettingsCache
-         */
+        /** @var array<int, CourseSettings> $courseSettingsCache */
         $courseSettingsCache = [];
 
-        /**
-         * @var array<string, MatrixRoom> $roomCache
-         */
+        /** @var array<string, MatrixRoom> $roomCache */
         $roomCache = [];
 
 
-        /**
-         * @var array<string, MatrixSpace> $spaceCache
-         */
+        /** @var array<string, MatrixSpace> $spaceCache */
         $spaceCache = [];
 
         foreach (ilObjCourse::_getAllReferences($objId) as $objRefId) {

@@ -24,9 +24,7 @@ class CourseSettingsRepository
     private static ?CourseSettingsRepository $instance = null;
     protected ilDBInterface $db;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected const TABLE_NAME = "mcc_course_settings";
 
     public function __construct(?ilDBInterface $db = null)
@@ -47,9 +45,7 @@ class CourseSettingsRepository
         return self::$instance = new self($db);
     }
 
-    /**
-     * @return CourseSettings[]
-     */
+    /** @return CourseSettings[] */
     public function readAll(): array
     {
         $result = $this->db->query("SELECT * FROM " . self::TABLE_NAME);

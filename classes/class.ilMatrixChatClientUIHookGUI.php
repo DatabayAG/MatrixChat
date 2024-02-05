@@ -112,9 +112,7 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
             return;
         }
 
-        /**
-         * @var ilTabsGUI $tabs
-         */
+        /** @var ilTabsGUI $tabs */
         $tabs = $a_par["tabs"];
 
         if (!$tabs->hasTabs()) {
@@ -233,14 +231,10 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
             return;
         }
 
-        /**
-         * @var LocalUserConfigController $localUserConfigController
-         */
+        /** @var LocalUserConfigController $localUserConfigController */
         $localUserConfigController = $this->controllerHandler->getController(LocalUserConfigController::class);
 
-        /**
-         * @var ExternalUserConfigController $externalUserConfigController
-         */
+        /** @var ExternalUserConfigController $externalUserConfigController */
         $externalUserConfigController = $this->controllerHandler->getController(ExternalUserConfigController::class);
 
         $tabs->addTab(
@@ -288,9 +282,7 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
                 || $this->access->checkAccess("write", "", $refId)
             ) && !str_starts_with($this->ctrl->getCmd(), "ChatController.")
         ) {
-            /**
-             * @var ChatController $chatController
-             */
+            /** @var ChatController $chatController */
             $chatController = $this->controllerHandler->getController(ChatController::class);
 
             $tabs->addTab(
@@ -303,9 +295,7 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
         }
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     protected function uiHookResponse(string $mode = ilUIHookPluginGUI::KEEP, string $html = ""): array
     {
         return ['mode' => $mode, 'html' => $html];
