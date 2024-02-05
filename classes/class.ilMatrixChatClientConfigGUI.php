@@ -67,7 +67,7 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
         /**
          * @var ilComponentFactory $componentFactory
          */
-        $componentFactory = $DIC["component.factory"];
+        $componentFactory = $this->dic["component.factory"];
         $this->plugin = $componentFactory->getPlugin("mcc");
 
         $this->plugin->denyConfigIfPluginNotActive();
