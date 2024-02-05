@@ -90,7 +90,7 @@ class MatrixApi
                     || !isset($body["device_id"])
                     || $body["device_id"] !== "ilias_matrix_chat_device_bot"
                 ) {
-                    $this->logError($apiCall, "Access token missing but required");
+                    $this->logApiError($apiCall, "Access token missing but required");
                     throw new MatrixApiException(
                         "ADMIN_AUTH_ERROR",
                         "Missing admin access token. Login probably failed."
@@ -104,7 +104,7 @@ class MatrixApi
             try {
                 $options["body"] = json_encode($body, JSON_THROW_ON_ERROR);
             } catch (JsonException $ex) {
-                $this->logError($apiCall, "JSON_ENCODE error", $ex);
+                $this->logApiError($apiCall, "JSON_ENCODE error", $ex);
                 throw new MatrixApiException("JSON_ERROR", $ex->getMessage());
             }
         }
@@ -115,14 +115,14 @@ class MatrixApi
             $statusCode = $request->getStatusCode();
             $content = $request->getContent(false);
         } catch (Throwable $ex) {
-            $this->logError($apiCall, " | Status-Code: $statusCode", $ex);
+            $this->logApiError($apiCall, " | Status-Code: $statusCode", $ex);
             throw new MatrixApiException("REQUEST_ERROR", $ex->getMessage(), $ex->getCode());
         }
 
         try {
             $responseData = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
         } catch (JsonException $ex) {
-            $this->logError(
+            $this->logApiError(
                 $apiCall,
                 "Error occurred while decoding response json data | Status-Code: $statusCode",
                 $ex
@@ -133,12 +133,12 @@ class MatrixApi
         if (isset($responseData["errcode"])) {
             $ex = new MatrixApiException($responseData["errcode"], $responseData["error"]);
             if ($responseData["errcode"] === "M_LIMIT_EXCEEDED") {
-                $this->logError(
+                $this->logApiError(
                     $apiCall,
                     "Matrix API Request limit reached. Consider removing ratelimit for admin & rest-api user"
                 );
             } else {
-                $this->logError($apiCall, "Matrix-Error Code '{$responseData["errcode"]}'", $ex);
+                $this->logApiError($apiCall, "Matrix-Error Code '{$responseData["errcode"]}'", $ex);
             }
             throw $ex;
         }
@@ -824,7 +824,7 @@ class MatrixApi
         return $this->getServerVersionInfo() !== null;
     }
 
-    protected function logError(string $apiCall, string $message, ?Exception $ex = null): void
+    protected function logApiError(string $apiCall, string $message, ?Exception $ex = null): void
     {
         $this->logger->error("Matrix API request to `{$this->getApiUrl($apiCall)}` failed. $message." . ($ex === null ? "" : " Ex.: {$ex->getMessage()}"));
     }
