@@ -15,10 +15,10 @@
 
 declare(strict_types=1);
 
-namespace ILIAS\Plugin\MatrixChatClient\Form;
+namespace ILIAS\Plugin\MatrixChat\Form;
 
-use ILIAS\Plugin\MatrixChatClient\Controller\BaseUserConfigController;
-use ILIAS\Plugin\MatrixChatClient\Controller\LocalUserConfigController;
+use ILIAS\Plugin\MatrixChat\Controller\BaseUserConfigController;
+use ILIAS\Plugin\MatrixChat\Controller\LocalUserConfigController;
 use ilObjUser;
 use ilPasswordInputGUI;
 use ilRadioOption;

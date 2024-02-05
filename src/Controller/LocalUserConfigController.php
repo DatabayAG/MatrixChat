@@ -15,12 +15,12 @@
 
 declare(strict_types=1);
 
-namespace ILIAS\Plugin\MatrixChatClient\Controller;
+namespace ILIAS\Plugin\MatrixChat\Controller;
 
-use ILIAS\Plugin\MatrixChatClient\Form\BaseUserConfigForm;
-use ILIAS\Plugin\MatrixChatClient\Form\LocalUserConfigForm;
-use ILIAS\Plugin\MatrixChatClient\Form\LocalUserPasswordChangeForm;
-use ILIAS\Plugin\MatrixChatClient\Form\PluginConfigForm;
+use ILIAS\Plugin\MatrixChat\Form\BaseUserConfigForm;
+use ILIAS\Plugin\MatrixChat\Form\LocalUserConfigForm;
+use ILIAS\Plugin\MatrixChat\Form\LocalUserPasswordChangeForm;
+use ILIAS\Plugin\MatrixChat\Form\PluginConfigForm;
 
 class LocalUserConfigController extends BaseUserConfigController
 {

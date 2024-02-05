@@ -15,7 +15,7 @@
 
 declare(strict_types=1);
 
-namespace ILIAS\Plugin\MatrixChatClient\Controller;
+namespace ILIAS\Plugin\MatrixChat\Controller;
 
 use ilAuthUtils;
 use ILIAS\DI\Container;
@@ -23,18 +23,18 @@ use ILIAS\Filesystem\Stream\Streams;
 use ILIAS\HTTP\Services;
 use ILIAS\Plugin\Libraries\ControllerHandler\BaseController;
 use ILIAS\Plugin\Libraries\ControllerHandler\ControllerHandler;
-use ILIAS\Plugin\MatrixChatClient\Api\MatrixApi;
-use ILIAS\Plugin\MatrixChatClient\Api\MatrixApiException;
-use ILIAS\Plugin\MatrixChatClient\Form\BaseUserConfigForm;
-use ILIAS\Plugin\MatrixChatClient\Model\CourseSettings;
-use ILIAS\Plugin\MatrixChatClient\Model\UserConfig;
-use ILIAS\Plugin\MatrixChatClient\Model\UserRoomAddQueue;
-use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
-use ILIAS\Plugin\MatrixChatClient\Repository\QueuedInvitesRepository;
+use ILIAS\Plugin\MatrixChat\Api\MatrixApi;
+use ILIAS\Plugin\MatrixChat\Api\MatrixApiException;
+use ILIAS\Plugin\MatrixChat\Form\BaseUserConfigForm;
+use ILIAS\Plugin\MatrixChat\Model\CourseSettings;
+use ILIAS\Plugin\MatrixChat\Model\UserConfig;
+use ILIAS\Plugin\MatrixChat\Model\UserRoomAddQueue;
+use ILIAS\Plugin\MatrixChat\Repository\CourseSettingsRepository;
+use ILIAS\Plugin\MatrixChat\Repository\QueuedInvitesRepository;
 use ilLanguage;
 use ilLogger;
-use ilMatrixChatClientPlugin;
-use ilMatrixChatClientUIHookGUI;
+use ilMatrixChatPlugin;
+use ilMatrixChatUIHookGUI;
 use ilObject;
 use ilObjUser;
 use ilParticipants;
@@ -53,7 +53,7 @@ abstract class BaseUserConfigController extends BaseController
     protected UserConfig $userConfig;
     protected ilObjUser $user;
     protected ilTabsGUI $tabs;
-    protected ilMatrixChatClientPlugin $plugin;
+    protected ilMatrixChatPlugin $plugin;
     protected MatrixApi $matrixApi;
     protected ilLogger $logger;
     private Services $http;
@@ -68,7 +68,7 @@ abstract class BaseUserConfigController extends BaseController
         $this->lng = $this->dic->language();
         $this->user = $this->dic->user();
         $this->tabs = $this->dic->tabs();
-        $this->plugin = ilMatrixChatClientPlugin::getInstance();
+        $this->plugin = ilMatrixChatPlugin::getInstance();
         $this->userConfig = (new UserConfig($this->user))->load();
         $this->matrixApi = $this->plugin->getMatrixApi();
         $this->logger = $this->dic->logger()->root();
@@ -347,6 +347,6 @@ abstract class BaseUserConfigController extends BaseController
 
     public function getCtrlClassesForCommand(string $cmd): array
     {
-        return [ilUIPluginRouterGUI::class, ilMatrixChatClientUIHookGUI::class];
+        return [ilUIPluginRouterGUI::class, ilMatrixChatUIHookGUI::class];
     }
 }

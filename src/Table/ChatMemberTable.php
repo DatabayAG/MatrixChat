@@ -15,18 +15,18 @@
 
 declare(strict_types=1);
 
-namespace ILIAS\Plugin\MatrixChatClient\Table;
+namespace ILIAS\Plugin\MatrixChat\Table;
 
 use Exception;
 use ilCtrlInterface;
 use ILIAS\DI\Container;
-use ILIAS\Plugin\MatrixChatClient\Controller\ChatController;
-use ILIAS\Plugin\MatrixChatClient\Model\ChatMember;
+use ILIAS\Plugin\MatrixChat\Controller\ChatController;
+use ILIAS\Plugin\MatrixChat\Model\ChatMember;
 use ILIAS\UI\Factory;
 use ILIAS\UI\Renderer;
 use ilLegacyFormElementsUtil;
-use ilMatrixChatClientPlugin;
-use ilMatrixChatClientUIHookGUI;
+use ilMatrixChatPlugin;
+use ilMatrixChatUIHookGUI;
 use ilObjRole;
 use ilRbacReview;
 use ilSelectInputGUI;
@@ -35,7 +35,7 @@ use ilTextInputGUI;
 
 class ChatMemberTable extends ilTable2GUI
 {
-    private ilMatrixChatClientPlugin $plugin;
+    private ilMatrixChatPlugin $plugin;
     private Container $dic;
     private ChatController $controller;
     private ilRbacReview $rbacReview;
@@ -49,7 +49,7 @@ class ChatMemberTable extends ilTable2GUI
         $this->dic = $DIC;
         $this->refId = $refId;
         $this->controller = $controller;
-        $this->plugin = ilMatrixChatClientPlugin::getInstance();
+        $this->plugin = ilMatrixChatPlugin::getInstance();
         $this->rbacReview = $this->dic->rbac()->review();
         $this->uiRenderer = $this->dic->ui()->renderer();
         $this->uiFactory = $this->dic->ui()->factory();
@@ -57,7 +57,7 @@ class ChatMemberTable extends ilTable2GUI
         $this->setId("ChatMemberTable");
         $this->setTitle($this->plugin->txt("matrix.chat.members"));
 
-        parent::__construct(new ilMatrixChatClientUIHookGUI());
+        parent::__construct(new ilMatrixChatUIHookGUI());
 
         $this->setExternalSorting(false);
         $this->setExternalSegmentation(false);

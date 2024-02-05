@@ -15,7 +15,7 @@
 
 declare(strict_types=1);
 
-namespace ILIAS\Plugin\MatrixChatClient\Controller;
+namespace ILIAS\Plugin\MatrixChat\Controller;
 
 use Exception;
 use ilAccessHandler;
@@ -26,23 +26,23 @@ use ILIAS\HTTP\Services;
 use ILIAS\HTTP\Wrapper\WrapperFactory;
 use ILIAS\Plugin\Libraries\ControllerHandler\BaseController;
 use ILIAS\Plugin\Libraries\ControllerHandler\ControllerHandler;
-use ILIAS\Plugin\MatrixChatClient\Api\MatrixApi;
-use ILIAS\Plugin\MatrixChatClient\Form\ChatSettingsForm;
-use ILIAS\Plugin\MatrixChatClient\Form\ConfirmDeleteRoomForm;
-use ILIAS\Plugin\MatrixChatClient\Model\ChatMember;
-use ILIAS\Plugin\MatrixChatClient\Model\CourseSettings;
-use ILIAS\Plugin\MatrixChatClient\Model\MatrixRoom;
-use ILIAS\Plugin\MatrixChatClient\Model\MatrixUserPowerLevel;
-use ILIAS\Plugin\MatrixChatClient\Model\UserConfig;
-use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
-use ILIAS\Plugin\MatrixChatClient\Repository\QueuedInvitesRepository;
-use ILIAS\Plugin\MatrixChatClient\Table\ChatMemberTable;
+use ILIAS\Plugin\MatrixChat\Api\MatrixApi;
+use ILIAS\Plugin\MatrixChat\Form\ChatSettingsForm;
+use ILIAS\Plugin\MatrixChat\Form\ConfirmDeleteRoomForm;
+use ILIAS\Plugin\MatrixChat\Model\ChatMember;
+use ILIAS\Plugin\MatrixChat\Model\CourseSettings;
+use ILIAS\Plugin\MatrixChat\Model\MatrixRoom;
+use ILIAS\Plugin\MatrixChat\Model\MatrixUserPowerLevel;
+use ILIAS\Plugin\MatrixChat\Model\UserConfig;
+use ILIAS\Plugin\MatrixChat\Repository\CourseSettingsRepository;
+use ILIAS\Plugin\MatrixChat\Repository\QueuedInvitesRepository;
+use ILIAS\Plugin\MatrixChat\Table\ChatMemberTable;
 use ILIAS\UI\Factory;
 use ILIAS\UI\Renderer;
 use ilLanguage;
 use ilLogger;
-use ilMatrixChatClientPlugin;
-use ilMatrixChatClientUIHookGUI;
+use ilMatrixChatPlugin;
+use ilMatrixChatUIHookGUI;
 use ilObjCourseGUI;
 use ilObject;
 use ilObjGroupGUI;
@@ -81,7 +81,7 @@ class ChatController extends BaseController
     public const USER_STATUS_QUEUE = "queue";
 
     private ilTabsGUI $tabs;
-    private ilMatrixChatClientPlugin $plugin;
+    private ilMatrixChatPlugin $plugin;
     private CourseSettingsRepository $courseSettingsRepo;
     private CourseSettings $courseSettings;
     private int $refId;
@@ -101,7 +101,7 @@ class ChatController extends BaseController
     {
         parent::__construct($dic, $controllerHandler);
         $this->tabs = $this->dic->tabs();
-        $this->plugin = ilMatrixChatClientPlugin::getInstance();
+        $this->plugin = ilMatrixChatPlugin::getInstance();
         $this->refId = (int) $this->controllerHandler->verifyQueryParameterExists("ref_id");
         $this->access = $this->dic->access();
         $this->matrixApi = $this->plugin->getMatrixApi();
@@ -140,7 +140,7 @@ class ChatController extends BaseController
         /** @var ExternalUserConfigController $externalUserConfigController */
         $externalUserConfigController = $this->controllerHandler->getController(ExternalUserConfigController::class);
 
-        $this->ctrl->clearParameterByClass(ilMatrixChatClientUIHookGUI::class, "ref_id");
+        $this->ctrl->clearParameterByClass(ilMatrixChatUIHookGUI::class, "ref_id");
         $this->ctrl->clearParameterByClass(ilUIPluginRouterGUI::class, "ref_id");
 
         $toChatSettingsButtonLink = (int) $this->user->getAuthMode(true) === ilAuthUtils::AUTH_LOCAL
@@ -757,6 +757,6 @@ class ChatController extends BaseController
 
     public function getCtrlClassesForCommand(string $cmd): array
     {
-        return [ilUIPluginRouterGUI::class, ilMatrixChatClientUIHookGUI::class];
+        return [ilUIPluginRouterGUI::class, ilMatrixChatUIHookGUI::class];
     }
 }

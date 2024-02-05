@@ -15,15 +15,15 @@
 
 declare(strict_types=1);
 
-namespace ILIAS\Plugin\MatrixChatClient\Api;
+namespace ILIAS\Plugin\MatrixChat\Api;
 
 use Exception;
-use ILIAS\Plugin\MatrixChatClient\Model\MatrixRoom;
-use ILIAS\Plugin\MatrixChatClient\Model\MatrixUser;
-use ILIAS\Plugin\MatrixChatClient\Model\MatrixUserPowerLevel;
-use ILIAS\Plugin\MatrixChatClient\Model\Room\MatrixSpace;
+use ILIAS\Plugin\MatrixChat\Model\MatrixRoom;
+use ILIAS\Plugin\MatrixChat\Model\MatrixUser;
+use ILIAS\Plugin\MatrixChat\Model\MatrixUserPowerLevel;
+use ILIAS\Plugin\MatrixChat\Model\Room\MatrixSpace;
 use ilLogger;
-use ilMatrixChatClientPlugin;
+use ilMatrixChatPlugin;
 use JsonException;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -34,7 +34,7 @@ class MatrixApi
     private static ?MatrixUser $adminUser = null;
     private static ?MatrixUser $restApiUser = null;
     private HttpClientInterface $client;
-    private ilMatrixChatClientPlugin $plugin;
+    private ilMatrixChatPlugin $plugin;
     private string $matrixServerUrl;
     private float $requestTimeout;
     private ilLogger $logger;
@@ -42,7 +42,7 @@ class MatrixApi
     public function __construct(
         string $matrixServerUrl,
         float $requestTimeout = 3,
-        ?ilMatrixChatClientPlugin $plugin = null,
+        ?ilMatrixChatPlugin $plugin = null,
         ?ilLogger $logger = null
     ) {
         $this->client = HttpClient::create();
@@ -50,7 +50,7 @@ class MatrixApi
         $this->requestTimeout = $requestTimeout;
 
         if (!$plugin) {
-            $plugin = ilMatrixChatClientPlugin::getInstance();
+            $plugin = ilMatrixChatPlugin::getInstance();
         }
         $this->plugin = $plugin;
 

@@ -1,4 +1,4 @@
-# UIHook Plugin - MatrixChatClient
+# UIHook Plugin - MatrixChat
 
 ## Requirements
 
@@ -11,7 +11,7 @@
 ## Table of contents
 
 <!-- TOC -->
-* [UIHook Plugin - MatrixChatClient](#uihook-plugin---matrixchatclient)
+* [UIHook Plugin - MatrixChat](#uihook-plugin---matrixchat)
   * [Requirements](#requirements)
   * [Table of contents](#table-of-contents)
   * [Notes](#notes)
@@ -44,17 +44,17 @@
 
 ## Installation
 
-1. Clone this repository to **Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/MatrixChatClient**
+1. Clone this repository to **Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/MatrixChat**
 2. Install the Composer dependencies
    ```bash
-   cd Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/MatrixChatClient
+   cd Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/MatrixChat
    composer install --no-dev
    ```
    Developers **MUST** omit the `--no-dev` argument.
 
 3. Login to ILIAS with an administrator account (e.g. root)
 4. Select **Plugins** in **Extending ILIAS** inside the **Administration** main menu.
-5. Search for the **MatrixChatClient** plugin in the list of plugin and choose **Install** from the **Actions** drop-down.
+5. Search for the **MatrixChat** plugin in the list of plugin and choose **Install** from the **Actions** drop-down.
 6. Choose **Activate** from the **Actions** dropdown.
 
 ### Adding User to Course/Group

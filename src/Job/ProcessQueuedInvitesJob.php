@@ -15,18 +15,18 @@
 
 declare(strict_types=1);
 
-namespace ILIAS\Plugin\MatrixChatClient\Job;
+namespace ILIAS\Plugin\MatrixChat\Job;
 
 use ilCronJob;
 use ilCronJobResult;
 use ILIAS\DI\Container;
-use ILIAS\Plugin\MatrixChatClient\Controller\ChatController;
-use ILIAS\Plugin\MatrixChatClient\Model\UserConfig;
-use ILIAS\Plugin\MatrixChatClient\Model\UserRoomAddQueue;
-use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
-use ILIAS\Plugin\MatrixChatClient\Repository\QueuedInvitesRepository;
+use ILIAS\Plugin\MatrixChat\Controller\ChatController;
+use ILIAS\Plugin\MatrixChat\Model\UserConfig;
+use ILIAS\Plugin\MatrixChat\Model\UserRoomAddQueue;
+use ILIAS\Plugin\MatrixChat\Repository\CourseSettingsRepository;
+use ILIAS\Plugin\MatrixChat\Repository\QueuedInvitesRepository;
 use ilLogger;
-use ilMatrixChatClientPlugin;
+use ilMatrixChatPlugin;
 use ilObject;
 use ilObjUser;
 use ReflectionClass;
@@ -35,12 +35,12 @@ use Throwable;
 class ProcessQueuedInvitesJob extends ilCronJob
 {
     private Container $dic;
-    private ilMatrixChatClientPlugin $plugin;
+    private ilMatrixChatPlugin $plugin;
     private ilLogger $logger;
     private QueuedInvitesRepository $queuedInvitesRepo;
     private CourseSettingsRepository $courseSettingsRepo;
 
-    public function __construct(Container $dic, ilMatrixChatClientPlugin $plugin)
+    public function __construct(Container $dic, ilMatrixChatPlugin $plugin)
     {
         $this->dic = $dic;
         $this->plugin = $plugin;

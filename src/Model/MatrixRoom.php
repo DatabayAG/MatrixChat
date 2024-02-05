@@ -15,9 +15,9 @@
 
 declare(strict_types=1);
 
-namespace ILIAS\Plugin\MatrixChatClient\Model;
+namespace ILIAS\Plugin\MatrixChat\Model;
 
-use ilMatrixChatClientPlugin;
+use ilMatrixChatPlugin;
 
 class MatrixRoom
 {
@@ -26,7 +26,7 @@ class MatrixRoom
 
     /** @var string[] */
     private array $members;
-    private ilMatrixChatClientPlugin $plugin;
+    private ilMatrixChatPlugin $plugin;
 
     /** @param string[] $members */
     public function __construct(string $id, string $name, array $members)
@@ -34,7 +34,7 @@ class MatrixRoom
         $this->id = $id;
         $this->name = $name;
         $this->members = $members;
-        $this->plugin = ilMatrixChatClientPlugin::getInstance();
+        $this->plugin = ilMatrixChatPlugin::getInstance();
     }
 
     public function getId(): string

@@ -15,20 +15,20 @@
 
 declare(strict_types=1);
 
-namespace ILIAS\Plugin\MatrixChatClient\Form;
+namespace ILIAS\Plugin\MatrixChat\Form;
 
 use ILIAS\DI\Container;
 use ILIAS\HTTP\Wrapper\WrapperFactory;
 use ILIAS\Plugin\Libraries\ControllerHandler\UiUtils;
-use ILIAS\Plugin\MatrixChatClient\Api\MatrixApi;
-use ILIAS\Plugin\MatrixChatClient\Controller\ChatController;
-use ilMatrixChatClientPlugin;
+use ILIAS\Plugin\MatrixChat\Api\MatrixApi;
+use ILIAS\Plugin\MatrixChat\Controller\ChatController;
+use ilMatrixChatPlugin;
 use ilPropertyFormGUI;
 use ilTextInputGUI;
 
 class ChatSettingsForm extends ilPropertyFormGUI
 {
-    private ilMatrixChatClientPlugin $plugin;
+    private ilMatrixChatPlugin $plugin;
     private Container $dic;
     private UiUtils $uiUtil;
     private WrapperFactory $httpWrapper;
@@ -37,7 +37,7 @@ class ChatSettingsForm extends ilPropertyFormGUI
     public function __construct(ChatController $controller, int $refId, string $matrixRoomId = null)
     {
         parent::__construct();
-        $this->plugin = ilMatrixChatClientPlugin::getInstance();
+        $this->plugin = ilMatrixChatPlugin::getInstance();
         global $DIC;
         $this->dic = $DIC;
         $this->uiUtil = new UiUtils();

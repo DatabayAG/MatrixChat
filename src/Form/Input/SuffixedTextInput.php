@@ -15,7 +15,7 @@
 
 declare(strict_types=1);
 
-namespace ILIAS\Plugin\MatrixChatClient\Form\Input;
+namespace ILIAS\Plugin\MatrixChat\Form\Input;
 
 use ilTextInputGUI;
 

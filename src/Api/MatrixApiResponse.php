@@ -15,7 +15,7 @@
 
 declare(strict_types=1);
 
-namespace ILIAS\Plugin\MatrixChatClient\Api;
+namespace ILIAS\Plugin\MatrixChat\Api;
 
 class MatrixApiResponse
 {

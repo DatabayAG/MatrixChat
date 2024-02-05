@@ -15,21 +15,21 @@
 
 declare(strict_types=1);
 
-namespace ILIAS\Plugin\MatrixChatClient\Form;
+namespace ILIAS\Plugin\MatrixChat\Form;
 
 use ilGlobalPageTemplate;
 use ILIAS\DI\Container;
-use ILIAS\Plugin\MatrixChatClient\Controller\BaseUserConfigController;
-use ILIAS\Plugin\MatrixChatClient\Controller\LocalUserConfigController;
-use ILIAS\Plugin\MatrixChatClient\Model\UserConfig;
-use ilMatrixChatClientPlugin;
+use ILIAS\Plugin\MatrixChat\Controller\BaseUserConfigController;
+use ILIAS\Plugin\MatrixChat\Controller\LocalUserConfigController;
+use ILIAS\Plugin\MatrixChat\Model\UserConfig;
+use ilMatrixChatPlugin;
 use ilPasswordInputGUI;
 use ilPropertyFormGUI;
 use ilTextInputGUI;
 
 class LocalUserPasswordChangeForm extends ilPropertyFormGUI
 {
-    protected ilMatrixChatClientPlugin $plugin;
+    protected ilMatrixChatPlugin $plugin;
     protected ilGlobalPageTemplate $mainTpl;
     protected Container $dic;
     protected BaseUserConfigController $controller;
@@ -41,7 +41,7 @@ class LocalUserPasswordChangeForm extends ilPropertyFormGUI
         global $DIC;
         parent::__construct();
         $this->dic = $DIC;
-        $this->plugin = ilMatrixChatClientPlugin::getInstance();
+        $this->plugin = ilMatrixChatPlugin::getInstance();
         $this->mainTpl = $this->dic->ui()->mainTemplate();
         $this->controller = $controller;
 

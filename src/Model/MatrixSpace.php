@@ -15,9 +15,9 @@
 
 declare(strict_types=1);
 
-namespace ILIAS\Plugin\MatrixChatClient\Model\Room;
+namespace ILIAS\Plugin\MatrixChat\Model\Room;
 
-use ILIAS\Plugin\MatrixChatClient\Model\MatrixRoom;
+use ILIAS\Plugin\MatrixChat\Model\MatrixRoom;
 
 class MatrixSpace extends MatrixRoom
 {

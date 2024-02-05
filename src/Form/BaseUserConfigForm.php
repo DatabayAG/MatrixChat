@@ -15,12 +15,12 @@
 
 declare(strict_types=1);
 
-namespace ILIAS\Plugin\MatrixChatClient\Form;
+namespace ILIAS\Plugin\MatrixChat\Form;
 
 use ilGlobalPageTemplate;
 use ILIAS\DI\Container;
-use ILIAS\Plugin\MatrixChatClient\Controller\BaseUserConfigController;
-use ilMatrixChatClientPlugin;
+use ILIAS\Plugin\MatrixChat\Controller\BaseUserConfigController;
+use ilMatrixChatPlugin;
 use ilObjUser;
 use ilPropertyFormGUI;
 use ilRadioGroupInputGUI;
@@ -29,7 +29,7 @@ use ilTextInputGUI;
 
 abstract class BaseUserConfigForm extends ilPropertyFormGUI
 {
-    protected ilMatrixChatClientPlugin $plugin;
+    protected ilMatrixChatPlugin $plugin;
     protected ilGlobalPageTemplate $mainTpl;
     protected Container $dic;
     protected BaseUserConfigController $controller;
@@ -43,7 +43,7 @@ abstract class BaseUserConfigForm extends ilPropertyFormGUI
         global $DIC;
         parent::__construct();
         $this->dic = $DIC;
-        $this->plugin = ilMatrixChatClientPlugin::getInstance();
+        $this->plugin = ilMatrixChatPlugin::getInstance();
         $this->mainTpl = $this->dic->ui()->mainTemplate();
         $this->mainTpl->addCss($this->plugin->cssFolder("userConfigForm.css"));
         $this->controller = $controller;

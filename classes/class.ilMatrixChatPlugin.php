@@ -17,20 +17,20 @@ declare(strict_types=1);
 
 use ILIAS\DI\Container;
 use ILIAS\Plugin\Libraries\ControllerHandler\UiUtils;
-use ILIAS\Plugin\MatrixChatClient\Api\MatrixApi;
-use ILIAS\Plugin\MatrixChatClient\Job\ProcessQueuedInvitesJob;
-use ILIAS\Plugin\MatrixChatClient\Model\CourseSettings;
-use ILIAS\Plugin\MatrixChatClient\Model\MatrixRoom;
-use ILIAS\Plugin\MatrixChatClient\Model\PluginConfig;
-use ILIAS\Plugin\MatrixChatClient\Model\Room\MatrixSpace;
-use ILIAS\Plugin\MatrixChatClient\Model\UserConfig;
-use ILIAS\Plugin\MatrixChatClient\Model\UserRoomAddQueue;
-use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
-use ILIAS\Plugin\MatrixChatClient\Repository\QueuedInvitesRepository;
+use ILIAS\Plugin\MatrixChat\Api\MatrixApi;
+use ILIAS\Plugin\MatrixChat\Job\ProcessQueuedInvitesJob;
+use ILIAS\Plugin\MatrixChat\Model\CourseSettings;
+use ILIAS\Plugin\MatrixChat\Model\MatrixRoom;
+use ILIAS\Plugin\MatrixChat\Model\PluginConfig;
+use ILIAS\Plugin\MatrixChat\Model\Room\MatrixSpace;
+use ILIAS\Plugin\MatrixChat\Model\UserConfig;
+use ILIAS\Plugin\MatrixChat\Model\UserRoomAddQueue;
+use ILIAS\Plugin\MatrixChat\Repository\CourseSettingsRepository;
+use ILIAS\Plugin\MatrixChat\Repository\QueuedInvitesRepository;
 
 require_once __DIR__ . "/../vendor/autoload.php";
 
-class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin implements ilCronJobProvider
+class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobProvider
 {
     /** @var string */
     public const CTYPE = "Services";
@@ -40,9 +40,9 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin implements ilCr
     public const SLOT_ID = "uihk";
 
     /** @var string */
-    public const PNAME = "MatrixChatClient";
+    public const PNAME = "MatrixChat";
 
-    private static ?ilMatrixChatClientPlugin $instance = null;
+    private static ?ilMatrixChatPlugin $instance = null;
     private ?PluginConfig $pluginConfig = null;
     private QueuedInvitesRepository $queuedInvitesRepo;
     private CourseSettingsRepository $courseSettingsRepo;

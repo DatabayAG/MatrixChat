@@ -15,25 +15,25 @@
 
 declare(strict_types=1);
 
-namespace ILIAS\Plugin\MatrixChatClient\Form;
+namespace ILIAS\Plugin\MatrixChat\Form;
 
 use ilGlobalTemplateInterface;
 use ILIAS\DI\Container;
-use ilMatrixChatClientConfigGUI;
-use ilMatrixChatClientPlugin;
+use ilMatrixChatConfigGUI;
+use ilMatrixChatPlugin;
 use ilPropertyFormGUI;
 use ilTextAreaInputGUI;
 
 class ChatPageDesignerForm extends ilPropertyFormGUI
 {
-    private ilMatrixChatClientPlugin $plugin;
+    private ilMatrixChatPlugin $plugin;
     private Container $dic;
     private ilGlobalTemplateInterface $mainTpl;
 
     public function __construct()
     {
         parent::__construct();
-        $this->plugin = ilMatrixChatClientPlugin::getInstance();
+        $this->plugin = ilMatrixChatPlugin::getInstance();
         $this->dic = $this->plugin->dic;
         $this->mainTpl = $this->dic->ui()->mainTemplate();
 
@@ -49,13 +49,13 @@ class ChatPageDesignerForm extends ilPropertyFormGUI
 
         $this->setFormAction(
             $this->ctrl->getFormActionByClass(
-                ilMatrixChatClientConfigGUI::class,
-                ilMatrixChatClientConfigGUI::CMD_SHOW_CHAT_PAGE_DESIGNER
+                ilMatrixChatConfigGUI::class,
+                ilMatrixChatConfigGUI::CMD_SHOW_CHAT_PAGE_DESIGNER
             )
         );
         $this->setId("{$this->plugin->getId()}_{$this->plugin->getPluginName()}_chat_page_designer");
         $this->setTitle($this->plugin->txt("general.plugin.settings"));
 
-        $this->addCommandButton(ilMatrixChatClientConfigGUI::CMD_SAVE_CHAT_PAGE_DESIGNER, $this->lng->txt("save"));
+        $this->addCommandButton(ilMatrixChatConfigGUI::CMD_SAVE_CHAT_PAGE_DESIGNER, $this->lng->txt("save"));
     }
 }

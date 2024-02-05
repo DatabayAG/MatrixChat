@@ -15,7 +15,7 @@
 
 declare(strict_types=1);
 
-namespace ILIAS\Plugin\MatrixChatClient\Model;
+namespace ILIAS\Plugin\MatrixChat\Model;
 
 use Exception;
 use ILIAS\Plugin\Libraries\IliasConfigLoader\Exception\ConfigLoadException;

@@ -15,22 +15,22 @@
 
 declare(strict_types=1);
 
-namespace ILIAS\Plugin\MatrixChatClient\Form;
+namespace ILIAS\Plugin\MatrixChat\Form;
 
 use ILIAS\Plugin\Libraries\ControllerHandler\UiUtils;
-use ILIAS\Plugin\MatrixChatClient\Controller\ChatController;
-use ilMatrixChatClientPlugin;
+use ILIAS\Plugin\MatrixChat\Controller\ChatController;
+use ilMatrixChatPlugin;
 use ilPropertyFormGUI;
 
 class ConfirmDeleteRoomForm extends ilPropertyFormGUI
 {
-    private ilMatrixChatClientPlugin $plugin;
+    private ilMatrixChatPlugin $plugin;
     private UiUtils $uiUtil;
 
     public function __construct(ChatController $controller, int $refId)
     {
         parent::__construct();
-        $this->plugin = ilMatrixChatClientPlugin::getInstance();
+        $this->plugin = ilMatrixChatPlugin::getInstance();
         $this->uiUtil = new UiUtils();
         $this->uiUtil->sendQuestion($this->plugin->txt("matrix.chat.room.delete.confirm"));
 

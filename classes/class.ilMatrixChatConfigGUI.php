@@ -18,18 +18,18 @@ declare(strict_types=1);
 use ILIAS\DI\Container;
 use ILIAS\FileUpload\FileUpload;
 use ILIAS\Plugin\Libraries\ControllerHandler\UiUtils;
-use ILIAS\Plugin\MatrixChatClient\Api\MatrixApi;
-use ILIAS\Plugin\MatrixChatClient\Form\ChatPageDesignerForm;
-use ILIAS\Plugin\MatrixChatClient\Form\PluginConfigForm;
+use ILIAS\Plugin\MatrixChat\Api\MatrixApi;
+use ILIAS\Plugin\MatrixChat\Form\ChatPageDesignerForm;
+use ILIAS\Plugin\MatrixChat\Form\PluginConfigForm;
 
 require_once __DIR__ . "/../vendor/autoload.php";
 
 /**
- * @ilCtrl_Calls      ilMatrixChatClientConfigGUI: ilPropertyFormGUI
- * @ilCtrl_Calls      ilMatrixChatClientConfigGUI: ilAdministrationGUI
- * @ilCtrl_IsCalledBy ilMatrixChatClientConfigGUI: ilObjComponentSettingsGUI
+ * @ilCtrl_Calls      ilMatrixChatConfigGUI: ilPropertyFormGUI
+ * @ilCtrl_Calls      ilMatrixChatConfigGUI: ilAdministrationGUI
+ * @ilCtrl_IsCalledBy ilMatrixChatConfigGUI: ilObjComponentSettingsGUI
  */
-class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
+class ilMatrixChatConfigGUI extends ilPluginConfigGUI
 {
     public const CMD_SHOW_SETTINGS = "showSettings";
     public const CMD_SAVE_SETTINGS = "saveSettings";
@@ -42,7 +42,7 @@ class ilMatrixChatClientConfigGUI extends ilPluginConfigGUI
     protected ilObjUser $user;
     protected ilLogger $logger;
     protected FileUpload $upload;
-    protected ilMatrixChatClientPlugin $plugin;
+    protected ilMatrixChatPlugin $plugin;
     protected ilTabsGUI $tabs;
     protected Container $dic;
     protected ilGlobalPageTemplate $mainTpl;

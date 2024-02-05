@@ -15,7 +15,7 @@
 
 declare(strict_types=1);
 
-namespace ILIAS\Plugin\MatrixChatClient\Form;
+namespace ILIAS\Plugin\MatrixChat\Form;
 
 use ilCheckboxGroupInputGUI;
 use ilCheckboxInputGUI;
@@ -23,8 +23,8 @@ use ilCheckboxOption;
 use ilFormSectionHeaderGUI;
 use ilGlobalPageTemplate;
 use ILIAS\DI\Container;
-use ilMatrixChatClientConfigGUI;
-use ilMatrixChatClientPlugin;
+use ilMatrixChatConfigGUI;
+use ilMatrixChatPlugin;
 use ilNumberInputGUI;
 use ilPasswordInputGUI;
 use ilPropertyFormGUI;
@@ -33,7 +33,7 @@ use ilUriInputGUI;
 
 class PluginConfigForm extends ilPropertyFormGUI
 {
-    private ilMatrixChatClientPlugin $plugin;
+    private ilMatrixChatPlugin $plugin;
     private Container $dic;
     private ilGlobalPageTemplate $mainTpl;
 
@@ -43,15 +43,15 @@ class PluginConfigForm extends ilPropertyFormGUI
     public function __construct()
     {
         parent::__construct();
-        $this->plugin = ilMatrixChatClientPlugin::getInstance();
+        $this->plugin = ilMatrixChatPlugin::getInstance();
         $this->dic = $this->plugin->dic;
         $this->mainTpl = $this->dic->ui()->mainTemplate();
         $this->mainTpl->addCss($this->plugin->cssFolder("style.css"));
 
         $this->setFormAction(
             $this->ctrl->getFormActionByClass(
-                ilMatrixChatClientConfigGUI::class,
-                ilMatrixChatClientConfigGUI::CMD_SHOW_SETTINGS
+                ilMatrixChatConfigGUI::class,
+                ilMatrixChatConfigGUI::CMD_SHOW_SETTINGS
             )
         );
         $this->setId("{$this->plugin->getId()}_{$this->plugin->getPluginName()}_plugin_config_form");
@@ -71,7 +71,7 @@ class PluginConfigForm extends ilPropertyFormGUI
         $this->addLocalUserSection($allowedUsernameSchemeCharacters);
         $this->addRoomSection();
 
-        $this->addCommandButton(ilMatrixChatClientConfigGUI::CMD_SAVE_SETTINGS, $this->lng->txt("save"));
+        $this->addCommandButton(ilMatrixChatConfigGUI::CMD_SAVE_SETTINGS, $this->lng->txt("save"));
     }
 
     protected function addGeneralSection(): void
