@@ -105,9 +105,6 @@ abstract class BaseUserConfigController extends BaseController
             return null;
         }
 
-        /** @var array<int, CourseSettings> $courseSettingsCache */
-        $courseSettingsCache = [];
-
         $resultText = $this->plugin->txt("matrix.user.queue.inviteProcessResult");
 
         $processResults = [];
@@ -132,9 +129,8 @@ abstract class BaseUserConfigController extends BaseController
                 $this->queuedInvitesRepo->delete($userRoomAddQueue);
                 continue;
             }
-            if (!array_key_exists($userRoomAddQueue->getRefId(), $courseSettingsCache)) {
-                $courseSettingsCache[$userRoomAddQueue->getRefId()] = $this->courseSettingsRepo->read($userRoomAddQueue->getRefId());
-            }
+
+            $courseSettings = $this->courseSettingsRepo->read($userRoomAddQueue->getRefId());
 
             if (!ilParticipants::_isParticipant($userRoomAddQueue->getRefId(), $user->getId())) {
                 $this->logger->warning(sprintf(
@@ -146,7 +142,6 @@ abstract class BaseUserConfigController extends BaseController
                 continue;
             }
 
-            $courseSettings = $courseSettingsCache[$userRoomAddQueue->getRefId()];
 
             if ($courseSettings->getMatrixRoomId()) {
                 $room = $this->matrixApi->getRoom($courseSettings->getMatrixRoomId());
