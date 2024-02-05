@@ -95,7 +95,8 @@ if (!$ilDB->tableExists("mcc_usr_room_add_queue")) {
 <?php
 if (
     $ilDB->tableExists("mcc_course_settings")
-    && $ilDB->tableColumnExists("mcc_course_settings", "chat_integration_enabled")) {
+    && $ilDB->tableColumnExists("mcc_course_settings", "chat_integration_enabled")
+) {
     $ilDB->dropTableColumn(
         "mcc_course_settings",
         "chat_integration_enabled"
