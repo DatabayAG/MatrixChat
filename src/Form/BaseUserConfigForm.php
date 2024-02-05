@@ -56,7 +56,7 @@ abstract class BaseUserConfigForm extends ilPropertyFormGUI
         ));
 
         $this->mainTpl->addOnLoadCode(
-            "window.userConfigFormConfig = " . json_encode([
+            "initUserConfigForm(" . json_encode([
                 "actions" => [
                     "checkAccountOnMatrixServer" => $this->controller->getCommandLink(
                         BaseUserConfigController::AJAX_CMD_CHECK_EXTERNAL_ACCOUNT
@@ -65,7 +65,7 @@ abstract class BaseUserConfigForm extends ilPropertyFormGUI
                 "translation" => [
                     "checkAccountOnMatrixServer" => $this->plugin->txt("config.user.externalMatrixUserLookup.checkAccountOnMatrixServer")
                 ]
-            ], JSON_THROW_ON_ERROR)
+            ], JSON_THROW_ON_ERROR) . ");"
         );
 
         $this->mainTpl->addJavaScript($this->plugin->jsFolder("userConfigForm.js"));
