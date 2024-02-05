@@ -240,7 +240,7 @@ class ChatController extends BaseController
         $this->checkChatActivatedForObject();
 
         $userIds = $this->httpWrapper->post()->retrieve(
-            'userId',
+            "userId",
             $this->refinery->byTrying([
                 $this->refinery->kindlyTo()->listOf($this->refinery->kindlyTo()->int()),
                 $this->refinery->always([])
@@ -335,7 +335,7 @@ class ChatController extends BaseController
         $this->checkChatActivatedForObject();
 
         $userId = $this->httpWrapper->query()->retrieve(
-            'userId',
+            "userId",
             $this->refinery->byTrying([
                 $this->refinery->kindlyTo()->int(),
                 $this->refinery->always(null)
@@ -700,11 +700,11 @@ class ChatController extends BaseController
         }
 
         if ($gui) {
-            $reflectionMethod = new ReflectionMethod($gui, 'setTitleAndDescription');
+            $reflectionMethod = new ReflectionMethod($gui, "setTitleAndDescription");
             $reflectionMethod->setAccessible(true);
             $reflectionMethod->invoke($gui);
 
-            $this->dic['ilLocator']->addRepositoryItems($this->courseSettings->getCourseId());
+            $this->dic["ilLocator"]->addRepositoryItems($this->courseSettings->getCourseId());
         }
 
         if ($this->checkChatActivatedForObject()) {

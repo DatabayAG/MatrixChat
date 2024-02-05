@@ -28,7 +28,7 @@ use ILIAS\Plugin\MatrixChatClient\Model\UserRoomAddQueue;
 use ILIAS\Plugin\MatrixChatClient\Repository\CourseSettingsRepository;
 use ILIAS\Plugin\MatrixChatClient\Repository\QueuedInvitesRepository;
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . "/../vendor/autoload.php";
 
 class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin implements ilCronJobProvider
 {

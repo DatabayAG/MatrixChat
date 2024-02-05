@@ -15,7 +15,7 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . "/../vendor/autoload.php";
 
 use ILIAS\DI\Container;
 use ILIAS\HTTP\Wrapper\WrapperFactory;
@@ -143,7 +143,7 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
         $cmd = $this->ctrl->getCmd();
 
         $refId = $this->httpWrapper->query()->retrieve(
-            'ref_id',
+            "ref_id",
             $this->refinery->byTrying([
                 $this->refinery->kindlyTo()->int(),
                 $this->refinery->always(null)
@@ -200,7 +200,7 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
     {
         $tabs = $dic->tabs();
         $referrer = $this->httpWrapper->query()->retrieve(
-            'referrer',
+            "referrer",
             $this->refinery->byTrying([
                 $this->refinery->kindlyTo()->string(),
                 $this->refinery->always(null)
@@ -248,7 +248,7 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
         $tabs = $dic->tabs();
 
         $refId = $this->httpWrapper->query()->retrieve(
-            'ref_id',
+            "ref_id",
             $this->refinery->byTrying([
                 $this->refinery->kindlyTo()->int(),
                 $this->refinery->always(null)
@@ -294,6 +294,6 @@ class ilMatrixChatClientUIHookGUI extends ilUIHookPluginGUI
     /** @return string[] */
     protected function uiHookResponse(string $mode = ilUIHookPluginGUI::KEEP, string $html = ""): array
     {
-        return ['mode' => $mode, 'html' => $html];
+        return ["mode" => $mode, "html" => $html];
     }
 }

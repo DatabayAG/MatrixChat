@@ -22,7 +22,7 @@ use ILIAS\Plugin\MatrixChatClient\Api\MatrixApi;
 use ILIAS\Plugin\MatrixChatClient\Form\ChatPageDesignerForm;
 use ILIAS\Plugin\MatrixChatClient\Form\PluginConfigForm;
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . "/../vendor/autoload.php";
 
 /**
  * @ilCtrl_Calls      ilMatrixChatClientConfigGUI: ilPropertyFormGUI

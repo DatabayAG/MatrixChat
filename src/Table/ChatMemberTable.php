@@ -73,7 +73,7 @@ class ChatMemberTable extends ilTable2GUI
         ));
         $this->setRowTemplate($this->plugin->templatesFolder("table/tpl.chatMemberTable_row.html"));
 
-        $this->addColumn('', '', "1%", true);
+        $this->addColumn("", "", "1%", true);
         $this->addColumns([
             $this->lng->txt("name") => "name",
             $this->lng->txt("username") => "username",
@@ -83,13 +83,13 @@ class ChatMemberTable extends ilTable2GUI
             $this->plugin->txt("matrix.chat.invite") => "",
         ]);
 
-        $this->setSelectAllCheckbox('userId');
+        $this->setSelectAllCheckbox("userId");
         $this->addMultiCommand(
             ChatController::getCommand(ChatController::CMD_INVITE_SELECTED_PARTICIPANTS),
-            $this->plugin->txt('matrix.chat.invite')
+            $this->plugin->txt("matrix.chat.invite")
         );
 
-        $this->setSelectAllCheckbox('userId');
+        $this->setSelectAllCheckbox("userId");
         $this->initFilter();
     }
 
