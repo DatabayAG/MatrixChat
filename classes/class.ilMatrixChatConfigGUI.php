@@ -82,7 +82,7 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
             $form = new PluginConfigForm();
 
             $form->setValuesByArray(
-                $this->plugin->getPluginConfig()->toArray(["matrixAdminPassword", "sharedSecret"]),
+                $this->plugin->getPluginConfig()->toArray(["matrixAdminPassword", "matrixRestApiUserPassword", "sharedSecret"]),
                 true
             );
         }
@@ -192,7 +192,7 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
             $form = new ChatPageDesignerForm();
 
             $form->setValuesByArray(
-                $this->plugin->getPluginConfig()->toArray(["matrixAdminPassword", "sharedSecret"]),
+                $this->plugin->getPluginConfig()->toArray(["matrixAdminPassword", "matrixRestApiUserPassword", "sharedSecret"]),
                 true
             );
         }
