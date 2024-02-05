@@ -84,7 +84,7 @@ class MatrixApi
             if (!$accessToken) {
                 //Don't log error when request send is trying to login the admin
                 //(As it's already clear the access token won't be available yet)
-                //In theory should never get called because login does not require prior auth,
+                //In theory should never get called because login does not require prior auth.
                 if (
                     $apiCall === "/_matrix/client/v3/login"
                     || !isset($body["device_id"])
