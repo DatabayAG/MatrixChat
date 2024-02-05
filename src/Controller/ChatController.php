@@ -661,7 +661,6 @@ class ChatController extends BaseController
         if (!$activated && $redirectToInfoScreenOnFail) {
             $this->uiUtil->sendFailure($this->lng->txt("permission_denied"), true);
             $this->redirectToInfoTab();
-            return false; //Never gets to here
         }
 
         return $activated;
@@ -673,7 +672,6 @@ class ChatController extends BaseController
         if (!$hasAccess && $redirectToInfoScreenOnFail) {
             $this->uiUtil->sendFailure($this->lng->txt("permission_denied"), true);
             $this->redirectToInfoTab();
-            return false; //Never gets to here
         }
 
         return $hasAccess;
