@@ -210,7 +210,7 @@ abstract class BaseUserConfigController extends BaseController
 
                 $matrixRoom = $this->matrixApi->getRoom($courseSetting->getMatrixRoomId());
                 if (!$matrixRoom) {
-                    //No need to remove user from room because no room found/configured
+                    //No need to remove user from room because no room found
                     continue;
                 }
 
