@@ -25,10 +25,6 @@ class MatrixUserPowerLevel
     private string $matrixUserId;
     private int $powerLevel;
 
-    /**
-     * @param string $matrixUserId
-     * @param int    $powerLevel
-     */
     public function __construct(string $matrixUserId, int $powerLevel)
     {
         $this->matrixUserId = $matrixUserId;

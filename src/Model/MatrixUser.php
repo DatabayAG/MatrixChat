@@ -23,10 +23,6 @@ class MatrixUser
     private string $accessToken = "";
     private string $deviceId = "ilias_auth_verification";
 
-    /**
-     * @param string $id
-     * @param string $displayName
-     */
     public function __construct(string $id, string $displayName)
     {
         $this->id = $id;

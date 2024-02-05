@@ -25,10 +25,6 @@ class MatrixApiResponse
     private int $statusCode;
     private array $responseData;
 
-    /**
-     * @param int   $statusCode
-     * @param array $responseData
-     */
     public function __construct(int $statusCode, array $responseData)
     {
         $this->statusCode = $statusCode;
@@ -36,7 +32,6 @@ class MatrixApiResponse
     }
 
     /**
-     * @param string $key
      * @return null|string|int|float|bool|array
      */
     public function getResponseDataValue(string $key)
