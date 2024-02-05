@@ -124,7 +124,7 @@ abstract class BaseUserConfigController extends BaseController
 
         foreach ($this->queuedInvitesRepo->readAllByUserId($user->getId()) as $userRoomAddQueue) {
             if (!ilObject::_exists($userRoomAddQueue->getRefId(), true)) {
-                $this->logger->error(sprintf(
+                $this->logger->warning(sprintf(
                     "Unable to continue processing queue entry of user with id '%s' to object with ref-id '%s'. Object does not exist",
                     $user->getId(),
                     $userRoomAddQueue->getRefId()
@@ -137,7 +137,7 @@ abstract class BaseUserConfigController extends BaseController
             }
 
             if (!ilParticipants::_isParticipant($userRoomAddQueue->getRefId(), $user->getId())) {
-                $this->logger->error(sprintf(
+                $this->logger->warning(sprintf(
                     "Unable to continue processing queue entry of user with id '%s' to object with ref-id '%s'. User is not a participant of this object",
                     $user->getId(),
                     $userRoomAddQueue->getRefId()
@@ -156,10 +156,10 @@ abstract class BaseUserConfigController extends BaseController
 
                 if (!$room->isMember($matrixUser)) {
                     if (!$this->matrixApi->inviteUserToRoom($matrixUser, $space)) {
-                        $this->logger->error("Inviting matrix-user '{$matrixUser->getId()}' to space '{$space->getId()}' failed");
+                        $this->logger->warning("Inviting matrix-user '{$matrixUser->getId()}' to space '{$space->getId()}' failed");
                     }
                     if (!$this->matrixApi->inviteUserToRoom($matrixUser, $room)) {
-                        $this->logger->error("Inviting matrix-user '{$matrixUser->getId()}' to room '{$room->getId()}' failed");
+                        $this->logger->warning("Inviting matrix-user '{$matrixUser->getId()}' to room '{$room->getId()}' failed");
                     }
                     $this->ctrl->setParameterByClass(ilRepositoryGUI::class, "ref_id", $courseSettings->getCourseId());
                     $objectLink = $this->ctrl->getLinkTargetByClass(ilRepositoryGUI::class, "view");
@@ -208,7 +208,7 @@ abstract class BaseUserConfigController extends BaseController
                 if ($matrixRoom->isMember($matrixUser)) {
                     $reason = "Removed Matrix-Account from ILIAS-Plattform";
                     if (!$this->matrixApi->removeUserFromRoom($matrixUser->getId(), $matrixRoom, $reason)) {
-                        $this->logger->error(sprintf(
+                        $this->logger->warning(sprintf(
                             "Removing user '%s' from room '%s' for reason '%s' failed.",
                             $matrixUser->getId(),
                             $matrixRoom->getId(),
@@ -225,7 +225,7 @@ abstract class BaseUserConfigController extends BaseController
                             $courseSetting->getCourseId()
                         ))
                     ) {
-                        $this->logger->error(sprintf(
+                        $this->logger->warning(sprintf(
                             "ILIAS-User with id '%s' (matrix: '%s') could not be added back to queue after removing user from room '%s' when user reset matrix-account settings",
                             $this->user->getId(),
                             $matrixUser->getId(),
@@ -246,7 +246,7 @@ abstract class BaseUserConfigController extends BaseController
                         "Invite redacted because Matrix-Account of user was reset"
                     )
                 ) {
-                    $this->logger->error(sprintf(
+                    $this->logger->warning(sprintf(
                         "Error occurred while trying to remove invited user '%s' from room '%s' after matrix-account of user was reset",
                         $matrixUser->getId(),
                         $matrixRoom->getId()

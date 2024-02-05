@@ -262,12 +262,12 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin implements ilCr
             $matrixSpaceId = $this->pluginConfig->getMatrixSpaceId();
 
             if (!$matrixRoomId) {
-                $this->logger->error("Unable to continue handling event '$a_event'. No Matrix-Room-ID found in setting of object with ref_id '$objRefId'");
+                $this->logger->warning("Unable to continue handling event '$a_event'. No Matrix-Room-ID found in setting of object with ref_id '$objRefId'");
                 continue;
             }
 
             if (!$matrixSpaceId) {
-                $this->logger->error("Unable to continue handling event '$a_event'. No Matrix-Space-ID found");
+                $this->logger->warning("Unable to continue handling event '$a_event'. No Matrix-Space-ID found");
                 continue;
             }
 
@@ -290,12 +290,12 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin implements ilCr
             $space = $spaceCache[$matrixSpaceId] ?? null;
 
             if (!$room) {
-                $this->logger->error("Unable to continue handling event '$a_event'. Matrix-Room-ID '$matrixRoomId' saved but retrieving room failed. Skipping");
+                $this->logger->warning("Unable to continue handling event '$a_event'. Matrix-Room-ID '$matrixRoomId' saved but retrieving room failed. Skipping");
                 continue;
             }
 
             if (!$space) {
-                $this->logger->error("Unable to continue handling event '$a_event'. Matrix-Space-ID '$matrixSpaceId' saved but retrieving space failed. Skipping");
+                $this->logger->warning("Unable to continue handling event '$a_event'. Matrix-Space-ID '$matrixSpaceId' saved but retrieving space failed. Skipping");
                 continue;
             }
 
@@ -309,7 +309,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin implements ilCr
                     && !$room->isMember($matrixUser)
                 ) {
                     if (!$this->getMatrixApi()->inviteUserToRoom($matrixUser, $space)) {
-                        $this->logger->error(sprintf(
+                        $this->logger->warning(sprintf(
                             "Inviting matrix-user '%s' to space '%s' failed",
                             $matrixUser->getId(),
                             $space->getId()
@@ -317,7 +317,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin implements ilCr
                     }
 
                     if (!$this->getMatrixApi()->inviteUserToRoom($matrixUser, $room)) {
-                        $this->logger->error(sprintf(
+                        $this->logger->warning(sprintf(
                             "Inviting matrix-user '%s' to room '%s' failed",
                             $matrixUser->getId(),
                             $room->getId()
@@ -338,7 +338,7 @@ class ilMatrixChatClientPlugin extends ilUserInterfaceHookPlugin implements ilCr
                         $room,
                         "Removed from course/group"
                     )) {
-                        $this->logger->error(sprintf(
+                        $this->logger->warning(sprintf(
                             "Removing matrixuser '%s' from room '%s'. with Reason 'Removed from Course/Group object' failed.",
                             $matrixUser->getId(),
                             $room->getId()

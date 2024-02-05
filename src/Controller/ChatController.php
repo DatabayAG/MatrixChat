@@ -286,14 +286,14 @@ class ChatController extends BaseController
         $inviteFailed = false;
         foreach ($userIds as $userId) {
             if (!ilParticipants::_isParticipant($this->refId, $userId)) {
-                $this->logger->error("Unable to invite user with id '$userId' to room '{$room->getId()}'. User is not a member of the Course/Group with id '{$this->refId}'");
+                $this->logger->warning("Unable to invite user with id '$userId' to room '{$room->getId()}'. User is not a member of the Course/Group with id '{$this->refId}'");
                 continue;
             }
             try {
                 $user = new ilObjUser($userId);
             } catch (Throwable $ex) {
                 $inviteFailed = true;
-                $this->logger->error("Unable to invite user with id '$userId', No User seems to exist with that id");
+                $this->logger->warning("Unable to invite user with id '$userId', No User seems to exist with that id");
                 continue;
             }
 
@@ -306,18 +306,18 @@ class ChatController extends BaseController
 
             if (!$matrixUser) {
                 $inviteFailed = true;
-                $this->logger->error("Unable to get Matrix-User of ilias user with id '$userId'. Not configured or server problem");
+                $this->logger->warning("Unable to get Matrix-User of ilias user with id '$userId'. Not configured or server problem");
                 continue;
             }
 
             if (!$this->matrixApi->inviteUserToRoom($matrixUser, $space)) {
                 $inviteFailed = true;
-                $this->logger->error("Inviting user '{$matrixUser->getId()}' to space '{$space->getId()}' failed.");
+                $this->logger->warning("Inviting user '{$matrixUser->getId()}' to space '{$space->getId()}' failed.");
             }
 
             if (!$this->matrixApi->inviteUserToRoom($matrixUser, $room)) {
                 $inviteFailed = true;
-                $this->logger->error("Inviting user '{$matrixUser->getId()}' to room '{$room->getId()}' failed.");
+                $this->logger->warning("Inviting user '{$matrixUser->getId()}' to room '{$room->getId()}' failed.");
             }
         }
 
@@ -524,14 +524,14 @@ class ChatController extends BaseController
                 }
 
                 if (!$this->matrixApi->inviteUserToRoom($matrixUser, $space)) {
-                    $this->logger->error(sprintf(
+                    $this->logger->warning(sprintf(
                         "Inviting matrix-user '%s' to space '%s' failed.",
                         $matrixUser->getId(),
                         $space->getId()
                     ));
                 }
                 if (!$this->matrixApi->inviteUserToRoom($matrixUser, $room)) {
-                    $this->logger->error(sprintf(
+                    $this->logger->warning(sprintf(
                         "Inviting matrix-user '%s' to room '%s' failed.",
                         $matrixUser->getId(),
                         $room->getId()

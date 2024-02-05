@@ -114,7 +114,7 @@ class ProcessQueuedInvitesJob extends ilCronJob
             $total += count($queuedInvites);
 
             if (!ilObject::_exists($refId, true)) {
-                $this->logger->error("Skipping invite queue check for object with ref-id '$refId'. Object does not exist");
+                $this->logger->warning("Skipping invite queue check for object with ref-id '$refId'. Object does not exist");
                 $skipped += count($queuedInvites);
                 continue;
             }
@@ -127,7 +127,7 @@ class ProcessQueuedInvitesJob extends ilCronJob
 
             $room = $matrixApi->getRoom($courseSettings->getMatrixRoomId());
             if (!$room) {
-                $this->logger->error("Unable to process invite queue for object with ref_id '$refId'. Matrix-Room-ID defined but room not found.");
+                $this->logger->warning("Unable to process invite queue for object with ref_id '$refId'. Matrix-Room-ID defined but room not found.");
                 $skipped += count($queuedInvites);
                 continue;
             }
@@ -136,13 +136,13 @@ class ProcessQueuedInvitesJob extends ilCronJob
                 try {
                     $user = new ilObjUser($queuedInvite->getUserId());
                 } catch (Throwable $ex) {
-                    $this->logger->error(sprintf(
+                    $this->logger->warning(sprintf(
                         "Unable to process invite of user with id '%s' to course with ref-id '%s'",
                         $queuedInvite->getUserId(),
                         $refId
                     ));
                     if (!$this->queuedInvitesRepo->delete($queuedInvite)) {
-                        $this->logger->error(sprintf(
+                        $this->logger->warning(sprintf(
                             "Error occurred while trying to remove queued invite of user with id '%s' to course with ref-id '%s'",
                             $queuedInvite->getUserId(),
                             $refId
@@ -185,7 +185,7 @@ class ProcessQueuedInvitesJob extends ilCronJob
                     ));
 
                     if (!$this->queuedInvitesRepo->delete($queuedInvite)) {
-                        $this->logger->error(sprintf(
+                        $this->logger->warning(sprintf(
                             "Error occurred while trying to remove queued invite of user with id '%s' to course with ref-id '%s'",
                             $queuedInvite->getUserId(),
                             $refId
