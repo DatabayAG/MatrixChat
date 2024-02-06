@@ -151,6 +151,19 @@ class ilMatrixChatUIHookGUI extends ilUIHookPluginGUI
         );
 
         if ($nextClass) {
+            switch ($nextClass) {
+                case strtolower(ilPersonalSettingsGUI::class):
+                    $this->ctrl->redirectByClass([ilDashboardGUI::class, $cmdClass], $cmd);
+                    break;
+                case strtolower(ilMailOptionsGUI::class):
+                    $this->ctrl->setParameterByClass($cmdClass, "referrer", ilPersonalSettingsGUI::class);
+                    $this->ctrl->redirectByClass(
+                        [ilDashboardGUI::class, ilPersonalSettingsGUI::class, $cmdClass],
+                        $cmd
+                    );
+                    break;
+            }
+
             if (!$refId) {
                 $this->uiUtil->sendFailure(sprintf(
                     $this->plugin->txt("general.plugin.requiredParameterMissing"),
@@ -163,25 +176,13 @@ class ilMatrixChatUIHookGUI extends ilUIHookPluginGUI
 
             $this->ctrl->setParameterByClass($cmdClass, "ref_id", $refId);
 
-            switch ($nextClass) {
-                case strtolower(ilPersonalSettingsGUI::class):
-                    $this->ctrl->redirectByClass([ilDashboardGUI::class, $cmdClass], $cmd);
-                    break;
-                case strtolower(ilMailOptionsGUI::class):
-                    $this->ctrl->setParameterByClass($cmdClass, "referrer", ilPersonalSettingsGUI::class);
-                    $this->ctrl->redirectByClass(
-                        [ilDashboardGUI::class, ilPersonalSettingsGUI::class, $cmdClass],
-                        $cmd
-                    );
-                    break;
-                case strtolower(ilObjectMetaDataGUI::class):
-                    $this->ctrl->redirectByClass([
-                        ilRepositoryGUI::class,
-                        $objType === "crs" ? ilObjCourseGUI::class : ilObjGroupGUI::class,
-                        ilObjectMetaDataGUI::class,
-                        ilMDEditorGUI::class
-                    ], $cmd);
-                    break;
+            if ($nextClass === strtolower(ilObjectMetaDataGUI::class)) {
+                $this->ctrl->redirectByClass([
+                    ilRepositoryGUI::class,
+                    $objType === "crs" ? ilObjCourseGUI::class : ilObjGroupGUI::class,
+                    ilObjectMetaDataGUI::class,
+                    ilMDEditorGUI::class
+                ], $cmd);
             }
 
             $objGuiClass = $this->plugin->getObjGUIClassByType($objType);
