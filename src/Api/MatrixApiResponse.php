@@ -17,25 +17,30 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChat\Api;
 
-use Exception;
-
-class MatrixApiException extends Exception
+class MatrixApiResponse
 {
-    private string $errorCode;
+    private int $statusCode;
+    private array $responseData;
 
-    public function __construct(string $errorCode, string $errorMessage, int $code = 0)
+    public function __construct(int $statusCode, array $responseData)
     {
-        parent::__construct($errorMessage, $code);
-        $this->setErrorCode($errorCode);
+        $this->statusCode = $statusCode;
+        $this->responseData = $responseData;
     }
 
-    private function setErrorCode(string $errorCode): void
+    /** @return null|string|int|float|bool|array */
+    public function getResponseDataValue(string $key)
     {
-        $this->errorCode = $errorCode;
+        return $this->getResponseData()[$key] ?? null;
     }
 
-    public function getErrorCode(): string
+    public function getStatusCode(): int
     {
-        return $this->errorCode;
+        return $this->statusCode;
+    }
+
+    public function getResponseData(): array
+    {
+        return $this->responseData;
     }
 }

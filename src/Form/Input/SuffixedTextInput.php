@@ -1,35 +1,27 @@
 <?php
 
-declare(strict_types=1);
 /**
  * This file is part of ILIAS, a powerful learning management system
  * published by ILIAS open source e-Learning e.V.
- *
  * ILIAS is licensed with the GPL-3.0,
  * see https://www.gnu.org/licenses/gpl-3.0.en.html
  * You should have received a copy of said license along with the
  * source code, too.
- *
  * If this is not the case or you just want to try ILIAS, you'll find
  * us at:
  * https://www.ilias.de
  * https://github.com/ILIAS-eLearning
- *
  *********************************************************************/
 
-namespace ILIAS\Plugin\MatrixChatClient\Form\Input;
+declare(strict_types=1);
+
+namespace ILIAS\Plugin\MatrixChat\Form\Input;
 
 use ilTextInputGUI;
 
-/**
- * Class SuffixedTextInput
- *
- * @package ILIAS\Plugin\MatrixChatClient\Form\Input
- * @author  Marvin Beym <mbeym@databay.de>
- */
 class SuffixedTextInput extends ilTextInputGUI
 {
-    public function render($a_mode = "") : string
+    public function render($a_mode = ""): string
     {
         $suffix = $this->getSuffix();
         $this->setSuffix("");

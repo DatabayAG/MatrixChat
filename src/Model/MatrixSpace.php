@@ -15,27 +15,10 @@
 
 declare(strict_types=1);
 
-namespace ILIAS\Plugin\MatrixChat\Api;
+namespace ILIAS\Plugin\MatrixChat\Model\Room;
 
-use Exception;
+use ILIAS\Plugin\MatrixChat\Model\MatrixRoom;
 
-class MatrixApiException extends Exception
+class MatrixSpace extends MatrixRoom
 {
-    private string $errorCode;
-
-    public function __construct(string $errorCode, string $errorMessage, int $code = 0)
-    {
-        parent::__construct($errorMessage, $code);
-        $this->setErrorCode($errorCode);
-    }
-
-    private function setErrorCode(string $errorCode): void
-    {
-        $this->errorCode = $errorCode;
-    }
-
-    public function getErrorCode(): string
-    {
-        return $this->errorCode;
-    }
 }

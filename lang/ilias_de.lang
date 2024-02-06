@@ -1,5 +1,3 @@
-/* This file was automatically generated from the de.lang.json file. DO NOT EDIT! */
-
 general.cmd.undefined#:#Kein Kommando wurde gefunden
 general.cmd.notFound#:#Kommando '%s' wurde nicht gefunden
 general.update.success#:#Aktualisierung erfolgreich
@@ -7,62 +5,160 @@ general.update.failed#:#Aktualisierung fehlgeschlagen
 general.plugin.settings#:#Plugin-Einstellungen
 general.plugin.notActivated#:#Das Plugin ist nicht aktiviert. Bitte aktivieren Sie dieses zunächst.
 general.plugin.requiredParameterMissing#:#Der benötigte Parameter '%s' konnte nicht gefunden werden.
-authenticate#:#Authentifizieren
+
+chat#:#Chat
+
 config.section.server.reachable#:#<span class='sectionTitleWithStatus'>Server <span class='alert alert-success sectionStatus'>%s</span></span>
 config.section.server.unreachable#:#<span class='sectionTitleWithStatus'>Server <span class='alert alert-danger sectionStatus'>%s</span></span>
 config.section.adminAuthentication.valid#:#<span class='sectionTitleWithStatus'>Admin-Authentifizierung <span class='alert alert-success sectionStatus'>%s</span></span>
 config.section.adminAuthentication.invalid#:#<span class='sectionTitleWithStatus'>Admin-Authentifizierung <span class='alert alert-danger sectionStatus'>%s</span></span>
-config.section.chat#:#Chat
-config.section.user#:#Benutzer
-config.usernameScheme.title#:#Matrix-Benutzer-Namensschema
-config.usernameScheme.info#:#Dieses Schema wird verwendet, um den Matrix-Benutzernamen zu erzeugen,<br>wenn ILIAS-Benutzer einem Matrix-Chat beitreten wollen, aber bisher keinen Benutzer haben. <br><br>Das Schema darf nur die folgenden Zeichen enthalten %s.<br>Großbuchstaben werden in Kleinbuchstaben umgewandelt!<br><br>Unterstützte Variablen: <br>%s
+config.section.restApiAuthentication.valid#:#<span class='sectionTitleWithStatus'>Rest-API Authentifizierung <span class='alert alert-success sectionStatus'>%s</span></span>
+config.section.restApiAuthentication.invalid#:#<span class='sectionTitleWithStatus'>Rest-API Authentifizierung <span class='alert alert-danger sectionStatus'>%s</span></span>
+config.section.user.external#:#Extern authentifizierte ILIAS-Benutzer
+config.section.user.local#:#Lokale ILIAS-Benutzer
+config.section.room#:#Raum
+config.section.general#:#Allgemeine Einstellungen
+
+config.usernameScheme.external#:#Schema zum Verbinden von ILIAS-Benutzern mit externem ILIAS-Account
+config.usernameScheme.local#:#Schema zum Verbinden von ILIAS-Usern mit lokalem ILIAS-Account
+config.usernameScheme.info#:#Dieses Schema wird verwendet, um den Matrix-Benutzernamen zu erzeugen,<br>wenn extern authentifizierte ILIAS-Benutzer einem Matrix-Chat beitreten wollen, aber bisher keinen Benutzer haben. <br><br>Das Schema darf nur die folgenden Zeichen enthalten %s.<br>Großbuchstaben werden in Kleinbuchstaben umgewandelt!<br><br>Unterstützte Variablen: <br>%s
+
+config.room.prefix#:#Raumpräfix
+config.room.prefix.info#:#Dieses Schema wird verwendet, um den Präfix für die Benennung des Matrix-Chatraumes zu erzeugen. <br>Dieser Präfix wird vor den namen des Kurses/der Gruppe gesetzt zu dem dieser Chatraum zugewiesen bzw. durch den dieser erstellt wurde. <br><br>Unterstützte Variablen: <br>%s
+
+config.room.encryption.enable.title#:#Aktiviere Ende-zu-Ende-Verschlüsselung
+config.room.encryption.enable.info#:#Neu angelegte Räume werden mit Ende-zu-Ende-Verschlüsselung angelegt. <br>Ende-zu-Ende-Verschlüsselung kann für Räume nicht wieder deaktiviert werden!
+config.room.powerLevel.modify.title#:#Power-Level von Kurs/Gruppen Teilnehmern anpassen
+config.room.powerLevel.modify.info#:#Hier kann das Power-Level für die verschiedenen Rollen eines Kurs/einer Gruppe Teilnehmers angepasst werden. <br>Wird nur für neue Zuweisungen übernommen, existierende Power-Level werden nicht angepasst. <br> Standardwerte: <br>- Kurs/Gruppen Administrator: 100 (Administrator in Element) <br>- Kurstutor: 50 (Moderator in Element), <br>- Kurs/Gruppen Mitglied: 0 (Standard in Element)
+config.room.status.title#:#Status vom Chatraum
+config.room.status.info#:#Kurs/Gruppen Teilnehmer werden dem Raum automatisch hinzugefügt bzw. entfernt, wenn Sie den Kurs/die Gruppe verlassen.
+config.room.status.disconnected#:#Nicht Verbunden/Eingerichtet
+config.room.status.connected#:#Verbunden
+config.room.status.restApiUserMissingInRoom#:#Raum verbunden aber Rest-API Benutzer nicht im Raum. Einladen nicht möglich. Raum fehlerhaft.
+config.room.status.faulty#:#Verbindung zum Chatraum ist fehlerhaft. Die ID des Raums ist gespeichert, es konnte jedoch kein Raum mit dieser ID gefunden werden.
+config.room.name#:#Name vom Chatraum
+config.room.create#:#Matrix-Chatraum anlegen
+config.room.delete#:#Matrix-Chatraum entkoppeln
+
+config.accountOptions.title#:#Account-Optionen
+config.accountOptions.createOnConfiguredHomeserver#:#Account auf konfiguriertem Homeserver anlegen und nutzen.
+config.accountOptions.specifyOtherMatrixAccount#:#Anderen Matrix Account angeben.
+
+config.supportedObjectTypes.title#:#Unterstützte Objekttypen
+config.supportedObjectTypes.info#:#Bitte wählen Sie die Objekttypen aus, von denen der Matrix-Chat unterstützt werden soll
+
 config.sharedSecret.title#:#Gemeinsames Geheimnis
-config.sharedSecret.info#:#'registration_shared_secret' aus der Synapse-Homeserver konfiguration (homeserver.yaml)<br><br>Dieses Feld wird nach dem Absenden des Formulars wieder gelöscht.
+config.sharedSecret.info#:#Bitte geben Sie das gemeinsame Geheimnis an, das für die Registrierung neuer Benutzer auf dem konfigurierten Homeserver erforderlich ist. <br>Diesen Wert finden Sie in der 'homeserver.yaml' des Homeservers unter 'registration_shared_secret'. <br><br>Aus Sicherheitsgründen wird dieses Feld nach dem Speichern geleert.
 config.sharedSecret.empty#:#Dieses Feld ist erforderlich, wenn es noch nicht gespeichert wurde!
-config.admin.username.title#:#Benutzername Des Matrix-Server Administrators
-config.admin.username.info#:#Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen.
-config.admin.password.title#:#Passwort Des Matrix-Server Administrators
-config.admin.password.info#:#Wird verwendet um Administrator-Aufgaben wie z.B. Zuweisung zu Räumen zu machen.<br>Eingabefeld wird nach abspeichern des Passwortes geleert!
+
+config.pageDesignerText.title#:#Matrix Chat Seite gestalten
+config.pageDesignerText.info#:#Text wird auf dem Chat-Tab innerhalb von Kursen & Gruppen angezeigt. <br>Aktivieren von TinyMCE-Editor empfohlen.
+
+config.admin.username.title#:#Benutzername vom Matrix-Server Admin Benutzer
+config.admin.username.info#:#Wird für Administrative-Aufgaben verwendet (z.B. Prüfen von Benutzer-Accounts)
+config.admin.password.title#:#Passwort vom Matrix-Server Admin Benutzer
+config.admin.password.info#:#Passwort Eingabefeld wird aus Sicherheitsgründen nach dem Speichern geleert.
+
+config.restApiUser.username.title#:#Benutzername vom Matrix-Server Rest-API Benutzer
+config.restApiUser.username.info#:#Tragen Sie hier den Benutzer-Account ein, der die Chaträume erstellt und verwaltet. Dieser benötigt keine besonderen Privilegien.
+config.restApiUser.password.title#:#Password vom Rest-API Benutzer
+config.restApiUser.password.info#:#Passwort Eingabefeld wird aus Sicherheitsgründen nach dem Speichern geleert.
+
+config.removeRateLimit#:#Ratelimit von Benutzer entfernen
+config.removeRateLimit.info#:#Diese Checkbox entfernt beim Speichern des Formulars das Ratelimit des Benutzers. <br>Es wird eine Anfrage an die Matrix-Server API gesendet, das RateLimit für diesen Benutzer zu entfernen. <br>Benötigt funktionierenden "Matrix-Server Admin Benutzer"
+
 config.user.generalSettings#:#Allgemeine Einstellungen
-config.user.title#:#Chat Einstellungen
+config.user.title#:#Matrix Chat Einstellungen
 config.user.authMethod#:#Matrix-Authentifizierungsmethode
-config.user.useExternalAccount#:#Externes Konto Verwenden
-config.user.loginOrCreate#:#Authentifizierung mit Bestehendem Konto oder Erstellen Eines Neuen Kontos Mittels Namensschema
-config.user.login#:#Mit Bestehendem Konto Authentifizieren
-config.user.create.title#:#Konto Mittels Namensschema Erstellen
-config.user.create.username.info#:#Um Konflikte zu vermeiden, wird dem eingegebenen Benutzernamen ein Suffix "%s" hinzugefügt.<br><br> Der Benutzername (inklusive Suffix) darf nur die Zeichen %s enthalten. <br>Großbuchstaben werden in Kleinbuchstaben umgewandelt!
-config.user.create.username.illegalCharactersUsed#:#Nur "a-z, 0-9, =, _, -, ., /, '" sind erlaubt
-config.user.create.username.idm_info#:#Sie sind durch einen IDM-Server authentifiziert. Der Benutzername wird automatisch festgelegt.<br><br>
-config.user.method.title#:#Matrix-Benutzer Registrierungsmethode
-config.user.method.externalAccount#:#Verwende Externen-Account Eintrag
-config.user.method.fromNameScheme#:#Benutzer Basierend Auf Namensschema
-config.loadLimit.initial.title#:#Initiales Chat-Nachrichten Limit
-config.loadLimit.initial.info#:#Wie viele Nachrichten sollen beim Laden des Chats initial geladen werden (neusten x Nachrichten)
-config.loadLimit.history.title#:#Anzahl Der Gleichzeitig Zu Ladenden Alten Nachrichten
-config.loadLimit.history.info#:#Wie viele Nachrichten gleichzeitig sollen nachgeladen werden, wenn der Benutzer im Chat-Fenster nach oben scrollt
-chat#:#Chat
+
+config.user.method.createOnConfiguredHomeserver#:#Account auf dem verbundenem Homeserver verwenden
+config.user.method.createOnConfiguredHomeserver.connectedHomeserver#:#Verbundener Matrix Homeserver
+config.user.method.createOnConfiguredHomeserver.detectedMatrixAccount#:#Erkannter Matrix-Account
+
+config.user.method.specifyOtherMatrixAccount#:#Anderen Matrix-Account nutzen
+config.user.method.specifyOtherMatrixAccount.accountName#:#Account-Name (Inklusive homeserver)
+
+config.user.resetAccountSettings#:#Matrix-Accounteinstellungen zurücksetzen
+config.user.resetAccountSettings.success#:#Matrix-Accounteinstellungen zurückgesetzt!
+
+config.user.changeLocalUserPassword.title#:#Passwort von Lokal verbundenen Matrix-Benutzer ändern
+config.user.changeLocalUserPassword.failure.userNotExist#:#Ihr passwort konnte nicht geändert werden. Ihr Benutzer existiert nicht!
+config.user.changeLocalUserPassword.failure.general#:#Ihr passwort konnte nicht geändert werden.
+config.user.changeLocalUserPassword.success#:#Ihr passwort wurde erfolgreich geändert. Ihre Geräte wurden ausgeloggt!
+
+config.user.externalMatrixUserLookup.checkAccountOnMatrixServer#:#Account auf Matrix Server prüfen
+config.user.externalMatrixUserLookup.missingMatrixUserIdInPost#:#Bei der Anfrage wurde die Matrix-Benutzer-ID nicht mitgeliefert.
+
+config.user.externalMatrixUserLookup.failure.notExist#:#Der angefragte Homeserver antwortete, das es den Benutzer %s nicht gibt.
+config.user.externalMatrixUserLookup.failure.lookupDisabled#:#Der angefragte Homeserver erlaubt das abfragen von Profilen durch einen anderen Homeserver nicht.
+config.user.externalMatrixUserLookup.failure.unknown#:#Ein unerwarteter Fehler ist beim abfragen des profils aufgetreten.
+config.user.externalMatrixUserLookup.success#:#Auf dem angefragten Homeserver wurde ein Profil gefunden.
+config.user.externalMatrixUserLookup.info#:#Sie können diese Eingabe dennoch speichern, <br> eventuell werden sie dann jedoch nicht eingeladen, fall es mit dieser Angabe zu weiteren fehlern kommt. <br Wenn sie dies nicht wünschen. Verwenden Sie den '%s' Button.
+
+config.user.register.success#:#Matrix-Account erfolgreich registriert.
+config.user.register.failure#:#Matrix-Account konnte nicht registriert werden.
+config.user.register.failure.usernameAlreadyUsed#:#Matrix-Account konnte nicht registriert werden. Ihr Benutzername ist bereits vergeben.
+config.user.auth.failure#:#Matrix-Account konnte nicht authentifiziert werden.
+config.user.auth.success#:#Matrix-Account erfolgreich authentifiziert.
+
 matrix.server.url#:#Matrix Server (Synapse) URL
 matrix.server.reachable#:#Server erreichbar
 matrix.server.unreachable#:#Server nicht erreichbar
-matrix.chat.loggedInAs#:#Eingeloggt als
-matrix.chat.notifications.changedName#:#Benutzer '%s' hat seinen Namen auf '%s' geändert
-matrix.chat.send#:#Senden
-matrix.chat.login.failed#:#Matrix-Login fehlgeschlagen
-matrix.chat.login.success#:#Matrix-Login erfolgreich
-matrix.chat.logout.success#:#Matrix-Logout erfolgreich
-matrix.chat.room.notFoundEvenThoughEnabled#:#Der Raum wurde nicht gefunden, obwohl die Integration für den Kurs aktiviert ist.<br>Wahrscheinlich wurde der Raum durch einen externen Client gelöscht oder der genutzte Administrator kann nicht mehr auf diesen zugreifen!<br><br>Die Integration muss wahrscheinlich deaktiviert (und dabei der Raum gelöscht werden, falls möglich) und dann wieder aktiviert werden.
+
 matrix.chat.room.notFound#:#Raum konnte nicht gefunden werden.
-matrix.chat.room.memberAssignFailed#:#Benutzer konnte nicht zum Raum hinzugefügt werden.
-matrix.chat.room.delete.confirm#:#Möchten Sie auch den Chatraum löschen?
-matrix.chat.room.delete.button#:#Chatraum löschen
+matrix.chat.room.delete.confirm#:#Sind Sie sicher das Sie den Matrix-Chatraum löschen wollen? <br>Alle Benutzer werden aus diesem entfernt!
 matrix.chat.room.delete.success#:#Chatraum erfolgreich gelöscht
 matrix.chat.room.delete.failed#:#Chatraum konnte nicht gelöscht werden
-matrix.chat.course.settings#:#Chat-Einstellungen
-matrix.chat.course.enable#:#Aktiviere Matrix-Chat Integration Für Den Kurs
-matrix.user.authentication.failed.authFailed#:#Authentifizierung mit Matrix-Benutzer '%s' fehlgeschlagen
-matrix.user.authentication.failed.unConfigured#:#Keine Authentifizierung konfiguriert
-matrix.user.authentication.failed.usernameTaken#:#Benutzername '%s' ist bereits vergeben
-matrix.user.authentication.failed.userCreation#:#Beim Anlegen des Benutzers ist ein Fehler aufgetreten
-matrix.user.authentication.success#:#Authentifizierung erfolgreich mit Benutzername '%s' (Matrix-User-ID: %s)
+matrix.chat.settings#:#Matrix Chat Einstellungen
+matrix.chat.members#:#Mitglieder
+matrix.chat.invite#:#Einladen
+matrix.chat.invite.notPossible#:#Einladen nicht möglich
+matrix.chat.status#:#Chat-Status
+matrix.chat.members#:#Chatteilnehmer
+
+
+config.space.name#:#Name des Spaces
+config.space.name.info#:#Ändern des Namens führt dazu, das ein neuer Space erstellt wird (ID des Space verändert sich) <br>Räume im alten Space verbleiben in dem zuvor verwendeten!
+config.space.id#:#ID des Space
+config.space.id.info#:#Nicht editierbar. Dieser wert ändert sich wenn 'Name des Spaces' geändert wird.
+config.space.status.faulty#:#Verbindung zum Chat-Space ist fehlerhaft. Die ID des Spaces ist gespeichert, es konnte jedoch kein Space mit dieser ID gefunden werden.
+config.space.status.disconnected#:#Space nicht Verbunden/Eingerichtet
+
+matrix.space.creation.failure#:#Beim erstellen des Spaces ist ein Fehler aufgetreten.
+matrix.space.notFound#:#Es konnte kein Space gefunden werden, zu dem der Matrix-Raum hinzugefügt werden kann. Erstellen des Raumes nicht möglich.
+
+matrix.user.name#:#Matrix-Benutzername
+matrix.user.name.info#:#Nicht editierbar. Vordefiniert durch Server.
+matrix.user.account#:#Matrix-Account
+matrix.user.password#:#Matrix-User Passwort
+matrix.user.password.external.required#:#Ihr "Erkannter Matrix-Account" existiert nicht. Bitte geben sie ein Passwort ein um diesen zu erstellen.
+matrix.user.password.local.required#:#Es existiert kein Matrix-Account mit diesem Benutzernamen. Bitte geben sie ein Passwort ein um diesen zu erstellen.
+matrix.user.account.joined#:#Sie sind nun mit Ihrem Matrix-Nutzer '%s' dem Chat beigetreten. Wenn Sie chatten möchten, verwenden Sie den Matrix Client Ihrer Wahl. <br>Dort können Sie auch Ihre Mitgliedschat verwalten und ggf. den Chatraum wieder verlassen.
+matrix.user.account.invited#:#Sie wurden mit Ihrem Matrix-Nutzer '%s' zum Chat eingeladen. Sie haben diese Einladung jedoch noch nicht angenommen. <br>Bitte verwenden Sie den Matrix Client Ihrer Wahl. <br>Mit diesem können sie sowohl die Einladung annehmen als auch im Chatraum schreiben.
+matrix.user.account.unconfigured#:#Sie haben noch keinen Matrix-Account konfiguriert. <br>Bitte konfigurieren Sie einen Matrix-Account in Ihren Benutzer-Einstellungen um dem Chatraum hinzugefügt zu werden.
+matrix.user.account.unknown#:#Es konnte kein Matrix-Benutzer Profil gefunden werden. <br>Haben Sie z.B. einen Benutzer von einem anderen Matrix-Server verwendet, kann es sein das dieser das abfragen des Profils nicht erlaubt. <br><br>Sie können diese Einstellung belassen, werden aber vielleicht auch nicht in den Raum eingeladen, falls der Benutzer wirklich nicht existiert.
+matrix.user.account.changeMatrixAccountSettings#:#Matrix-Account Einstellungen ändern
+matrix.user.account.setupMatrixAccount#:#Matrix-Account einrichten
+matrix.user.account.invite.failed#:#Der Benutzer konnte nicht in den Raum eingeladen werden.
+matrix.user.account.invite.failed.userNotMember#:#Der Benutzer ist kein Mitglied des Kurses/der Gruppe.
+matrix.user.account.invite.success#:#Der Benutzer wurde erfolgreich in den Raum eingeladen.
+matrix.user.account.invite.multiple.success#:#Alle ausgewählten Benutzer wurden eingeladen.
+matrix.user.account.invite.multiple.failure#:#Beim einladen der Benutzer ist ein Fehler aufgetreten, es wurden unter umständen nicht alle eingeladen.
+
+matrix.user.status.notInvite#:#Noch nicht eingeladen
+matrix.user.status.invite#:#Eingeladen
+matrix.user.status.join#:#Beigetreten
+matrix.user.status.leave#:#Verlassen
+matrix.user.status.ban#:#Gebannt
+matrix.user.status.queue#:#Auf Warteschlange für Einladung
+
+matrix.user.queue.inviteProcessResult#:#Sie wurden automatisch zu folgenden Chaträumen eingeladen. <br>Verwenden Sie den Matrix Client Ihrer Wahl um diese anzunehmen.: <br><br><table class="table table-striped fullwidth_invisible"><thead><tr><th>Object-Typ</th><th>Object-Titel</th><th>Chatraum-Name</th></tr></thead><tbody>%s</tbody></table>
+
 matrix.admin.login.valid#:#Admin-Login gültig
 matrix.admin.login.invalid#:#Admin-Login ungültig
+matrix.restApiUser.login.valid#:#Rest-API Login gültig
+matrix.restApiUser.login.invalid#:#Rest-API Login ungültig
+
+job.title#:#Matrix-Raum Einladungen in der Warteschlange verarbeiten/prüfen
+job.description#:#Prüft alle Matrix-Raum Einladungen ob die Benutzer nun eingeladen werden können.
+job.result#:#%s Einladungen in der Warteschlange. <br>%s Einladungen übersprungen. <br>%s Einladungen gesendet. <br> %s Einladungen nicht erfolgreich.

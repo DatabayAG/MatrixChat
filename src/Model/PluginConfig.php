@@ -1,6 +1,5 @@
 <?php
 
-declare(strict_types=1);
 /**
  * This file is part of ILIAS, a powerful learning management system
  * published by ILIAS open source e-Learning e.V.
@@ -14,177 +13,261 @@ declare(strict_types=1);
  * https://github.com/ILIAS-eLearning
  *********************************************************************/
 
-namespace ILIAS\Plugin\MatrixChatClient\Model;
+declare(strict_types=1);
+
+namespace ILIAS\Plugin\MatrixChat\Model;
 
 use Exception;
-use ILIAS\Plugin\MatrixChatClient\Libs\IliasConfigLoader\Exception\ConfigLoadException;
-use ILIAS\Plugin\MatrixChatClient\Libs\IliasConfigLoader\Model\SettingsConfig;
+use ILIAS\Plugin\Libraries\IliasConfigLoader\Exception\ConfigLoadException;
+use ILIAS\Plugin\Libraries\IliasConfigLoader\Model\Config\SettingsConfig;
 
-/**
- * Class PluginConfig
- *
- * @package ILIAS\Plugin\MatrixChatClient\Model
- * @author  Marvin Beym <mbeym@databay.de>
- */
 class PluginConfig extends SettingsConfig
 {
-    /**
-     * @var string
-     */
-    private $matrixServerUrl = "";
-    /**
-     * @var string
-     */
-    private $matrixAdminUsername = "";
-    /**
-     * @var string
-     */
-    private $matrixAdminPassword = "";
-    /**
-     * @var string
-     */
-    private $sharedSecret = "";
-    /**
-     * @var int
-     */
-    private $chatInitialLoadLimit = 20;
-    /**
-     * @var int
-     */
-    private $chatHistoryLoadLimit = 20;
+    private string $matrixServerUrl = "";
+    private string $matrixAdminUsername = "";
+    private string $matrixAdminPassword = "";
+    private string $matrixRestApiUserUsername = "";
+    private string $matrixRestApiUserPassword = "";
+    private string $sharedSecret = "";
+    private string $externalUserScheme = "";
+    private array $externalUserOptions = [];
+    private string $localUserScheme = "";
+    private array $localUserOptions = [];
+    private string $roomPrefix = "";
+    private array $supportedObjectTypes = [];
+    private string $pageDesignerText = "";
+    private string $matrixSpaceId = "";
+    private string $matrixSpaceName = "";
+    private bool $enableRoomEncryption = false;
+    private bool $modifyParticipantPowerLevel = false;
+    private int $adminPowerLevel = 100;
+    private int $tutorPowerLevel = 50;
+    private int $memberPowerLevel = 0;
 
-    private $usernameScheme = "";
-
-    /**
-     * @return string
-     */
-    public function getMatrixServerUrl() : string
+    public function getMatrixServerUrl(): string
     {
         return $this->matrixServerUrl;
     }
 
-    /**
-     * @param string $matrixServerUrl
-     * @return PluginConfig
-     */
-    public function setMatrixServerUrl(string $matrixServerUrl) : PluginConfig
+    public function setMatrixServerUrl(string $matrixServerUrl): PluginConfig
     {
         $this->matrixServerUrl = $matrixServerUrl;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getMatrixAdminUsername() : string
+    public function getMatrixAdminUsername(): string
     {
         return $this->matrixAdminUsername;
     }
 
-    /**
-     * @param string $matrixAdminUsername
-     * @return PluginConfig
-     */
-    public function setMatrixAdminUsername(string $matrixAdminUsername) : PluginConfig
+    public function setMatrixAdminUsername(string $matrixAdminUsername): PluginConfig
     {
         $this->matrixAdminUsername = $matrixAdminUsername;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getMatrixAdminPassword() : string
+    public function getMatrixAdminPassword(): string
     {
         return $this->matrixAdminPassword;
     }
 
-    /**
-     * @param string $matrixAdminPassword
-     * @return PluginConfig
-     */
-    public function setMatrixAdminPassword(string $matrixAdminPassword) : PluginConfig
+    public function setMatrixAdminPassword(string $matrixAdminPassword): PluginConfig
     {
         $this->matrixAdminPassword = $matrixAdminPassword;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getSharedSecret() : string
+    public function getMatrixRestApiUserUsername(): string
+    {
+        return $this->matrixRestApiUserUsername;
+    }
+
+    public function setMatrixRestApiUserUsername(string $matrixRestApiUserUsername): PluginConfig
+    {
+        $this->matrixRestApiUserUsername = $matrixRestApiUserUsername;
+        return $this;
+    }
+
+    public function getMatrixRestApiUserPassword(): string
+    {
+        return $this->matrixRestApiUserPassword;
+    }
+
+    public function setMatrixRestApiUserPassword(string $matrixRestApiUserPassword): PluginConfig
+    {
+        $this->matrixRestApiUserPassword = $matrixRestApiUserPassword;
+        return $this;
+    }
+
+    public function getSharedSecret(): string
     {
         return $this->sharedSecret;
     }
 
-    /**
-     * @param string $sharedSecret
-     * @return PluginConfig
-     */
-    public function setSharedSecret(string $sharedSecret) : PluginConfig
+    public function setSharedSecret(string $sharedSecret): PluginConfig
     {
         $this->sharedSecret = $sharedSecret;
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getChatInitialLoadLimit() : int
+    public function getExternalUserScheme(): string
     {
-        return $this->chatInitialLoadLimit;
+        return $this->externalUserScheme;
     }
 
-    /**
-     * @param int $chatInitialLoadLimit
-     * @return PluginConfig
-     */
-    public function setChatInitialLoadLimit(int $chatInitialLoadLimit) : PluginConfig
+    public function setExternalUserScheme(string $externalUserScheme): PluginConfig
     {
-        $this->chatInitialLoadLimit = $chatInitialLoadLimit;
+        $this->externalUserScheme = $externalUserScheme;
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getChatHistoryLoadLimit() : int
+    public function getLocalUserScheme(): string
     {
-        return $this->chatHistoryLoadLimit;
+        return $this->localUserScheme;
     }
 
-    /**
-     * @param int $chatHistoryLoadLimit
-     * @return PluginConfig
-     */
-    public function setChatHistoryLoadLimit(int $chatHistoryLoadLimit) : PluginConfig
+    public function setLocalUserScheme(string $localUserScheme): PluginConfig
     {
-        $this->chatHistoryLoadLimit = $chatHistoryLoadLimit;
+        $this->localUserScheme = $localUserScheme;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getUsernameScheme() : string
+    public function getRoomPrefix(): string
     {
-        return $this->usernameScheme;
+        return $this->roomPrefix;
     }
 
-    /**
-     * @param string $usernameScheme
-     * @return PluginConfig
-     */
-    public function setUsernameScheme(string $usernameScheme) : PluginConfig
+    public function setRoomPrefix(string $roomPrefix): PluginConfig
     {
-        $this->usernameScheme = $usernameScheme;
+        $this->roomPrefix = $roomPrefix;
+        return $this;
+    }
+
+    public function getExternalUserOptions(): array
+    {
+        return $this->externalUserOptions;
+    }
+
+    public function setExternalUserOptions(array $externalUserOptions): PluginConfig
+    {
+        $this->externalUserOptions = $externalUserOptions;
+        return $this;
+    }
+
+    public function getLocalUserOptions(): array
+    {
+        return $this->localUserOptions;
+    }
+
+    public function setLocalUserOptions(array $localUserOptions): PluginConfig
+    {
+        $this->localUserOptions = $localUserOptions;
+        return $this;
+    }
+
+    public function getSupportedObjectTypes(): array
+    {
+        return $this->supportedObjectTypes;
+    }
+
+    public function setSupportedObjectTypes(array $supportedObjectTypes): PluginConfig
+    {
+        $this->supportedObjectTypes = $supportedObjectTypes;
+        return $this;
+    }
+
+    public function getPageDesignerText(): string
+    {
+        return $this->pageDesignerText;
+    }
+
+    public function setPageDesignerText(string $pageDesignerText): PluginConfig
+    {
+        $this->pageDesignerText = $pageDesignerText;
+        return $this;
+    }
+
+    public function getMatrixSpaceId(): string
+    {
+        return $this->matrixSpaceId;
+    }
+
+    public function setMatrixSpaceId(string $matrixSpaceId): PluginConfig
+    {
+        $this->matrixSpaceId = $matrixSpaceId;
+        return $this;
+    }
+
+    public function getMatrixSpaceName(): string
+    {
+        return $this->matrixSpaceName;
+    }
+
+    public function setMatrixSpaceName(string $matrixSpaceName): PluginConfig
+    {
+        $this->matrixSpaceName = $matrixSpaceName;
+        return $this;
+    }
+
+    public function isEnableRoomEncryption(): bool
+    {
+        return $this->enableRoomEncryption;
+    }
+
+    public function setEnableRoomEncryption(bool $enableRoomEncryption): PluginConfig
+    {
+        $this->enableRoomEncryption = $enableRoomEncryption;
+        return $this;
+    }
+
+    public function isModifyParticipantPowerLevel(): bool
+    {
+        return $this->modifyParticipantPowerLevel;
+    }
+
+    public function setModifyParticipantPowerLevel(bool $modifyParticipantPowerLevel): PluginConfig
+    {
+        $this->modifyParticipantPowerLevel = $modifyParticipantPowerLevel;
+        return $this;
+    }
+
+    public function getAdminPowerLevel(): int
+    {
+        return $this->adminPowerLevel;
+    }
+
+    public function setAdminPowerLevel(int $adminPowerLevel): PluginConfig
+    {
+        $this->adminPowerLevel = $adminPowerLevel;
+        return $this;
+    }
+
+    public function getTutorPowerLevel(): int
+    {
+        return $this->tutorPowerLevel;
+    }
+
+    public function setTutorPowerLevel(int $tutorPowerLevel): PluginConfig
+    {
+        $this->tutorPowerLevel = $tutorPowerLevel;
+        return $this;
+    }
+
+    public function getMemberPowerLevel(): int
+    {
+        return $this->memberPowerLevel;
+    }
+
+    public function setMemberPowerLevel(int $memberPowerLevel): PluginConfig
+    {
+        $this->memberPowerLevel = $memberPowerLevel;
         return $this;
     }
 
     /**
      * @throws Exception
      */
-    public function save() : void
+    public function save(): void
     {
         try {
             parent::save();
@@ -202,5 +285,14 @@ class PluginConfig extends SettingsConfig
                 throw new Exception("general.update.failed");
             }
         }
+    }
+
+    public function getMatrixServerName(): string
+    {
+        if (!$this->getMatrixServerUrl()) {
+            return "";
+        }
+        $url = parse_url($this->getMatrixServerUrl());
+        return $url["host"] ?? "";
     }
 }

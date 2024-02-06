@@ -1,6 +1,5 @@
 <?php
 
-declare(strict_types=1);
 /**
  * This file is part of ILIAS, a powerful learning management system
  * published by ILIAS open source e-Learning e.V.
@@ -14,30 +13,19 @@ declare(strict_types=1);
  * https://github.com/ILIAS-eLearning
  *********************************************************************/
 
-namespace ILIAS\Plugin\MatrixChatClient\Repository;
+declare(strict_types=1);
+
+namespace ILIAS\Plugin\MatrixChat\Repository;
 
 use ilDBInterface;
-use ILIAS\Plugin\MatrixChatClient\Model\CourseSettings;
+use ILIAS\Plugin\MatrixChat\Model\CourseSettings;
 
-/**
- * Class CourseSettingsRepository
- *
- * @package ILIAS\Plugin\MatrixChatClient\Repository
- * @author  Marvin Beym <mbeym@databay.de>
- */
 class CourseSettingsRepository
 {
-    /**
-     * @var self|null
-     */
-    private static $instance;
-    /**
-     * @var ilDBInterface
-     */
-    protected $db;
-    /**
-     * @var string
-     */
+    private static ?CourseSettingsRepository $instance = null;
+    protected ilDBInterface $db;
+
+    /** @var string */
     protected const TABLE_NAME = "mcc_course_settings";
 
     public function __construct(?ilDBInterface $db = null)
@@ -50,13 +38,7 @@ class CourseSettingsRepository
         }
     }
 
-    /**
-     * Returns the instance of the repository to prevent recreation of the whole object.
-     *
-     * @param ilDBInterface|null $db
-     * @return self
-     */
-    public static function getInstance(ilDBInterface $db = null) : self
+    public static function getInstance(?ilDBInterface $db = null): self
     {
         if (self::$instance) {
             return self::$instance;
@@ -64,24 +46,21 @@ class CourseSettingsRepository
         return self::$instance = new self($db);
     }
 
-    /**
-     * @return CourseSettings[]
-     */
-    public function readAll() : array
+    /** @return CourseSettings[] */
+    public function readAll(): array
     {
         $result = $this->db->query("SELECT * FROM " . self::TABLE_NAME);
 
         $data = [];
 
         while ($row = $this->db->fetchAssoc($result)) {
-            $data[] = (new CourseSettings((int) $row["course_id"], $row["matrix_room_id"]))
-                ->setChatIntegrationEnabled((bool) $row["chat_integration_enabled"]);
+            $data[] = (new CourseSettings((int) $row["course_id"], $row["matrix_room_id"]));
         }
 
         return $data;
     }
 
-    public function read(int $courseId) : CourseSettings
+    public function read(int $courseId): CourseSettings
     {
         $result = $this->db->queryF(
             "SELECT * FROM " . self::TABLE_NAME . " WHERE course_id = %s",
@@ -94,11 +73,10 @@ class CourseSettingsRepository
         }
 
         $data = $this->db->fetchAssoc($result);
-        return (new CourseSettings($courseId, $data["matrix_room_id"]))
-            ->setChatIntegrationEnabled((bool) $data["chat_integration_enabled"]);
+        return (new CourseSettings($courseId, $data["matrix_room_id"]));
     }
 
-    public function exists(int $courseId) : bool
+    public function exists(int $courseId): bool
     {
         $result = $this->db->queryF(
             "SELECT course_id FROM " . self::TABLE_NAME . " WHERE course_id = %s",
@@ -109,33 +87,29 @@ class CourseSettingsRepository
         return $result->numRows() === 1;
     }
 
-    public function save(CourseSettings $courseSettings) : bool
+    public function save(CourseSettings $courseSettings): bool
     {
         if ($this->exists($courseSettings->getCourseId())) {
-            $affectedRows = (int) $this->db->manipulateF(
-                "UPDATE " . self::TABLE_NAME . " SET chat_integration_enabled = %s, matrix_room_id = %s WHERE course_id = %s",
+            return $this->db->manipulateF(
+                "UPDATE " . self::TABLE_NAME . " SET matrix_room_id = %s WHERE course_id = %s",
                 [
-                    "integer",
                     "text",
                     "integer"
                 ],
                 [
-                    $courseSettings->isChatIntegrationEnabled(),
-                    $courseSettings->getMatrixRoom() ? $courseSettings->getMatrixRoom()->getId() : null,
+                    $courseSettings->getMatrixRoomId() ?: null,
                     $courseSettings->getCourseId()
                 ]
-            );
-            return $affectedRows === 1;
+            ) === 1;
         }
 
-        $affectedRows = (int) $this->db->manipulateF(
-            "INSERT INTO " . self::TABLE_NAME . " (course_id, chat_integration_enabled, matrix_room_id) VALUES (%s, %s, %s)",
-            ["integer", "integer", "text"],
-            [$courseSettings->getCourseId(),
-             $courseSettings->isChatIntegrationEnabled(),
-             $courseSettings->getMatrixRoom() ? $courseSettings->getMatrixRoom()->getId() : null
+        return $this->db->manipulateF(
+            "INSERT INTO " . self::TABLE_NAME . " (course_id, matrix_room_id) VALUES (%s, %s)",
+            ["integer", "text"],
+            [
+                $courseSettings->getCourseId(),
+                $courseSettings->getMatrixRoomId() ?: null
             ]
-        );
-        return $affectedRows === 1;
+        ) === 1;
     }
 }

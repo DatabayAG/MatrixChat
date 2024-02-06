@@ -1,6 +1,5 @@
 <?php
 
-declare(strict_types=1);
 /**
  * This file is part of ILIAS, a powerful learning management system
  * published by ILIAS open source e-Learning e.V.
@@ -14,55 +13,140 @@ declare(strict_types=1);
  * https://github.com/ILIAS-eLearning
  *********************************************************************/
 
-namespace ILIAS\Plugin\MatrixChatClient\Form;
+declare(strict_types=1);
 
+namespace ILIAS\Plugin\MatrixChat\Form;
+
+use ilCheckboxGroupInputGUI;
+use ilCheckboxInputGUI;
+use ilCheckboxOption;
 use ilFormSectionHeaderGUI;
 use ilGlobalPageTemplate;
 use ILIAS\DI\Container;
-use ilMatrixChatClientConfigGUI;
-use ilMatrixChatClientPlugin;
+use ilMatrixChatConfigGUI;
+use ilMatrixChatPlugin;
 use ilNumberInputGUI;
 use ilPasswordInputGUI;
 use ilPropertyFormGUI;
 use ilTextInputGUI;
 use ilUriInputGUI;
-use ilUtil;
 
-/**
- * Class PluginConfigForm
- *
- * @package ILIAS\Plugin\MatrixChatClient\Form
- * @author  Marvin Beym <mbeym@databay.de>
- */
 class PluginConfigForm extends ilPropertyFormGUI
 {
-    /**
-     * @var ilMatrixChatClientPlugin
-     */
-    private $plugin;
-    /**
-     * @var Container
-     */
-    private $dic;
-    /**
-     * @var ilGlobalPageTemplate
-     */
-    private $mainTpl;
+    private ilMatrixChatPlugin $plugin;
+    private Container $dic;
+    private ilGlobalPageTemplate $mainTpl;
+
+    public const SPECIFY_OTHER_MATRIX_ACCOUNT = "specifyOtherMatrixAccount";
+    public const CREATE_ON_CONFIGURED_HOMESERVER = "createOnConfiguredHomeserver";
 
     public function __construct()
     {
         parent::__construct();
-        $this->plugin = ilMatrixChatClientPlugin::getInstance();
+        $this->plugin = ilMatrixChatPlugin::getInstance();
         $this->dic = $this->plugin->dic;
         $this->mainTpl = $this->dic->ui()->mainTemplate();
         $this->mainTpl->addCss($this->plugin->cssFolder("style.css"));
 
-        $this->setFormAction($this->ctrl->getFormActionByClass(ilMatrixChatClientConfigGUI::class, "showSettings"));
+        $this->setFormAction(
+            $this->ctrl->getFormActionByClass(
+                ilMatrixChatConfigGUI::class,
+                ilMatrixChatConfigGUI::CMD_SHOW_SETTINGS
+            )
+        );
         $this->setId("{$this->plugin->getId()}_{$this->plugin->getPluginName()}_plugin_config_form");
         $this->setTitle($this->plugin->txt("general.plugin.settings"));
 
+        $serverReachable = $this->plugin->getMatrixApi()->serverReachable();
+
+        $allowedUsernameSchemeCharacters = array_map(static function ($char) {
+            return "<span style='color: blue; font-weight: bold'>$char</span>";
+        }, ["a-z", "0-9", "=", "_", "-", ".", "/", "'"]);
+
+        $this->addGeneralSection();
+        $this->addServerSection($serverReachable);
+        $this->addAdminUserSection($serverReachable);
+        $this->addRestApiUserSection($serverReachable);
+        $this->addExternalUserSection($allowedUsernameSchemeCharacters);
+        $this->addLocalUserSection($allowedUsernameSchemeCharacters);
+        $this->addRoomSection();
+
+        $this->addCommandButton(ilMatrixChatConfigGUI::CMD_SAVE_SETTINGS, $this->lng->txt("save"));
+    }
+
+    protected function addGeneralSection(): void
+    {
+        $section = new ilFormSectionHeaderGUI();
+        $section->setTitle($this->plugin->txt("config.section.general"));
+        $this->addItem($section);
+
+        $supportedObjectTypes = new ilCheckboxGroupInputGUI(
+            $this->plugin->txt("config.supportedObjectTypes.title"),
+            "supportedObjectTypes"
+        );
+        $supportedObjectTypes->setInfo($this->plugin->txt("config.supportedObjectTypes.info"));
+
+        $supportedObjectTypes->addOption(new ilCheckboxOption(
+            $this->lng->txt("crs"),
+            "crs"
+        ));
+
+        $supportedObjectTypes->addOption(new ilCheckboxOption(
+            $this->lng->txt("grp"),
+            "grp"
+        ));
+        $this->addItem($supportedObjectTypes);
+    }
+
+    protected function addServerSection($serverReachable): void
+    {
+        $section = new ilFormSectionHeaderGUI();
+        if ($serverReachable) {
+            $section->setTitle(sprintf(
+                $this->plugin->txt("config.section.server.reachable"),
+                $this->plugin->txt("matrix.server.reachable")
+            ));
+        } else {
+            $section->setTitle(sprintf(
+                $this->plugin->txt("config.section.server.unreachable"),
+                $this->plugin->txt("matrix.server.unreachable")
+            ));
+        }
+        $this->addItem($section);
+
         $matrixServerUrl = new ilUriInputGUI($this->plugin->txt("matrix.server.url"), "matrixServerUrl");
         $matrixServerUrl->setRequired(true);
+        $this->addItem($matrixServerUrl);
+
+        $sharedSecret = new ilPasswordInputGUI($this->plugin->txt("config.sharedSecret.title"), "sharedSecret");
+        $sharedSecret->setInfo($this->plugin->txt("config.sharedSecret.info"));
+        $sharedSecret->setSkipSyntaxCheck(true);
+        $sharedSecret->setRetype(false);
+        $this->addItem($sharedSecret);
+    }
+
+    protected function addAdminUserSection(bool $serverReachable): void
+    {
+        $section = new ilFormSectionHeaderGUI();
+        if ($this->plugin->getMatrixApi()->checkAdminUser()) {
+            $section->setTitle(sprintf(
+                $this->plugin->txt("config.section.adminAuthentication.valid"),
+                $this->plugin->txt("matrix.admin.login.valid")
+            ));
+        } else {
+            if (!$serverReachable) {
+                $section->setTitle(sprintf(
+                    $this->plugin->txt("config.section.adminAuthentication.invalid"),
+                    $this->plugin->txt("matrix.server.unreachable")
+                ));
+            } else {
+                $section->setTitle(sprintf(
+                    $this->plugin->txt("config.section.adminAuthentication.invalid"),
+                    $this->plugin->txt("matrix.admin.login.invalid")
+                ));
+            }
+        }
+        $this->addItem($section);
 
         $matrixAdminUsername = new ilTextInputGUI(
             $this->plugin->txt("config.admin.username.title"),
@@ -70,6 +154,7 @@ class PluginConfigForm extends ilPropertyFormGUI
         );
         $matrixAdminUsername->setRequired(true);
         $matrixAdminUsername->setInfo($this->plugin->txt("config.admin.username.info"));
+        $this->addItem($matrixAdminUsername);
 
         $matrixAdminPassword = new ilPasswordInputGUI(
             $this->plugin->txt("config.admin.password.title"),
@@ -78,98 +163,201 @@ class PluginConfigForm extends ilPropertyFormGUI
         $matrixAdminPassword->setInfo($this->plugin->txt("config.admin.password.info"));
         $matrixAdminPassword->setSkipSyntaxCheck(true);
         $matrixAdminPassword->setRetype(false);
+        $this->addItem($matrixAdminPassword);
 
-        $sharedSecret = new ilPasswordInputGUI($this->plugin->txt("config.sharedSecret.title"), "sharedSecret");
-        $sharedSecret->setInfo($this->plugin->txt("config.sharedSecret.info"));
-        $sharedSecret->setSkipSyntaxCheck(true);
-        $sharedSecret->setRetype(false);
-
-        $chatInitialLoadLimit = new ilNumberInputGUI(
-            $this->plugin->txt("config.loadLimit.initial.title"),
-            "chatInitialLoadLimit"
+        $matrixAdminPasswordRemoveRateLimit = new ilCheckboxInputGUI(
+            $this->plugin->txt("config.removeRateLimit"),
+            "matrixAdminPasswordRemoveRateLimit"
         );
-        $chatInitialLoadLimit->setRequired(true);
-        $chatInitialLoadLimit->setInfo($this->plugin->txt("config.loadLimit.initial.info"));
+        $matrixAdminPasswordRemoveRateLimit->setInfo($this->plugin->txt("config.removeRateLimit.info"));
+        $this->addItem($matrixAdminPasswordRemoveRateLimit);
+    }
 
-        $chatHistoryLoadLimit = new ilNumberInputGUI(
-            $this->plugin->txt("config.loadLimit.history.title"),
-            "chatHistoryLoadLimit"
+    protected function addRestApiUserSection(bool $serverReachable): void
+    {
+        $section = new ilFormSectionHeaderGUI();
+        if ($this->plugin->getMatrixApi()->checkRestApiUser()) {
+            $section->setTitle(sprintf(
+                $this->plugin->txt("config.section.restApiAuthentication.valid"),
+                $this->plugin->txt("matrix.restApiUser.login.valid")
+            ));
+        } elseif (!$serverReachable) {
+            $section->setTitle(sprintf(
+                $this->plugin->txt("config.section.restApiAuthentication.invalid"),
+                $this->plugin->txt("matrix.server.unreachable")
+            ));
+        } else {
+            $section->setTitle(sprintf(
+                $this->plugin->txt("config.section.restApiAuthentication.invalid"),
+                $this->plugin->txt("matrix.restApiUser.login.invalid")
+            ));
+        }
+        $this->addItem($section);
+
+        $matrixRestApiUserUsername = new ilTextInputGUI(
+            $this->plugin->txt("config.restApiUser.username.title"),
+            "matrixRestApiUserUsername"
         );
-        $chatHistoryLoadLimit->setRequired(true);
-        $chatHistoryLoadLimit->setInfo($this->plugin->txt("config.loadLimit.history.info"));
+        $matrixRestApiUserUsername->setRequired(true);
+        $matrixRestApiUserUsername->setInfo($this->plugin->txt("config.restApiUser.username.info"));
+        $this->addItem($matrixRestApiUserUsername);
+
+        $matrixRestApiUserPassword = new ilPasswordInputGUI(
+            $this->plugin->txt("config.restApiUser.password.title"),
+            "matrixRestApiUserPassword"
+        );
+        $matrixRestApiUserPassword->setInfo($this->plugin->txt("config.restApiUser.password.info"));
+        $matrixRestApiUserPassword->setSkipSyntaxCheck(true);
+        $matrixRestApiUserPassword->setRetype(false);
+        $this->addItem($matrixRestApiUserPassword);
+
+        $matrixRestApiUserRemoveRateLimit = new ilCheckboxInputGUI(
+            $this->plugin->txt("config.removeRateLimit"),
+            "matrixRestApiUserRemoveRateLimit"
+        );
+        $matrixRestApiUserRemoveRateLimit->setInfo($this->plugin->txt("config.removeRateLimit.info"));
+        $this->addItem($matrixRestApiUserRemoveRateLimit);
+    }
+
+    protected function addExternalUserSection(array $allowedCharacters): void
+    {
+        $section = new ilFormSectionHeaderGUI();
+        $section->setTitle($this->plugin->txt("config.section.user.external"));
+        $this->addItem($section);
 
         $usernameScheme = new ilTextInputGUI(
-            $this->plugin->txt("config.usernameScheme.title"),
-            "usernameScheme"
+            $this->plugin->txt("config.usernameScheme.external"),
+            "externalUserScheme"
         );
         $usernameScheme->setRequired(true);
-
-        $allowedCharacters = array_map(static function ($char) {
-            return "<span style='color: blue; font-weight: bold'>$char</span>";
-        }, ["a-z", "0-9", "=", "_", "-", ".", "/", "'"]);
 
         $usernameScheme->setInfo(sprintf(
             $this->plugin->txt("config.usernameScheme.info"),
             implode(", ", $allowedCharacters),
-            "- " . implode("<br>- ", array_map(static function ($variable) : string {
+            "- " . implode("<br>- ", array_map(static function ($variable): string {
                 return "<span>{</span>$variable<span>}</span>";
             }, array_keys($this->plugin->getUsernameSchemeVariables())))
         ));
-
-        $serverReachable = $this->plugin->matrixApi->general->serverReachable();
-        $serverSection = new ilFormSectionHeaderGUI();
-        if ($this->plugin->matrixApi->general->serverReachable()) {
-            $serverSection->setTitle(sprintf(
-                $this->plugin->txt("config.section.server.reachable"),
-                $this->plugin->txt("matrix.server.reachable")
-            ));
-        } else {
-            $serverSection->setTitle(sprintf(
-                $this->plugin->txt("config.section.server.unreachable"),
-                $this->plugin->txt("matrix.server.unreachable")
-            ));
-        }
-
-        $adminAuthenticationSection = new ilFormSectionHeaderGUI();
-        if ($this->plugin->matrixApi->admin->checkAdminUser()) {
-            $adminAuthenticationSection->setTitle(sprintf(
-                $this->plugin->txt("config.section.adminAuthentication.valid"),
-                $this->plugin->txt("matrix.admin.login.valid")
-            ));
-        } else {
-            if (!$serverReachable) {
-                $adminAuthenticationSection->setTitle(sprintf(
-                    $this->plugin->txt("config.section.adminAuthentication.invalid"),
-                    $this->plugin->txt("matrix.server.unreachable")
-                ));
-            } else {
-                $adminAuthenticationSection->setTitle(sprintf(
-                    $this->plugin->txt("config.section.adminAuthentication.invalid"),
-                    $this->plugin->txt("matrix.admin.login.invalid")
-                ));
-            }
-        }
-
-        $chatSection = new ilFormSectionHeaderGUI();
-        $chatSection->setTitle($this->plugin->txt("config.section.chat"));
-
-        $userSection = new ilFormSectionHeaderGUI();
-        $userSection->setTitle($this->plugin->txt("config.section.user"));
-
-        $this->addItem($serverSection);
-        $this->addItem($matrixServerUrl);
-        $this->addItem($sharedSecret);
-
-        $this->addItem($adminAuthenticationSection);
-        $this->addItem($matrixAdminUsername);
-        $this->addItem($matrixAdminPassword);
-
-        $this->addItem($chatSection);
-        $this->addItem($chatInitialLoadLimit);
-        $this->addItem($chatHistoryLoadLimit);
-
-        $this->addItem($userSection);
         $this->addItem($usernameScheme);
-        $this->addCommandButton("saveSettings", $this->lng->txt("save"));
+
+        $accountOptions = new ilCheckboxGroupInputGUI(
+            $this->plugin->txt("config.accountOptions.title"),
+            "externalUserOptions"
+        );
+
+        $accountOptions->addOption(new ilCheckboxOption(
+            $this->plugin->txt("config.accountOptions.createOnConfiguredHomeserver"),
+            self::CREATE_ON_CONFIGURED_HOMESERVER
+        ));
+        $accountOptions->addOption(new ilCheckboxOption(
+            $this->plugin->txt("config.accountOptions.specifyOtherMatrixAccount"),
+            self::SPECIFY_OTHER_MATRIX_ACCOUNT
+        ));
+
+        $this->addItem($accountOptions);
+    }
+
+    protected function addLocalUserSection(array $allowedCharacters): void
+    {
+        $section = new ilFormSectionHeaderGUI();
+        $section->setTitle($this->plugin->txt("config.section.user.local"));
+        $this->addItem($section);
+
+        $usernameScheme = new ilTextInputGUI(
+            $this->plugin->txt("config.usernameScheme.local"),
+            "localUserScheme"
+        );
+        $usernameScheme->setRequired(true);
+
+        $usernameScheme->setInfo(sprintf(
+            $this->plugin->txt("config.usernameScheme.info"),
+            implode(", ", $allowedCharacters),
+            "- " . implode("<br>- ", array_map(static function ($variable): string {
+                return "<span>{</span>$variable<span>}</span>";
+            }, array_keys($this->plugin->getUsernameSchemeVariables())))
+        ));
+        $this->addItem($usernameScheme);
+
+        $accountOptions = new ilCheckboxGroupInputGUI(
+            $this->plugin->txt("config.accountOptions.title"),
+            "localUserOptions"
+        );
+
+        $accountOptions->addOption(new ilCheckboxOption(
+            $this->plugin->txt("config.accountOptions.createOnConfiguredHomeserver"),
+            self::CREATE_ON_CONFIGURED_HOMESERVER
+        ));
+        $accountOptions->addOption(new ilCheckboxOption(
+            $this->plugin->txt("config.accountOptions.specifyOtherMatrixAccount"),
+            self::SPECIFY_OTHER_MATRIX_ACCOUNT
+        ));
+
+        $this->addItem($accountOptions);
+    }
+
+    protected function addRoomSection(): void
+    {
+        $section = new ilFormSectionHeaderGUI();
+        $section->setTitle($this->plugin->txt("config.section.room"));
+        $this->addItem($section);
+
+        $roomPrefix = new ilTextInputGUI(
+            $this->plugin->txt("config.room.prefix"),
+            "roomPrefix"
+        );
+        $roomPrefix->setInfo(sprintf(
+            $this->plugin->txt("config.room.prefix.info"),
+            "- " . implode("<br>- ", array_map(static function ($variable): string {
+                return "<span>{</span>$variable<span>}</span>";
+            }, array_keys($this->plugin->getRoomSchemeVariables())))
+        ));
+        $this->addItem($roomPrefix);
+
+        $spaceName = new ilTextInputGUI(
+            $this->plugin->txt("config.space.name"),
+            "matrixSpaceName"
+        );
+        $spaceName->setInfo($this->plugin->txt("config.space.name.info"));
+        $this->addItem($spaceName);
+        $matrixSpaceId = new ilTextInputGUI(
+            $this->plugin->txt("config.space.id"),
+            "matrixSpaceId"
+        );
+        $matrixSpaceId->setInfo($this->plugin->txt("config.space.id.info"));
+
+        $matrixSpaceId->setDisabled(true);
+        $this->addItem($matrixSpaceId);
+
+        $enableRoomEncryption = new ilCheckboxInputGUI(
+            $this->plugin->txt("config.room.encryption.enable.title"),
+            "enableRoomEncryption"
+        );
+        $enableRoomEncryption->setInfo($this->plugin->txt("config.room.encryption.enable.info"));
+        $this->addItem($enableRoomEncryption);
+
+        $modifyParticipantPowerLevel = new ilCheckboxInputGUI(
+            $this->plugin->txt("config.room.powerLevel.modify.title"),
+            "modifyParticipantPowerLevel"
+        );
+        $modifyParticipantPowerLevel->setInfo($this->plugin->txt("config.room.powerLevel.modify.info"));
+        $this->addItem($modifyParticipantPowerLevel);
+
+        $adminPowerLevel = new ilNumberInputGUI(
+            $this->lng->txt("il_crs_admin") . " | " . $this->lng->txt("il_grp_admin"),
+            "adminPowerLevel"
+        );
+        $modifyParticipantPowerLevel->addSubItem($adminPowerLevel);
+
+        $tutorPowerLevel = new ilNumberInputGUI(
+            $this->lng->txt("il_crs_tutor"),
+            "tutorPowerLevel"
+        );
+        $modifyParticipantPowerLevel->addSubItem($tutorPowerLevel);
+
+        $memberPowerLevel = new ilNumberInputGUI(
+            $this->lng->txt("il_crs_member") . " | " . $this->lng->txt("il_grp_member"),
+            "memberPowerLevel"
+        );
+        $modifyParticipantPowerLevel->addSubItem($memberPowerLevel);
     }
 }

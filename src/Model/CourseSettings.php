@@ -1,6 +1,5 @@
 <?php
 
-declare(strict_types=1);
 /**
  * This file is part of ILIAS, a powerful learning management system
  * published by ILIAS open source e-Learning e.V.
@@ -14,73 +13,35 @@ declare(strict_types=1);
  * https://github.com/ILIAS-eLearning
  *********************************************************************/
 
-namespace ILIAS\Plugin\MatrixChatClient\Model;
+declare(strict_types=1);
 
-use ilMatrixChatClientPlugin;
+namespace ILIAS\Plugin\MatrixChat\Model;
 
-/**
- * Class CourseSettings
- *
- * @package ILIAS\Plugin\MatrixChatClient\Model
- * @author  Marvin Beym <mbeym@databay.de>
- */
 class CourseSettings
 {
-    /**
-     * @var int
-     */
-    private $courseId;
-    /**
-     * @var bool
-     */
-    private $chatIntegrationEnabled = false;
-
-    /**
-     * @var ilMatrixChatClientPlugin
-     */
-    private $plugin;
-    /**
-     * @var MatrixRoom|null
-     */
-    private $matrixRoom;
+    private int $courseId;
+    private ?MatrixRoom $matrixRoom = null;
+    private ?string $matrixRoomId = null;
 
     public function __construct(int $courseId, ?string $matrixRoomId = null)
     {
         $this->courseId = $courseId;
-
-        $this->plugin = ilMatrixChatClientPlugin::getInstance();
-        if ($matrixRoomId) {
-            $this->matrixRoom = $this->plugin->matrixApi->admin->getRoom($matrixRoomId);
-        }
+        $this->matrixRoomId = $matrixRoomId;
     }
 
-    /**
-     * @return int
-     */
-    public function getCourseId() : int
+    public function getCourseId(): int
     {
         return $this->courseId;
     }
 
-    public function isChatIntegrationEnabled() : bool
+    public function getMatrixRoomId(): ?string
     {
-        return $this->chatIntegrationEnabled;
+        return $this->matrixRoomId;
     }
 
-    public function setChatIntegrationEnabled(bool $chatIntegrationEnabled) : self
+    public function setMatrixRoomId(?string $matrixRoomId): CourseSettings
     {
-        $this->chatIntegrationEnabled = $chatIntegrationEnabled;
-        return $this;
-    }
-
-    public function getMatrixRoom() : ?MatrixRoom
-    {
-        return $this->matrixRoom;
-    }
-
-    public function setMatrixRoom(?MatrixRoom $matrixRoom) : CourseSettings
-    {
-        $this->matrixRoom = $matrixRoom;
+        $this->matrixRoomId = $matrixRoomId;
         return $this;
     }
 }

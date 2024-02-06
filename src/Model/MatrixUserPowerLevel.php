@@ -15,27 +15,26 @@
 
 declare(strict_types=1);
 
-namespace ILIAS\Plugin\MatrixChat\Api;
+namespace ILIAS\Plugin\MatrixChat\Model;
 
-use Exception;
-
-class MatrixApiException extends Exception
+class MatrixUserPowerLevel
 {
-    private string $errorCode;
+    private string $matrixUserId;
+    private int $powerLevel;
 
-    public function __construct(string $errorCode, string $errorMessage, int $code = 0)
+    public function __construct(string $matrixUserId, int $powerLevel)
     {
-        parent::__construct($errorMessage, $code);
-        $this->setErrorCode($errorCode);
+        $this->matrixUserId = $matrixUserId;
+        $this->powerLevel = $powerLevel;
     }
 
-    private function setErrorCode(string $errorCode): void
+    public function getMatrixUserId(): string
     {
-        $this->errorCode = $errorCode;
+        return $this->matrixUserId;
     }
 
-    public function getErrorCode(): string
+    public function getPowerLevel(): int
     {
-        return $this->errorCode;
+        return $this->powerLevel;
     }
 }
