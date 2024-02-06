@@ -30,50 +30,20 @@ use ILIAS\Refinery\Factory;
 
 /**
  * @ilCtrl_isCalledBy  ilMatrixChatUIHookGUI: ilUIPluginRouterGUI
- * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilObjCourseGUI
- * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilCourseRegistrationGUI, ilCourseObjectivesGUI
- * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilObjCourseGroupingGUI, ilInfoScreenGUI, ilLearningProgressGUI,
- *                     ilPermissionGUI
- * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilRepositorySearchGUI, ilConditionHandlerGUI
- * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilCourseContentGUI, ilPublicUserProfileGUI, ilMemberExportGUI
- * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilObjectCustomUserFieldsGUI, ilMemberAgreementGUI,
- *                     ilSessionOverviewGUI
- * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilColumnGUI, ilContainerPageGUI
- * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilObjectCopyGUI, ilObjectContentStyleSettingsGUI
- * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilCourseParticipantsGroupsGUI, ilExportGUI,
- *                     ilCommonActionDispatcherGUI
- * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilDidacticTemplateGUI, ilCertificateGUI, ilObjectServiceSettingsGUI
- * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilContainerStartObjectsGUI, ilContainerStartObjectsPageGUI
- * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilMailMemberSearchGUI, ilBadgeManagementGUI
- * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilLOPageGUI, ilObjectMetaDataGUI, ilNewsTimelineGUI,
- *                     ilContainerNewsSettingsGUI
- * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilCourseMembershipGUI, ilPropertyFormGUI, ilContainerSkillGUI,
- *                     ilCalendarPresentationGUI
- * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilMemberExportSettingsGUI
- * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilLTIProviderObjectSettingGUI, ilObjectTranslationGUI,
- *                     ilBookingGatewayGUI, ilRepUtilGUI
- * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilObjGroupGUI
- * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilGroupRegistrationGUI, ilPermissionGUI, ilInfoScreenGUI,
- *                     ilLearningProgressGUI
- * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilPublicUserProfileGUI, ilObjCourseGroupingGUI, ilObjStyleSheetGUI
- * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilCourseContentGUI, ilColumnGUI, ilContainerPageGUI,
- *                     ilObjectCopyGUI
- * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilObjectCustomUserFieldsGUI, ilMemberAgreementGUI, ilExportGUI,
- *                     ilMemberExportGUI
- * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilCommonActionDispatcherGUI, ilObjectServiceSettingsGUI,
- *                     ilSessionOverviewGUI
- * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilGroupMembershipGUI, ilBadgeManagementGUI, ilMailMemberSearchGUI,
- *                     ilNewsTimelineGUI, ilContainerNewsSettingsGUI
- * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilContainerSkillGUI, ilCalendarPresentationGUI
- * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilLTIProviderObjectSettingGUI
- * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilObjectMetaDataGUI, ilObjectTranslationGUI, ilPropertyFormGUI
  * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilPersonalSettingsGUI
  * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilMailOptionsGUI
+ * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilObjGroupGUI
+ * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilGroupMembershipGUI
+ * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilObjectMetaDataGUI
+ * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilExportGUI
+ * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilObjCourseGroupingGUI
+ * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilObjectTranslationGUI
  * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilObjFileUploadHandlerGUI
- * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilFormPropertyDispatchGUI
- * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilFormPropertyDispatchGUI
- * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilObjectMetaDataGUI, ilAdvancedMDSettingsGUI, ilPropertyFormGUI,
- *                     ilTaxMDGUI, ilObjTaxonomyGUI
+ * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilObjCourseGUI
+ * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilCourseMembershipGUI
+ * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilConditionHandlerGUI
+ * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilContainerStartObjectsGUI
+ * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilCertificateGUI
  */
 class ilMatrixChatUIHookGUI extends ilUIHookPluginGUI
 {
