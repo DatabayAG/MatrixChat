@@ -125,7 +125,7 @@ config.space.status.disconnected#:#Space not Connected/Setup
 matrix.space.creation.failure#:#An error occurred while trying to create MatrixSpace.
 matrix.space.notFound#:#No Matrix-Space could be found to which the Matrix-Room can be added. Creation of room not possible.
 
-matrix.room.notYetConfigured#:#No Matrix-Room has been configured for this %s yet. <br>Click on the button bellow to go to the chat settings and create one. <br><br><a href="%s">%s</a>
+matrix.room.notYetConfigured#:#No Matrix-Room has been configured for this %s, yet. <br>Click on the button bellow to go to the chat settings and create a room. <br><br><a href="%s">%s</a>
 matrix.room.delete.purge#:#Purge
 matrix.room.delete.purge.info#:#Should the room be deleted with <span style="font-weight: bolder">Purge</span>?
 matrix.room.delete.block#:#Block
