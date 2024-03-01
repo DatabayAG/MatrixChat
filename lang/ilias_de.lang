@@ -126,6 +126,7 @@ config.space.status.disconnected#:#Space nicht Verbunden/Eingerichtet
 matrix.space.creation.failure#:#Beim erstellen des Spaces ist ein Fehler aufgetreten.
 matrix.space.notFound#:#Es konnte kein Space gefunden werden, zu dem der Matrix-Raum hinzugefügt werden kann. Erstellen des Raumes nicht möglich.
 
+matrix.room.notYetConfigured#:#Für diesen %s wurde noch kein Matrix-Raum konfiguriert. <br>Klicken Sie auf den Link unten, um zu den Chat-Einstellungen zu gelangen und einen zu erstellen. <br><br><a href="%s">%s</a>
 matrix.user.name#:#Matrix-Benutzername
 matrix.user.name.info#:#Nicht editierbar. Vordefiniert durch Server.
 matrix.user.account#:#Matrix-Account

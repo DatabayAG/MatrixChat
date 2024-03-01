@@ -134,6 +134,17 @@ class ChatController extends BaseController
             $room = $this->matrixApi->getRoom($matrixRoomId);
         }
 
+        if (!$matrixRoomId && $this->checkPermissionOnObject("write", false)) {
+            $this->uiUtil->sendInfo(sprintf(
+                $this->plugin->txt("matrix.room.notYetConfigured"),
+                $this->lng->txt(ilObject::_lookupType($this->refId)),
+                $this->getCommandLink(self::CMD_SHOW_CHAT_SETTINGS, [
+                    "ref_id" => $this->courseSettings->getCourseId()
+                ]),
+                $this->plugin->txt("matrix.chat.settings")
+            ), true);
+        }
+
         /** @var LocalUserConfigController $localUserConfigController */
         $localUserConfigController = $this->controllerHandler->getController(LocalUserConfigController::class);
 
