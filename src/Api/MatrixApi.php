@@ -302,29 +302,29 @@ class MatrixApi
             return false;
         }
     }
-/*
-    public function addUserToRoom(MatrixUser $matrixUser, MatrixRoom $matrixRoom): bool
-    {
-        try {
-            $response = $this->sendRequest(
-                "/_synapse/admin/v1/join/{$matrixRoom->getId()}",
-                true,
-                "POST",
-                [
-                    "user_id" => $matrixUser->getId(),
-                ],
-            );
-        } catch (MatrixApiException $ex) {
-            //Todo: If admin user is not in room, he can't invite himself.
-            //Todo: Find any user in the room. Login as that user (https://matrix-org.github.io/synapse/latest/admin_api/user_admin_api.html#login-as-a-user)
-            //Todo: Then invite the admin user using that user.
-            //Todo: Then make the admin user an admin using: https://matrix-org.github.io/synapse/latest/admin_api/rooms.html#make-room-admin-api
-            return false;
-        }
+    /*
+        public function addUserToRoom(MatrixUser $matrixUser, MatrixRoom $matrixRoom): bool
+        {
+            try {
+                $response = $this->sendRequest(
+                    "/_synapse/admin/v1/join/{$matrixRoom->getId()}",
+                    true,
+                    "POST",
+                    [
+                        "user_id" => $matrixUser->getId(),
+                    ],
+                );
+            } catch (MatrixApiException $ex) {
+                //Todo: If admin user is not in room, he can't invite himself.
+                //Todo: Find any user in the room. Login as that user (https://matrix-org.github.io/synapse/latest/admin_api/user_admin_api.html#login-as-a-user)
+                //Todo: Then invite the admin user using that user.
+                //Todo: Then make the admin user an admin using: https://matrix-org.github.io/synapse/latest/admin_api/rooms.html#make-room-admin-api
+                return false;
+            }
 
-        return true;
-    }
-*/
+            return true;
+        }
+    */
     public function userExists(string $matrixUserId): bool
     {
         try {
