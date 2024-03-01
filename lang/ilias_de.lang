@@ -127,11 +127,11 @@ config.space.status.disconnected#:#Space nicht Verbunden/Eingerichtet
 matrix.space.creation.failure#:#Beim erstellen des Spaces ist ein Fehler aufgetreten.
 matrix.space.notFound#:#Es konnte kein Space gefunden werden, zu dem der Matrix-Raum hinzugefügt werden kann. Erstellen des Raumes nicht möglich.
 
-matrix.room.notYetConfigured#:#Für diesen %s wurde noch kein Matrix-Raum konfiguriert. <br>Klicken Sie auf den Link unten, um zu den Chat-Einstellungen zu gelangen und einen zu erstellen. <br><br><a href="%s">%s</a>
+matrix.room.notYetConfigured#:#Für diesen %s wurde noch kein Matrix-Raum konfiguriert. <br>Klicken Sie auf den Link unten, um zu den Chat-Einstellungen zu gelangen und einen Raum zu erstellen. <br><br><a href="%s">%s</a>
 matrix.room.delete.purge#:#Bereinigen
-matrix.room.delete.purge.info#:#Soll die Löschung des Raumes mit <span style="font-weight: bolder">Bereinigen</span> ausgeführt werden?
+matrix.room.delete.purge.info#:#Soll das Löschen des Raums mit <span style="font-weight: bolder">Bereinigen</span> ausgeführt werden?
 matrix.room.delete.block#:#Blockieren
-matrix.room.delete.block.info#:#Soll die Löschung des Raumes mit <span style="font-weight: bolder">Blockieren</span> ausgeführt werden?
+matrix.room.delete.block.info#:#Soll das Löschen des Raums mit <span style="font-weight: bolder">Blockieren</span> ausgeführt werden?
 
 
 matrix.user.name#:#Matrix-Benutzername
