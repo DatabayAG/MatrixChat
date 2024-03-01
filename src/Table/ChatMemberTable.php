@@ -27,6 +27,7 @@ use ILIAS\UI\Renderer;
 use ilLegacyFormElementsUtil;
 use ilMatrixChatPlugin;
 use ilMatrixChatUIHookGUI;
+use ilObject;
 use ilObjRole;
 use ilRbacReview;
 use ilSelectInputGUI;
@@ -84,10 +85,12 @@ class ChatMemberTable extends ilTable2GUI
         ]);
 
         $this->setSelectAllCheckbox("userId");
-        $this->addMultiCommand(
-            ChatController::getCommand(ChatController::CMD_INVITE_SELECTED_PARTICIPANTS),
-            $this->plugin->txt("matrix.chat.invite")
-        );
+        if (!ilObject::lookupOfflineStatus(ilObject::_lookupObjId($this->refId))) {
+            $this->addMultiCommand(
+                ChatController::getCommand(ChatController::CMD_INVITE_SELECTED_PARTICIPANTS),
+                $this->plugin->txt("matrix.chat.invite")
+            );
+        }
 
         $this->setSelectAllCheckbox("userId");
         $this->initFilter();
@@ -107,6 +110,7 @@ class ChatMemberTable extends ilTable2GUI
     {
         $tableData = [];
 
+        $objectOffline = ilObject::lookupOfflineStatus(ilObject::_lookupObjId($this->refId));
         foreach ($this->filterData($chatMembers) as $chatMember) {
             $inviteButton = null;
             if (in_array(
@@ -149,6 +153,10 @@ class ChatMemberTable extends ilTable2GUI
                 $inviteText = "<span class='inviteButton-wrapper'>{$this->uiRenderer->render($inviteButton)}</span>";
             } elseif (!$chatMember->getMatrixUserId()) {
                 $inviteText = $this->plugin->txt("matrix.chat.invite.notPossible");
+            }
+
+            if ($objectOffline) {
+                $inviteText = $this->plugin->txt("matrix.chat.invite.notPossible.objectOffline");
             }
 
             $tableData[] = [

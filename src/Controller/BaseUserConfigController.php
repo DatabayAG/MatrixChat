@@ -130,6 +130,11 @@ abstract class BaseUserConfigController extends BaseController
                 continue;
             }
 
+            if (ilObject::lookupOfflineStatus(ilObject::_lookupObjId($userRoomAddQueue->getRefId()))) {
+                //Don't process queue entries for objects that are offline
+                continue;
+            }
+
             $courseSettings = $this->courseSettingsRepo->read($userRoomAddQueue->getRefId());
             $participants = ilParticipants::getInstance($userRoomAddQueue->getRefId());
 

@@ -218,28 +218,37 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
         if (!in_array($a_event, ["addParticipant", "deleteParticipant"], true)) {
             return;
         }
+
         $matrixApi = $this->getMatrixApi();
 
+        $objectOffline = false;
         $objId = $a_parameter["obj_id"];
         $user = new ilObjUser($a_parameter["usr_id"]);
         if ($a_event === "addParticipant") {
             $roleId = $a_parameter["role_id"];
+
+            $objectOffline = ilObject::lookupOfflineStatus($objId);
         }
 
         $userConfig = (new UserConfig($user))->load();
 
+        $matrixUser = null;
         $addToQueue = false;
 
-        $matrixUser = null;
-        if (!$userConfig->getMatrixUserId()) {
-            $addToQueue = true;
-        } else {
-            $matrixUser = $this->getMatrixApi()->getUser($userConfig->getMatrixUserId());
-
-            if (!$matrixUser) {
+        if (!$objectOffline) {
+            if (!$userConfig->getMatrixUserId()) {
                 $addToQueue = true;
+            } else {
+                $matrixUser = $this->getMatrixApi()->getUser($userConfig->getMatrixUserId());
+
+                if (!$matrixUser) {
+                    $addToQueue = true;
+                }
             }
+        } else {
+            $addToQueue = true;
         }
+
 
         /** @var array<int, CourseSettings> $courseSettingsCache */
         $courseSettingsCache = [];
@@ -250,7 +259,7 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
         /** @var array<string, MatrixSpace> $spaceCache */
         $spaceCache = [];
 
-        foreach (ilObjCourse::_getAllReferences($objId) as $objRefId) {
+        foreach (ilObject::_getAllReferences($objId) as $objRefId) {
             $objRefId = (int) $objRefId;
 
             if (!array_key_exists($objRefId, $courseSettingsCache)) {

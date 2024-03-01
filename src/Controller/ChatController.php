@@ -251,6 +251,11 @@ class ChatController extends BaseController
         $this->checkPermissionOnObject("write");
         $this->checkChatActivatedForObject();
 
+        if (ilObject::lookupOfflineStatus(ilObject::_lookupObjId($this->refId))) {
+            $this->uiUtil->sendFailure($this->plugin->txt("matrix.chat.invite.notPossible.objectOffline"), true);
+            $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
+        }
+
         $userIds = $this->httpWrapper->post()->retrieve(
             "userId",
             $this->refinery->byTrying([
@@ -366,6 +371,11 @@ class ChatController extends BaseController
 
         if (!ilParticipants::_isParticipant($this->refId, $userId)) {
             $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.account.invite.failed.userNotMember"), true);
+            $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
+        }
+
+        if (ilObject::lookupOfflineStatus(ilObject::_lookupObjId($this->refId))) {
+            $this->uiUtil->sendFailure($this->plugin->txt("matrix.chat.invite.notPossible.objectOffline"), true);
             $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
         }
 
@@ -539,42 +549,45 @@ class ChatController extends BaseController
         if ($room) {
             $participants = ilParticipants::getInstance($courseSettings->getCourseId());
             $matrixUserPowerLevelMap = [];
-            foreach ($participants->getParticipants() as $participantId) {
-                $participantId = (int) $participantId;
-                $userConfig = (new UserConfig(new ilObjUser($participantId)))->load();
 
-                if (!$userConfig->getMatrixUserId()) {
-                    continue;
-                }
+            if (!ilObject::lookupOfflineStatus(ilObject::_lookupObjId($courseSettings->getCourseId()))) {
+                foreach ($participants->getParticipants() as $participantId) {
+                    $participantId = (int) $participantId;
+                    $userConfig = (new UserConfig(new ilObjUser($participantId)))->load();
 
-                $matrixUser = $this->matrixApi->getUser($userConfig->getMatrixUserId());
+                    if (!$userConfig->getMatrixUserId()) {
+                        continue;
+                    }
 
-                if (!$matrixUser) {
-                    continue;
-                }
+                    $matrixUser = $this->matrixApi->getUser($userConfig->getMatrixUserId());
 
-                if (!$this->matrixApi->inviteUserToRoom($matrixUser, $space)) {
-                    $this->logger->warning(sprintf(
-                        "Inviting matrix-user '%s' to space '%s' failed.",
+                    if (!$matrixUser) {
+                        continue;
+                    }
+
+                    if (!$this->matrixApi->inviteUserToRoom($matrixUser, $space)) {
+                        $this->logger->warning(sprintf(
+                            "Inviting matrix-user '%s' to space '%s' failed.",
+                            $matrixUser->getId(),
+                            $space->getId()
+                        ));
+                    }
+                    if (!$this->matrixApi->inviteUserToRoom($matrixUser, $room, $this->plugin->determinePowerLevelOfParticipant($participants, $participantId))) {
+                        $this->logger->warning(sprintf(
+                            "Inviting matrix-user '%s' to room '%s' failed.",
+                            $matrixUser->getId(),
+                            $room->getId()
+                        ));
+                    }
+
+                    $matrixUserPowerLevelMap[] = new MatrixUserPowerLevel(
                         $matrixUser->getId(),
-                        $space->getId()
-                    ));
-                }
-                if (!$this->matrixApi->inviteUserToRoom($matrixUser, $room, $this->plugin->determinePowerLevelOfParticipant($participants, $participantId))) {
-                    $this->logger->warning(sprintf(
-                        "Inviting matrix-user '%s' to room '%s' failed.",
-                        $matrixUser->getId(),
-                        $room->getId()
-                    ));
+                        $this->plugin->determinePowerLevelOfParticipant($participants, $participantId)
+                    );
                 }
 
-                $matrixUserPowerLevelMap[] = new MatrixUserPowerLevel(
-                    $matrixUser->getId(),
-                    $this->plugin->determinePowerLevelOfParticipant($participants, $participantId)
-                );
+                $this->matrixApi->setUserPowerLevelOnRoom($room, $matrixUserPowerLevelMap);
             }
-
-            $this->matrixApi->setUserPowerLevelOnRoom($room, $matrixUserPowerLevelMap);
         }
         try {
             $this->courseSettingsRepo->save($courseSettings);

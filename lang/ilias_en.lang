@@ -111,6 +111,7 @@ matrix.chat.settings#:#Matrix Chat Settings
 matrix.chat.members#:#Members
 matrix.chat.invite#:#Invite
 matrix.chat.invite.notPossible#:#Invite not possible
+matrix.chat.invite.notPossible.objectOffline#:#Invite not possible <br>Object offline
 matrix.chat.status#:#Chat-Status
 matrix.chat.members#:#Chat Participants
 

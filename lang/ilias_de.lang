@@ -112,6 +112,7 @@ matrix.chat.settings#:#Matrix Chat Einstellungen
 matrix.chat.members#:#Mitglieder
 matrix.chat.invite#:#Einladen
 matrix.chat.invite.notPossible#:#Einladen nicht möglich
+matrix.chat.invite.notPossible.objectOffline#:#Einladen nicht möglich. <br>Objekt Offline
 matrix.chat.status#:#Chat-Status
 matrix.chat.members#:#Chatteilnehmer
 
