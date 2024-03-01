@@ -48,8 +48,7 @@ config.supportedObjectTypes.title#:#Unterstützte Objekttypen
 config.supportedObjectTypes.info#:#Bitte wählen Sie die Objekttypen aus, von denen der Matrix-Chat unterstützt werden soll
 
 config.sharedSecret.title#:#Gemeinsames Geheimnis
-config.sharedSecret.info#:#Bitte geben Sie das gemeinsame Geheimnis an, das für die Registrierung neuer Benutzer auf dem konfigurierten Homeserver erforderlich ist. <br>Diesen Wert finden Sie in der 'homeserver.yaml' des Homeservers unter 'registration_shared_secret'. <br><br>Aus Sicherheitsgründen wird dieses Feld nach dem Speichern geleert.
-config.sharedSecret.empty#:#Dieses Feld ist erforderlich, wenn es noch nicht gespeichert wurde!
+config.sharedSecret.info#:#Bitte geben Sie das gemeinsame Geheimnis an, das für die Registrierung neuer Benutzer auf dem konfigurierten Homeserver erforderlich ist. <br>Diesen Wert finden Sie in der 'homeserver.yaml' des Homeservers unter 'registration_shared_secret'. <br><br>Aus Sicherheitsgründen wird dieses Feld nach dem Speichern durch Sterne (*) ersetzt.
 
 config.pageDesignerText.title#:#Matrix Chat Seite gestalten
 config.pageDesignerText.info#:#Text wird auf dem Chat-Tab innerhalb von Kursen & Gruppen angezeigt. <br>Aktivieren von TinyMCE-Editor empfohlen.
@@ -57,12 +56,12 @@ config.pageDesignerText.info#:#Text wird auf dem Chat-Tab innerhalb von Kursen &
 config.admin.username.title#:#Benutzername vom Matrix-Server Admin Benutzer
 config.admin.username.info#:#Wird für Administrative-Aufgaben verwendet (z.B. Prüfen von Benutzer-Accounts)
 config.admin.password.title#:#Passwort vom Matrix-Server Admin Benutzer
-config.admin.password.info#:#Passwort Eingabefeld wird aus Sicherheitsgründen nach dem Speichern geleert.
+config.admin.password.info#:#Passwort im Eingabefeld wird nach dem Speichern aus Sicherheitsgründen durch Sterne (*) ersetzt.
 
 config.restApiUser.username.title#:#Benutzername vom Matrix-Server Rest-API Benutzer
 config.restApiUser.username.info#:#Tragen Sie hier den Benutzer-Account ein, der die Chaträume erstellt und verwaltet. Dieser benötigt keine besonderen Privilegien.
 config.restApiUser.password.title#:#Password vom Rest-API Benutzer
-config.restApiUser.password.info#:#Passwort Eingabefeld wird aus Sicherheitsgründen nach dem Speichern geleert.
+config.restApiUser.password.info#:#Passwort im Eingabefeld wird nach dem Speichern aus Sicherheitsgründen durch Sterne (*) ersetzt.
 
 config.removeRateLimit#:#Ratelimit von Benutzer entfernen
 config.removeRateLimit.info#:#Diese Checkbox entfernt beim Speichern des Formulars das Ratelimit des Benutzers. <br>Es wird eine Anfrage an die Matrix-Server API gesendet, das RateLimit für diesen Benutzer zu entfernen. <br>Benötigt funktionierenden "Matrix-Server Admin Benutzer"

@@ -119,6 +119,7 @@ class PluginConfigForm extends ilPropertyFormGUI
         $this->addItem($matrixServerUrl);
 
         $sharedSecret = new ilPasswordInputGUI($this->plugin->txt("config.sharedSecret.title"), "sharedSecret");
+        $sharedSecret->setRequired(true);
         $sharedSecret->setInfo($this->plugin->txt("config.sharedSecret.info"));
         $sharedSecret->setSkipSyntaxCheck(true);
         $sharedSecret->setRetype(false);
@@ -160,6 +161,7 @@ class PluginConfigForm extends ilPropertyFormGUI
             $this->plugin->txt("config.admin.password.title"),
             "matrixAdminPassword"
         );
+        $matrixAdminPassword->setRequired(true);
         $matrixAdminPassword->setInfo($this->plugin->txt("config.admin.password.info"));
         $matrixAdminPassword->setSkipSyntaxCheck(true);
         $matrixAdminPassword->setRetype(false);
@@ -206,6 +208,7 @@ class PluginConfigForm extends ilPropertyFormGUI
             $this->plugin->txt("config.restApiUser.password.title"),
             "matrixRestApiUserPassword"
         );
+        $matrixRestApiUserPassword->setRequired(true);
         $matrixRestApiUserPassword->setInfo($this->plugin->txt("config.restApiUser.password.info"));
         $matrixRestApiUserPassword->setSkipSyntaxCheck(true);
         $matrixRestApiUserPassword->setRetype(false);

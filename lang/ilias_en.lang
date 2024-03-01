@@ -47,8 +47,7 @@ config.supportedObjectTypes.title#:#Supported Object Types
 config.supportedObjectTypes.info#:#Please choose the object types the matrix chat should be supported by
 
 config.sharedSecret.title#:#Shared Secret
-config.sharedSecret.info#:#Please provide the shared secret required for registering new users on the configured homeserver. <br>This value can be found inside the 'homeserver.yaml' of the homeserver under registration_shared_secret'. <br><br>For security reasons, this field will be cleared once saved.
-config.sharedSecret.empty#:#This field is required if it has not been saved yet!
+config.sharedSecret.info#:#Please provide the shared secret required for registering new users on the configured homeserver. <br>This value can be found inside the 'homeserver.yaml' of the homeserver under registration_shared_secret'. <br><br>For security reasons, this field is replaced by asterisks (*) after saving.
 
 config.pageDesignerText.title#:#Design Matrix Chat Page
 config.pageDesignerText.info#:#Text is displayed on the chat tab within courses & groups. <br>Activation of TinyMCE editor recommended.
@@ -56,12 +55,12 @@ config.pageDesignerText.info#:#Text is displayed on the chat tab within courses 
 config.admin.username.title#:#Username of the Matrix-Server Admin User
 config.admin.username.info#:#Will be used to do administrator tasks like checking user accounts.
 config.admin.password.title#:#Password of the Matrix-Server Admin User
-config.admin.password.info#:#Password Input-Field will be cleared for security reasons once saved.
+config.admin.password.info#:#Password in the input field is replaced by asterisks (*) after saving for security reasons.
 
 config.restApiUser.username.title#:#Username of the Matrix-Server  Rest-API User
 config.restApiUser.username.info#:#Enter the user account that creates and manages the chat rooms here. This user does not require any special privileges.
 config.restApiUser.password.title#:#Password of the Matrix-Server Rest-API User
-config.restApiUser.password.info#:#Password Input-Field will be cleared for security reasons once saved.
+config.restApiUser.password.info#:#Password in the input field is replaced by asterisks (*) after saving for security reasons.
 
 config.removeRateLimit#:#Remove Ratelimit of User
 config.removeRateLimit.info#:#The ratelimit of the user will be removed once the form is saved. <br>This sends a request to the Matrix-Server API to remove the ratelimit of this user. <br>Requires functioning "Matrix-Server Admin User"

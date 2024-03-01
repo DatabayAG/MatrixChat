@@ -39,6 +39,8 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
     public const TAB_PLUGIN_SETTINGS = "tab_plugin_settings";
     public const TAB_CHAT_PAGE_DESIGNER = "tab_chat_page_designer";
 
+    public const CLEANED_PASSWORD_VALUE = "************";
+
     protected ilObjUser $user;
     protected ilLogger $logger;
     protected FileUpload $upload;
@@ -81,8 +83,14 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
         if ($form === null) {
             $form = new PluginConfigForm();
 
+            $pluginConfig = $this->plugin->getPluginConfig();
+
             $form->setValuesByArray(
-                $this->plugin->getPluginConfig()->toArray(["matrixAdminPassword", "matrixRestApiUserPassword", "sharedSecret"]),
+                $pluginConfig->toArray(["matrixAdminPassword", "matrixRestApiUserPassword", "sharedSecret"]) + [
+                    "matrixAdminPassword" => $pluginConfig->getMatrixAdminPassword() ? self::CLEANED_PASSWORD_VALUE : "",
+                    "matrixRestApiUserPassword" => $pluginConfig->getMatrixRestApiUserPassword() ? self::CLEANED_PASSWORD_VALUE : "",
+                    "sharedSecret" => $pluginConfig->getSharedSecret() ? self::CLEANED_PASSWORD_VALUE : ""
+                ],
                 true
             );
         }
@@ -105,17 +113,9 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
 
         $sharedSecretValue = $form->getInput("sharedSecret");
 
-        if (!$sharedSecretValue && !$this->plugin->getPluginConfig()->getSharedSecret()) {
-            /** @var ilPasswordInputGUI $sharedSecret */
-            $sharedSecret = $form->getItemByPostVar("sharedSecret");
-            $sharedSecret->setRequired(true);
-            $this->uiUtil->sendFailure($this->lng->txt("form_input_not_valid"), true);
-            $sharedSecret->setAlert($this->plugin->txt("config.sharedSecret.empty"));
-            $this->showSettings($form);
-            return;
+        if ($sharedSecretValue === self::CLEANED_PASSWORD_VALUE) {
+            $sharedSecretValue = $this->plugin->getPluginConfig()->getSharedSecret();
         }
-
-        $sharedSecretValue = $sharedSecretValue ?: $this->plugin->getPluginConfig()->getSharedSecret();
 
         $this->plugin->getPluginConfig()
             ->setMatrixServerUrl(rtrim($form->getInput("matrixServerUrl"), "/"))
@@ -135,12 +135,12 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
             ->setMemberPowerLevel((int) $form->getInput("memberPowerLevel"));
 
         $matrixAdminPassword = $form->getInput("matrixAdminPassword");
-        if ($matrixAdminPassword !== "") {
+        if ($matrixAdminPassword !== self::CLEANED_PASSWORD_VALUE) {
             $this->plugin->getPluginConfig()->setMatrixAdminPassword($matrixAdminPassword);
         }
 
         $matrixRestApiUserPassword = $form->getInput("matrixRestApiUserPassword");
-        if ($matrixRestApiUserPassword !== "") {
+        if ($matrixRestApiUserPassword !== self::CLEANED_PASSWORD_VALUE) {
             $this->plugin->getPluginConfig()->setMatrixRestApiUserPassword($matrixRestApiUserPassword);
         }
 
