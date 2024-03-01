@@ -228,6 +228,17 @@ class PluginConfigForm extends ilPropertyFormGUI
         $section->setTitle($this->plugin->txt("config.section.user.external"));
         $this->addItem($section);
 
+        $accountOptions = new ilCheckboxGroupInputGUI(
+            $this->plugin->txt("config.accountOptions.title"),
+            "externalUserOptions"
+        );
+
+        $createOnConfiguredHomeserver = new ilCheckboxOption(
+            $this->plugin->txt("config.accountOptions.createOnConfiguredHomeserver"),
+            self::CREATE_ON_CONFIGURED_HOMESERVER
+        );
+        $accountOptions->addOption($createOnConfiguredHomeserver);
+
         $usernameScheme = new ilTextInputGUI(
             $this->plugin->txt("config.usernameScheme.external"),
             "externalUserScheme"
@@ -241,17 +252,8 @@ class PluginConfigForm extends ilPropertyFormGUI
                 return "<span>{</span>$variable<span>}</span>";
             }, array_keys($this->plugin->getUsernameSchemeVariables())))
         ));
-        $this->addItem($usernameScheme);
+        $createOnConfiguredHomeserver->addSubItem($usernameScheme);
 
-        $accountOptions = new ilCheckboxGroupInputGUI(
-            $this->plugin->txt("config.accountOptions.title"),
-            "externalUserOptions"
-        );
-
-        $accountOptions->addOption(new ilCheckboxOption(
-            $this->plugin->txt("config.accountOptions.createOnConfiguredHomeserver"),
-            self::CREATE_ON_CONFIGURED_HOMESERVER
-        ));
         $accountOptions->addOption(new ilCheckboxOption(
             $this->plugin->txt("config.accountOptions.specifyOtherMatrixAccount"),
             self::SPECIFY_OTHER_MATRIX_ACCOUNT
@@ -266,6 +268,17 @@ class PluginConfigForm extends ilPropertyFormGUI
         $section->setTitle($this->plugin->txt("config.section.user.local"));
         $this->addItem($section);
 
+        $accountOptions = new ilCheckboxGroupInputGUI(
+            $this->plugin->txt("config.accountOptions.title"),
+            "localUserOptions"
+        );
+
+        $createOnConfiguredHomeserver = new ilCheckboxOption(
+            $this->plugin->txt("config.accountOptions.createOnConfiguredHomeserver"),
+            self::CREATE_ON_CONFIGURED_HOMESERVER
+        );
+        $accountOptions->addOption($createOnConfiguredHomeserver);
+
         $usernameScheme = new ilTextInputGUI(
             $this->plugin->txt("config.usernameScheme.local"),
             "localUserScheme"
@@ -279,17 +292,8 @@ class PluginConfigForm extends ilPropertyFormGUI
                 return "<span>{</span>$variable<span>}</span>";
             }, array_keys($this->plugin->getUsernameSchemeVariables())))
         ));
-        $this->addItem($usernameScheme);
+        $createOnConfiguredHomeserver->addSubItem($usernameScheme);
 
-        $accountOptions = new ilCheckboxGroupInputGUI(
-            $this->plugin->txt("config.accountOptions.title"),
-            "localUserOptions"
-        );
-
-        $accountOptions->addOption(new ilCheckboxOption(
-            $this->plugin->txt("config.accountOptions.createOnConfiguredHomeserver"),
-            self::CREATE_ON_CONFIGURED_HOMESERVER
-        ));
         $accountOptions->addOption(new ilCheckboxOption(
             $this->plugin->txt("config.accountOptions.specifyOtherMatrixAccount"),
             self::SPECIFY_OTHER_MATRIX_ACCOUNT
