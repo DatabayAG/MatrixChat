@@ -29,6 +29,7 @@ use ilLogger;
 use ilMatrixChatPlugin;
 use ilObject;
 use ilObjUser;
+use ilParticipants;
 use ReflectionClass;
 use Throwable;
 
@@ -111,6 +112,7 @@ class ProcessQueuedInvitesJob extends ilCronJob
 
         /** @var UserRoomAddQueue[] $queuedInvites */
         foreach ($this->queuedInvitesRepo->readAllGroupedByRefId() as $refId => $queuedInvites) {
+            $participants = ilParticipants::getInstance($refId);
             $total += count($queuedInvites);
 
             if (!ilObject::_exists($refId, true)) {
@@ -231,7 +233,7 @@ class ProcessQueuedInvitesJob extends ilCronJob
                     continue;
                 }
 
-                if ($matrixApi->inviteUserToRoom($matrixUser, $room)) {
+                if ($matrixApi->inviteUserToRoom($matrixUser, $room, $this->plugin->determinePowerLevelOfParticipant($participants, $user->getId()))) {
                     $this->logger->info(sprintf(
                         "Invited user '%s' to room '%s' created for object with ref-id '%s'",
                         $matrixUser->getId(),

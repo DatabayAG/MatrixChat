@@ -131,6 +131,7 @@ abstract class BaseUserConfigController extends BaseController
             }
 
             $courseSettings = $this->courseSettingsRepo->read($userRoomAddQueue->getRefId());
+            $participants = ilParticipants::getInstance($userRoomAddQueue->getRefId());
 
             if (!ilParticipants::_isParticipant($userRoomAddQueue->getRefId(), $user->getId())) {
                 $this->logger->warning(sprintf(
@@ -153,7 +154,7 @@ abstract class BaseUserConfigController extends BaseController
                     if (!$this->matrixApi->inviteUserToRoom($matrixUser, $space)) {
                         $this->logger->warning("Inviting matrix-user '{$matrixUser->getId()}' to space '{$space->getId()}' failed");
                     }
-                    if (!$this->matrixApi->inviteUserToRoom($matrixUser, $room)) {
+                    if (!$this->matrixApi->inviteUserToRoom($matrixUser, $room, $this->plugin->determinePowerLevelOfParticipant($participants, $user->getId()))) {
                         $this->logger->warning("Inviting matrix-user '{$matrixUser->getId()}' to room '{$room->getId()}' failed");
                     }
                     $this->ctrl->setParameterByClass(ilRepositoryGUI::class, "ref_id", $courseSettings->getCourseId());

@@ -261,6 +261,8 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
             $matrixRoomId = $courseSettings->getMatrixRoomId();
             $matrixSpaceId = $this->pluginConfig->getMatrixSpaceId();
 
+            $participants = ilParticipants::getInstance($objRefId);
+
             if (!$matrixRoomId) {
                 $this->logger->warning("Unable to continue handling event '$a_event'. No Matrix-Room-ID found in setting of object with ref_id '$objRefId'");
                 continue;
@@ -316,7 +318,7 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
                         ));
                     }
 
-                    if (!$this->getMatrixApi()->inviteUserToRoom($matrixUser, $room)) {
+                    if (!$this->getMatrixApi()->inviteUserToRoom($matrixUser, $room, $this->determinePowerLevelOfParticipant($participants, $user->getId()))) {
                         $this->logger->warning(sprintf(
                             "Inviting matrix-user '%s' to room '%s' failed",
                             $matrixUser->getId(),
@@ -353,6 +355,19 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
                 }
             }
         }
+    }
+
+    public function determinePowerLevelOfParticipant(ilParticipants $participants, int $participantId): int
+    {
+        $pluginConfig = $this->getPluginConfig();
+        $powerLevel = $pluginConfig->isModifyParticipantPowerLevel() ? $pluginConfig->getMemberPowerLevel() : 0;
+        if ($participants->isTutor($participantId)) {
+            $powerLevel = $pluginConfig->isModifyParticipantPowerLevel() ? $pluginConfig->getTutorPowerLevel() : 50;
+        }
+        if ($participants->isAdmin($participantId)) {
+            $powerLevel = $pluginConfig->isModifyParticipantPowerLevel() ? $pluginConfig->getAdminPowerLevel() : 100;
+        }
+        return $powerLevel;
     }
 
     public function getCronJobInstances(): array

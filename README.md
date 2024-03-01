@@ -56,6 +56,21 @@
 4. Select **Plugins** in **Extending ILIAS** inside the **Administration** main menu.
 5. Search for the **MatrixChat** plugin in the list of plugin and choose **Install** from the **Actions** drop-down.
 6. Choose **Activate** from the **Actions** dropdown.
+7. Add the following configuration to your ``homeserver.yaml`` file to guarantee the plugin works as intended  
+   (rc values may be adjusted based on the setup, these are just example values that should work in most scenarios):
+   ```yaml
+    rc_login:
+        address:
+            per_second: 10
+            burst_count: 10
+        account:
+            per_second: 10
+            burst_count: 10
+        failed_attempts:
+            per_second: 10
+            burst_count: 10
+    serve_server_wellknown: true
+    ```
 
 ### Adding User to Course/Group
 

@@ -157,11 +157,12 @@ class ChatController extends BaseController
                         $this->plugin->txt("matrix.user.account.joined"),
                         $matrixUser->getId()
                     ), true);
+                } else {
+                    $this->uiUtil->sendInfo(sprintf(
+                        $this->plugin->txt("matrix.user.account.invited"),
+                        $matrixUser->getId()
+                    ), true);
                 }
-                $this->uiUtil->sendInfo(sprintf(
-                    $this->plugin->txt("matrix.user.account.invited"),
-                    $matrixUser->getId()
-                ), true);
             }
             $toChatSettingsButton = $this->uiFactory->button()->standard(
                 $this->plugin->txt("matrix.user.account.changeMatrixAccountSettings"),
@@ -283,6 +284,8 @@ class ChatController extends BaseController
             $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
         }
 
+        $participants = ilParticipants::getInstance($this->refId);
+
         $inviteFailed = false;
         foreach ($userIds as $userId) {
             if (!ilParticipants::_isParticipant($this->refId, $userId)) {
@@ -315,7 +318,7 @@ class ChatController extends BaseController
                 $this->logger->warning("Inviting user '{$matrixUser->getId()}' to space '{$space->getId()}' failed.");
             }
 
-            if (!$this->matrixApi->inviteUserToRoom($matrixUser, $room)) {
+            if (!$this->matrixApi->inviteUserToRoom($matrixUser, $room, $this->plugin->determinePowerLevelOfParticipant($participants, $user->getId()))) {
                 $inviteFailed = true;
                 $this->logger->warning("Inviting user '{$matrixUser->getId()}' to room '{$room->getId()}' failed.");
             }
@@ -403,12 +406,14 @@ class ChatController extends BaseController
             $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
         }
 
+        $participants = ilParticipants::getInstance($this->refId);
+
         if (!$this->matrixApi->inviteUserToRoom($matrixUser, $space)) {
             $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.account.invite.failed"), true);
             $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
         }
 
-        if (!$this->matrixApi->inviteUserToRoom($matrixUser, $room)) {
+        if (!$this->matrixApi->inviteUserToRoom($matrixUser, $room, $this->plugin->determinePowerLevelOfParticipant($participants, $user->getId()))) {
             $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.account.invite.failed"), true);
             $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
         }
@@ -439,13 +444,27 @@ class ChatController extends BaseController
             if ($room->isMember($userConfig->getMatrixUserId())) {
                 $status = self::USER_STATUS_JOIN;
             } else {
-                $status = $this->matrixApi->getStatusOfUserInRoom($room, $userConfig->getMatrixUserId()) ?: self::USER_STATUS_NO_INVITE;
+                $status = $this->matrixApi->getStatusOfUserInRoom(
+                    $room,
+                    $userConfig->getMatrixUserId()
+                ) ?: self::USER_STATUS_NO_INVITE;
             }
 
-            $userRoomAddQueue = $this->queuedInvitesRepo->read($user->getId(), $this->refId);
-            if ($userRoomAddQueue) {
-                $status = "queue";
+            if (in_array(
+                $status,
+                [
+                    self::USER_STATUS_NO_INVITE,
+                    self::USER_STATUS_LEAVE,
+                ],
+                true
+            )
+            ) {
+                $userRoomAddQueue = $this->queuedInvitesRepo->read($user->getId(), $this->refId);
+                if ($userRoomAddQueue) {
+                    $status = self::USER_STATUS_QUEUE;
+                }
             }
+
 
             $chatMembers[] = new ChatMember(
                 $user->getId(),
@@ -530,7 +549,7 @@ class ChatController extends BaseController
                         $space->getId()
                     ));
                 }
-                if (!$this->matrixApi->inviteUserToRoom($matrixUser, $room)) {
+                if (!$this->matrixApi->inviteUserToRoom($matrixUser, $room, $this->plugin->determinePowerLevelOfParticipant($participants, $participantId))) {
                     $this->logger->warning(sprintf(
                         "Inviting matrix-user '%s' to room '%s' failed.",
                         $matrixUser->getId(),
@@ -540,7 +559,7 @@ class ChatController extends BaseController
 
                 $matrixUserPowerLevelMap[] = new MatrixUserPowerLevel(
                     $matrixUser->getId(),
-                    $this->determinePowerLevelOfParticipant($participants, $participantId)
+                    $this->plugin->determinePowerLevelOfParticipant($participants, $participantId)
                 );
             }
 
@@ -566,19 +585,6 @@ class ChatController extends BaseController
             $roomPrefix = str_replace("{" . $key . "}", $value, $roomPrefix);
         }
         return $roomPrefix . $objTitle;
-    }
-
-    protected function determinePowerLevelOfParticipant(ilParticipants $participants, int $participantId): int
-    {
-        $pluginConfig = $this->plugin->getPluginConfig();
-        $powerLevel = $pluginConfig->isModifyParticipantPowerLevel() ? $pluginConfig->getMemberPowerLevel() : 0;
-        if ($participants->isTutor($participantId)) {
-            $powerLevel = $pluginConfig->isModifyParticipantPowerLevel() ? $pluginConfig->getTutorPowerLevel() : 50;
-        }
-        if ($participants->isAdmin($participantId)) {
-            $powerLevel = $pluginConfig->isModifyParticipantPowerLevel() ? $pluginConfig->getAdminPowerLevel() : 100;
-        }
-        return $powerLevel;
     }
 
     public function showConfirmDeleteRoom(?ConfirmDeleteRoomForm $form = null): void

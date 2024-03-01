@@ -266,9 +266,12 @@ class MatrixApi
         return $response->getResponseDataValue("members");
     }
 
-    public function inviteUserToRoom(MatrixUser $matrixUser, MatrixRoom $matrixRoom): bool
+    public function inviteUserToRoom(MatrixUser $matrixUser, MatrixRoom $matrixRoom, ?int $powerLevel = null): bool
     {
         if ($matrixRoom->isMember($matrixUser)) {
+            if ($powerLevel !== null) {
+                $this->addUserPowerLevelOnRoom($matrixRoom, $matrixUser->getId(), $powerLevel);
+            }
             return true;
         }
         try {
@@ -281,7 +284,13 @@ class MatrixApi
                 ],
                 true
             );
-            return $response->getStatusCode() === 200;
+            $success = $response->getStatusCode() === 200;
+
+            if ($success && $powerLevel !== null) {
+                $this->addUserPowerLevelOnRoom($matrixRoom, $matrixUser->getId(), $powerLevel);
+            }
+
+            return $success;
         } catch (MatrixApiException $ex) {
             $roomType = $matrixRoom instanceof MatrixSpace ? "space" : "room";
 
@@ -293,29 +302,29 @@ class MatrixApi
             return false;
         }
     }
+    /*
+        public function addUserToRoom(MatrixUser $matrixUser, MatrixRoom $matrixRoom): bool
+        {
+            try {
+                $response = $this->sendRequest(
+                    "/_synapse/admin/v1/join/{$matrixRoom->getId()}",
+                    true,
+                    "POST",
+                    [
+                        "user_id" => $matrixUser->getId(),
+                    ],
+                );
+            } catch (MatrixApiException $ex) {
+                //Todo: If admin user is not in room, he can't invite himself.
+                //Todo: Find any user in the room. Login as that user (https://matrix-org.github.io/synapse/latest/admin_api/user_admin_api.html#login-as-a-user)
+                //Todo: Then invite the admin user using that user.
+                //Todo: Then make the admin user an admin using: https://matrix-org.github.io/synapse/latest/admin_api/rooms.html#make-room-admin-api
+                return false;
+            }
 
-    public function addUserToRoom(MatrixUser $matrixUser, MatrixRoom $matrixRoom): bool
-    {
-        try {
-            $response = $this->sendRequest(
-                "/_synapse/admin/v1/join/{$matrixRoom->getId()}",
-                true,
-                "POST",
-                [
-                    "user_id" => $matrixUser->getId(),
-                ],
-            );
-        } catch (MatrixApiException $ex) {
-            //Todo: If admin user is not in room, he can't invite himself.
-            //Todo: Find any user in the room. Login as that user (https://matrix-org.github.io/synapse/latest/admin_api/user_admin_api.html#login-as-a-user)
-            //Todo: Then invite the admin user using that user.
-            //Todo: Then make the admin user an admin using: https://matrix-org.github.io/synapse/latest/admin_api/rooms.html#make-room-admin-api
-            return false;
+            return true;
         }
-
-        return true;
-    }
-
+    */
     public function userExists(string $matrixUserId): bool
     {
         try {
@@ -412,6 +421,9 @@ class MatrixApi
                 ],
                 true
             );
+
+            $this->removeUserPowerLevelOnRoom($room, $matrixUserId);
+
             return true;
         } catch (MatrixApiException $ex) {
             $this->logger->error(sprintf(
@@ -643,6 +655,85 @@ class MatrixApi
     }
 
     /**
+     * @param MatrixRoom $room
+     * @return MatrixUserPowerLevel[]
+     */
+    public function getUserPowerLevelOnRoom(MatrixRoom $room): array
+    {
+        try {
+            $state = $this->getRoomState($room, "m.room.power_levels");
+        } catch (MatrixApiException $ex) {
+            $this->logger->error("Error occurred while trying to request current state of room '{$room->getId()}'");
+            return [];
+        }
+
+        if (!isset($state["users"]) || !is_array($state["users"])) {
+            $state["users"] = [];
+        }
+
+        $matrixUserPowerLevelMap = [];
+        foreach ($state["users"] as $matrixUserId => $powerLevel) {
+            $matrixUserPowerLevelMap[] = new MatrixUserPowerLevel($matrixUserId, $powerLevel);
+        }
+        return $matrixUserPowerLevelMap;
+    }
+
+    public function removeUserPowerLevelOnRoom(MatrixRoom $room, string $matrixUserId): bool
+    {
+        $currentPowerLevelMap = $this->getUserPowerLevelOnRoom($room);
+        if ($currentPowerLevelMap === []) {
+            return true;
+        }
+
+        $newPowerLevelMap = [];
+        foreach ($currentPowerLevelMap as $userPowerLevel) {
+            if ($userPowerLevel->getMatrixUserId() === $matrixUserId) {
+                continue;
+            }
+
+            $newPowerLevelMap[] = $userPowerLevel;
+        }
+
+        if (count($newPowerLevelMap) < count($currentPowerLevelMap)) {
+            return $this->setUserPowerLevelOnRoom($room, $newPowerLevelMap);
+        }
+
+        return true;
+    }
+
+    public function addUserPowerLevelOnRoom(MatrixRoom $room, string $matrixUserId, int $powerLevel): bool
+    {
+        $currentPowerLevelMap = $this->getUserPowerLevelOnRoom($room);
+        if ($currentPowerLevelMap === []) {
+            return false;
+        }
+
+        $changedMap = false;
+        $userPowerLevelAlreadyDefined = false;
+        foreach ($currentPowerLevelMap as $userPowerLevel) {
+            if ($userPowerLevel->getMatrixUserId() === $matrixUserId) {
+                $userPowerLevelAlreadyDefined = true;
+                if ($userPowerLevel->getPowerLevel() !== $powerLevel) {
+                    $changedMap = true;
+                    $userPowerLevel->setPowerLevel($powerLevel);
+                }
+                break;
+            }
+        }
+
+        if (!$userPowerLevelAlreadyDefined) {
+            $currentPowerLevelMap[] = new MatrixUserPowerLevel($matrixUserId, $powerLevel);
+            $changedMap = true;
+        }
+
+        if ($changedMap) {
+            return $this->setUserPowerLevelOnRoom($room, $currentPowerLevelMap);
+        }
+
+        return false;
+    }
+
+    /**
      * @param MatrixUserPowerLevel[]|MatrixUserPowerLevel $matrixUserPowerLevelMap
      */
     public function setUserPowerLevelOnRoom(MatrixRoom $room, $matrixUserPowerLevelMap): bool
@@ -760,6 +851,24 @@ class MatrixApi
         }
 
         return $matrixRoom;
+    }
+
+    public function isOverrideRateLimit(MatrixUser $matrixUser): bool
+    {
+        try {
+            $response = $this->sendRequest(
+                "/_synapse/admin/v1/users/{$matrixUser->getId()}/override_ratelimit"
+            );
+            return $response->getStatusCode() === 200
+                && $response->getResponseDataValue("messages_per_second") === 0
+                && $response->getResponseDataValue("burst_count") === 0;
+        } catch (MatrixApiException $ex) {
+            $this->logger->error(sprintf(
+                "Error occurred while trying to get overwrite_ratelimit for user '%s'",
+                $matrixUser->getId()
+            ));
+            return false;
+        }
     }
 
     public function setOverrideRateLimit(MatrixUser $matrixUser, int $messagesPerSecond, int $burstCount): bool
