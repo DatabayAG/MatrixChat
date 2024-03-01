@@ -74,7 +74,7 @@ config.user.method.createOnConfiguredHomeserver.connectedHomeserver#:#Connected 
 config.user.method.createOnConfiguredHomeserver.detectedMatrixAccount#:#Recognized Matrix Account
 
 config.user.method.specifyOtherMatrixAccount#:#Use another Matrix Account
-config.user.method.specifyOtherMatrixAccount.accountName#:#Account-Name (Including Homeserver)
+config.user.method.specifyOtherMatrixAccount.accountName#:#Account-Name (Including Homeserver)<br>Example: @myAccount:matrix.org
 
 config.user.resetAccountSettings#:#Reset Matrix Account Settings
 config.user.resetAccountSettings.success#:#Matrix account settings were reset
