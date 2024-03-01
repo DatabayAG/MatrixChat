@@ -125,6 +125,10 @@ matrix.space.creation.failure#:#An error occurred while trying to create MatrixS
 matrix.space.notFound#:#No Matrix-Space could be found to which the Matrix-Room can be added. Creation of room not possible.
 
 matrix.room.notYetConfigured#:#No Matrix-Room has been configured for this %s yet. <br>Click on the button bellow to go to the chat settings and create one. <br><br><a href="%s">%s</a>
+matrix.room.delete.purge#:#Purge
+matrix.room.delete.purge.info#:#Should the room be deleted with <span style="font-weight: bolder">Bereinigen</span> ausgeführt werden?
+matrix.room.delete.block#:#Block
+matrix.room.delete.block.info#:#Should the room be deleted with <span style="font-weight: bolder">Blockieren</span> ausgeführt werden?
 
 matrix.user.name#:#Matrix-Username
 matrix.user.name.info#:#Not editable. Predefined by server.

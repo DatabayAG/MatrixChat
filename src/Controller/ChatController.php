@@ -624,6 +624,9 @@ class ChatController extends BaseController
 
         $form->setValuesByPost();
 
+        $purge = (bool) $form->getInput("purge");
+        $block = (bool) $form->getInput("block");
+
         $room = $this->matrixApi->getRoom($this->courseSettings->getMatrixRoomId());
 
         if (!$room) {
@@ -641,7 +644,7 @@ class ChatController extends BaseController
         }
 
         if ($room) {
-            $deleteSuccess = $this->matrixApi->deleteRoom($room);
+            $deleteSuccess = $this->matrixApi->deleteRoom($room, "", $purge, $block);
             if ($deleteSuccess) {
                 $this->courseSettings->setMatrixRoomId(null);
             }

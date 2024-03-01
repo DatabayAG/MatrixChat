@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChat\Form;
 
+use ilCheckboxInputGUI;
 use ILIAS\Plugin\Libraries\ControllerHandler\UiUtils;
 use ILIAS\Plugin\MatrixChat\Controller\ChatController;
 use ilMatrixChatPlugin;
@@ -39,6 +40,14 @@ class ConfirmDeleteRoomForm extends ilPropertyFormGUI
             ["ref_id" => $refId],
             true
         ));
+
+        $purge = new ilCheckboxInputGUI($this->plugin->txt("matrix.room.delete.purge"), "purge");
+        $purge->setInfo($this->plugin->txt("matrix.room.delete.purge.info"));
+        $this->addItem($purge);
+
+        $block = new ilCheckboxInputGUI($this->plugin->txt("matrix.room.delete.block"), "block");
+        $block->setInfo($this->plugin->txt("matrix.room.delete.block.info"));
+        $this->addItem($block);
 
         $this->addCommandButton(
             ChatController::getCommand(ChatController::CMD_DELETE_ROOM),
