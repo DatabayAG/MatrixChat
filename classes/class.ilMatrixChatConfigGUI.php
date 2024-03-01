@@ -85,11 +85,29 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
 
             $pluginConfig = $this->plugin->getPluginConfig();
 
+            try {
+                $adminUser = $this->matrixApi->getAdminUser();
+                $matrixAdminPasswordRemoveRateLimit = $this->matrixApi->isOverrideRateLimit($adminUser);
+            } catch (Exception $ex) {
+                //Ignore, matrixApi already logged error
+                $matrixAdminPasswordRemoveRateLimit = false;
+            }
+
+            try {
+                $restApiUser = $this->matrixApi->getRestApiUser();
+                $matrixRestApiUserRemoveRateLimit = $this->matrixApi->isOverrideRateLimit($restApiUser);
+            } catch (Exception $ex) {
+                //Ignore, matrixApi already logged error
+                $matrixRestApiUserRemoveRateLimit = false;
+            }
+
             $form->setValuesByArray(
                 $pluginConfig->toArray(["matrixAdminPassword", "matrixRestApiUserPassword", "sharedSecret"]) + [
                     "matrixAdminPassword" => $pluginConfig->getMatrixAdminPassword() ? self::CLEANED_PASSWORD_VALUE : "",
                     "matrixRestApiUserPassword" => $pluginConfig->getMatrixRestApiUserPassword() ? self::CLEANED_PASSWORD_VALUE : "",
-                    "sharedSecret" => $pluginConfig->getSharedSecret() ? self::CLEANED_PASSWORD_VALUE : ""
+                    "sharedSecret" => $pluginConfig->getSharedSecret() ? self::CLEANED_PASSWORD_VALUE : "",
+                    "matrixAdminPasswordRemoveRateLimit" => $matrixAdminPasswordRemoveRateLimit,
+                    "matrixRestApiUserRemoveRateLimit" => $matrixRestApiUserRemoveRateLimit
                 ],
                 true
             );

@@ -762,6 +762,24 @@ class MatrixApi
         return $matrixRoom;
     }
 
+    public function isOverrideRateLimit(MatrixUser $matrixUser): bool
+    {
+        try {
+            $response = $this->sendRequest(
+                "/_synapse/admin/v1/users/{$matrixUser->getId()}/override_ratelimit"
+            );
+            return $response->getStatusCode() === 200
+                && $response->getResponseDataValue("messages_per_second") === 0
+                && $response->getResponseDataValue("burst_count") === 0;
+        } catch (MatrixApiException $ex) {
+            $this->logger->error(sprintf(
+                "Error occurred while trying to get overwrite_ratelimit for user '%s'",
+                $matrixUser->getId()
+            ));
+            return false;
+        }
+    }
+
     public function setOverrideRateLimit(MatrixUser $matrixUser, int $messagesPerSecond, int $burstCount): bool
     {
         try {
