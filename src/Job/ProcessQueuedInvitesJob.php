@@ -112,7 +112,6 @@ class ProcessQueuedInvitesJob extends ilCronJob
 
         /** @var UserRoomAddQueue[] $queuedInvites */
         foreach ($this->queuedInvitesRepo->readAllGroupedByRefId() as $refId => $queuedInvites) {
-            $participants = ilParticipants::getInstance($refId);
             $total += count($queuedInvites);
 
             if (!ilObject::_exists($refId, true)) {
@@ -120,6 +119,12 @@ class ProcessQueuedInvitesJob extends ilCronJob
                 $skipped += count($queuedInvites);
                 continue;
             }
+
+            if (ilObject::lookupOfflineStatus(ilObject::_lookupObjId($refId))) {
+                //Don't process queue entries for objects that are offline
+                continue;
+            }
+
             $courseSettings = $this->courseSettingsRepo->read($refId);
             if (!$courseSettings->getMatrixRoomId()) {
                 $this->logger->info("Skipping invite queue check for object with ref-id '$refId'. Matrix-Room-ID not defined");
@@ -134,6 +139,7 @@ class ProcessQueuedInvitesJob extends ilCronJob
                 continue;
             }
 
+            $participants = ilParticipants::getInstance($refId);
             foreach ($queuedInvites as $queuedInvite) {
                 try {
                     $user = new ilObjUser($queuedInvite->getUserId());

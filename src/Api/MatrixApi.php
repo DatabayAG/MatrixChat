@@ -460,7 +460,7 @@ class MatrixApi
         }
     }
 
-    public function deleteRoom(MatrixRoom $room, string $reason = ""): bool
+    public function deleteRoom(MatrixRoom $room, string $reason = "", bool $purge = false, bool $block = false): bool
     {
         try {
             //Kick users before removing room, otherwise users are not removed from the room (except user that created the room)
@@ -481,7 +481,7 @@ class MatrixApi
                 "/_synapse/admin/v1/rooms/{$room->getId()}",
                 true,
                 "DELETE",
-                ["message" => $reason, "purge" => true, "block" => true],
+                ["message" => $reason, "purge" => $purge, "block" => $block],
             );
         } catch (MatrixApiException $ex) {
             $this->logger->error("Error occurred while trying to delete room '{$room->getId()}' with reason '$reason'");
