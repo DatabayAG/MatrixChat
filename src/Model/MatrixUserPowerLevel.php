@@ -37,4 +37,10 @@ class MatrixUserPowerLevel
     {
         return $this->powerLevel;
     }
+
+    public function setPowerLevel(int $powerLevel): MatrixUserPowerLevel
+    {
+        $this->powerLevel = $powerLevel;
+        return $this;
+    }
 }
