@@ -21,6 +21,8 @@ use ILIAS\Plugin\MatrixChat\Form\BaseUserConfigForm;
 use ILIAS\Plugin\MatrixChat\Form\LocalUserConfigForm;
 use ILIAS\Plugin\MatrixChat\Form\LocalUserPasswordChangeForm;
 use ILIAS\Plugin\MatrixChat\Form\PluginConfigForm;
+use ILIAS\Plugin\MatrixChat\Model\MatrixUser;
+use ILIAS\Plugin\MatrixChat\Model\MatrixUserHistory;
 
 class LocalUserConfigController extends BaseUserConfigController
 {
@@ -112,13 +114,24 @@ class LocalUserConfigController extends BaseUserConfigController
                 $this->uiUtil->sendSuccess($this->plugin->txt("config.user.auth.success"), true);
             }
 
+            $matrixUserId = $matrixUser->getId();
             $this->userConfig
-                ->setMatrixUserId($matrixUser->getId())
+                ->setMatrixUserId($matrixUserId)
                 ->setMatrixUsername($matrixUsername)
                 ->save();
         } else {
-            $this->userConfig->setMatrixUserId($form->getInput("matrixAccount"))->save();
+            $matrixUserId = $form->getInput("matrixAccount");
+            $this->userConfig->setMatrixUserId($matrixUserId)->save();
         }
+
+        if (!$this->matrixUserHistoryRepo->create(new MatrixUserHistory($this->user->getId(), $matrixUserId))) {
+            $this->logger->warning(sprintf(
+                "Unable to create history entry for ilias user with id '%s' setting matrix user to '%s'",
+                $this->user->getId(),
+                $matrixUserId
+            ));
+        }
+
 
         $result = $this->processUserRoomAddQueue($this->user);
         if ($result) {

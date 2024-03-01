@@ -112,6 +112,7 @@ matrix.chat.settings#:#Matrix Chat Einstellungen
 matrix.chat.members#:#Mitglieder
 matrix.chat.invite#:#Einladen
 matrix.chat.invite.notPossible#:#Einladen nicht möglich
+matrix.chat.invite.notPossible.objectOffline#:#Einladen nicht möglich. <br>Objekt Offline
 matrix.chat.status#:#Chat-Status
 matrix.chat.members#:#Chatteilnehmer
 
@@ -125,6 +126,13 @@ config.space.status.disconnected#:#Space nicht Verbunden/Eingerichtet
 
 matrix.space.creation.failure#:#Beim erstellen des Spaces ist ein Fehler aufgetreten.
 matrix.space.notFound#:#Es konnte kein Space gefunden werden, zu dem der Matrix-Raum hinzugefügt werden kann. Erstellen des Raumes nicht möglich.
+
+matrix.room.notYetConfigured#:#Für diesen %s wurde noch kein Matrix-Raum konfiguriert. <br>Klicken Sie auf den Link unten, um zu den Chat-Einstellungen zu gelangen und einen Raum zu erstellen. <br><br><a href="%s">%s</a>
+matrix.room.delete.purge#:#Bereinigen
+matrix.room.delete.purge.info#:#Soll das Löschen des Raums mit <span style="font-weight: bolder">Bereinigen</span> ausgeführt werden?
+matrix.room.delete.block#:#Blockieren
+matrix.room.delete.block.info#:#Soll das Löschen des Raums mit <span style="font-weight: bolder">Blockieren</span> ausgeführt werden?
+
 
 matrix.user.name#:#Matrix-Benutzername
 matrix.user.name.info#:#Nicht editierbar. Vordefiniert durch Server.

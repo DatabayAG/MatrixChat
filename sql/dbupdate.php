@@ -109,3 +109,32 @@ if ($ilDB->tableExists("mcc_usr_room_add_queue")) {
     $ilDB->renameTable("mcc_usr_room_add_queue", "mcc_queued_invites");
 }
 ?>
+<#8>
+<?php
+if (!$ilDB->tableExists("mcc_usr_matrix_user_history")) {
+    $ilDB->createTable("mcc_matrix_usr_history", [
+        "id" => [
+            "type" => "integer",
+            "length" => 8,
+            "notnull" => true,
+        ],
+        "user_id" => [
+            "type" => "integer",
+            "length" => 8,
+            "notnull" => true,
+        ],
+        "matrix_user_id" => [
+            "type" => "text",
+            "length" => 255,
+            "notnull" => true,
+        ],
+        "created_at" => [
+            "type" => "integer",
+            "length" => 8,
+            "notnull" => true,
+        ],
+    ]);
+    $ilDB->addPrimaryKey("mcc_matrix_usr_history", ["id"]);
+    $ilDB->createSequence("mcc_matrix_usr_history");
+}
+?>

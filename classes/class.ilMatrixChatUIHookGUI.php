@@ -109,6 +109,9 @@ class ilMatrixChatUIHookGUI extends ilUIHookPluginGUI
     public function executeCommand(): void
     {
         $cmdClass = $this->ctrl->getCmdClass();
+        if ($cmdClass === ilObjCourseGUI::class) {
+            $cmdClass = strtolower($cmdClass);
+        }
         $nextClass = $this->ctrl->getNextClass();
         $cmd = $this->ctrl->getCmd();
 
@@ -161,7 +164,12 @@ class ilMatrixChatUIHookGUI extends ilUIHookPluginGUI
                 $this->plugin->redirectToHome();
             }
 
-            $this->ctrl->redirectByClass(array_unique([ilRepositoryGUI::class, $objGuiClass, $cmdClass]), $cmd);
+            $redirectCmdClasses = [];
+            foreach ([ilRepositoryGUI::class, $objGuiClass, $cmdClass] as $className) {
+                $redirectCmdClasses[] = strtolower($className);
+            }
+
+            $this->ctrl->redirectByClass(array_unique($redirectCmdClasses), $cmd);
         }
 
         $this->controllerHandler->handleCommand($cmd);
