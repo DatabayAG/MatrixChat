@@ -127,9 +127,9 @@ matrix.space.notFound#:#No Matrix-Space could be found to which the Matrix-Room 
 
 matrix.room.notYetConfigured#:#No Matrix-Room has been configured for this %s yet. <br>Click on the button bellow to go to the chat settings and create one. <br><br><a href="%s">%s</a>
 matrix.room.delete.purge#:#Purge
-matrix.room.delete.purge.info#:#Should the room be deleted with <span style="font-weight: bolder">Bereinigen</span> ausgeführt werden?
+matrix.room.delete.purge.info#:#Should the room be deleted with <span style="font-weight: bolder">Purge</span>?
 matrix.room.delete.block#:#Block
-matrix.room.delete.block.info#:#Should the room be deleted with <span style="font-weight: bolder">Blockieren</span> ausgeführt werden?
+matrix.room.delete.block.info#:#Should the room be deleted with <span style="font-weight: bolder">Block</span>?
 
 matrix.user.name#:#Matrix-Username
 matrix.user.name.info#:#Not editable. Predefined by server.
