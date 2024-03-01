@@ -54,12 +54,12 @@ class MatrixUserHistoryRepository
         $matrixUserHistory->setId($this->db->nextId(self::TABLE_NAME));
         return $this->db->manipulateF(
             "INSERT INTO " . self::TABLE_NAME . " (id, user_id, matrix_user_id, created_at) VALUES (%s, %s, %s, %s)",
-            ["integer", "integer", "text", "timestamp"],
+            ["integer", "integer", "text", "integer"],
             [
                 $matrixUserHistory->getId(),
                 $matrixUserHistory->getUserId(),
                 $matrixUserHistory->getMatrixUserId(),
-                $matrixUserHistory->getCreatedAt()->format("Y-m-d H:i:s")
+                $matrixUserHistory->getCreatedAt()->getTimestamp()
             ]
         ) === 1;
     }

@@ -129,7 +129,8 @@ if (!$ilDB->tableExists("mcc_usr_matrix_user_history")) {
             "notnull" => true,
         ],
         "created_at" => [
-            "type" => "timestamp",
+            "type" => "integer",
+            "length" => 8,
             "notnull" => true,
         ],
     ]);
