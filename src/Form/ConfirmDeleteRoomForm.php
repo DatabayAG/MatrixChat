@@ -41,12 +41,13 @@ class ConfirmDeleteRoomForm extends ilPropertyFormGUI
         ));
 
         $this->addCommandButton(
-            ChatController::getCommand(ChatController::CMD_SHOW_CHAT_SETTINGS),
-            $this->lng->txt("cancel")
-        );
-        $this->addCommandButton(
             ChatController::getCommand(ChatController::CMD_DELETE_ROOM),
             $this->lng->txt("confirm")
+        );
+
+        $this->addCommandButton(
+            ChatController::getCommand(ChatController::CMD_SHOW_CHAT_SETTINGS),
+            $this->lng->txt("cancel")
         );
     }
 }
