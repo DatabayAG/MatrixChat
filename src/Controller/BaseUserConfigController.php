@@ -27,9 +27,11 @@ use ILIAS\Plugin\MatrixChat\Api\MatrixApi;
 use ILIAS\Plugin\MatrixChat\Api\MatrixApiException;
 use ILIAS\Plugin\MatrixChat\Form\BaseUserConfigForm;
 use ILIAS\Plugin\MatrixChat\Model\CourseSettings;
+use ILIAS\Plugin\MatrixChat\Model\MatrixUserHistory;
 use ILIAS\Plugin\MatrixChat\Model\UserConfig;
 use ILIAS\Plugin\MatrixChat\Model\UserRoomAddQueue;
 use ILIAS\Plugin\MatrixChat\Repository\CourseSettingsRepository;
+use ILIAS\Plugin\MatrixChat\Repository\MatrixUserHistoryRepository;
 use ILIAS\Plugin\MatrixChat\Repository\QueuedInvitesRepository;
 use ilLanguage;
 use ilLogger;
@@ -60,6 +62,7 @@ abstract class BaseUserConfigController extends BaseController
     protected QueuedInvitesRepository $queuedInvitesRepo;
     protected CourseSettingsRepository $courseSettingsRepo;
     private ilLanguage $lng;
+    protected MatrixUserHistoryRepository $matrixUserHistoryRepo;
 
     public function __construct(Container $dic, ControllerHandler $controllerHandler)
     {
@@ -74,7 +77,8 @@ abstract class BaseUserConfigController extends BaseController
         $this->logger = $this->dic->logger()->root();
         $this->http = $this->dic->http();
         $this->queuedInvitesRepo = QueuedInvitesRepository::getInstance($this->dic->database());
-        $this->courseSettingsRepo = CourseSettingsRepository::getInstance();
+        $this->courseSettingsRepo = CourseSettingsRepository::getInstance($this->dic->database());
+        $this->matrixUserHistoryRepo = MatrixUserHistoryRepository::getInstance($this->dic->database());
     }
 
     protected function verifyCorrectController(): void
