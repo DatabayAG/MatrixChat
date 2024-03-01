@@ -157,11 +157,12 @@ class ChatController extends BaseController
                         $this->plugin->txt("matrix.user.account.joined"),
                         $matrixUser->getId()
                     ), true);
+                } else {
+                    $this->uiUtil->sendInfo(sprintf(
+                        $this->plugin->txt("matrix.user.account.invited"),
+                        $matrixUser->getId()
+                    ), true);
                 }
-                $this->uiUtil->sendInfo(sprintf(
-                    $this->plugin->txt("matrix.user.account.invited"),
-                    $matrixUser->getId()
-                ), true);
             }
             $toChatSettingsButton = $this->uiFactory->button()->standard(
                 $this->plugin->txt("matrix.user.account.changeMatrixAccountSettings"),
