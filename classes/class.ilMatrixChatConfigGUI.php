@@ -88,7 +88,7 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
             try {
                 $adminUser = $this->matrixApi->getAdminUser();
                 $matrixAdminPasswordRemoveRateLimit = $this->matrixApi->isOverrideRateLimit($adminUser);
-            } catch (Exception $ex) {
+            } catch (Throwable $ex) {
                 //Ignore, matrixApi already logged error
                 $matrixAdminPasswordRemoveRateLimit = false;
             }
@@ -96,7 +96,7 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
             try {
                 $restApiUser = $this->matrixApi->getRestApiUser();
                 $matrixRestApiUserRemoveRateLimit = $this->matrixApi->isOverrideRateLimit($restApiUser);
-            } catch (Exception $ex) {
+            } catch (Throwable $ex) {
                 //Ignore, matrixApi already logged error
                 $matrixRestApiUserRemoveRateLimit = false;
             }
