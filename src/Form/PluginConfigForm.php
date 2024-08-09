@@ -149,23 +149,12 @@ class PluginConfigForm extends ilPropertyFormGUI
         }
         $this->addItem($section);
 
-        $matrixAdminUsername = new ilTextInputGUI(
-            $this->plugin->txt("config.admin.username.title"),
-            "matrixAdminUsername"
-        );
-        $matrixAdminUsername->setRequired(true);
-        $matrixAdminUsername->setInfo($this->plugin->txt("config.admin.username.info"));
-        $this->addItem($matrixAdminUsername);
-
-        $matrixAdminPassword = new ilPasswordInputGUI(
-            $this->plugin->txt("config.admin.password.title"),
-            "matrixAdminPassword"
-        );
-        $matrixAdminPassword->setRequired(true);
-        $matrixAdminPassword->setInfo($this->plugin->txt("config.admin.password.info"));
-        $matrixAdminPassword->setSkipSyntaxCheck(true);
-        $matrixAdminPassword->setRetype(false);
-        $this->addItem($matrixAdminPassword);
+        $matrixAdminApiToken = new ilPasswordInputGUI($this->plugin->txt("config.admin.apiToken.title"), "matrixAdminApiToken");
+        $matrixAdminApiToken->setRequired(true);
+        $matrixAdminApiToken->setInfo($this->plugin->txt("config.admin.apiToken.info"));
+        $matrixAdminApiToken->setSkipSyntaxCheck(true);
+        $matrixAdminApiToken->setRetype(false);
+        $this->addItem($matrixAdminApiToken);
 
         $matrixAdminPasswordRemoveRateLimit = new ilCheckboxInputGUI(
             $this->plugin->txt("config.removeRateLimit"),
@@ -196,23 +185,12 @@ class PluginConfigForm extends ilPropertyFormGUI
         }
         $this->addItem($section);
 
-        $matrixRestApiUserUsername = new ilTextInputGUI(
-            $this->plugin->txt("config.restApiUser.username.title"),
-            "matrixRestApiUserUsername"
-        );
-        $matrixRestApiUserUsername->setRequired(true);
-        $matrixRestApiUserUsername->setInfo($this->plugin->txt("config.restApiUser.username.info"));
-        $this->addItem($matrixRestApiUserUsername);
-
-        $matrixRestApiUserPassword = new ilPasswordInputGUI(
-            $this->plugin->txt("config.restApiUser.password.title"),
-            "matrixRestApiUserPassword"
-        );
-        $matrixRestApiUserPassword->setRequired(true);
-        $matrixRestApiUserPassword->setInfo($this->plugin->txt("config.restApiUser.password.info"));
-        $matrixRestApiUserPassword->setSkipSyntaxCheck(true);
-        $matrixRestApiUserPassword->setRetype(false);
-        $this->addItem($matrixRestApiUserPassword);
+        $matrixRestApiUserApiToken = new ilPasswordInputGUI($this->plugin->txt("config.restApiUser.apiToken.title"), "matrixRestApiUserApiToken");
+        $matrixRestApiUserApiToken->setRequired(true);
+        $matrixRestApiUserApiToken->setInfo($this->plugin->txt("config.restApiUser.apiToken.info"));
+        $matrixRestApiUserApiToken->setSkipSyntaxCheck(true);
+        $matrixRestApiUserApiToken->setRetype(false);
+        $this->addItem($matrixRestApiUserApiToken);
 
         $matrixRestApiUserRemoveRateLimit = new ilCheckboxInputGUI(
             $this->plugin->txt("config.removeRateLimit"),
