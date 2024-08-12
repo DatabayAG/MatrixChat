@@ -496,6 +496,32 @@ class MatrixApi
         return true;
     }
 
+    public function apiTokenLogin(string $apiToken): ?MatrixUser
+    {
+        try {
+            $response = $this->sendRequest("/_matrix/client/v3/account/whoami", true, "GET", [], false, $apiToken);
+        } catch (MatrixApiException $ex) {
+            $this->logger->error("Error occurred while trying to login user with api-token");
+            return null;
+        }
+
+        $userId = $response->getResponseDataValue("user_id");
+
+        try {
+            $matrixUserProfile = $this->getMatrixUserProfile($userId);
+            $displayName = $matrixUserProfile["displayname"];
+        } catch (MatrixApiException $e) {
+            $displayName = "";
+            $this->logger->error("Error occurred while trying to retrieve profile for user '$userId'. Assuming displayname as empty");
+        }
+
+        return (new MatrixUser(
+            $userId,
+            $displayName
+        ))->setAccessToken($apiToken)
+            ->setDeviceId($response->getResponseDataValue("device_id"));
+    }
+
     public function login(string $username, string $password, string $deviceId): ?MatrixUser
     {
         try {
