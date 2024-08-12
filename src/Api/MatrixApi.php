@@ -70,14 +70,19 @@ class MatrixApi
         bool $requiresAuth = true,
         string $method = "GET",
         array $body = [],
-        bool $useRestApiUserAuth = false
+        bool $useRestApiUserAuth = false,
+        ?string $overwriteApiToken = null
     ): MatrixApiResponse {
         $options = [
             "timeout" => $this->requestTimeout
         ];
 
         if ($requiresAuth) {
-            $accessToken = $useRestApiUserAuth ? $this->getRestApiUserAccessToken() : $this->getAdminAccessToken();
+            if (is_string($overwriteApiToken)) {
+                $accessToken = $overwriteApiToken;
+            } else {
+                $accessToken = $useRestApiUserAuth ? $this->getRestApiUserAccessToken() : $this->getAdminAccessToken();
+            }
 
             if (!$accessToken) {
                 //Don't log error when request send is trying to login the admin
