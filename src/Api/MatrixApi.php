@@ -196,10 +196,8 @@ class MatrixApi
     public function getRestApiUser(): MatrixUser
     {
         if (self::$restApiUser === null) {
-            self::$restApiUser = $this->login(
-                $this->plugin->getPluginConfig()->getMatrixRestApiUserUsername(),
-                $this->plugin->getPluginConfig()->getMatrixRestApiUserPassword(),
-                "ilias_matrix_chat_device_bot"
+            self::$restApiUser = $this->apiTokenLogin(
+                $this->plugin->getPluginConfig()->getMatrixRestApiUserApiToken()
             );
         }
 
@@ -209,10 +207,8 @@ class MatrixApi
     public function getAdminUser(): MatrixUser
     {
         if (self::$adminUser === null) {
-            self::$adminUser = $this->login(
-                $this->plugin->getPluginConfig()->getMatrixAdminUsername(),
-                $this->plugin->getPluginConfig()->getMatrixAdminPassword(),
-                "ilias_matrix_chat_device_bot"
+            self::$adminUser = $this->apiTokenLogin(
+                $this->plugin->getPluginConfig()->getMatrixAdminApiToken(),
             );
         }
 

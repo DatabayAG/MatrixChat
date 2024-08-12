@@ -102,9 +102,9 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
             }
 
             $form->setValuesByArray(
-                $pluginConfig->toArray(["matrixAdminPassword", "matrixRestApiUserPassword", "sharedSecret"]) + [
-                    "matrixAdminPassword" => $pluginConfig->getMatrixAdminPassword() ? self::CLEANED_PASSWORD_VALUE : "",
-                    "matrixRestApiUserPassword" => $pluginConfig->getMatrixRestApiUserPassword() ? self::CLEANED_PASSWORD_VALUE : "",
+                $pluginConfig->toArray(["matrixAdminApiToken", "matrixRestApiUserApiToken", "sharedSecret"]) + [
+                    "matrixAdminApiToken" => $pluginConfig->getMatrixAdminApiToken() ? self::CLEANED_PASSWORD_VALUE : "",
+                    "matrixRestApiUserApiToken" => $pluginConfig->getMatrixRestApiUserApiToken() ? self::CLEANED_PASSWORD_VALUE : "",
                     "sharedSecret" => $pluginConfig->getSharedSecret() ? self::CLEANED_PASSWORD_VALUE : "",
                     "matrixAdminPasswordRemoveRateLimit" => $matrixAdminPasswordRemoveRateLimit,
                     "matrixRestApiUserRemoveRateLimit" => $matrixRestApiUserRemoveRateLimit
@@ -137,8 +137,6 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
 
         $this->plugin->getPluginConfig()
             ->setMatrixServerUrl(rtrim($form->getInput("matrixServerUrl"), "/"))
-            ->setMatrixAdminUsername($form->getInput("matrixAdminUsername"))
-            ->setMatrixRestApiUserUsername($form->getInput("matrixRestApiUserUsername"))
             ->setSharedSecret($sharedSecretValue)
             ->setExternalUserScheme($form->getInput("externalUserScheme"))
             ->setExternalUserOptions($form->getInput("externalUserOptions"))
@@ -152,14 +150,14 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
             ->setTutorPowerLevel((int) $form->getInput("tutorPowerLevel"))
             ->setMemberPowerLevel((int) $form->getInput("memberPowerLevel"));
 
-        $matrixAdminPassword = $form->getInput("matrixAdminPassword");
-        if ($matrixAdminPassword !== self::CLEANED_PASSWORD_VALUE) {
-            $this->plugin->getPluginConfig()->setMatrixAdminPassword($matrixAdminPassword);
+        $matrixAdminApiToken = $form->getInput("matrixAdminApiToken");
+        if ($matrixAdminApiToken !== self::CLEANED_PASSWORD_VALUE) {
+            $this->plugin->getPluginConfig()->setMatrixAdminApiToken($matrixAdminApiToken);
         }
 
-        $matrixRestApiUserPassword = $form->getInput("matrixRestApiUserPassword");
-        if ($matrixRestApiUserPassword !== self::CLEANED_PASSWORD_VALUE) {
-            $this->plugin->getPluginConfig()->setMatrixRestApiUserPassword($matrixRestApiUserPassword);
+        $matrixRestApiUserApiToken = $form->getInput("matrixRestApiUserApiToken");
+        if ($matrixRestApiUserApiToken !== self::CLEANED_PASSWORD_VALUE) {
+            $this->plugin->getPluginConfig()->setMatrixRestApiUserApiToken($matrixRestApiUserApiToken);
         }
 
         $matrixAdminPasswordRemoveRateLimit = (bool) $form->getInput("matrixAdminPasswordRemoveRateLimit");
@@ -210,7 +208,7 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
             $form = new ChatPageDesignerForm();
 
             $form->setValuesByArray(
-                $this->plugin->getPluginConfig()->toArray(["matrixAdminPassword", "matrixRestApiUserPassword", "sharedSecret"]),
+                $this->plugin->getPluginConfig()->toArray(["matrixAdminApiToken", "matrixRestApiUserApiToken", "sharedSecret"]),
                 true
             );
         }

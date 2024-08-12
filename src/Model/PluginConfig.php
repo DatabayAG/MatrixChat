@@ -24,10 +24,8 @@ use ILIAS\Plugin\Libraries\IliasConfigLoader\Model\Config\SettingsConfig;
 class PluginConfig extends SettingsConfig
 {
     private string $matrixServerUrl = "";
-    private string $matrixAdminUsername = "";
-    private string $matrixAdminPassword = "";
-    private string $matrixRestApiUserUsername = "";
-    private string $matrixRestApiUserPassword = "";
+    private string $matrixAdminApiToken = "";
+    private string $matrixRestApiUserApiToken = "";
     private string $sharedSecret = "";
     private string $externalUserScheme = "";
     private array $externalUserOptions = [];
@@ -55,47 +53,25 @@ class PluginConfig extends SettingsConfig
         return $this;
     }
 
-    public function getMatrixAdminUsername(): string
+    public function getMatrixAdminApiToken(): string
     {
-        return $this->matrixAdminUsername;
+        return $this->matrixAdminApiToken;
     }
 
-    public function setMatrixAdminUsername(string $matrixAdminUsername): PluginConfig
+    public function setMatrixAdminApiToken(string $matrixAdminApiToken): PluginConfig
     {
-        $this->matrixAdminUsername = $matrixAdminUsername;
+        $this->matrixAdminApiToken = $matrixAdminApiToken;
         return $this;
     }
 
-    public function getMatrixAdminPassword(): string
+    public function getMatrixRestApiUserApiToken(): string
     {
-        return $this->matrixAdminPassword;
+        return $this->matrixRestApiUserApiToken;
     }
 
-    public function setMatrixAdminPassword(string $matrixAdminPassword): PluginConfig
+    public function setMatrixRestApiUserApiToken(string $matrixRestApiUserApiToken): PluginConfig
     {
-        $this->matrixAdminPassword = $matrixAdminPassword;
-        return $this;
-    }
-
-    public function getMatrixRestApiUserUsername(): string
-    {
-        return $this->matrixRestApiUserUsername;
-    }
-
-    public function setMatrixRestApiUserUsername(string $matrixRestApiUserUsername): PluginConfig
-    {
-        $this->matrixRestApiUserUsername = $matrixRestApiUserUsername;
-        return $this;
-    }
-
-    public function getMatrixRestApiUserPassword(): string
-    {
-        return $this->matrixRestApiUserPassword;
-    }
-
-    public function setMatrixRestApiUserPassword(string $matrixRestApiUserPassword): PluginConfig
-    {
-        $this->matrixRestApiUserPassword = $matrixRestApiUserPassword;
+        $this->matrixRestApiUserApiToken = $matrixRestApiUserApiToken;
         return $this;
     }
 
