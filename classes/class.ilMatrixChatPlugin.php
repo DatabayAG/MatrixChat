@@ -322,8 +322,11 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
                         ));
                     }
 
-                    if (!$this->getMatrixApi()->inviteUserToRoom($matrixUser, $room,
-                        $this->determinePowerLevelOfParticipant($participants, $user->getId()))) {
+                    if (!$this->getMatrixApi()->inviteUserToRoom(
+                        $matrixUser,
+                        $room,
+                        $this->determinePowerLevelOfParticipant($participants, $user->getId())
+                    )) {
                         $this->logger->warning(sprintf(
                             "Inviting matrix-user '%s' to room '%s' failed",
                             $matrixUser->getId(),
