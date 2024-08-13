@@ -70,14 +70,19 @@ class MatrixApi
         bool $requiresAuth = true,
         string $method = "GET",
         array $body = [],
-        bool $useRestApiUserAuth = false
+        bool $useRestApiUserAuth = false,
+        ?string $overwriteApiToken = null
     ): MatrixApiResponse {
         $options = [
             "timeout" => $this->requestTimeout
         ];
 
         if ($requiresAuth) {
-            $accessToken = $useRestApiUserAuth ? $this->getRestApiUserAccessToken() : $this->getAdminAccessToken();
+            if (is_string($overwriteApiToken)) {
+                $accessToken = $overwriteApiToken;
+            } else {
+                $accessToken = $useRestApiUserAuth ? $this->getRestApiUserAccessToken() : $this->getAdminAccessToken();
+            }
 
             if (!$accessToken) {
                 //Don't log error when request send is trying to login the admin
@@ -191,10 +196,8 @@ class MatrixApi
     public function getRestApiUser(): MatrixUser
     {
         if (self::$restApiUser === null) {
-            self::$restApiUser = $this->login(
-                $this->plugin->getPluginConfig()->getMatrixRestApiUserUsername(),
-                $this->plugin->getPluginConfig()->getMatrixRestApiUserPassword(),
-                "ilias_matrix_chat_device_bot"
+            self::$restApiUser = $this->apiTokenLogin(
+                $this->plugin->getPluginConfig()->getMatrixRestApiUserApiToken()
             );
         }
 
@@ -204,10 +207,8 @@ class MatrixApi
     public function getAdminUser(): MatrixUser
     {
         if (self::$adminUser === null) {
-            self::$adminUser = $this->login(
-                $this->plugin->getPluginConfig()->getMatrixAdminUsername(),
-                $this->plugin->getPluginConfig()->getMatrixAdminPassword(),
-                "ilias_matrix_chat_device_bot"
+            self::$adminUser = $this->apiTokenLogin(
+                $this->plugin->getPluginConfig()->getMatrixAdminApiToken(),
             );
         }
 
@@ -489,6 +490,32 @@ class MatrixApi
         }
 
         return true;
+    }
+
+    public function apiTokenLogin(string $apiToken): ?MatrixUser
+    {
+        try {
+            $response = $this->sendRequest("/_matrix/client/v3/account/whoami", true, "GET", [], false, $apiToken);
+        } catch (MatrixApiException $ex) {
+            $this->logger->error("Error occurred while trying to login user with api-token");
+            return null;
+        }
+
+        $userId = $response->getResponseDataValue("user_id");
+
+        try {
+            $matrixUserProfile = $this->getMatrixUserProfile($userId);
+            $displayName = $matrixUserProfile["displayname"];
+        } catch (MatrixApiException $e) {
+            $displayName = "";
+            $this->logger->error("Error occurred while trying to retrieve profile for user '$userId'. Assuming displayname as empty");
+        }
+
+        return (new MatrixUser(
+            $userId,
+            $displayName
+        ))->setAccessToken($apiToken)
+            ->setDeviceId($response->getResponseDataValue("device_id"));
     }
 
     public function login(string $username, string $password, string $deviceId): ?MatrixUser
