@@ -46,21 +46,19 @@ config.accountOptions.specifyOtherMatrixAccount#:#Specify another Matrix Account
 config.supportedObjectTypes.title#:#Supported Object Types
 config.supportedObjectTypes.info#:#Please choose the object types the matrix chat should be supported by
 
+config.cleanedValue.info#:#For security reasons the entered value is replaced by asterisks (*) after saving.
+
 config.sharedSecret.title#:#Shared Secret
-config.sharedSecret.info#:#Please provide the shared secret required for registering new users on the configured homeserver. <br>This value can be found inside the 'homeserver.yaml' of the homeserver under registration_shared_secret'. <br><br>For security reasons, this field is replaced by asterisks (*) after saving.
+config.sharedSecret.info#:#Please provide the shared secret required for registering new users on the configured homeserver. <br>This value can be found inside the 'homeserver.yaml' of the homeserver under registration_shared_secret'.
 
 config.pageDesignerText.title#:#Design Matrix Chat Page
 config.pageDesignerText.info#:#Text is displayed on the chat tab within courses & groups. <br>Activation of TinyMCE editor recommended.
 
-config.admin.username.title#:#Username of the Matrix-Server Admin User
-config.admin.username.info#:#Will be used to do administrator tasks like checking user accounts.
-config.admin.password.title#:#Password of the Matrix-Server Admin User
-config.admin.password.info#:#Password in the input field is replaced by asterisks (*) after saving for security reasons.
+config.admin.apiToken.title#:#API-Token for the Matrix-Server Admin User
+config.admin.apiToken.info#:#Enter the API-Token for the admin user that is used for administrative tasks here (like checking user accounts). <br>The API-Token may be retrieved from existing clients like Element.
 
-config.restApiUser.username.title#:#Username of the Matrix-Server  Rest-API User
-config.restApiUser.username.info#:#Enter the user account that creates and manages the chat rooms here. This user does not require any special privileges.
-config.restApiUser.password.title#:#Password of the Matrix-Server Rest-API User
-config.restApiUser.password.info#:#Password in the input field is replaced by asterisks (*) after saving for security reasons.
+config.restApiUser.apiToken.title#:#API-Token for the Rest-API User
+config.restApiUser.apiToken.info#:#Enter the API-Token for the user that creates and manages the chat rooms here. This user does not require any special privileges. <br>The API-Token may be retrieved from existing clients like Element.
 
 config.removeRateLimit#:#Remove Ratelimit of User
 config.removeRateLimit.info#:#The ratelimit of the user will be removed once the form is saved. <br>This sends a request to the Matrix-Server API to remove the ratelimit of this user. <br>Requires functioning "Matrix-Server Admin User"
