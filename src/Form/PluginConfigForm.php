@@ -120,7 +120,7 @@ class PluginConfigForm extends ilPropertyFormGUI
 
         $sharedSecret = new ilPasswordInputGUI($this->plugin->txt("config.sharedSecret.title"), "sharedSecret");
         $sharedSecret->setRequired(true);
-        $sharedSecret->setInfo($this->plugin->txt("config.sharedSecret.info"));
+        $sharedSecret->setInfo($this->plugin->txt("config.sharedSecret.info") . "<br><br>" . $this->plugin->txt("config.cleanedValue.info"));
         $sharedSecret->setSkipSyntaxCheck(true);
         $sharedSecret->setRetype(false);
         $this->addItem($sharedSecret);
@@ -151,7 +151,7 @@ class PluginConfigForm extends ilPropertyFormGUI
 
         $matrixAdminApiToken = new ilPasswordInputGUI($this->plugin->txt("config.admin.apiToken.title"), "matrixAdminApiToken");
         $matrixAdminApiToken->setRequired(true);
-        $matrixAdminApiToken->setInfo($this->plugin->txt("config.admin.apiToken.info"));
+        $matrixAdminApiToken->setInfo($this->plugin->txt("config.admin.apiToken.info") . "<br><br>" . $this->plugin->txt("config.cleanedValue.info"));
         $matrixAdminApiToken->setSkipSyntaxCheck(true);
         $matrixAdminApiToken->setRetype(false);
         $this->addItem($matrixAdminApiToken);
@@ -187,7 +187,7 @@ class PluginConfigForm extends ilPropertyFormGUI
 
         $matrixRestApiUserApiToken = new ilPasswordInputGUI($this->plugin->txt("config.restApiUser.apiToken.title"), "matrixRestApiUserApiToken");
         $matrixRestApiUserApiToken->setRequired(true);
-        $matrixRestApiUserApiToken->setInfo($this->plugin->txt("config.restApiUser.apiToken.info"));
+        $matrixRestApiUserApiToken->setInfo($this->plugin->txt("config.restApiUser.apiToken.info") . "<br><br>" . $this->plugin->txt("config.cleanedValue.info"));
         $matrixRestApiUserApiToken->setSkipSyntaxCheck(true);
         $matrixRestApiUserApiToken->setRetype(false);
         $this->addItem($matrixRestApiUserApiToken);
