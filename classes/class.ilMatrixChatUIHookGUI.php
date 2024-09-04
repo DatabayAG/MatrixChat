@@ -44,6 +44,8 @@ use ILIAS\Refinery\Factory;
  * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilConditionHandlerGUI
  * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilContainerStartObjectsGUI
  * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilCertificateGUI
+ * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilNewsTimelineGUI
+ * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilContainerNewsSettingsGUI
  */
 class ilMatrixChatUIHookGUI extends ilUIHookPluginGUI
 {
