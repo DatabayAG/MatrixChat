@@ -41,6 +41,7 @@ class PluginConfig extends SettingsConfig
     private int $adminPowerLevel = 100;
     private int $tutorPowerLevel = 50;
     private int $memberPowerLevel = 0;
+    private int $externalUserTruncateLength = 0;
 
     public function getMatrixServerUrl(): string
     {
@@ -237,6 +238,18 @@ class PluginConfig extends SettingsConfig
     public function setMemberPowerLevel(int $memberPowerLevel): PluginConfig
     {
         $this->memberPowerLevel = $memberPowerLevel;
+        return $this;
+    }
+
+
+    public function getExternalUserTruncateLength(): int
+    {
+        return $this->ExternalUserTruncateLength;
+    }
+
+    public function setExternalUserTruncateLength(int $ExternalUserTruncateLength): PluginConfig
+    {
+        $this->ExternalUserTruncateLength = $ExternalUserTruncateLength;
         return $this;
     }
 

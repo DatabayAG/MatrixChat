@@ -114,7 +114,7 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
     {
         return [
             "CLIENT_ID" => CLIENT_ID,
-            "LOGIN" => $this->user->getLogin(),
+            "LOGIN" => substr($this->user->getLogin(),0,0),
             "EXTERNAL_ACCOUNT" => $this->user->getExternalAccount()
         ];
     }
