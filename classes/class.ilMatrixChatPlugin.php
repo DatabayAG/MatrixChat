@@ -19,7 +19,6 @@ use ILIAS\DI\Container;
 use ILIAS\Plugin\Libraries\ControllerHandler\UiUtils;
 use ILIAS\Plugin\MatrixChat\Api\MatrixApi;
 use ILIAS\Plugin\MatrixChat\Job\ProcessQueuedInvitesJob;
-use ILIAS\Plugin\MatrixChat\Model\CourseSettings;
 use ILIAS\Plugin\MatrixChat\Model\MatrixRoom;
 use ILIAS\Plugin\MatrixChat\Model\MatrixUser;
 use ILIAS\Plugin\MatrixChat\Model\PluginConfig;
@@ -115,8 +114,16 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
     {
         return [
             "CLIENT_ID" => CLIENT_ID,
-            "LOGIN" => $this->user->getLogin(),
-            "EXTERNAL_ACCOUNT" => $this->user->getExternalAccount()
+            "LOGIN" => mb_substr(
+                $this->user->getLogin(),
+                0,
+                -$this->getPluginConfig()->getTruncateLoginVariableLength()
+            ),
+            "EXTERNAL_ACCOUNT" => mb_substr(
+                $this->user->getExternalAccount(),
+                0,
+                -$this->getPluginConfig()->getTruncateExternalAccountVariableLength()
+            )
         ];
     }
 

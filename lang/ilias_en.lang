@@ -14,6 +14,7 @@ config.section.adminAuthentication.valid#:#<span class='sectionTitleWithStatus'>
 config.section.adminAuthentication.invalid#:#<span class='sectionTitleWithStatus'>Admin-Authentication <span class='alert alert-danger sectionStatus'>%s</span></span>
 config.section.restApiAuthentication.valid#:#<span class='sectionTitleWithStatus'>Rest-API Authentication <span class='alert alert-success sectionStatus'>%s</span></span>
 config.section.restApiAuthentication.invalid#:#<span class='sectionTitleWithStatus'>Rest-API Authentication <span class='alert alert-danger sectionStatus'>%s</span></span>
+config.section.user.scheme#:#Scheme
 config.section.user.external#:#Externally Authenticated ILIAS Users
 config.section.user.local#:#Local ILIAS Users
 config.section.room#:#Room
@@ -22,6 +23,8 @@ config.section.general#:#General Settings
 config.usernameScheme.external#:#Scheme for connecting ILIAS users with an external account
 config.usernameScheme.local#:#Scheme for connecting ILIAS users with an local account
 config.usernameScheme.info#:#This scheme is used to create the matrix username,<br>when externally authenticated ILIAS users want to join a Matrix chat but do not have a user yet.<br><br>The scheme may only contain the characters %s.<br>Uppercase letters are converted to lowercase!<br><br>Supported variables: <br>%s
+
+config.usernameScheme.truncate.variable#:#Truncate Number of Characters from <span style="color: blue">%s</span> Variable
 
 config.room.prefix#:#Room Prefix
 config.room.prefix.info#:#This scheme is used to create the prefix for the naming of the Matrix-Chatroom. <br>This prefix is put in front of the name of the course/group this chatroom is assigned to/created by. <br><br>Supported variables: <br>%s
