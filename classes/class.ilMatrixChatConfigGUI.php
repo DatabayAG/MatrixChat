@@ -138,6 +138,8 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
         $this->plugin->getPluginConfig()
             ->setMatrixServerUrl(rtrim($form->getInput("matrixServerUrl"), "/"))
             ->setSharedSecret($sharedSecretValue)
+            ->setTruncateLoginVariableLength((int) $form->getInput("truncateLoginVariableLength"))
+            ->setTruncateExternalAccountVariableLength((int) $form->getInput("truncateExternalAccountVariableLength"))
             ->setExternalUserScheme($form->getInput("externalUserScheme"))
             ->setExternalUserOptions($form->getInput("externalUserOptions"))
             ->setLocalUserScheme($form->getInput("localUserScheme"))

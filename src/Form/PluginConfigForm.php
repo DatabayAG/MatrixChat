@@ -67,6 +67,7 @@ class PluginConfigForm extends ilPropertyFormGUI
         $this->addServerSection($serverReachable);
         $this->addAdminUserSection($serverReachable);
         $this->addRestApiUserSection($serverReachable);
+        $this->addSchemeSection();
         $this->addExternalUserSection($allowedUsernameSchemeCharacters);
         $this->addLocalUserSection($allowedUsernameSchemeCharacters);
         $this->addRoomSection();
@@ -198,6 +199,29 @@ class PluginConfigForm extends ilPropertyFormGUI
         );
         $matrixRestApiUserRemoveRateLimit->setInfo($this->plugin->txt("config.removeRateLimit.info"));
         $this->addItem($matrixRestApiUserRemoveRateLimit);
+    }
+
+    private function addSchemeSection(): void
+    {
+        $section = new ilFormSectionHeaderGUI();
+        $section->setTitle($this->plugin->txt("config.section.user.scheme"));
+        $this->addItem($section);
+
+        $truncateLoginVariableLength = new ilNumberInputGUI(
+            sprintf($this->plugin->txt("config.usernameScheme.truncate.variable"), "LOGIN"),
+            "truncateLoginVariableLength"
+        );
+        $truncateLoginVariableLength->setRequired(true);
+        $truncateLoginVariableLength->setMinValue(0);
+        $this->addItem($truncateLoginVariableLength);
+
+        $truncateExternalAccountVariableLength = new ilNumberInputGUI(
+            sprintf($this->plugin->txt("config.usernameScheme.truncate.variable"), "EXTERNAL_ACCOUNT"),
+            "truncateExternalAccountVariableLength"
+        );
+        $truncateExternalAccountVariableLength->setRequired(true);
+        $truncateExternalAccountVariableLength->setMinValue(0);
+        $this->addItem($truncateExternalAccountVariableLength);
     }
 
     protected function addExternalUserSection(array $allowedCharacters): void

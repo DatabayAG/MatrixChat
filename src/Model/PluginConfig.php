@@ -41,6 +41,8 @@ class PluginConfig extends SettingsConfig
     private int $adminPowerLevel = 100;
     private int $tutorPowerLevel = 50;
     private int $memberPowerLevel = 0;
+    private int $truncateLoginVariableLength = 0;
+    private int $truncateExternalAccountVariableLength = 0;
 
     public function getMatrixServerUrl(): string
     {
@@ -83,6 +85,28 @@ class PluginConfig extends SettingsConfig
     public function setSharedSecret(string $sharedSecret): PluginConfig
     {
         $this->sharedSecret = $sharedSecret;
+        return $this;
+    }
+
+    public function getTruncateLoginVariableLength(): int
+    {
+        return $this->truncateLoginVariableLength;
+    }
+
+    public function setTruncateLoginVariableLength(int $truncateLoginVariableLength): PluginConfig
+    {
+        $this->truncateLoginVariableLength = $truncateLoginVariableLength;
+        return $this;
+    }
+
+    public function getTruncateExternalAccountVariableLength(): int
+    {
+        return $this->truncateExternalAccountVariableLength;
+    }
+
+    public function setTruncateExternalAccountVariableLength(int $truncateExternalAccountVariableLength): PluginConfig
+    {
+        $this->truncateExternalAccountVariableLength = $truncateExternalAccountVariableLength;
         return $this;
     }
 
