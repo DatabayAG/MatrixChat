@@ -140,6 +140,7 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
             ->setSharedSecret($sharedSecretValue)
             ->setExternalUserScheme($form->getInput("externalUserScheme"))
             ->setExternalUserOptions($form->getInput("externalUserOptions"))
+            ->setExternalUsertruncateLength(abs((int) $form->getInput("externalUserTruncateLength")))
             ->setLocalUserScheme($form->getInput("localUserScheme"))
             ->setLocalUserOptions($form->getInput("localUserOptions"))
             ->setRoomPrefix($form->getInput("roomPrefix"))

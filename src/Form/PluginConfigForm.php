@@ -39,6 +39,7 @@ class PluginConfigForm extends ilPropertyFormGUI
 
     public const SPECIFY_OTHER_MATRIX_ACCOUNT = "specifyOtherMatrixAccount";
     public const CREATE_ON_CONFIGURED_HOMESERVER = "createOnConfiguredHomeserver";
+    public const EXTERNAL_USER_TRUNCATE_LENGTH = "externalUserTruncateLength";
 
     public function __construct()
     {
@@ -232,7 +233,13 @@ class PluginConfigForm extends ilPropertyFormGUI
         ));
         $createOnConfiguredHomeserver->addSubItem($usernameScheme);
 
-        $accountOptions->addOption(new ilCheckboxOption(
+        $externalUserTruncateLength = new ilNumberInputGUI(
+            $this->lng->txt("config.usernameScheme.truncatelength"),
+            "externalUserTruncateLength"
+	);
+        $createOnConfiguredHomeserver->addSubItem($externalUserTruncateLength); //mg1023
+
+	$accountOptions->addOption(new ilCheckboxOption(
             $this->plugin->txt("config.accountOptions.specifyOtherMatrixAccount"),
             self::SPECIFY_OTHER_MATRIX_ACCOUNT
         ));

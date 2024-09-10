@@ -22,6 +22,7 @@ config.section.general#:#General Settings
 config.usernameScheme.external#:#Scheme for connecting ILIAS users with an external account
 config.usernameScheme.local#:#Scheme for connecting ILIAS users with an local account
 config.usernameScheme.info#:#This scheme is used to create the matrix username,<br>when externally authenticated ILIAS users want to join a Matrix chat but do not have a user yet.<br><br>The scheme may only contain the characters %s.<br>Uppercase letters are converted to lowercase!<br><br>Supported variables: <br>%s
+config.usernameScheme.truncatelength#:#Number of characters to be truncated from the configured scheme.
 
 config.room.prefix#:#Room Prefix
 config.room.prefix.info#:#This scheme is used to create the prefix for the naming of the Matrix-Chatroom. <br>This prefix is put in front of the name of the course/group this chatroom is assigned to/created by. <br><br>Supported variables: <br>%s

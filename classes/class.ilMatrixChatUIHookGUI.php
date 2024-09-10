@@ -259,15 +259,17 @@ class ilMatrixChatUIHookGUI extends ilUIHookPluginGUI
         ) {
             /** @var ChatController $chatController */
             $chatController = $this->controllerHandler->getController(ChatController::class);
-
-            $tabs->addTab(
+if ($chatController !== null) {
+	    $tabs->addTab(
                 ChatController::TAB_CHAT,
                 $this->plugin->txt("chat"),
                 $chatController->getCommandLink(ChatController::CMD_SHOW_CHAT, [
                     "ref_id" => $refId
                 ])
-            );
-        }
+	    );
+}
+}
+
     }
 
     /** @return string[] */

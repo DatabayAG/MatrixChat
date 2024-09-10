@@ -112,10 +112,12 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
 
     public function getUsernameSchemeVariables(): array
     {
+	$truncLength = $this->getPluginConfig()->getExternalUserTruncateLength();
+	
         return [
             "CLIENT_ID" => CLIENT_ID,
-            "LOGIN" => substr($this->user->getLogin(),0,0),
-            "EXTERNAL_ACCOUNT" => $this->user->getExternalAccount()
+            "LOGIN" => substr($this->user->getLogin(),0,-$truncLength),
+            "EXTERNAL_ACCOUNT" => substr($this->user->getExternalAccount(),0,-$truncLength)
         ];
     }
 

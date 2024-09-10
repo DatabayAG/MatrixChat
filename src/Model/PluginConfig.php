@@ -244,12 +244,12 @@ class PluginConfig extends SettingsConfig
 
     public function getExternalUserTruncateLength(): int
     {
-        return $this->ExternalUserTruncateLength;
+        return $this->externalUserTruncateLength;
     }
 
-    public function setExternalUserTruncateLength(int $ExternalUserTruncateLength): PluginConfig
+    public function setExternalUserTruncateLength(int $externalUserTruncateLength): PluginConfig
     {
-        $this->ExternalUserTruncateLength = $ExternalUserTruncateLength;
+        $this->externalUserTruncateLength = $externalUserTruncateLength;
         return $this;
     }
 
