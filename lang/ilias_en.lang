@@ -88,7 +88,7 @@ config.user.externalMatrixUserLookup.missingMatrixUserIdInPost#:#The Matrix-User
 
 config.user.externalMatrixUserLookup.failure.notExist#:#The homeserver responded that the user %s does not exist.
 config.user.externalMatrixUserLookup.failure.lookupDisabled#:#The homeserver does not allow querying of profiles through a different homeserver.
-config.user.externalMatrixUserLookup.failure.unknown#:#An unexpected error has occurred while querying the profile.
+config.user.externalMatrixUserLookup.failure.unknown#:#No corresponding user accout could be found on the configured homeserver. Please make sure that you have already activated your matrix account. Try to log on to you matrix server with this account, first. 
 config.user.externalMatrixUserLookup.success#:#A profile was found on the homeserver.
 config.user.externalMatrixUserLookup.info#:#You can still save this value but you may not get invited if there are further errors with this account. <br If you do not want this. Please use the '%s' button and try a different account.
 

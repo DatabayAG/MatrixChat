@@ -73,7 +73,7 @@ class ExternalUserConfigForm extends BaseUserConfigForm
         $matrixAccountInput->setInfo($this->plugin->txt("matrix.user.name.info"));
         $radioOption->addSubItem($matrixAccountInput);
 
-        if ($this->passwordEnterNeeded) {
+/*        if ($this->passwordEnterNeeded) {
             $matrixUserPassword = new ilPasswordInputGUI(
                 $this->plugin->txt("matrix.user.password"),
                 "matrixUserPassword"
@@ -82,7 +82,8 @@ class ExternalUserConfigForm extends BaseUserConfigForm
             $matrixUserPassword->setRequired(true);
 
             $radioOption->addSubItem($matrixUserPassword);
-        }
+	}
+ */
 
         return $radioOption;
     }
