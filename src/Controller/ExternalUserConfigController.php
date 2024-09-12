@@ -79,7 +79,7 @@ class ExternalUserConfigController extends BaseUserConfigController
         $this->userConfig->setAuthMethod($form->getInput("authMethod"));
 
         if ($authMethod === PluginConfigForm::CREATE_ON_CONFIGURED_HOMESERVER) {
-            if (!$this->matrixApi->usernameAvailable($matrixUserId)) {
+            if ($this->matrixApi->userExists($matrixUserId)) {
                 $this->userConfig
                     ->setMatrixUserId($matrixUserId)
                     ->save();
