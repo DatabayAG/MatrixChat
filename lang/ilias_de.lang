@@ -150,6 +150,7 @@ matrix.user.account.invite.success#:#Der Benutzer wurde erfolgreich in den Raum 
 matrix.user.account.invite.multiple.success#:#Alle ausgewählten Benutzer wurden eingeladen.
 matrix.user.account.invite.multiple.failure#:#Beim einladen der Benutzer ist ein Fehler aufgetreten, es wurden unter umständen nicht alle eingeladen.
 
+matrix.user.status.unknown#:#Unbekannt
 matrix.user.status.notInvite#:#Noch nicht eingeladen
 matrix.user.status.invite#:#Eingeladen
 matrix.user.status.join#:#Beigetreten

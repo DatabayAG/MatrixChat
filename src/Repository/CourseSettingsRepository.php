@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChat\Repository;
 
+use ilDBConstants;
 use ilDBInterface;
 use ILIAS\Plugin\MatrixChat\Model\CourseSettings;
 
@@ -110,6 +111,17 @@ class CourseSettingsRepository
                 $courseSettings->getCourseId(),
                 $courseSettings->getMatrixRoomId() ?: null
             ]
+        ) === 1;
+    }
+
+    public function delete(CourseSettings $courseSettings): bool
+    {
+        return $this->db->manipulateF(
+            "DELETE FROM " . self::TABLE_NAME . " WHERE course_id = %s",
+            [ilDBConstants::T_INTEGER],
+            [
+                    $courseSettings->getCourseId(),
+                ]
         ) === 1;
     }
 }
