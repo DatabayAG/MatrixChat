@@ -215,6 +215,30 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
             return;
         }
 
+        if ($a_event === "delete") {
+            try {
+                /**
+                 * @var ilObjCourse|ilObjGroup $object
+                 */
+                $object = $a_parameter["object"];
+
+                $refId = $object->getRefId();
+                $courseSettings = $this->courseSettingsRepo->read($refId);
+                if ($courseSettings->getMatrixRoomId() && !$this->courseSettingsRepo->delete($courseSettings)) {
+                    $this->logger->warning("Error occurred trying to delete settings for object with ref_id '$refId' after object was deleted");
+                    return;
+                }
+                foreach ($this->queuedInvitesRepo->readAllByRefId($refId) as $userRoomAddQueue) {
+                    if (!$this->queuedInvitesRepo->delete($userRoomAddQueue)) {
+                        $this->logger->warning("Error occurred trying to delete queued invited for object with ref_id '$refId' after object was deleted");
+                    }
+                }
+            } catch (Throwable $e) {
+                //If refID is undefined for some reason, don't cause a crash. It's not mandatory to clean up left over data.
+                return;
+            }
+        }
+
         if (!in_array($a_event, ["addParticipant", "deleteParticipant", "update"], true)) {
             return;
         }
