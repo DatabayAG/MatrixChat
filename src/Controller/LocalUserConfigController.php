@@ -36,14 +36,18 @@ class LocalUserConfigController extends BaseUserConfigController
         $this->mainTpl->loadStandardTemplate();
 
         if (!$form) {
-            $username = $this->buildUsername();
+		if (!$this->userConfig->getMatrixUserId()) {
+			$username = $this->buildUsername(); 
+		} else {
+  	    		$username =  $this->userConfig->getMatrixUserId();
+		}
 
             $form = new LocalUserConfigForm(
                 $this,
                 $this->user,
                 $this->userConfig->getMatrixUserId(),
                 $this->userConfig->getAuthMethod(),
-                $this->matrixApi->usernameAvailable($username)
+                !$this->matrixApi->userExists($username)
             );
 
             $form->setValuesByArray(array_merge(
@@ -65,7 +69,7 @@ class LocalUserConfigController extends BaseUserConfigController
         $this->verifyCorrectController();
         $matrixUsername = $this->buildUsername();
 
-        $usernameAvailable = $this->matrixApi->usernameAvailable($matrixUsername);
+        $usernameAvailable = !$this->matrixApi->userExists($matrixUsername);
         $form = new LocalUserConfigForm(
             $this,
             $this->user,

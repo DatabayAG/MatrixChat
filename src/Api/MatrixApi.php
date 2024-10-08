@@ -423,6 +423,53 @@ class MatrixApi
         return $this->login($username, $password, "ilias_auth_verification");
     }
 
+    public function createExternalUser(string $username, string $displayName): ?MatrixUser
+    {
+//        $nonce = $this->retrieveNonce();
+//        if (!$nonce) {
+//            return null;
+//        }
+
+        if (!$this->plugin->getPluginConfig()->getSharedSecret()) {
+            return null;
+        }
+
+//        $hmac = hash_hmac(
+//            "sha1",
+//            "$nonce\0$username\0$password\0notadmin",
+//            $this->plugin->getPluginConfig()->getSharedSecret()
+//        );
+//	bool $creationsuccessful = true;
+        try {
+            $response = $this->sendRequest(
+                "/_synapse/admin/v2/users/".$username,
+                true,
+                "PUT",
+                [
+//                    "nonce" => $nonce,
+//                    "username" => $username,
+//                  "password" => $password,
+                    "displayname" => $displayName,
+		    "admin" => false,
+		    "locked" => false,
+		    "deactivated" => false,
+		    "external_ids"=> array(
+				"auth_provider" => "oidc-keycloak_uni_freiburg",
+				"external_id" => $this->user->getExternalAccount()
+			)
+   		
+	    //                    "mac" => $hmac
+                ],
+            );
+        } catch (MatrixApiException $ex) {
+            $this->logger->error("Error occurred while trying to create user with username '$username'");
+	    return null;
+//	    $creationsuccessful = false;
+        }
+
+        return loginUserWithAdmin($username);
+    }
+
     public function getUser(string $matrixUserId): ?MatrixUser
     {
         try {

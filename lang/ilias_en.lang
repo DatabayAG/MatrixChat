@@ -22,6 +22,7 @@ config.section.general#:#General Settings
 config.usernameScheme.external#:#Scheme for connecting ILIAS users with an external account
 config.usernameScheme.local#:#Scheme for connecting ILIAS users with an local account
 config.usernameScheme.info#:#This scheme is used to create the matrix username,<br>when externally authenticated ILIAS users want to join a Matrix chat but do not have a user yet.<br><br>The scheme may only contain the characters %s.<br>Uppercase letters are converted to lowercase!<br><br>Supported variables: <br>%s
+config.usernameScheme.truncatelength#:#Number of characters to be truncated from the configured scheme.
 
 config.room.prefix#:#Room Prefix
 config.room.prefix.info#:#This scheme is used to create the prefix for the naming of the Matrix-Chatroom. <br>This prefix is put in front of the name of the course/group this chatroom is assigned to/created by. <br><br>Supported variables: <br>%s
@@ -87,7 +88,7 @@ config.user.externalMatrixUserLookup.missingMatrixUserIdInPost#:#The Matrix-User
 
 config.user.externalMatrixUserLookup.failure.notExist#:#The homeserver responded that the user %s does not exist.
 config.user.externalMatrixUserLookup.failure.lookupDisabled#:#The homeserver does not allow querying of profiles through a different homeserver.
-config.user.externalMatrixUserLookup.failure.unknown#:#An unexpected error has occurred while querying the profile.
+config.user.externalMatrixUserLookup.failure.unknown#:#No corresponding user accout could be found on the configured homeserver. Please make sure that you have already activated your matrix account. Try to log on to you matrix server with this account, first. 
 config.user.externalMatrixUserLookup.success#:#A profile was found on the homeserver.
 config.user.externalMatrixUserLookup.info#:#You can still save this value but you may not get invited if there are further errors with this account. <br If you do not want this. Please use the '%s' button and try a different account.
 
