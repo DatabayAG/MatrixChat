@@ -359,7 +359,15 @@ class MatrixApi
     public function usernameAvailable(string $username): bool
     {
         try {
-            $response = $this->sendRequest("/_synapse/admin/v1/username_available?username=$username");
+            $response = $this->sendRequest(
+                "/_synapse/admin/v1/username_available?username=$username",
+                true,
+                "GET",
+                [],
+                false,
+                null,
+                false
+            );
             return $response->getResponseDataValue("available");
         } catch (MatrixApiException $ex) {
             return false;
