@@ -136,13 +136,27 @@ class MatrixApi
 
         if (isset($responseData["errcode"])) {
             $ex = new MatrixApiException($responseData["errcode"], $responseData["error"]);
-            if ($responseData["errcode"] === "M_LIMIT_EXCEEDED") {
-                $this->logApiError(
-                    $apiCall,
-                    "Matrix API Request limit reached. Consider removing ratelimit for admin & rest-api user"
-                );
-            } else {
-                $this->logApiError($apiCall, "Matrix-Error Code '{$responseData["errcode"]}'", $ex);
+            switch ($responseData["errcode"]) {
+                case "M_LIMIT_EXCEEDED":
+                    $this->logApiError(
+                        $apiCall,
+                        "Matrix API Request limit reached. Consider removing ratelimit for admin & rest-api user"
+                    );
+                    break;
+                case "M_NOT_FOUND":
+                    if (str_ends_with($apiCall, "/state/m.room.member")) {
+                        //Assume never invited so state is null for user in room
+                        return new MatrixApiResponse(200, [
+                            "displayname" => "",
+                            "membership" => ChatController::USER_STATUS_NO_INVITE
+                        ]);
+                    }
+
+                    $this->logApiError($apiCall, "Matrix-Error Code '{$responseData["errcode"]}'", $ex);
+                    break;
+                default:
+                    $this->logApiError($apiCall, "Matrix-Error Code '{$responseData["errcode"]}'", $ex);
+                    break;
             }
             throw $ex;
         }
@@ -674,9 +688,6 @@ class MatrixApi
     public function getStatusOfUserInRoom(MatrixRoom $room, string $matrixUserId): string
     {
         try {
-            if (!$room->isMember($matrixUserId)) {
-                return ChatController::USER_STATUS_NO_INVITE;
-            }
             $state = $this->getRoomState($room, "m.room.member", $matrixUserId);
             return $state["membership"];
         } catch (MatrixApiException $ex) {
