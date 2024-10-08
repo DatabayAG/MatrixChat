@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace ILIAS\Plugin\MatrixChat\Api;
 
 use Exception;
+use ILIAS\Plugin\MatrixChat\Controller\ChatController;
 use ILIAS\Plugin\MatrixChat\Model\MatrixRoom;
 use ILIAS\Plugin\MatrixChat\Model\MatrixUser;
 use ILIAS\Plugin\MatrixChat\Model\MatrixUserPowerLevel;
@@ -677,7 +678,7 @@ class MatrixApi
             return $state["membership"];
         } catch (MatrixApiException $ex) {
             $this->logger->error("Error occurred while trying to retrieve status of user '$matrixUserId' in room '{$room->getId()}'.");
-            return "";
+            return ChatController::USER_STATUS_UNKNOWN;
         }
     }
 

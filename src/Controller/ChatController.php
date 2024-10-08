@@ -73,6 +73,7 @@ class ChatController extends BaseController
     public const SUB_TAB_CHAT_SETTINGS = "sub_tab_chat_settings";
     public const SUB_TAB_MEMBERS = "sub_tab_chat_members";
 
+    public const USER_STATUS_UNKNOWN = "unknown";
     public const USER_STATUS_NO_INVITE = "notInvite";
     public const USER_STATUS_INVITE = "invite";
     public const USER_STATUS_JOIN = "join";
