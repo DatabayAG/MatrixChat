@@ -217,6 +217,7 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
 
         if ($a_event === "delete") {
             try {
+                $matrixApi = $this->getMatrixApi();
                 /**
                  * @var ilObjCourse|ilObjGroup $object
                  */
@@ -224,6 +225,16 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
 
                 $refId = $object->getRefId();
                 $courseSettings = $this->courseSettingsRepo->read($refId);
+
+                /*
+                //ToDo: Delete room when object deleted?
+                if ($courseSettings->getMatrixRoomId()) {
+                    $room = $matrixApi->getRoom($courseSettings->getMatrixRoomId());
+                    if ($room && !$matrixApi->deleteRoom($room, "Object deleted", true, true)) {
+                        $this->logger->warning("Error occurred trying to delete room for object with ref_id '$refId' after object was deleted");
+                    }
+                }
+                */
                 if ($courseSettings->getMatrixRoomId() && !$this->courseSettingsRepo->delete($courseSettings)) {
                     $this->logger->warning("Error occurred trying to delete settings for object with ref_id '$refId' after object was deleted");
                     return;
