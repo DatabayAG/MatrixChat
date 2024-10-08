@@ -72,7 +72,8 @@ class MatrixApi
         string $method = "GET",
         array $body = [],
         bool $useRestApiUserAuth = false,
-        ?string $overwriteApiToken = null
+        ?string $overwriteApiToken = null,
+        bool $logApiError = true
     ): MatrixApiResponse {
         $options = [
             "timeout" => $this->requestTimeout
@@ -136,27 +137,29 @@ class MatrixApi
 
         if (isset($responseData["errcode"])) {
             $ex = new MatrixApiException($responseData["errcode"], $responseData["error"]);
-            switch ($responseData["errcode"]) {
-                case "M_LIMIT_EXCEEDED":
-                    $this->logApiError(
-                        $apiCall,
-                        "Matrix API Request limit reached. Consider removing ratelimit for admin & rest-api user"
-                    );
-                    break;
-                case "M_NOT_FOUND":
-                    if (str_ends_with($apiCall, "/state/m.room.member")) {
-                        //Assume never invited so state is null for user in room
-                        return new MatrixApiResponse(200, [
-                            "displayname" => "",
-                            "membership" => ChatController::USER_STATUS_NO_INVITE
-                        ]);
-                    }
+            if ($logApiError) {
+                switch ($responseData["errcode"]) {
+                    case "M_LIMIT_EXCEEDED":
+                        $this->logApiError(
+                            $apiCall,
+                            "Matrix API Request limit reached. Consider removing ratelimit for admin & rest-api user"
+                        );
+                        break;
+                    case "M_NOT_FOUND":
+                        if (str_ends_with($apiCall, "/state/m.room.member")) {
+                            //Assume never invited so state is null for user in room
+                            return new MatrixApiResponse(200, [
+                                "displayname" => "",
+                                "membership" => ChatController::USER_STATUS_NO_INVITE
+                            ]);
+                        }
 
-                    $this->logApiError($apiCall, "Matrix-Error Code '{$responseData["errcode"]}'", $ex);
-                    break;
-                default:
-                    $this->logApiError($apiCall, "Matrix-Error Code '{$responseData["errcode"]}'", $ex);
-                    break;
+                        $this->logApiError($apiCall, "Matrix-Error Code '{$responseData["errcode"]}'", $ex);
+                        break;
+                    default:
+                        $this->logApiError($apiCall, "Matrix-Error Code '{$responseData["errcode"]}'", $ex);
+                        break;
+                }
             }
             throw $ex;
         }
