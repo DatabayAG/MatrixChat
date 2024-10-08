@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChat\Repository;
 
+use ilDBConstants;
 use ilDBInterface;
 use ILIAS\Plugin\MatrixChat\Model\UserRoomAddQueue;
 
@@ -133,6 +134,22 @@ class QueuedInvitesRepository
             }
 
             $data[$refId][] = new UserRoomAddQueue((int) $row["user_id"], $refId);
+        }
+        return $data;
+    }
+
+    /** @return UserRoomAddQueue[] */
+    public function readAllByRefId(int $refId): array
+    {
+        $result = $this->db->queryF(
+            "SELECT * FROM " . self::TABLE_NAME . " WHERE ref_id = %s",
+            [ilDBConstants::T_INTEGER],
+            [$refId]
+        );
+
+        $data = [];
+        while ($row = $this->db->fetchAssoc($result)) {
+            $data[] = new UserRoomAddQueue((int) $row["user_id"], (int) $row["ref_id"]);
         }
         return $data;
     }

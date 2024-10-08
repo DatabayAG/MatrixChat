@@ -26,8 +26,6 @@ use ILIAS\Plugin\Libraries\ControllerHandler\ControllerHandler;
 use ILIAS\Plugin\MatrixChat\Api\MatrixApi;
 use ILIAS\Plugin\MatrixChat\Api\MatrixApiException;
 use ILIAS\Plugin\MatrixChat\Form\BaseUserConfigForm;
-use ILIAS\Plugin\MatrixChat\Model\CourseSettings;
-use ILIAS\Plugin\MatrixChat\Model\MatrixUserHistory;
 use ILIAS\Plugin\MatrixChat\Model\UserConfig;
 use ILIAS\Plugin\MatrixChat\Model\UserRoomAddQueue;
 use ILIAS\Plugin\MatrixChat\Repository\CourseSettingsRepository;
@@ -244,13 +242,11 @@ abstract class BaseUserConfigController extends BaseController
                     $matrixUser->getId()
                 );
 
-                if ($statusOfUserInRoom === ChatController::USER_STATUS_INVITE
-                    && !$this->matrixApi->removeUserFromRoom(
-                        $matrixUser->getId(),
-                        $matrixRoom,
-                        "Invite redacted because Matrix-Account of user was reset"
-                    )
-                ) {
+                if ($statusOfUserInRoom === ChatController::USER_STATUS_INVITE && !$this->matrixApi->removeUserFromRoom(
+                    $matrixUser->getId(),
+                    $matrixRoom,
+                    "Invite redacted because Matrix-Account of user was reset"
+                )) {
                     $this->logger->warning(sprintf(
                         "Error occurred while trying to remove invited user '%s' from room '%s' after matrix-account of user was reset",
                         $matrixUser->getId(),

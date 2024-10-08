@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace ILIAS\Plugin\MatrixChat\Api;
 
 use Exception;
+use ILIAS\Plugin\MatrixChat\Controller\ChatController;
 use ILIAS\Plugin\MatrixChat\Model\MatrixRoom;
 use ILIAS\Plugin\MatrixChat\Model\MatrixUser;
 use ILIAS\Plugin\MatrixChat\Model\MatrixUserPowerLevel;
@@ -71,7 +72,8 @@ class MatrixApi
         string $method = "GET",
         array $body = [],
         bool $useRestApiUserAuth = false,
-        ?string $overwriteApiToken = null
+        ?string $overwriteApiToken = null,
+        bool $logApiError = true
     ): MatrixApiResponse {
         $options = [
             "timeout" => $this->requestTimeout
@@ -135,13 +137,29 @@ class MatrixApi
 
         if (isset($responseData["errcode"])) {
             $ex = new MatrixApiException($responseData["errcode"], $responseData["error"]);
-            if ($responseData["errcode"] === "M_LIMIT_EXCEEDED") {
-                $this->logApiError(
-                    $apiCall,
-                    "Matrix API Request limit reached. Consider removing ratelimit for admin & rest-api user"
-                );
-            } else {
-                $this->logApiError($apiCall, "Matrix-Error Code '{$responseData["errcode"]}'", $ex);
+            if ($logApiError) {
+                switch ($responseData["errcode"]) {
+                    case "M_LIMIT_EXCEEDED":
+                        $this->logApiError(
+                            $apiCall,
+                            "Matrix API Request limit reached. Consider removing ratelimit for admin & rest-api user"
+                        );
+                        break;
+                    case "M_NOT_FOUND":
+                        if (str_ends_with($apiCall, "/state/m.room.member")) {
+                            //Assume never invited so state is null for user in room
+                            return new MatrixApiResponse(200, [
+                                "displayname" => "",
+                                "membership" => ChatController::USER_STATUS_NO_INVITE
+                            ]);
+                        }
+
+                        $this->logApiError($apiCall, "Matrix-Error Code '{$responseData["errcode"]}'", $ex);
+                        break;
+                    default:
+                        $this->logApiError($apiCall, "Matrix-Error Code '{$responseData["errcode"]}'", $ex);
+                        break;
+                }
             }
             throw $ex;
         }
@@ -341,7 +359,15 @@ class MatrixApi
     public function usernameAvailable(string $username): bool
     {
         try {
-            $response = $this->sendRequest("/_synapse/admin/v1/username_available?username=$username");
+            $response = $this->sendRequest(
+                "/_synapse/admin/v1/username_available?username=$username",
+                true,
+                "GET",
+                [],
+                false,
+                null,
+                false
+            );
             return $response->getResponseDataValue("available");
         } catch (MatrixApiException $ex) {
             return false;
@@ -677,7 +703,7 @@ class MatrixApi
             return $state["membership"];
         } catch (MatrixApiException $ex) {
             $this->logger->error("Error occurred while trying to retrieve status of user '$matrixUserId' in room '{$room->getId()}'.");
-            return "";
+            return ChatController::USER_STATUS_UNKNOWN;
         }
     }
 

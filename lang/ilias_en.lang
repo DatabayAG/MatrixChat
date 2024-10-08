@@ -147,6 +147,7 @@ matrix.user.account.invite.success#:#The User was successfully invited.
 matrix.user.account.invite.multiple.success#:#All selected users were invited.
 matrix.user.account.invite.multiple.failure#:#An error occurred while inviting the users. Some users may not have been invited.
 
+matrix.user.status.unknown#:#Unknown
 matrix.user.status.notInvite#:#Not yet invited
 matrix.user.status.invite#:#Invited
 matrix.user.status.join#:#Joined
