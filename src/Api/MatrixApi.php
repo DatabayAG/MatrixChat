@@ -674,6 +674,9 @@ class MatrixApi
     public function getStatusOfUserInRoom(MatrixRoom $room, string $matrixUserId): string
     {
         try {
+            if (!$room->isMember($matrixUserId)) {
+                return ChatController::USER_STATUS_NO_INVITE;
+            }
             $state = $this->getRoomState($room, "m.room.member", $matrixUserId);
             return $state["membership"];
         } catch (MatrixApiException $ex) {

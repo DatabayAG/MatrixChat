@@ -469,7 +469,7 @@ class ChatController extends BaseController
                 $status = $this->matrixApi->getStatusOfUserInRoom(
                     $room,
                     $userConfig->getMatrixUserId()
-                ) ?: self::USER_STATUS_NO_INVITE;
+                );
             }
 
             if (in_array(
