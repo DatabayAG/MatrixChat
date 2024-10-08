@@ -21,6 +21,7 @@ use ILIAS\Plugin\MatrixChat\Api\MatrixApi;
 use ILIAS\Plugin\MatrixChat\Job\ProcessQueuedInvitesJob;
 use ILIAS\Plugin\MatrixChat\Model\CourseSettings;
 use ILIAS\Plugin\MatrixChat\Model\MatrixRoom;
+use ILIAS\Plugin\MatrixChat\Model\MatrixUser;
 use ILIAS\Plugin\MatrixChat\Model\PluginConfig;
 use ILIAS\Plugin\MatrixChat\Model\Room\MatrixSpace;
 use ILIAS\Plugin\MatrixChat\Model\UserConfig;
@@ -210,158 +211,188 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
 
     public function handleEvent(string $a_component, string $a_event, $a_parameter): void
     {
-        if (!in_array($a_event, ["addParticipant", "deleteParticipant"], true)) {
+        if (!in_array($a_component, ["Modules/Course", "Modules/Group"])) {
             return;
+        }
+
+        if (!in_array($a_event, ["addParticipant", "deleteParticipant", "update"], true)) {
+            return;
+        }
+
+        $objId = (int) $a_parameter["obj_id"];
+
+        if ($a_event === "update") {
+            /**
+             * @var ilObjCourse|ilObjGroup $object
+             */
+            $object = $a_parameter["object"];
+
+            $oldOfflineStatus = ilObject::lookupOfflineStatus($objId);
+            $newOfflineStatus = $object->getOfflineStatus();
+
+            if ($newOfflineStatus !== $oldOfflineStatus && !$newOfflineStatus) {
+                $userIds = $object->getMembersObject()->getParticipants();
+            } else {
+                return;
+            }
+        } else {
+            $userIds = [(int) $a_parameter["usr_id"]];
         }
 
         $matrixApi = $this->getMatrixApi();
 
-        $objectOffline = false;
-        $objId = $a_parameter["obj_id"];
-        $user = new ilObjUser($a_parameter["usr_id"]);
-        if ($a_event === "addParticipant") {
-            $roleId = $a_parameter["role_id"];
-
-            $objectOffline = ilObject::lookupOfflineStatus($objId);
+        $matrixSpaceId = $this->pluginConfig->getMatrixSpaceId();
+        if (!$matrixSpaceId) {
+            $this->logger->warning("Unable to continue handling event '$a_event'. No Matrix-Space-ID found");
+            return;
         }
 
-        $userConfig = (new UserConfig($user))->load();
+        $space = $matrixApi->getSpace($matrixSpaceId);
+        if (!$space) {
+            $this->logger->warning("Unable to continue handling event '$a_event'. Matrix-Space-ID '$matrixSpaceId' saved but retrieving space failed");
+            return;
+        }
 
-        $matrixUser = null;
+        $rooms = $this->findMatrixRoomsLinkedToObjId($objId, $a_event, $matrixApi);
+        if($rooms === []) {
+            $this->logger->warning("Unable to continue handling event '$a_event'. No room(s) were found using the obj-id '$objId'");
+            return;
+        }
+
+        foreach ($userIds as $userId) {
+            $user = new ilObjUser($userId);
+            $userConfig = (new UserConfig($user))->load();
+
+            $matrixUserId = $userConfig->getMatrixUserId();
+            if ($matrixUserId) {
+                $matrixUser = $this->getMatrixApi()->getUser($matrixUserId);
+            } else {
+                $matrixUser = null;
+            }
+
+
+            foreach ($rooms as $objRefId => $room) {
+                $participants = ilParticipants::getInstance($objRefId);
+
+                if ($a_event === "addParticipant" || $a_event === "update") {
+                    $this->inviteParticipant(
+                        $user,
+                        $objId,
+                        $objRefId,
+                        $matrixUser,
+                        $room,
+                        $space,
+                        $this->determinePowerLevelOfParticipant($participants, $user->getId()),
+                        $a_event === "update" ? $newOfflineStatus : ilObject::lookupOfflineStatus($objId)
+
+                );
+                } else {
+                    $this->removeParticipant(
+                        $user,
+                        $objRefId,
+                        $matrixUser,
+                        $room
+                    );
+                }
+            }
+        }
+    }
+
+    /**
+     * @return array<int, MatrixRoom>
+     */
+    private function findMatrixRoomsLinkedToObjId(int $objId, string $event, MatrixApi $matrixApi): array
+    {
+        $rooms = [];
+        foreach (ilObject::_getAllReferences($objId) as $objRefId) {
+            $objRefId = (int) $objRefId;
+            $courseSettings = $this->courseSettingsRepo->read($objRefId);
+            $matrixRoomId = $courseSettings->getMatrixRoomId();
+
+            if (!$matrixRoomId) {
+                $this->logger->debug("Unable to continue handling event '$event'. No Matrix-Room-ID found in setting of object with ref_id '$objRefId'");
+                continue;
+            }
+
+            $room = $matrixApi->getRoom($matrixRoomId);
+
+            if (!$room) {
+                $this->logger->debug("Unable to continue handling event '$event'. Matrix-Room-ID '$matrixRoomId' saved but retrieving room failed. Skipping");
+                continue;
+            }
+
+            $rooms[$objRefId] = $room;
+        }
+
+        return $rooms;
+    }
+
+    private function inviteParticipant(ilObjUser $user, int $objId, int $objRefId, ?MatrixUser $matrixUser, MatrixRoom $room, MatrixSpace $space, int $powerLevel, bool $objectOffline): void
+    {
         $addToQueue = false;
 
         if (!$objectOffline) {
-            if (!$userConfig->getMatrixUserId()) {
+            if (!$matrixUser) {
                 $addToQueue = true;
-            } else {
-                $matrixUser = $this->getMatrixApi()->getUser($userConfig->getMatrixUserId());
-
-                if (!$matrixUser) {
-                    $addToQueue = true;
-                }
             }
         } else {
             $addToQueue = true;
         }
 
-
-        /** @var array<int, CourseSettings> $courseSettingsCache */
-        $courseSettingsCache = [];
-
-        /** @var array<string, MatrixRoom> $roomCache */
-        $roomCache = [];
-
-        /** @var array<string, MatrixSpace> $spaceCache */
-        $spaceCache = [];
-
-        foreach (ilObject::_getAllReferences($objId) as $objRefId) {
-            $objRefId = (int) $objRefId;
-
-            if (!array_key_exists($objRefId, $courseSettingsCache)) {
-                $courseSettingsCache[$objRefId] = $this->courseSettingsRepo->read($objRefId);
+        if ($addToQueue) {
+            $this->queuedInvitesRepo->create(new UserRoomAddQueue($user->getId(), $objRefId));
+        } elseif (
+            $matrixUser
+            && !$room->isMember($matrixUser)
+        ) {
+            if (!$this->getMatrixApi()->inviteUserToRoom($matrixUser, $space)) {
+                $this->logger->warning(sprintf(
+                    "Inviting matrix-user '%s' to space '%s' failed",
+                    $matrixUser->getId(),
+                    $space->getId()
+                ));
             }
 
-            $courseSettings = $courseSettingsCache[$objRefId];
-            $matrixRoomId = $courseSettings->getMatrixRoomId();
-            $matrixSpaceId = $this->pluginConfig->getMatrixSpaceId();
+            if (!$this->getMatrixApi()->inviteUserToRoom(
+                $matrixUser,
+                $room,
+                $powerLevel
+            )) {
+                $this->logger->warning(sprintf(
+                    "Inviting matrix-user '%s' to room '%s' failed",
+                    $matrixUser->getId(),
+                    $room->getId()
+                ));
+            }
+        }
+    }
 
-            $participants = ilParticipants::getInstance($objRefId);
+    private function removeParticipant(ilObjUser $user, int $objRefId, ?MatrixUser $matrixUser, MatrixRoom $room): void
+    {
+        $userRoomAddQueue = $this->queuedInvitesRepo->read($user->getId(), $objRefId);
 
-            if (!$matrixRoomId) {
-                $this->logger->warning("Unable to continue handling event '$a_event'. No Matrix-Room-ID found in setting of object with ref_id '$objRefId'");
-                continue;
+        if ($userRoomAddQueue) {
+            $this->queuedInvitesRepo->delete($userRoomAddQueue);
+        }
+
+        if ($matrixUser) {
+            if (!$this->getMatrixApi()->removeUserFromRoom(
+                $matrixUser->getId(),
+                $room,
+                "Removed from course/group"
+            )) {
+                $this->logger->warning(sprintf(
+                    "Removing matrixuser '%s' from room '%s'. with Reason 'Removed from Course/Group object' failed.",
+                    $matrixUser->getId(),
+                    $room->getId()
+                ));
             }
 
-            if (!$matrixSpaceId) {
-                $this->logger->warning("Unable to continue handling event '$a_event'. No Matrix-Space-ID found");
-                continue;
-            }
-
-            if (!array_key_exists($matrixRoomId, $roomCache)) {
-                $matrixRoom = $matrixApi->getRoom($matrixRoomId);
-                if ($matrixRoom) {
-                    $roomCache[$matrixRoomId] = $matrixRoom;
-                }
-            }
-
-            $room = $roomCache[$matrixRoomId] ?? null;
-
-            if (!array_key_exists($matrixSpaceId, $spaceCache)) {
-                $matrixSpace = $matrixApi->getRoom($matrixSpaceId);
-                if ($matrixSpace) {
-                    $spaceCache[$matrixSpaceId] = $matrixSpace;
-                }
-            }
-
-            $space = $spaceCache[$matrixSpaceId] ?? null;
-
-            if (!$room) {
-                $this->logger->warning("Unable to continue handling event '$a_event'. Matrix-Room-ID '$matrixRoomId' saved but retrieving room failed. Skipping");
-                continue;
-            }
-
-            if (!$space) {
-                $this->logger->warning("Unable to continue handling event '$a_event'. Matrix-Space-ID '$matrixSpaceId' saved but retrieving space failed. Skipping");
-                continue;
-            }
-
-            if ($a_event === "addParticipant") {
-                //Add participant
-
-                if ($addToQueue) {
-                    $this->queuedInvitesRepo->create(new UserRoomAddQueue($user->getId(), $objRefId));
-                } elseif (
-                    $matrixUser
-                    && !$room->isMember($matrixUser)
-                ) {
-                    if (!$this->getMatrixApi()->inviteUserToRoom($matrixUser, $space)) {
-                        $this->logger->warning(sprintf(
-                            "Inviting matrix-user '%s' to space '%s' failed",
-                            $matrixUser->getId(),
-                            $space->getId()
-                        ));
-                    }
-
-                    if (!$this->getMatrixApi()->inviteUserToRoom(
-                        $matrixUser,
-                        $room,
-                        $this->determinePowerLevelOfParticipant($participants, $user->getId())
-                    )) {
-                        $this->logger->warning(sprintf(
-                            "Inviting matrix-user '%s' to room '%s' failed",
-                            $matrixUser->getId(),
-                            $room->getId()
-                        ));
-                    }
-                }
-            } else {
-                //Remove participant
-                $userRoomAddQueue = $this->queuedInvitesRepo->read($user->getId(), $objRefId);
-
-                if ($userRoomAddQueue) {
-                    $this->queuedInvitesRepo->delete($userRoomAddQueue);
-                }
-
-                if ($matrixUser) {
-                    if (!$this->getMatrixApi()->removeUserFromRoom(
-                        $matrixUser->getId(),
-                        $room,
-                        "Removed from course/group"
-                    )) {
-                        $this->logger->warning(sprintf(
-                            "Removing matrixuser '%s' from room '%s'. with Reason 'Removed from Course/Group object' failed.",
-                            $matrixUser->getId(),
-                            $room->getId()
-                        ));
-                    }
-
-                    $this->logger->info(sprintf(
-                        "Removed matrix user '%s' from room '%s'. Reason: Removed from Course/Group object.",
-                        $matrixUser->getId(),
-                        $room->getId()
-                    ));
-                }
-            }
+            $this->logger->info(sprintf(
+                "Removed matrix user '%s' from room '%s'. Reason: Removed from Course/Group object.",
+                $matrixUser->getId(),
+                $room->getId()
+            ));
         }
     }
 
