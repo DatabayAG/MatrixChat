@@ -117,11 +117,11 @@ class CourseSettingsRepository
     public function delete(CourseSettings $courseSettings): bool
     {
         return $this->db->manipulateF(
-                "DELETE FROM " . self::TABLE_NAME . " WHERE course_id = %s",
-                [ilDBConstants::T_INTEGER],
-                [
+            "DELETE FROM " . self::TABLE_NAME . " WHERE course_id = %s",
+            [ilDBConstants::T_INTEGER],
+            [
                     $courseSettings->getCourseId(),
                 ]
-            ) === 1;
+        ) === 1;
     }
 }

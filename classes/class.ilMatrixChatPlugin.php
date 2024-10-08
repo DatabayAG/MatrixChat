@@ -319,8 +319,7 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
                         $space,
                         $this->determinePowerLevelOfParticipant($participants, $user->getId()),
                         $a_event === "update" ? $newOfflineStatus : ilObject::lookupOfflineStatus($objId)
-
-                );
+                    );
                 } else {
                     $this->removeParticipant(
                         $user,
