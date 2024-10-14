@@ -384,49 +384,6 @@ class MatrixApi
         }
     }
 
-    /**
-     * @deprecated
-     * ToDo: In the future this may no longer be usuable (https://github.com/matrix-org/matrix-spec-proposals/blob/hughns/delegated-oidc-architecture/proposals/3861-delegated-oidc-architecture.md)
-     */
-    public function createUser(string $username, string $password, string $displayName): ?MatrixUser
-    {
-        $nonce = $this->retrieveNonce();
-        if (!$nonce) {
-            return null;
-        }
-
-        if (!$this->plugin->getPluginConfig()->getSharedSecret()) {
-            return null;
-        }
-
-        $hmac = hash_hmac(
-            "sha1",
-            "$nonce\0$username\0$password\0notadmin",
-            $this->plugin->getPluginConfig()->getSharedSecret()
-        );
-
-        try {
-            $response = $this->sendRequest(
-                "/_synapse/admin/v1/register",
-                true,
-                "POST",
-                [
-                    "nonce" => $nonce,
-                    "username" => $username,
-                    "password" => $password,
-                    "displayname" => $displayName,
-                    "admin" => false,
-                    "mac" => $hmac
-                ],
-            );
-        } catch (MatrixApiException $ex) {
-            $this->logger->error("Error occurred while trying to create user with username '$username'");
-            return null;
-        }
-
-        return $this->login($username, $password, "ilias_auth_verification");
-    }
-
     public function getUser(string $matrixUserId): MatrixUser
     {
         $exists = false;
