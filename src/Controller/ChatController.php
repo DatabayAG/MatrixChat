@@ -562,10 +562,6 @@ class ChatController extends BaseController
 
                     $matrixUser = $this->matrixApi->getUser($userConfig->getMatrixUserId());
 
-                    if (!$matrixUser) {
-                        continue;
-                    }
-
                     if (!$this->matrixApi->inviteUserToRoom($matrixUser, $space)) {
                         $this->logger->warning(sprintf(
                             "Inviting matrix-user '%s' to space '%s' failed.",

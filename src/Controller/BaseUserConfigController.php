@@ -103,9 +103,6 @@ abstract class BaseUserConfigController extends BaseController
         }
 
         $matrixUser = $this->matrixApi->getUser($userConfig->getMatrixUserId());
-        if (!$matrixUser) {
-            return null;
-        }
 
         $resultText = $this->plugin->txt("matrix.user.queue.inviteProcessResult");
 
