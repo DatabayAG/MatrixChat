@@ -75,38 +75,20 @@ class ExternalUserConfigController extends BaseUserConfigController
         $form->setValuesByPost();
 
         $authMethod = $form->getInput("authMethod");
-        $matrixUserId = $this->buildMatrixUserId();
         $this->userConfig->setAuthMethod($form->getInput("authMethod"));
 
         if ($authMethod === PluginConfigForm::CREATE_ON_CONFIGURED_HOMESERVER) {
-            //ToDo: could probably be reduced without username available check/user exists
-            if ($this->matrixApi->userExists($matrixUserId)) {
-                $this->userConfig
-                    ->setMatrixUserId($matrixUserId)
-                    ->save();
+            $matrixUserId = $this->buildMatrixUserId();
 
-                $this->uiUtil->sendSuccess($this->plugin->txt("config.user.auth.success"), true);
-                $this->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
-            } else {
-                // User not yet created.
-                $username = $this->buildUsername();
-
-                if (!$this->matrixApi->usernameAvailable($username)) {
-                    //Should only ever happen if a user was register in the same moment this code ran (unlikely)
-                    $this->uiUtil->sendFailure($this->plugin->txt("config.user.register.failure.usernameAlreadyUsed"));
-                    $this->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
-                }
-
-                $this->userConfig
-                    ->setMatrixUserId($this->buildMatrixUserId())
-                    ->save();
-
-                $this->uiUtil->sendSuccess($this->plugin->txt("config.user.register.success"), true);
-            }
         } else {
             $matrixUserId = $form->getInput("matrixAccount");
-            $this->userConfig->setMatrixUserId($matrixUserId)->save();
         }
+
+        $this->userConfig
+            ->setMatrixUserId($matrixUserId)
+            ->save();
+
+        $this->uiUtil->sendSuccess($this->plugin->txt("config.user.save.success"), true);
 
         if (!$this->matrixUserHistoryRepo->create(new MatrixUserHistory($this->user->getId(), $matrixUserId))) {
             $this->logger->warning(sprintf(
