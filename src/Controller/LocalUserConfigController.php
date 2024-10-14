@@ -36,14 +36,12 @@ class LocalUserConfigController extends BaseUserConfigController
         $this->mainTpl->loadStandardTemplate();
 
         if (!$form) {
-            $username = $this->buildUsername();
-
             $form = new LocalUserConfigForm(
                 $this,
                 $this->user,
                 $this->userConfig->getMatrixUserId(),
                 $this->userConfig->getAuthMethod(),
-                $this->matrixApi->usernameAvailable($username)
+                !$this->matrixApi->usernameAvailable($this->buildUsername())
             );
 
             $form->setValuesByArray(array_merge(
@@ -63,15 +61,13 @@ class LocalUserConfigController extends BaseUserConfigController
     public function saveUserChatConfig(): void
     {
         $this->verifyCorrectController();
-        $matrixUsername = $this->buildUsername();
 
-        $usernameAvailable = $this->matrixApi->usernameAvailable($matrixUsername);
         $form = new LocalUserConfigForm(
             $this,
             $this->user,
             null,
             null,
-            $usernameAvailable
+            !$this->matrixApi->usernameAvailable($this->buildUsername())
         );
 
         if (!$form->checkInput()) {
