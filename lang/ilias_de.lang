@@ -95,9 +95,7 @@ config.user.externalMatrixUserLookup.failure.unknown#:#Ein unerwarteter Fehler i
 config.user.externalMatrixUserLookup.success#:#Auf dem angefragten Homeserver wurde ein Profil gefunden.
 config.user.externalMatrixUserLookup.info#:#Sie können diese Eingabe dennoch speichern, <br> eventuell werden sie dann jedoch nicht eingeladen, fall es mit dieser Angabe zu weiteren fehlern kommt. <br Wenn sie dies nicht wünschen. Verwenden Sie den '%s' Button.
 
-config.user.register.success#:#Matrix-Account erfolgreich registriert.
-config.user.auth.failure#:#Matrix-Account konnte nicht authentifiziert werden.
-config.user.auth.success#:#Matrix-Account erfolgreich authentifiziert.
+config.user.save.success#:#Matrix-Account erfolgreich gespeichert.
 
 matrix.server.url#:#Matrix Server (Synapse) URL
 matrix.server.reachable#:#Server erreichbar
