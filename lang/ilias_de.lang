@@ -52,9 +52,6 @@ config.supportedObjectTypes.info#:#Bitte wählen Sie die Objekttypen aus, von de
 
 config.cleanedValue.info#:#Aus Sicherheitsgründen wird der eingegebene Wert nach dem Speichern durch Sterne (*) ersetzt.
 
-config.sharedSecret.title#:#Gemeinsames Geheimnis
-config.sharedSecret.info#:#Bitte geben Sie das gemeinsame Geheimnis an, das für die Registrierung neuer Benutzer auf dem konfigurierten Homeserver erforderlich ist. <br>Diesen Wert finden Sie in der 'homeserver.yaml' des Homeservers unter 'registration_shared_secret'.
-
 config.pageDesignerText.title#:#Matrix Chat Seite gestalten
 config.pageDesignerText.info#:#Text wird auf dem Chat-Tab innerhalb von Kursen & Gruppen angezeigt. <br>Aktivieren von TinyMCE-Editor empfohlen.
 

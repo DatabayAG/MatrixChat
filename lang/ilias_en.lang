@@ -51,9 +51,6 @@ config.supportedObjectTypes.info#:#Please choose the object types the matrix cha
 
 config.cleanedValue.info#:#For security reasons the entered value is replaced by asterisks (*) after saving.
 
-config.sharedSecret.title#:#Shared Secret
-config.sharedSecret.info#:#Please provide the shared secret required for registering new users on the configured homeserver. <br>This value can be found inside the 'homeserver.yaml' of the homeserver under registration_shared_secret'.
-
 config.pageDesignerText.title#:#Design Matrix Chat Page
 config.pageDesignerText.info#:#Text is displayed on the chat tab within courses & groups. <br>Activation of TinyMCE editor recommended.
 
