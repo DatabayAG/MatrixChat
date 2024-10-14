@@ -73,7 +73,7 @@ class ExternalUserConfigForm extends BaseUserConfigForm
         $matrixAccountInput->setInfo($this->plugin->txt("matrix.user.name.info"));
         $radioOption->addSubItem($matrixAccountInput);
 
-        if ($this->accountFound) {
+        if (!$this->accountFound) {
             $this->uiUtil->sendInfo($this->plugin->txt("matrix.user.accountNotFound"));
         }
 
