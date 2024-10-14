@@ -174,16 +174,6 @@ class ProcessQueuedInvitesJob extends ilCronJob
 
                 $matrixUser = $matrixApi->getUser($userConfig->getMatrixUserId());
 
-                if (!$matrixUser) {
-                    $this->logger->info(sprintf(
-                        "Can't continue processing queued invite of user with id '%s' to course with ref-id '%s'. Can't retrieve Matrix User.",
-                        $user->getId(),
-                        $refId
-                    ));
-                    $skipped++;
-                    continue;
-                }
-
                 if ($room->isMember($matrixUser)) {
                     $this->logger->info(sprintf(
                         "Matrix User '%s' is already a member of the room '%s' created for object with ref-id '%s'. Deleting invite from queue",

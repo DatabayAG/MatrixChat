@@ -22,12 +22,14 @@ class MatrixUser
     private string $id;
     private string $displayName;
     private string $accessToken = "";
+    private bool $exists;
     private string $deviceId = "ilias_auth_verification";
 
-    public function __construct(string $id, string $displayName)
+    public function __construct(string $id, string $displayName, bool $exists)
     {
         $this->id = $id;
         $this->displayName = $displayName;
+        $this->exists = $exists;
     }
 
     public function getId(): string
@@ -56,6 +58,10 @@ class MatrixUser
         return $this->deviceId;
     }
 
+    public function isExists(): bool
+    {
+        return $this->exists;
+    }
     public function setDeviceId(string $deviceId): MatrixUser
     {
         $this->deviceId = $deviceId;
