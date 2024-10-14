@@ -25,7 +25,6 @@ use ilObjUser;
 class UserConfig extends UserPrefConfig
 {
     private string $authMethod = "";
-    private string $matrixUsername = "";
     private string $matrixUserId = "";
 
     public function __construct(ilObjUser $user)
@@ -41,17 +40,6 @@ class UserConfig extends UserPrefConfig
     public function setAuthMethod(string $authMethod): UserConfig
     {
         $this->authMethod = $authMethod;
-        return $this;
-    }
-
-    public function getMatrixUsername(): string
-    {
-        return $this->matrixUsername;
-    }
-
-    public function setMatrixUsername(string $matrixUsername): UserConfig
-    {
-        $this->matrixUsername = $matrixUsername;
         return $this;
     }
 
