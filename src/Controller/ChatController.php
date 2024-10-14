@@ -161,7 +161,7 @@ class ChatController extends BaseController
 
         if ($userConfig->getMatrixUserId()) {
             $matrixUser = $this->matrixApi->getUser($userConfig->getMatrixUserId());
-            if (!$matrixUser) {
+            if (!$matrixUser->isExists()) {
                 $this->uiUtil->sendInfo($this->plugin->txt("matrix.user.account.unknown"), true);
             } elseif ($room) {
                 if ($room->isMember($matrixUser)) {
