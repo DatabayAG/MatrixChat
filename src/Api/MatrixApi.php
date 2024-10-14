@@ -436,7 +436,7 @@ class MatrixApi
             $exists = true;
             $displayName = $profile["displayname"];
         } catch (MatrixApiException $ex) {
-            $this->logger->error("Error occurred while trying to retrieve user profile for user '$matrixUserId'. Assuming user does not yet exist");
+            //Assume account not yet created
         }
 
         return new MatrixUser($matrixUserId, $displayName, $exists);
