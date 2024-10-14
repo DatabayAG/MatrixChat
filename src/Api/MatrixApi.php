@@ -384,6 +384,10 @@ class MatrixApi
         }
     }
 
+    /**
+     * @deprecated
+     * ToDo: In the future this may no longer be usuable (https://github.com/matrix-org/matrix-spec-proposals/blob/hughns/delegated-oidc-architecture/proposals/3861-delegated-oidc-architecture.md)
+     */
     public function createUser(string $username, string $password, string $displayName): ?MatrixUser
     {
         $nonce = $this->retrieveNonce();
@@ -548,6 +552,9 @@ class MatrixApi
             ->setDeviceId($response->getResponseDataValue("device_id"));
     }
 
+    /**
+     * ToDo: In the future this may no longer be usuable (https://github.com/matrix-org/matrix-spec-proposals/blob/hughns/delegated-oidc-architecture/proposals/3861-delegated-oidc-architecture.md)
+     */
     public function login(string $username, string $password, string $deviceId): ?MatrixUser
     {
         try {
@@ -580,6 +587,9 @@ class MatrixApi
             ->setDeviceId($deviceId);
     }
 
+    /**
+     * ToDo: In the future this may no longer be usuable (https://github.com/matrix-org/matrix-spec-proposals/blob/hughns/delegated-oidc-architecture/proposals/3861-delegated-oidc-architecture.md)
+     */
     public function loginUserWithAdmin(string $matrixUserId): ?MatrixUser
     {
         try {
