@@ -87,18 +87,13 @@ class LocalUserConfigController extends BaseUserConfigController
         $this->userConfig->setAuthMethod($form->getInput("authMethod"));
 
         if ($authMethod === PluginConfigForm::CREATE_ON_CONFIGURED_HOMESERVER) {
+            //ToDo: could probably be reduced without username available check
             if ($usernameAvailable) {
                 // User not yet created.
                 $matrixUserId = $this->buildMatrixUserId();
                 $this->uiUtil->sendSuccess($this->plugin->txt("config.user.register.success"), true);
             } else {
-                $matrixUser = $this->matrixApi->loginUserWithAdmin($this->buildMatrixUserId());
-
-                if (!$matrixUser) {
-                    $this->uiUtil->sendFailure($this->plugin->txt("config.user.auth.failure"), true);
-                    $this->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
-                }
-
+                $matrixUser = $this->matrixApi->getUser($this->buildMatrixUserId());
                 $matrixUserId = $matrixUser->getId();
                 $this->uiUtil->sendSuccess($this->plugin->txt("config.user.auth.success"), true);
             }
