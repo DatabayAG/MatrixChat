@@ -423,16 +423,19 @@ class MatrixApi
         return $this->login($username, $password, "ilias_auth_verification");
     }
 
-    public function getUser(string $matrixUserId): ?MatrixUser
+    public function getUser(string $matrixUserId): MatrixUser
     {
+        $exists = false;
+        $displayName = "";
         try {
             $profile = $this->getMatrixUserProfile($matrixUserId);
+            $exists = true;
+            $displayName = $profile["displayname"];
         } catch (MatrixApiException $ex) {
-            $this->logger->error("Error occurred while trying to retrieve user profile for user '$matrixUserId'");
-            return null;
+            $this->logger->error("Error occurred while trying to retrieve user profile for user '$matrixUserId'. Assuming user does not yet exist");
         }
 
-        return new MatrixUser($matrixUserId, $profile["displayname"]);
+        return new MatrixUser($matrixUserId, $displayName, $exists);
     }
 
     public function removeUserFromRoom(string $matrixUserId, MatrixRoom $room, string $reason): bool
@@ -539,7 +542,8 @@ class MatrixApi
 
         return (new MatrixUser(
             $userId,
-            $displayName
+            $displayName,
+            true
         ))->setAccessToken($apiToken)
             ->setDeviceId($response->getResponseDataValue("device_id"));
     }
@@ -570,7 +574,8 @@ class MatrixApi
 
         return (new MatrixUser(
             $userId,
-            $displayName
+            $displayName,
+            true
         ))->setAccessToken($response->getResponseDataValue("access_token"))
             ->setDeviceId($deviceId);
     }
@@ -595,7 +600,7 @@ class MatrixApi
             $this->logger->error("Error occurred while trying to retrieve profile for user '$matrixUserId'. Assuming displayname as empty");
         }
 
-        return (new MatrixUser($matrixUserId, $displayName));
+        return (new MatrixUser($matrixUserId, $displayName, true));
     }
 
     public function createSpace(string $name): ?MatrixSpace
