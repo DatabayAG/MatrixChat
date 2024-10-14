@@ -95,8 +95,6 @@ config.user.externalMatrixUserLookup.success#:#A profile was found on the homese
 config.user.externalMatrixUserLookup.info#:#You can still save this value but you may not get invited if there are further errors with this account. <br If you do not want this. Please use the '%s' button and try a different account.
 
 config.user.register.success#:#Matrix-Account was created successfully.
-config.user.register.failure#:#Matrix-Account could not be created.
-config.user.register.failure.usernameAlreadyUsed#:#Matrix-Account could not be created. Your username is already used.
 config.user.auth.failure#:#Matrix-Account could not be authenticated.
 config.user.auth.success#:#Matrix-Account was authenticated successfully.
 
@@ -136,8 +134,7 @@ matrix.user.name#:#Matrix-Username
 matrix.user.name.info#:#Not editable. Predefined by server.
 matrix.user.account#:#Matrix-Account
 matrix.user.password#:#Matrix-User Password
-matrix.user.password.external.required#:#Your "Recognized Matrix account" does not exist. Please enter a passwort to create it.
-matrix.user.password.local.required#:#No Matrix-Account exists with this username yet. Please enter a passwort to create it.
+matrix.user.accountNotFound#:#Your "Recognized Matrix account" could not be found. You can still save it in ILIAS for once it is created.
 matrix.user.account.joined#:#You have now joined the chat with your Matrix user '%s'. If you want to chat, use the Matrix client of your choice. <br>You can also manage your membership chat there and leave the chat room again if desired.
 matrix.user.account.invited#:#You have been invited to the chat with your Matrix user '%s'. However, you have not yet accepted this invitation. <br>>Please use the Matrix client of your choice. <br>With this you can both accept the invitation and write in the chat room.
 matrix.user.account.unconfigured#:#You have not yet configured a Matrix account. <br>Please configure a Matrix account in your user settings to be added to the chat room.

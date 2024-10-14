@@ -83,25 +83,13 @@ class LocalUserConfigController extends BaseUserConfigController
         $form->setValuesByPost();
 
         $authMethod = $form->getInput("authMethod");
-        $matrixUserPassword = $form->getInput("matrixUserPassword");
 
         $this->userConfig->setAuthMethod($form->getInput("authMethod"));
 
         if ($authMethod === PluginConfigForm::CREATE_ON_CONFIGURED_HOMESERVER) {
             if ($usernameAvailable) {
-                //user needs to be created
-                $matrixUser = $this->matrixApi->createUser(
-                    $matrixUsername,
-                    $matrixUserPassword,
-                    $this->user->getFullname()
-                );
-
-                if (!$matrixUser) {
-                    //Creation failed.
-                    $this->uiUtil->sendFailure($this->plugin->txt("config.user.register.failure"), true);
-                    $this->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
-                }
-
+                // User not yet created.
+                $matrixUserId = $this->buildMatrixUserId();
                 $this->uiUtil->sendSuccess($this->plugin->txt("config.user.register.success"), true);
             } else {
                 $matrixUser = $this->matrixApi->loginUserWithAdmin($this->buildMatrixUserId());
@@ -111,10 +99,10 @@ class LocalUserConfigController extends BaseUserConfigController
                     $this->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
                 }
 
+                $matrixUserId = $matrixUser->getId();
                 $this->uiUtil->sendSuccess($this->plugin->txt("config.user.auth.success"), true);
             }
 
-            $matrixUserId = $matrixUser->getId();
             $this->userConfig
                 ->setMatrixUserId($matrixUserId)
                 ->setMatrixUsername($matrixUsername)

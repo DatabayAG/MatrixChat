@@ -96,8 +96,6 @@ config.user.externalMatrixUserLookup.success#:#Auf dem angefragten Homeserver wu
 config.user.externalMatrixUserLookup.info#:#Sie können diese Eingabe dennoch speichern, <br> eventuell werden sie dann jedoch nicht eingeladen, fall es mit dieser Angabe zu weiteren fehlern kommt. <br Wenn sie dies nicht wünschen. Verwenden Sie den '%s' Button.
 
 config.user.register.success#:#Matrix-Account erfolgreich registriert.
-config.user.register.failure#:#Matrix-Account konnte nicht registriert werden.
-config.user.register.failure.usernameAlreadyUsed#:#Matrix-Account konnte nicht registriert werden. Ihr Benutzername ist bereits vergeben.
 config.user.auth.failure#:#Matrix-Account konnte nicht authentifiziert werden.
 config.user.auth.success#:#Matrix-Account erfolgreich authentifiziert.
 
@@ -139,8 +137,7 @@ matrix.user.name#:#Matrix-Benutzername
 matrix.user.name.info#:#Nicht editierbar. Vordefiniert durch Server.
 matrix.user.account#:#Matrix-Account
 matrix.user.password#:#Matrix-User Passwort
-matrix.user.password.external.required#:#Ihr "Erkannter Matrix-Account" existiert nicht. Bitte geben sie ein Passwort ein um diesen zu erstellen.
-matrix.user.password.local.required#:#Es existiert kein Matrix-Account mit diesem Benutzernamen. Bitte geben sie ein Passwort ein um diesen zu erstellen.
+matrix.user.accountNotFound#:#Ihr "Erkannter Matrix-Account" konnte nicht gefunden werden. Sie können diesen jedoch trotzdem Speichern und diesen somit vormerken.
 matrix.user.account.joined#:#Sie sind nun mit Ihrem Matrix-Nutzer '%s' dem Chat beigetreten. Wenn Sie chatten möchten, verwenden Sie den Matrix Client Ihrer Wahl. <br>Dort können Sie auch Ihre Mitgliedschat verwalten und ggf. den Chatraum wieder verlassen.
 matrix.user.account.invited#:#Sie wurden mit Ihrem Matrix-Nutzer '%s' zum Chat eingeladen. Sie haben diese Einladung jedoch noch nicht angenommen. <br>Bitte verwenden Sie den Matrix Client Ihrer Wahl. <br>Mit diesem können sie sowohl die Einladung annehmen als auch im Chatraum schreiben.
 matrix.user.account.unconfigured#:#Sie haben noch keinen Matrix-Account konfiguriert. <br>Bitte konfigurieren Sie einen Matrix-Account in Ihren Benutzer-Einstellungen um dem Chatraum hinzugefügt zu werden.

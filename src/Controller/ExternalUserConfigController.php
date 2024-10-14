@@ -75,7 +75,6 @@ class ExternalUserConfigController extends BaseUserConfigController
         $form->setValuesByPost();
 
         $authMethod = $form->getInput("authMethod");
-        $matrixUserPassword = $form->getInput("matrixUserPassword");
         $matrixUserId = $this->buildMatrixUserId();
         $this->userConfig->setAuthMethod($form->getInput("authMethod"));
 
@@ -96,7 +95,7 @@ class ExternalUserConfigController extends BaseUserConfigController
                 $this->uiUtil->sendSuccess($this->plugin->txt("config.user.auth.success"), true);
                 $this->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
             } else {
-                //Register new account
+                // User not yet created.
                 $username = $this->buildUsername();
 
                 if (!$this->matrixApi->usernameAvailable($username)) {
@@ -105,27 +104,8 @@ class ExternalUserConfigController extends BaseUserConfigController
                     $this->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
                 }
 
-                if (!$matrixUserPassword) {
-                    //Missing password (should never happen as form check should already fail before
-                    $this->uiUtil->sendFailure($this->plugin->txt("config.user.register.failure"), true);
-                    $this->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
-                }
-
-                $matrixUser = $this->matrixApi->createUser(
-                    $username,
-                    $matrixUserPassword,
-                    $this->user->getFullname()
-                );
-
-                if (!$matrixUser) {
-                    //Creation failed, unknown cause.
-                    $this->uiUtil->sendFailure($this->plugin->txt("config.user.register.failure"), true);
-                    $this->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
-                }
-
-                $matrixUserId = $matrixUser->getId();
                 $this->userConfig
-                    ->setMatrixUserId($matrixUserId)
+                    ->setMatrixUserId($this->buildMatrixUserId())
                     ->save();
 
                 $this->uiUtil->sendSuccess($this->plugin->txt("config.user.register.success"), true);

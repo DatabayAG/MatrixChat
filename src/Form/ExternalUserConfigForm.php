@@ -27,16 +27,16 @@ use ilRadioOption;
 
 class ExternalUserConfigForm extends BaseUserConfigForm
 {
-    private bool $passwordEnterNeeded;
+    private bool $accountFound;
 
     public function __construct(
         ExternalUserConfigController $controller,
         ilObjUser $user,
         ?string $matrixAccountId = null,
         ?string $selectedAccountOption = null,
-        bool $passwordEnterNeeded = false
+        bool $accountFound = false
     ) {
-        $this->passwordEnterNeeded = $passwordEnterNeeded;
+        $this->accountFound = $accountFound;
         parent::__construct($controller, $user, $matrixAccountId, $selectedAccountOption);
     }
 
@@ -73,15 +73,8 @@ class ExternalUserConfigForm extends BaseUserConfigForm
         $matrixAccountInput->setInfo($this->plugin->txt("matrix.user.name.info"));
         $radioOption->addSubItem($matrixAccountInput);
 
-        if ($this->passwordEnterNeeded) {
-            $matrixUserPassword = new ilPasswordInputGUI(
-                $this->plugin->txt("matrix.user.password"),
-                "matrixUserPassword"
-            );
-            $matrixUserPassword->setInfo($this->plugin->txt("matrix.user.password.external.required"));
-            $matrixUserPassword->setRequired(true);
-
-            $radioOption->addSubItem($matrixUserPassword);
+        if ($this->accountFound) {
+            $this->uiUtil->sendInfo($this->plugin->txt("matrix.user.accountNotFound"));
         }
 
         return $radioOption;
