@@ -79,17 +79,10 @@ class ExternalUserConfigController extends BaseUserConfigController
         $this->userConfig->setAuthMethod($form->getInput("authMethod"));
 
         if ($authMethod === PluginConfigForm::CREATE_ON_CONFIGURED_HOMESERVER) {
+            //ToDo: could probably be reduced without username available check/user exists
             if ($this->matrixApi->userExists($matrixUserId)) {
-                $matrixUser = $this->matrixApi->loginUserWithAdmin($matrixUserId);
-
-                if (!$matrixUser) {
-                    //Logging into user failed, even though it exists (should never happen)
-                    $this->uiUtil->sendFailure($this->plugin->txt("config.user.auth.failure"), true);
-                    $this->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
-                }
-
                 $this->userConfig
-                    ->setMatrixUserId($matrixUser->getId())
+                    ->setMatrixUserId($matrixUserId)
                     ->save();
 
                 $this->uiUtil->sendSuccess($this->plugin->txt("config.user.auth.success"), true);
