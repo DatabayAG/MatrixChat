@@ -327,7 +327,9 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
                         $this->determinePowerLevelOfParticipant($participants, $user->getId()),
                         $a_event === "update" ? $newOfflineStatus : ilObject::lookupOfflineStatus($objId)
                     );
-                } else {
+                }
+
+                if ($a_event === "deleteParticipant") {
                     $this->removeParticipant(
                         $user,
                         $objRefId,
@@ -368,12 +370,12 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
         return $rooms;
     }
 
-    private function inviteParticipant(ilObjUser $user, int $objId, int $objRefId, MatrixUser $matrixUser, MatrixRoom $room, MatrixSpace $space, int $powerLevel, bool $objectOffline): void
+    private function inviteParticipant(ilObjUser $user, int $objId, int $objRefId, ?MatrixUser $matrixUser, MatrixRoom $room, MatrixSpace $space, int $powerLevel, bool $objectOffline): void
     {
         $addToQueue = false;
 
         if (!$objectOffline) {
-            if (!$matrixUser->isExists()) {
+            if (!$matrixUser || !$matrixUser->isExists()) {
                 $addToQueue = true;
             }
         } else {
@@ -408,12 +410,16 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
         }
     }
 
-    private function removeParticipant(ilObjUser $user, int $objRefId, MatrixUser $matrixUser, MatrixRoom $room): void
+    private function removeParticipant(ilObjUser $user, int $objRefId, ?MatrixUser $matrixUser, MatrixRoom $room): void
     {
         $userRoomAddQueue = $this->queuedInvitesRepo->read($user->getId(), $objRefId);
 
         if ($userRoomAddQueue) {
             $this->queuedInvitesRepo->delete($userRoomAddQueue);
+        }
+
+        if (!$matrixUser) {
+            return;
         }
 
         if ($matrixUser->isExists()) {
