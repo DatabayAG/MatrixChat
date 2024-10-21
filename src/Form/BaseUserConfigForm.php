@@ -19,6 +19,7 @@ namespace ILIAS\Plugin\MatrixChat\Form;
 
 use ilGlobalPageTemplate;
 use ILIAS\DI\Container;
+use ILIAS\Plugin\Libraries\ControllerHandler\UiUtils;
 use ILIAS\Plugin\MatrixChat\Controller\BaseUserConfigController;
 use ilMatrixChatPlugin;
 use ilObjUser;
@@ -33,6 +34,7 @@ abstract class BaseUserConfigForm extends ilPropertyFormGUI
     protected ilGlobalPageTemplate $mainTpl;
     protected Container $dic;
     protected BaseUserConfigController $controller;
+    protected UiUtils $uiUtil;
 
     public function __construct(
         BaseUserConfigController $controller,
@@ -43,6 +45,7 @@ abstract class BaseUserConfigForm extends ilPropertyFormGUI
         global $DIC;
         parent::__construct();
         $this->dic = $DIC;
+        $this->uiUtil = new UiUtils($this->dic);
         $this->plugin = ilMatrixChatPlugin::getInstance();
         $this->mainTpl = $this->dic->ui()->mainTemplate();
         $this->mainTpl->addCss($this->plugin->cssFolder("userConfigForm.css"));

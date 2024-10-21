@@ -26,7 +26,6 @@ class PluginConfig extends SettingsConfig
     private string $matrixServerUrl = "";
     private string $matrixAdminApiToken = "";
     private string $matrixRestApiUserApiToken = "";
-    private string $sharedSecret = "";
     private string $externalUserScheme = "";
     private array $externalUserOptions = [];
     private string $localUserScheme = "";
@@ -41,6 +40,8 @@ class PluginConfig extends SettingsConfig
     private int $adminPowerLevel = 100;
     private int $tutorPowerLevel = 50;
     private int $memberPowerLevel = 0;
+    private int $truncateLoginVariableLength = 0;
+    private int $truncateExternalAccountVariableLength = 0;
 
     public function getMatrixServerUrl(): string
     {
@@ -75,14 +76,25 @@ class PluginConfig extends SettingsConfig
         return $this;
     }
 
-    public function getSharedSecret(): string
+    public function getTruncateLoginVariableLength(): int
     {
-        return $this->sharedSecret;
+        return $this->truncateLoginVariableLength;
     }
 
-    public function setSharedSecret(string $sharedSecret): PluginConfig
+    public function setTruncateLoginVariableLength(int $truncateLoginVariableLength): PluginConfig
     {
-        $this->sharedSecret = $sharedSecret;
+        $this->truncateLoginVariableLength = $truncateLoginVariableLength;
+        return $this;
+    }
+
+    public function getTruncateExternalAccountVariableLength(): int
+    {
+        return $this->truncateExternalAccountVariableLength;
+    }
+
+    public function setTruncateExternalAccountVariableLength(int $truncateExternalAccountVariableLength): PluginConfig
+    {
+        $this->truncateExternalAccountVariableLength = $truncateExternalAccountVariableLength;
         return $this;
     }
 

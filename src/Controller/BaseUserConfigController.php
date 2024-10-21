@@ -103,9 +103,6 @@ abstract class BaseUserConfigController extends BaseController
         }
 
         $matrixUser = $this->matrixApi->getUser($userConfig->getMatrixUserId());
-        if (!$matrixUser) {
-            return null;
-        }
 
         $resultText = $this->plugin->txt("matrix.user.queue.inviteProcessResult");
 
@@ -195,7 +192,7 @@ abstract class BaseUserConfigController extends BaseController
     {
         $oldMatrixUserId = $this->userConfig->getMatrixUserId();
         $matrixUser = $this->matrixApi->getUser($oldMatrixUserId);
-        if ($matrixUser) {
+        if ($matrixUser->isExists()) {
             foreach ($this->courseSettingsRepo->readAll() as $courseSetting) {
                 if (!$courseSetting->getMatrixRoomId()) {
                     //No need to remove user from room because no room configured

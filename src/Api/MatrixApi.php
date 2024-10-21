@@ -146,7 +146,7 @@ class MatrixApi
                         );
                         break;
                     case "M_NOT_FOUND":
-                        if (str_ends_with($apiCall, "/state/m.room.member")) {
+                        if (str_contains($apiCall, "/state/m.room.member")) {
                             //Assume never invited so state is null for user in room
                             return new MatrixApiResponse(200, [
                                 "displayname" => "",
@@ -384,55 +384,19 @@ class MatrixApi
         }
     }
 
-    public function createUser(string $username, string $password, string $displayName): ?MatrixUser
+    public function getUser(string $matrixUserId): MatrixUser
     {
-        $nonce = $this->retrieveNonce();
-        if (!$nonce) {
-            return null;
-        }
-
-        if (!$this->plugin->getPluginConfig()->getSharedSecret()) {
-            return null;
-        }
-
-        $hmac = hash_hmac(
-            "sha1",
-            "$nonce\0$username\0$password\0notadmin",
-            $this->plugin->getPluginConfig()->getSharedSecret()
-        );
-
-        try {
-            $response = $this->sendRequest(
-                "/_synapse/admin/v1/register",
-                true,
-                "POST",
-                [
-                    "nonce" => $nonce,
-                    "username" => $username,
-                    "password" => $password,
-                    "displayname" => $displayName,
-                    "admin" => false,
-                    "mac" => $hmac
-                ],
-            );
-        } catch (MatrixApiException $ex) {
-            $this->logger->error("Error occurred while trying to create user with username '$username'");
-            return null;
-        }
-
-        return $this->login($username, $password, "ilias_auth_verification");
-    }
-
-    public function getUser(string $matrixUserId): ?MatrixUser
-    {
+        $exists = false;
+        $displayName = "";
         try {
             $profile = $this->getMatrixUserProfile($matrixUserId);
+            $exists = true;
+            $displayName = $profile["displayname"];
         } catch (MatrixApiException $ex) {
-            $this->logger->error("Error occurred while trying to retrieve user profile for user '$matrixUserId'");
-            return null;
+            //Assume account not yet created
         }
 
-        return new MatrixUser($matrixUserId, $profile["displayname"]);
+        return new MatrixUser($matrixUserId, $displayName, $exists);
     }
 
     public function removeUserFromRoom(string $matrixUserId, MatrixRoom $room, string $reason): bool
@@ -539,11 +503,15 @@ class MatrixApi
 
         return (new MatrixUser(
             $userId,
-            $displayName
+            $displayName,
+            true
         ))->setAccessToken($apiToken)
             ->setDeviceId($response->getResponseDataValue("device_id"));
     }
 
+    /**
+     * ToDo: In the future this may no longer be usuable (https://github.com/matrix-org/matrix-spec-proposals/blob/hughns/delegated-oidc-architecture/proposals/3861-delegated-oidc-architecture.md)
+     */
     public function login(string $username, string $password, string $deviceId): ?MatrixUser
     {
         try {
@@ -570,11 +538,15 @@ class MatrixApi
 
         return (new MatrixUser(
             $userId,
-            $displayName
+            $displayName,
+            true
         ))->setAccessToken($response->getResponseDataValue("access_token"))
             ->setDeviceId($deviceId);
     }
 
+    /**
+     * ToDo: In the future this may no longer be usuable (https://github.com/matrix-org/matrix-spec-proposals/blob/hughns/delegated-oidc-architecture/proposals/3861-delegated-oidc-architecture.md)
+     */
     public function loginUserWithAdmin(string $matrixUserId): ?MatrixUser
     {
         try {
@@ -595,7 +567,7 @@ class MatrixApi
             $this->logger->error("Error occurred while trying to retrieve profile for user '$matrixUserId'. Assuming displayname as empty");
         }
 
-        return (new MatrixUser($matrixUserId, $displayName));
+        return (new MatrixUser($matrixUserId, $displayName, true));
     }
 
     public function createSpace(string $name): ?MatrixSpace

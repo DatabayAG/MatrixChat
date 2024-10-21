@@ -14,6 +14,7 @@ config.section.adminAuthentication.valid#:#<span class='sectionTitleWithStatus'>
 config.section.adminAuthentication.invalid#:#<span class='sectionTitleWithStatus'>Admin-Authentication <span class='alert alert-danger sectionStatus'>%s</span></span>
 config.section.restApiAuthentication.valid#:#<span class='sectionTitleWithStatus'>Rest-API Authentication <span class='alert alert-success sectionStatus'>%s</span></span>
 config.section.restApiAuthentication.invalid#:#<span class='sectionTitleWithStatus'>Rest-API Authentication <span class='alert alert-danger sectionStatus'>%s</span></span>
+config.section.user.scheme#:#Scheme
 config.section.user.external#:#Externally Authenticated ILIAS Users
 config.section.user.local#:#Local ILIAS Users
 config.section.room#:#Room
@@ -22,6 +23,8 @@ config.section.general#:#General Settings
 config.usernameScheme.external#:#Scheme for connecting ILIAS users with an external account
 config.usernameScheme.local#:#Scheme for connecting ILIAS users with an local account
 config.usernameScheme.info#:#This scheme is used to create the matrix username,<br>when externally authenticated ILIAS users want to join a Matrix chat but do not have a user yet.<br><br>The scheme may only contain the characters %s.<br>Uppercase letters are converted to lowercase!<br><br>Supported variables: <br>%s
+
+config.usernameScheme.truncate.variable#:#Truncate Number of Characters from <span style="color: blue">%s</span> Variable
 
 config.room.prefix#:#Room Prefix
 config.room.prefix.info#:#This scheme is used to create the prefix for the naming of the Matrix-Chatroom. <br>This prefix is put in front of the name of the course/group this chatroom is assigned to/created by. <br><br>Supported variables: <br>%s
@@ -47,9 +50,6 @@ config.supportedObjectTypes.title#:#Supported Object Types
 config.supportedObjectTypes.info#:#Please choose the object types the matrix chat should be supported by
 
 config.cleanedValue.info#:#For security reasons the entered value is replaced by asterisks (*) after saving.
-
-config.sharedSecret.title#:#Shared Secret
-config.sharedSecret.info#:#Please provide the shared secret required for registering new users on the configured homeserver. <br>This value can be found inside the 'homeserver.yaml' of the homeserver under registration_shared_secret'.
 
 config.pageDesignerText.title#:#Design Matrix Chat Page
 config.pageDesignerText.info#:#Text is displayed on the chat tab within courses & groups. <br>Activation of TinyMCE editor recommended.
@@ -91,11 +91,7 @@ config.user.externalMatrixUserLookup.failure.unknown#:#An unexpected error has o
 config.user.externalMatrixUserLookup.success#:#A profile was found on the homeserver.
 config.user.externalMatrixUserLookup.info#:#You can still save this value but you may not get invited if there are further errors with this account. <br If you do not want this. Please use the '%s' button and try a different account.
 
-config.user.register.success#:#Matrix-Account was created successfully.
-config.user.register.failure#:#Matrix-Account could not be created.
-config.user.register.failure.usernameAlreadyUsed#:#Matrix-Account could not be created. Your username is already used.
-config.user.auth.failure#:#Matrix-Account could not be authenticated.
-config.user.auth.success#:#Matrix-Account was authenticated successfully.
+config.user.save.success#:#Matrix-Account was saved successfully.
 
 matrix.server.url#:#Matrix Server (Synapse) URL
 matrix.server.reachable#:#Server is reachable
@@ -133,8 +129,7 @@ matrix.user.name#:#Matrix-Username
 matrix.user.name.info#:#Not editable. Predefined by server.
 matrix.user.account#:#Matrix-Account
 matrix.user.password#:#Matrix-User Password
-matrix.user.password.external.required#:#Your "Recognized Matrix account" does not exist. Please enter a passwort to create it.
-matrix.user.password.local.required#:#No Matrix-Account exists with this username yet. Please enter a passwort to create it.
+matrix.user.accountNotFound#:#Your "Recognized Matrix account" could not be found. You can still save it in ILIAS for once it is created.
 matrix.user.account.joined#:#You have now joined the chat with your Matrix user '%s'. If you want to chat, use the Matrix client of your choice. <br>You can also manage your membership chat there and leave the chat room again if desired.
 matrix.user.account.invited#:#You have been invited to the chat with your Matrix user '%s'. However, you have not yet accepted this invitation. <br>>Please use the Matrix client of your choice. <br>With this you can both accept the invitation and write in the chat room.
 matrix.user.account.unconfigured#:#You have not yet configured a Matrix account. <br>Please configure a Matrix account in your user settings to be added to the chat room.

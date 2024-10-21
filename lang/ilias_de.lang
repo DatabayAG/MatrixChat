@@ -14,6 +14,7 @@ config.section.adminAuthentication.valid#:#<span class='sectionTitleWithStatus'>
 config.section.adminAuthentication.invalid#:#<span class='sectionTitleWithStatus'>Admin-Authentifizierung <span class='alert alert-danger sectionStatus'>%s</span></span>
 config.section.restApiAuthentication.valid#:#<span class='sectionTitleWithStatus'>Rest-API Authentifizierung <span class='alert alert-success sectionStatus'>%s</span></span>
 config.section.restApiAuthentication.invalid#:#<span class='sectionTitleWithStatus'>Rest-API Authentifizierung <span class='alert alert-danger sectionStatus'>%s</span></span>
+config.section.user.scheme#:#Schema
 config.section.user.external#:#Extern authentifizierte ILIAS-Benutzer
 config.section.user.local#:#Lokale ILIAS-Benutzer
 config.section.room#:#Raum
@@ -22,6 +23,8 @@ config.section.general#:#Allgemeine Einstellungen
 config.usernameScheme.external#:#Schema zum Verbinden von ILIAS-Benutzern mit externem ILIAS-Account
 config.usernameScheme.local#:#Schema zum Verbinden von ILIAS-Usern mit lokalem ILIAS-Account
 config.usernameScheme.info#:#Dieses Schema wird verwendet, um den Matrix-Benutzernamen zu erzeugen,<br>wenn extern authentifizierte ILIAS-Benutzer einem Matrix-Chat beitreten wollen, aber bisher keinen Benutzer haben. <br><br>Das Schema darf nur die folgenden Zeichen enthalten %s.<br>Großbuchstaben werden in Kleinbuchstaben umgewandelt!<br><br>Unterstützte Variablen: <br>%s
+
+config.usernameScheme.truncate.variable#:#Anzahl Zeichen von <span style="color: blue">%s</span> Variable abschneiden
 
 config.room.prefix#:#Raumpräfix
 config.room.prefix.info#:#Dieses Schema wird verwendet, um den Präfix für die Benennung des Matrix-Chatraumes zu erzeugen. <br>Dieser Präfix wird vor den namen des Kurses/der Gruppe gesetzt zu dem dieser Chatraum zugewiesen bzw. durch den dieser erstellt wurde. <br><br>Unterstützte Variablen: <br>%s
@@ -48,9 +51,6 @@ config.supportedObjectTypes.title#:#Unterstützte Objekttypen
 config.supportedObjectTypes.info#:#Bitte wählen Sie die Objekttypen aus, von denen der Matrix-Chat unterstützt werden soll
 
 config.cleanedValue.info#:#Aus Sicherheitsgründen wird der eingegebene Wert nach dem Speichern durch Sterne (*) ersetzt.
-
-config.sharedSecret.title#:#Gemeinsames Geheimnis
-config.sharedSecret.info#:#Bitte geben Sie das gemeinsame Geheimnis an, das für die Registrierung neuer Benutzer auf dem konfigurierten Homeserver erforderlich ist. <br>Diesen Wert finden Sie in der 'homeserver.yaml' des Homeservers unter 'registration_shared_secret'.
 
 config.pageDesignerText.title#:#Matrix Chat Seite gestalten
 config.pageDesignerText.info#:#Text wird auf dem Chat-Tab innerhalb von Kursen & Gruppen angezeigt. <br>Aktivieren von TinyMCE-Editor empfohlen.
@@ -92,11 +92,7 @@ config.user.externalMatrixUserLookup.failure.unknown#:#Ein unerwarteter Fehler i
 config.user.externalMatrixUserLookup.success#:#Auf dem angefragten Homeserver wurde ein Profil gefunden.
 config.user.externalMatrixUserLookup.info#:#Sie können diese Eingabe dennoch speichern, <br> eventuell werden sie dann jedoch nicht eingeladen, fall es mit dieser Angabe zu weiteren fehlern kommt. <br Wenn sie dies nicht wünschen. Verwenden Sie den '%s' Button.
 
-config.user.register.success#:#Matrix-Account erfolgreich registriert.
-config.user.register.failure#:#Matrix-Account konnte nicht registriert werden.
-config.user.register.failure.usernameAlreadyUsed#:#Matrix-Account konnte nicht registriert werden. Ihr Benutzername ist bereits vergeben.
-config.user.auth.failure#:#Matrix-Account konnte nicht authentifiziert werden.
-config.user.auth.success#:#Matrix-Account erfolgreich authentifiziert.
+config.user.save.success#:#Matrix-Account erfolgreich gespeichert.
 
 matrix.server.url#:#Matrix Server (Synapse) URL
 matrix.server.reachable#:#Server erreichbar
@@ -136,8 +132,7 @@ matrix.user.name#:#Matrix-Benutzername
 matrix.user.name.info#:#Nicht editierbar. Vordefiniert durch Server.
 matrix.user.account#:#Matrix-Account
 matrix.user.password#:#Matrix-User Passwort
-matrix.user.password.external.required#:#Ihr "Erkannter Matrix-Account" existiert nicht. Bitte geben sie ein Passwort ein um diesen zu erstellen.
-matrix.user.password.local.required#:#Es existiert kein Matrix-Account mit diesem Benutzernamen. Bitte geben sie ein Passwort ein um diesen zu erstellen.
+matrix.user.accountNotFound#:#Ihr "Erkannter Matrix-Account" konnte nicht gefunden werden. Sie können diesen jedoch trotzdem Speichern und diesen somit vormerken.
 matrix.user.account.joined#:#Sie sind nun mit Ihrem Matrix-Nutzer '%s' dem Chat beigetreten. Wenn Sie chatten möchten, verwenden Sie den Matrix Client Ihrer Wahl. <br>Dort können Sie auch Ihre Mitgliedschat verwalten und ggf. den Chatraum wieder verlassen.
 matrix.user.account.invited#:#Sie wurden mit Ihrem Matrix-Nutzer '%s' zum Chat eingeladen. Sie haben diese Einladung jedoch noch nicht angenommen. <br>Bitte verwenden Sie den Matrix Client Ihrer Wahl. <br>Mit diesem können sie sowohl die Einladung annehmen als auch im Chatraum schreiben.
 matrix.user.account.unconfigured#:#Sie haben noch keinen Matrix-Account konfiguriert. <br>Bitte konfigurieren Sie einen Matrix-Account in Ihren Benutzer-Einstellungen um dem Chatraum hinzugefügt zu werden.

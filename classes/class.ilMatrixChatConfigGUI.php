@@ -102,10 +102,9 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
             }
 
             $form->setValuesByArray(
-                $pluginConfig->toArray(["matrixAdminApiToken", "matrixRestApiUserApiToken", "sharedSecret"]) + [
+                $pluginConfig->toArray(["matrixAdminApiToken", "matrixRestApiUserApiToken"]) + [
                     "matrixAdminApiToken" => $pluginConfig->getMatrixAdminApiToken() ? self::CLEANED_VALUE : "",
                     "matrixRestApiUserApiToken" => $pluginConfig->getMatrixRestApiUserApiToken() ? self::CLEANED_VALUE : "",
-                    "sharedSecret" => $pluginConfig->getSharedSecret() ? self::CLEANED_VALUE : "",
                     "matrixAdminPasswordRemoveRateLimit" => $matrixAdminPasswordRemoveRateLimit,
                     "matrixRestApiUserRemoveRateLimit" => $matrixRestApiUserRemoveRateLimit
                 ],
@@ -129,15 +128,10 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
 
         $form->setValuesByPost();
 
-        $sharedSecretValue = $form->getInput("sharedSecret");
-
-        if ($sharedSecretValue === self::CLEANED_VALUE) {
-            $sharedSecretValue = $this->plugin->getPluginConfig()->getSharedSecret();
-        }
-
         $this->plugin->getPluginConfig()
             ->setMatrixServerUrl(rtrim($form->getInput("matrixServerUrl"), "/"))
-            ->setSharedSecret($sharedSecretValue)
+            ->setTruncateLoginVariableLength((int) $form->getInput("truncateLoginVariableLength"))
+            ->setTruncateExternalAccountVariableLength((int) $form->getInput("truncateExternalAccountVariableLength"))
             ->setExternalUserScheme($form->getInput("externalUserScheme"))
             ->setExternalUserOptions($form->getInput("externalUserOptions"))
             ->setLocalUserScheme($form->getInput("localUserScheme"))
@@ -208,7 +202,7 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
             $form = new ChatPageDesignerForm();
 
             $form->setValuesByArray(
-                $this->plugin->getPluginConfig()->toArray(["matrixAdminApiToken", "matrixRestApiUserApiToken", "sharedSecret"]),
+                $this->plugin->getPluginConfig()->toArray(["matrixAdminApiToken", "matrixRestApiUserApiToken"]),
                 true
             );
         }
