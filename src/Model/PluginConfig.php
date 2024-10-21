@@ -26,7 +26,6 @@ class PluginConfig extends SettingsConfig
     private string $matrixServerUrl = "";
     private string $matrixAdminApiToken = "";
     private string $matrixRestApiUserApiToken = "";
-    private string $sharedSecret = "";
     private string $externalUserScheme = "";
     private array $externalUserOptions = [];
     private string $localUserScheme = "";
@@ -74,17 +73,6 @@ class PluginConfig extends SettingsConfig
     public function setMatrixRestApiUserApiToken(string $matrixRestApiUserApiToken): PluginConfig
     {
         $this->matrixRestApiUserApiToken = $matrixRestApiUserApiToken;
-        return $this;
-    }
-
-    public function getSharedSecret(): string
-    {
-        return $this->sharedSecret;
-    }
-
-    public function setSharedSecret(string $sharedSecret): PluginConfig
-    {
-        $this->sharedSecret = $sharedSecret;
         return $this;
     }
 

@@ -118,13 +118,6 @@ class PluginConfigForm extends ilPropertyFormGUI
         $matrixServerUrl = new ilUriInputGUI($this->plugin->txt("matrix.server.url"), "matrixServerUrl");
         $matrixServerUrl->setRequired(true);
         $this->addItem($matrixServerUrl);
-
-        $sharedSecret = new ilPasswordInputGUI($this->plugin->txt("config.sharedSecret.title"), "sharedSecret");
-        $sharedSecret->setRequired(true);
-        $sharedSecret->setInfo($this->plugin->txt("config.sharedSecret.info") . "<br><br>" . $this->plugin->txt("config.cleanedValue.info"));
-        $sharedSecret->setSkipSyntaxCheck(true);
-        $sharedSecret->setRetype(false);
-        $this->addItem($sharedSecret);
     }
 
     protected function addAdminUserSection(bool $serverReachable): void
