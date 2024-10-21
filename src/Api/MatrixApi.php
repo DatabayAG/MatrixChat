@@ -146,7 +146,7 @@ class MatrixApi
                         );
                         break;
                     case "M_NOT_FOUND":
-                        if (str_ends_with($apiCall, "/state/m.room.member")) {
+                        if (str_contains($apiCall, "/state/m.room.member")) {
                             //Assume never invited so state is null for user in room
                             return new MatrixApiResponse(200, [
                                 "displayname" => "",
