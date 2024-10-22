@@ -733,8 +733,6 @@ class ChatController extends BaseController
             $reflectionMethod = new ReflectionMethod($gui, "setTitleAndDescription");
             $reflectionMethod->setAccessible(true);
             $reflectionMethod->invoke($gui);
-
-            $this->dic["ilLocator"]->addRepositoryItems($this->courseSettings->getCourseId());
         }
 
         if ($this->checkChatActivatedForObject()) {
