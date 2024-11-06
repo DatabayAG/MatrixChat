@@ -330,11 +330,13 @@ class ChatController extends BaseController
                 continue;
             }
 
+            //Todo: Can possibly be replaced with this->plugin->inviteParticipant in the future to reduce code size.
             if (!$this->matrixApi->inviteUserToRoom($matrixUser, $space)) {
                 $inviteFailed = true;
                 $this->logger->warning("Inviting user '{$matrixUser->getId()}' to space '{$space->getId()}' failed.");
             }
 
+            //Todo: Can possibly be replaced with this->plugin->inviteParticipant in the future to reduce code size.
             if (!$this->matrixApi->inviteUserToRoom($matrixUser, $room, $this->plugin->determinePowerLevelOfParticipant($participants, $user->getId()))) {
                 $inviteFailed = true;
                 $this->logger->warning("Inviting user '{$matrixUser->getId()}' to room '{$room->getId()}' failed.");
@@ -430,11 +432,13 @@ class ChatController extends BaseController
 
         $participants = ilParticipants::getInstance($this->refId);
 
+        //Todo: Can possibly be replaced with this->plugin->inviteParticipant in the future to reduce code size.
         if (!$this->matrixApi->inviteUserToRoom($matrixUser, $space)) {
             $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.account.invite.failed"), true);
             $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
         }
 
+        //Todo: Can possibly be replaced with this->plugin->inviteParticipant in the future to reduce code size.
         if (!$this->matrixApi->inviteUserToRoom($matrixUser, $room, $this->plugin->determinePowerLevelOfParticipant($participants, $user->getId()))) {
             $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.account.invite.failed"), true);
             $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
