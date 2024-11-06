@@ -549,6 +549,12 @@ class ChatController extends BaseController
             }
 
             $courseSettings->setMatrixRoomId($room->getId());
+            try {
+                $this->courseSettingsRepo->save($courseSettings);
+            } catch (Exception $ex) {
+                $this->uiUtil->sendFailure($this->plugin->txt("general.update.failed"), true);
+                $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS, ["ref_id" => $this->refId]);
+            }
         }
 
         if ($room) {
@@ -589,12 +595,6 @@ class ChatController extends BaseController
 
                 $this->matrixApi->setUserPowerLevelOnRoom($room, $matrixUserPowerLevelMap);
             }
-        }
-        try {
-            $this->courseSettingsRepo->save($courseSettings);
-        } catch (Exception $ex) {
-            $this->uiUtil->sendFailure($this->plugin->txt("general.update.failed"), true);
-            $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS, ["ref_id" => $this->refId]);
         }
 
         $this->uiUtil->sendSuccess($this->plugin->txt("general.update.success"), true);
