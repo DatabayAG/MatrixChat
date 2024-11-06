@@ -207,6 +207,7 @@ class ProcessQueuedInvitesJob extends ilCronJob
                         continue;
                     }
 
+                    //Todo: Can possibly be replaced with this->plugin->inviteParticipant in the future to reduce code size.
                     if ($matrixApi->inviteUserToRoom($matrixUser, $space)) {
                         $this->logger->info(sprintf(
                             "Invited user '%s' to space '%s'",
@@ -229,6 +230,7 @@ class ProcessQueuedInvitesJob extends ilCronJob
                     continue;
                 }
 
+                //Todo: Can possibly be replaced with this->plugin->inviteParticipant in the future to reduce code size.
                 if ($matrixApi->inviteUserToRoom($matrixUser, $room, $this->plugin->determinePowerLevelOfParticipant($participants, $user->getId()))) {
                     $this->logger->info(sprintf(
                         "Invited user '%s' to room '%s' created for object with ref-id '%s'",

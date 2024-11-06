@@ -319,7 +319,6 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
                 if ($a_event === "addParticipant" || $a_event === "update") {
                     $this->inviteParticipant(
                         $user,
-                        $objId,
                         $objRefId,
                         $matrixUser,
                         $room,
@@ -370,12 +369,12 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
         return $rooms;
     }
 
-    private function inviteParticipant(ilObjUser $user, int $objId, int $objRefId, ?MatrixUser $matrixUser, MatrixRoom $room, MatrixSpace $space, int $powerLevel, bool $objectOffline): void
+    public function inviteParticipant(ilObjUser $user, int $objRefId, ?MatrixUser $matrixUser, MatrixRoom $room, MatrixSpace $space, int $powerLevel, bool $objectOffline): void
     {
         $addToQueue = false;
 
         if (!$objectOffline) {
-            if (!$matrixUser || !$matrixUser->isExists()) {
+            if (!$matrixUser) {
                 $addToQueue = true;
             }
         } else {
@@ -385,8 +384,7 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
         if ($addToQueue) {
             $this->queuedInvitesRepo->create(new UserRoomAddQueue($user->getId(), $objRefId));
         } elseif (
-            $matrixUser->isExists()
-            && !$room->isMember($matrixUser)
+            !$room->isMember($matrixUser)
         ) {
             if (!$this->getMatrixApi()->inviteUserToRoom($matrixUser, $space)) {
                 $this->logger->warning(sprintf(
