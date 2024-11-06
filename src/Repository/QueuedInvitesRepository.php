@@ -77,9 +77,9 @@ class QueuedInvitesRepository
     public function deleteAll(int $refId): void
     {
         $this->db->manipulateF(
-                "DELETE FROM " . self::TABLE_NAME . " WHERE ref_id = %s",
-                [ilDBConstants::T_INTEGER],
-                [$refId]
+            "DELETE FROM " . self::TABLE_NAME . " WHERE ref_id = %s",
+            [ilDBConstants::T_INTEGER],
+            [$refId]
         );
     }
 
