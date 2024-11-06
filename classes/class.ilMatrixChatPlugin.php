@@ -374,7 +374,7 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
         $addToQueue = false;
 
         if (!$objectOffline) {
-            if (!$matrixUser || !$matrixUser->isExists()) {
+            if (!$matrixUser) {
                 $addToQueue = true;
             }
         } else {
@@ -384,8 +384,7 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
         if ($addToQueue) {
             $this->queuedInvitesRepo->create(new UserRoomAddQueue($user->getId(), $objRefId));
         } elseif (
-            $matrixUser->isExists()
-            && !$room->isMember($matrixUser)
+            !$room->isMember($matrixUser)
         ) {
             if (!$this->getMatrixApi()->inviteUserToRoom($matrixUser, $space)) {
                 $this->logger->warning(sprintf(
