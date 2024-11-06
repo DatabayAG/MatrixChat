@@ -557,44 +557,29 @@ class ChatController extends BaseController
             }
         }
 
-        if ($room) {
-            $participants = ilParticipants::getInstance($courseSettings->getCourseId());
-            $matrixUserPowerLevelMap = [];
+        $participants = ilParticipants::getInstance($courseSettings->getCourseId());
+        $objectOffline = ilObject::lookupOfflineStatus(ilObject::_lookupObjId($courseSettings->getCourseId()));
+        foreach ($participants->getParticipants() as $participantId) {
+            $participantId = (int) $participantId;
+            $user = new ilObjUser($participantId);
+            $userConfig = (new UserConfig($user))->load();
 
-            if (!ilObject::lookupOfflineStatus(ilObject::_lookupObjId($courseSettings->getCourseId()))) {
-                foreach ($participants->getParticipants() as $participantId) {
-                    $participantId = (int) $participantId;
-                    $userConfig = (new UserConfig(new ilObjUser($participantId)))->load();
-
-                    if (!$userConfig->getMatrixUserId()) {
-                        continue;
-                    }
-
-                    $matrixUser = $this->matrixApi->getUser($userConfig->getMatrixUserId());
-
-                    if (!$this->matrixApi->inviteUserToRoom($matrixUser, $space)) {
-                        $this->logger->warning(sprintf(
-                            "Inviting matrix-user '%s' to space '%s' failed.",
-                            $matrixUser->getId(),
-                            $space->getId()
-                        ));
-                    }
-                    if (!$this->matrixApi->inviteUserToRoom($matrixUser, $room, $this->plugin->determinePowerLevelOfParticipant($participants, $participantId))) {
-                        $this->logger->warning(sprintf(
-                            "Inviting matrix-user '%s' to room '%s' failed.",
-                            $matrixUser->getId(),
-                            $room->getId()
-                        ));
-                    }
-
-                    $matrixUserPowerLevelMap[] = new MatrixUserPowerLevel(
-                        $matrixUser->getId(),
-                        $this->plugin->determinePowerLevelOfParticipant($participants, $participantId)
-                    );
-                }
-
-                $this->matrixApi->setUserPowerLevelOnRoom($room, $matrixUserPowerLevelMap);
+            $matrixUserId = $userConfig->getMatrixUserId();
+            if ($matrixUserId) {
+                $matrixUser = $this->matrixApi->getUser($matrixUserId);
+            } else {
+                $matrixUser = null;
             }
+
+            $this->plugin->inviteParticipant(
+                $user,
+                $courseSettings->getCourseId(),
+                $matrixUser,
+                $room,
+                $space,
+                $this->plugin->determinePowerLevelOfParticipant($participants, $user->getId()),
+                $objectOffline
+            );
         }
 
         $this->uiUtil->sendSuccess($this->plugin->txt("general.update.success"), true);
