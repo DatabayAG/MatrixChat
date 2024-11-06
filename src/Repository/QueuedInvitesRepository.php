@@ -74,6 +74,15 @@ class QueuedInvitesRepository
         ) === 1;
     }
 
+    public function deleteAll(int $refId): void
+    {
+        $this->db->manipulateF(
+                "DELETE FROM " . self::TABLE_NAME . " WHERE ref_id = %s",
+                [ilDBConstants::T_INTEGER],
+                [$refId]
+        );
+    }
+
     public function delete(UserRoomAddQueue $userRoomAddQueue): bool
     {
         return $this->db->manipulateF(
