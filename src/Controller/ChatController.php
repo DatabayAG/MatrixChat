@@ -320,27 +320,21 @@ class ChatController extends BaseController
             $userConfig = (new UserConfig($user))->load();
 
             $matrixUser = null;
-            if ($userConfig->getMatrixUserId()) {
-                $matrixUser = $this->matrixApi->getUser($userConfig->getMatrixUserId());
+
+            $matrixUserId = $userConfig->getMatrixUserId();
+            if ($matrixUserId) {
+                $matrixUser = $this->matrixApi->getUser($matrixUserId);
             }
 
-            if (!$matrixUser) {
-                $inviteFailed = true;
-                $this->logger->warning("Unable to get Matrix-User of ilias user with id '$userId'. Not configured or server problem");
-                continue;
-            }
-
-            //Todo: Can possibly be replaced with this->plugin->inviteParticipant in the future to reduce code size.
-            if (!$this->matrixApi->inviteUserToRoom($matrixUser, $space)) {
-                $inviteFailed = true;
-                $this->logger->warning("Inviting user '{$matrixUser->getId()}' to space '{$space->getId()}' failed.");
-            }
-
-            //Todo: Can possibly be replaced with this->plugin->inviteParticipant in the future to reduce code size.
-            if (!$this->matrixApi->inviteUserToRoom($matrixUser, $room, $this->plugin->determinePowerLevelOfParticipant($participants, $user->getId()))) {
-                $inviteFailed = true;
-                $this->logger->warning("Inviting user '{$matrixUser->getId()}' to room '{$room->getId()}' failed.");
-            }
+            $this->plugin->inviteParticipant(
+                $user,
+                $this->refId,
+                $matrixUser,
+                $room,
+                $space,
+                $this->plugin->determinePowerLevelOfParticipant($participants, $user->getId()),
+                false
+            );
         }
 
         if ($inviteFailed) {
