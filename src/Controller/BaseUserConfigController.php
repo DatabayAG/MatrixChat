@@ -155,9 +155,11 @@ abstract class BaseUserConfigController extends BaseController
                 }
 
                 if (!$room->isMember($matrixUser)) {
+                    //Todo: Can possibly be replaced with this->plugin->inviteParticipant in the future to reduce code size.
                     if (!$this->matrixApi->inviteUserToRoom($matrixUser, $space)) {
                         $this->logger->warning("Inviting matrix-user '{$matrixUser->getId()}' to space '{$space->getId()}' failed");
                     }
+                    //Todo: Can possibly be replaced with this->plugin->inviteParticipant in the future to reduce code size.
                     if (!$this->matrixApi->inviteUserToRoom($matrixUser, $room, $this->plugin->determinePowerLevelOfParticipant($participants, $user->getId()))) {
                         $this->logger->warning("Inviting matrix-user '{$matrixUser->getId()}' to room '{$room->getId()}' failed");
                     }
