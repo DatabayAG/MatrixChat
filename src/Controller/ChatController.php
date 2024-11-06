@@ -643,6 +643,8 @@ class ChatController extends BaseController
 
         $room = $this->matrixApi->getRoom($this->courseSettings->getMatrixRoomId());
 
+        $this->queuedInvitesRepo->deleteAll($this->courseSettings->getCourseId());
+
         if (!$room) {
             $this->courseSettings->setMatrixRoomId(null);
             if ($this->courseSettingsRepo->save($this->courseSettings)) {
