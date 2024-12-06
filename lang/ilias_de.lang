@@ -20,6 +20,9 @@ config.section.user.local#:#Lokale ILIAS-Benutzer
 config.section.room#:#Raum
 config.section.general#:#Allgemeine Einstellungen
 
+config.chatSettingsPermanentLink.title#:#Permanent Link zu den Matrix-Chat-Einstellungen des Benutzers
+config.chatSettingsPermanentLink.info#:#Dieser Link verweist auf die <span style="font-weight: bolder;">Matrix Chat Einstellungen</span> des Benutzers.
+
 config.usernameScheme.external#:#Schema zum Verbinden von ILIAS-Benutzern mit externem ILIAS-Account
 config.usernameScheme.local#:#Schema zum Verbinden von ILIAS-Usern mit lokalem ILIAS-Account
 config.usernameScheme.info#:#Dieses Schema wird verwendet, um den Matrix-Benutzernamen zu erzeugen,<br>wenn extern authentifizierte ILIAS-Benutzer einem Matrix-Chat beitreten wollen, aber bisher keinen Benutzer haben. <br><br>Das Schema darf nur die folgenden Zeichen enthalten %s.<br>Großbuchstaben werden in Kleinbuchstaben umgewandelt!<br><br>Unterstützte Variablen: <br>%s

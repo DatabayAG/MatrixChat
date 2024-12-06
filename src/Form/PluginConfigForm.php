@@ -23,6 +23,7 @@ use ilCheckboxOption;
 use ilFormSectionHeaderGUI;
 use ilGlobalPageTemplate;
 use ILIAS\DI\Container;
+use ILIAS\Plugin\MatrixChat\Controller\BaseUserConfigController;
 use ilMatrixChatConfigGUI;
 use ilMatrixChatPlugin;
 use ilNumberInputGUI;
@@ -97,6 +98,12 @@ class PluginConfigForm extends ilPropertyFormGUI
             "grp"
         ));
         $this->addItem($supportedObjectTypes);
+
+        $permanentLink = new ilTextInputGUI($this->plugin->txt("config.chatSettingsPermanentLink.title"));
+        $permanentLink->setInfo($this->plugin->txt("config.chatSettingsPermanentLink.info"));
+        $permanentLink->setDisabled(true);
+        $permanentLink->setValue(BaseUserConfigController::buildPermanentLink());
+        $this->addItem($permanentLink);
     }
 
     protected function addServerSection($serverReachable): void

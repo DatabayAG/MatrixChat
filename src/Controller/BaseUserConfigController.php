@@ -32,6 +32,7 @@ use ILIAS\Plugin\MatrixChat\Repository\CourseSettingsRepository;
 use ILIAS\Plugin\MatrixChat\Repository\MatrixUserHistoryRepository;
 use ILIAS\Plugin\MatrixChat\Repository\QueuedInvitesRepository;
 use ilLanguage;
+use ilLink;
 use ilLogger;
 use ilMatrixChatPlugin;
 use ilMatrixChatUIHookGUI;
@@ -45,6 +46,8 @@ use ilUIPluginRouterGUI;
 
 abstract class BaseUserConfigController extends BaseController
 {
+    public const PERMANENT_LINK_ID = "matrixChatConfig";
+
     public const TAB_USER_CHAT_CONFIG = "user-chat-config";
     public const CMD_SHOW_USER_CHAT_CONFIG = "showUserChatConfig";
     public const CMD_SAVE_USER_CHAT_CONFIG = "saveUserChatConfig";
@@ -160,7 +163,11 @@ abstract class BaseUserConfigController extends BaseController
                         $this->logger->warning("Inviting matrix-user '{$matrixUser->getId()}' to space '{$space->getId()}' failed");
                     }
                     //Todo: Can possibly be replaced with this->plugin->inviteParticipant in the future to reduce code size.
-                    if (!$this->matrixApi->inviteUserToRoom($matrixUser, $room, $this->plugin->determinePowerLevelOfParticipant($participants, $user->getId()))) {
+                    if (!$this->matrixApi->inviteUserToRoom(
+                        $matrixUser,
+                        $room,
+                        $this->plugin->determinePowerLevelOfParticipant($participants, $user->getId())
+                    )) {
                         $this->logger->warning("Inviting matrix-user '{$matrixUser->getId()}' to room '{$room->getId()}' failed");
                     }
                     $this->ctrl->setParameterByClass(ilRepositoryGUI::class, "ref_id", $courseSettings->getCourseId());
@@ -343,6 +350,16 @@ abstract class BaseUserConfigController extends BaseController
         $this->http->saveResponse($response);
         $this->http->sendResponse();
         $this->http->close();
+    }
+
+    public static function buildPermanentLink(bool $addToGlobalPage = false): string
+    {
+        if ($addToGlobalPage) {
+            global $DIC;
+            $DIC->ui()->mainTemplate()->setPermanentLink(self::PERMANENT_LINK_ID, null);
+        }
+
+        return ilLink::_getStaticLink(null, self::PERMANENT_LINK_ID);
     }
 
     protected function buildMatrixUserId(): string
