@@ -97,6 +97,11 @@ config.user.externalMatrixUserLookup.info#:#Sie können diese Eingabe dennoch sp
 
 config.user.save.success#:#Matrix-Account erfolgreich gespeichert.
 
+config.mailTemplates.title#:#E-Mail Vorlagen
+config.mailTemplates.template.edit#:#Bearbeiten
+config.mailTemplates.template.noMatrixAccount#:#Kein Matrix-Konto konfiguriert
+config.mailTemplates.template.matrixAccount#:#Matrix-Konto konfiguriert
+
 matrix.server.url#:#Matrix Server (Synapse) URL
 matrix.server.reachable#:#Server erreichbar
 matrix.server.unreachable#:#Server nicht erreichbar

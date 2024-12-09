@@ -96,6 +96,11 @@ config.user.externalMatrixUserLookup.info#:#You can still save this value but yo
 
 config.user.save.success#:#Matrix-Account was saved successfully.
 
+config.mailTemplates.title#:#E-Mail Templates
+config.mailTemplates.template.edit#:#Edit
+config.mailTemplates.template.noMatrixAccount#:#No Matrix-Account configured
+config.mailTemplates.template.matrixAccount#:#Matrix-Account configured
+
 matrix.server.url#:#Matrix Server (Synapse) URL
 matrix.server.reachable#:#Server is reachable
 matrix.server.unreachable#:#Server is unreachable
