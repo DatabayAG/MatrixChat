@@ -138,3 +138,51 @@ if (!$ilDB->tableExists("mcc_usr_matrix_user_history")) {
     $ilDB->createSequence("mcc_matrix_usr_history");
 }
 ?>
+<#9>
+<?php
+if (!$ilDB->tableExists("mcc_mail_templates")) {
+    $ilDB->createTable("mcc_mail_templates", [
+        "language" => [
+            "type" => "text",
+            "length" => 64,
+            "notnull" => true,
+        ],
+        "no_matrix_account_content" => [
+            "type" => "clob",
+            "notnull" => true,
+        ],
+        "matrix_account_content" => [
+            "type" => "clob",
+            "notnull" => true,
+        ]
+    ]);
+    $ilDB->addPrimaryKey("mcc_mail_templates", ["language"]);
+}
+?>
+<#10>
+<?php
+if ($ilDB->tableExists("mcc_mail_templates")) {
+    $ilDB->dropTable("mcc_mail_templates");
+    $ilDB->createTable("mcc_mail_templates", [
+        "template_id" => [
+            "type" => "text",
+            "length" => 64,
+            "notnull" => true,
+        ],
+        "language" => [
+            "type" => "text",
+            "length" => 8,
+            "notnull" => true,
+        ],
+        "subject" => [
+            "type" => "clob",
+            "notnull" => true,
+        ],
+        "content" => [
+            "type" => "clob",
+            "notnull" => true,
+        ]
+    ]);
+    $ilDB->addPrimaryKey("mcc_mail_templates", ["template_id", "language"]);
+}
+?>
