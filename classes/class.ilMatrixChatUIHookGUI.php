@@ -109,6 +109,23 @@ class ilMatrixChatUIHookGUI extends ilUIHookPluginGUI
         return $this->uiHookResponse();
     }
 
+    public function checkGotoHook(string $a_target): array
+    {
+        $parts = explode('_', $a_target);
+
+        if ($parts[0] && $parts[0] === BaseUserConfigController::PERMANENT_LINK_ID) {
+            /** @var BaseUserConfigController $userConfigController */
+            $userConfigController = $this->controllerHandler->getController(
+                (int) $this->dic->user()->getAuthMode() === ilAuthUtils::AUTH_LOCAL
+                    ? LocalUserConfigController::class
+                    : ExternalUserConfigController::class
+            );
+            $userConfigController->redirectToCommand(BaseUserConfigController::CMD_SHOW_USER_CHAT_CONFIG);
+        }
+
+        return parent::checkGotoHook($a_target);
+    }
+
     public function executeCommand(): void
     {
         $cmdClass = $this->ctrl->getCmdClass();
