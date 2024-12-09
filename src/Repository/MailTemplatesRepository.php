@@ -76,35 +76,35 @@ class MailTemplatesRepository
         if ($this->exists($mailTemplate->getTemplateId(), $mailTemplate->getLanguage())) {
             $mailTemplate->setExists(true);
             return $this->db->manipulateF(
-                    "UPDATE " . self::TABLE_NAME . " SET "
+                "UPDATE " . self::TABLE_NAME . " SET "
                     . "subject = %s, "
                     . "content = %s "
                     . "WHERE template_id = %s AND language = %s",
-                    [
+                [
                         ilDBConstants::T_CLOB,
                         ilDBConstants::T_CLOB,
                         ilDBConstants::T_TEXT,
                         ilDBConstants::T_TEXT,
                     ],
-                    [
+                [
                         $mailTemplate->getSubject(),
                         $mailTemplate->getContent(),
                         $mailTemplate->getTemplateId(),
                         $mailTemplate->getLanguage()
                     ]
-                ) === 1;
+            ) === 1;
         }
 
         $result = $this->db->manipulateF(
-                "INSERT INTO " . self::TABLE_NAME . " (template_id, language, subject, content) VALUES (%s, %s, %s, %s)",
-                [ilDBConstants::T_TEXT, ilDBConstants::T_TEXT, ilDBConstants::T_CLOB, ilDBConstants::T_CLOB],
-                [
+            "INSERT INTO " . self::TABLE_NAME . " (template_id, language, subject, content) VALUES (%s, %s, %s, %s)",
+            [ilDBConstants::T_TEXT, ilDBConstants::T_TEXT, ilDBConstants::T_CLOB, ilDBConstants::T_CLOB],
+            [
                     $mailTemplate->getTemplateId(),
                     $mailTemplate->getLanguage(),
                     $mailTemplate->getSubject(),
                     $mailTemplate->getContent(),
                 ]
-            ) === 1;
+        ) === 1;
 
         $mailTemplate->setExists($result);
         return $result;

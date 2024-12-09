@@ -18,7 +18,6 @@
 
 declare(strict_types=1);
 
-
 namespace ILIAS\Plugin\MatrixChat\Form;
 
 use ilGlobalPageTemplate;
@@ -88,7 +87,8 @@ class MailTemplateForm extends ilPropertyFormGUI
         }, array_keys($this->controller->getTemplatePlaceholders()));
 
         $subject->setRequired(true);
-        $subject->setInfo(sprintf(
+        $subject->setInfo(
+            sprintf(
                 $this->plugin->txt("config.mailTemplates.template.subject.info"),
                 implode("", $placeHolderInfoList)
             )

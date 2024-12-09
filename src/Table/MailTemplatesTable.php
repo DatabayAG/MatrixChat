@@ -18,7 +18,6 @@
 
 declare(strict_types=1);
 
-
 namespace ILIAS\Plugin\MatrixChat\Table;
 
 use ILIAS\DI\Container;
@@ -96,7 +95,7 @@ class MailTemplatesTable extends ilTable2GUI
                     $mailTemplate->isExists()
                         ? ""
                         : "<span style='color: red;'>" . $this->plugin->txt("config.mailTemplates.template.notConfigured") . "</span>"
-                    );
+                );
             }
 
             $tableData[] = $tableRow;
