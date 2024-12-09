@@ -106,6 +106,28 @@ class MailTemplatesRepository
             ) === 1;
     }
 
+    public function read(string $templateId, string $language, bool $returnNewOnNotFound = true): ?MailTemplate
+    {
+        if ($returnNewOnNotFound && !$this->exists($templateId, $language)) {
+            return $this->constructFallbackNewMailTemplate(
+                $templateId,
+                $language
+            );
+        }
+        $result = $this->db->queryF(
+            "SELECT * FROM " . self::TABLE_NAME . " WHERE template_id = %s AND language = %s",
+            [ilDBConstants::T_TEXT, ilDBConstants::T_TEXT],
+            [$templateId, $language]
+        );
+
+        $data = $this->db->fetchAssoc($result);
+        if (!$data) {
+            return null;
+        }
+
+        return $this->map($data);
+    }
+
     /** @return array<string, array<string, MailTemplate>> */
     public function readAllMappedByLanguageAndTemplateId(bool $addMissing = true): array
     {
