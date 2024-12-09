@@ -21,6 +21,7 @@ use ilDBConstants;
 use ilDBInterface;
 use ILIAS\Plugin\MatrixChat\Controller\MailTemplatesController;
 use ILIAS\Plugin\MatrixChat\Model\MailTemplate;
+use ilLanguage;
 
 class MailTemplatesRepository
 {
@@ -30,6 +31,7 @@ class MailTemplatesRepository
     /** @var string */
     protected const TABLE_NAME = "mcc_mail_templates";
     private array $availableLanguages;
+    private ilLanguage $lng;
 
     public function __construct(?ilDBInterface $db = null)
     {
@@ -41,6 +43,7 @@ class MailTemplatesRepository
             $this->db = $DIC->database();
         }
 
+        $this->lng = $DIC->language();
         $this->availableLanguages = $DIC->language()->getInstalledLanguages();
     }
 
@@ -127,7 +130,7 @@ class MailTemplatesRepository
         foreach ($this->availableLanguages as $language) {
             if (!array_key_exists($language, $languageMappedData)) {
                 foreach (MailTemplatesController::SUPPORTED_TEMPLATES as $templateId) {
-                    $languageMappedData[$language][$templateId] = new MailTemplate(
+                    $languageMappedData[$language][$templateId] = $this->constructFallbackNewMailTemplate(
                         $templateId,
                         $language
                     );
@@ -135,7 +138,7 @@ class MailTemplatesRepository
             } else {
                 foreach (MailTemplatesController::SUPPORTED_TEMPLATES as $templateId) {
                     if (!array_key_exists($templateId, $languageMappedData[$language])) {
-                        $languageMappedData[$language][$templateId] = new MailTemplate(
+                        $languageMappedData[$language][$templateId] = $this->constructFallbackNewMailTemplate(
                             $templateId,
                             $language
                         );
@@ -145,6 +148,17 @@ class MailTemplatesRepository
         }
 
         return $languageMappedData;
+    }
+
+    private function constructFallbackNewMailTemplate(string $templateId, string $language): MailTemplate
+    {
+        $fallbackText = $this->lng->txtlng("ui_uihk_mcc", "ui_uihk_mcc_config.mailTemplates.template.$templateId", $language);
+        return new MailTemplate(
+            $templateId,
+            $language,
+            $fallbackText,
+            $fallbackText
+        );
     }
 
     private function map(array $row): MailTemplate
