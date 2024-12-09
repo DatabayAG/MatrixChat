@@ -49,15 +49,10 @@ class MailTemplatesTable extends ilTable2GUI
         $this->uiFactory = $this->dic->ui()->factory();
 
         $this->setId("MailTemplatesTable");
-        $this->setTitle($this->plugin->txt("matrix.chat.members"));
+        $this->setTitle($this->plugin->txt("config.mailTemplates.title"));
 
         parent::__construct($parentGui);
 
-        $this->setExternalSorting(false);
-        $this->setExternalSegmentation(false);
-
-        $this->setDefaultOrderField("name");
-        $this->setDefaultOrderDirection("desc");
         $this->setEnableHeader(true);
 
         $this->setFormAction($controller->getCommandLink(
@@ -67,18 +62,11 @@ class MailTemplatesTable extends ilTable2GUI
         ));
         $this->setRowTemplate($this->plugin->templatesFolder("table/tpl.mailTemplatesTable_row.html"));
 
-        $this->addColumns([
-            $this->lng->txt("language") => "language",
-            $this->plugin->txt("config.mailTemplates.template.noMatrixAccount") => "noMatrixAccount",
-            $this->plugin->txt("config.mailTemplates.template.matrixAccount") => "matrixAccount",
-        ]);
-    }
+        $this->addColumn($this->lng->txt("language"));
+        $this->addColumn($this->plugin->txt("config.mailTemplates.template.noMatrixAccount"));
+        $this->addColumn($this->plugin->txt("config.mailTemplates.template.matrixAccount"));
 
-    private function addColumns(array $columns): void
-    {
-        foreach ($columns as $text => $sortField) {
-            $this->addColumn($text, $sortField);
-        }
+        $this->lng->loadLanguageModule("meta");
     }
 
     /**
