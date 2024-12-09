@@ -60,12 +60,12 @@ class MailTemplatesRepository
         return self::$instance = new self($db);
     }
 
-    public function exists(MailTemplate $mailTemplate): bool
+    public function exists(string $templateId, string $language): bool
     {
         $result = $this->db->queryF(
             "SELECT 1 AS exist FROM " . self::TABLE_NAME . " WHERE template_id = %s AND language = %s",
             [ilDBConstants::T_TEXT, ilDBConstants::T_TEXT],
-            [$mailTemplate->getTemplateId(), $mailTemplate->getLanguage()]
+            [$templateId, $language]
         );
 
         return (bool) $this->db->fetchAssoc($result);
@@ -73,7 +73,7 @@ class MailTemplatesRepository
 
     public function save(MailTemplate $mailTemplate): bool
     {
-        if ($this->exists($mailTemplate)) {
+        if ($this->exists($mailTemplate->getTemplateId(), $mailTemplate->getLanguage())) {
             return $this->db->manipulateF(
                     "UPDATE " . self::TABLE_NAME . " SET "
                     . "subject = %s, "
