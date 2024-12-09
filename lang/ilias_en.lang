@@ -98,6 +98,23 @@ config.user.save.success#:#Matrix-Account was saved successfully.
 
 config.mailTemplates.title#:#E-Mail Templates
 config.mailTemplates.template.edit#:#Edit
+config.mailTemplates.template.editTemplateTitle#:#Edit Template <span style="font-weight: bold;">%s</span> (<span style="font-weight: bold; color: blue;">%s</span>)
+config.mailTemplates.template.unsupported.language#:#The language '%s' is not supported (Not installed).
+config.mailTemplates.template.unsupported.template#:#No template with the ID '%s' exists.
+config.mailTemplates.template.notFound#:#No template with the ID '%s' could be found for the language '%s'.
+config.mailTemplates.template.saved.success#:#The template was saved successfully!
+
+config.mailTemplates.template.subject.title#:#Subject
+config.mailTemplates.template.subject.info#:#The subject for the send e-mail. <br> The following placeholders can be used: <br><ul>%s</ul>
+config.mailTemplates.template.content.title#:#Content
+config.mailTemplates.template.content.info#:#The content for the send e-mail. <br> The following placeholders can be used: <br><ul>%s</ul>
+
+config.mailTemplates.template.placeholders.[FIRSTNAME]#:#First Name of the Object Member
+config.mailTemplates.template.placeholders.[LASTNAME]#:#Last Name of the Object Member
+config.mailTemplates.template.placeholders.[OBJECT_TITLE]#:#Object Title
+config.mailTemplates.template.placeholders.[CHAT_SETTINGS_LINK]#:#Permanent link to the <span style="font-weight: bold;">Matrix Chat Settings</span> of the User
+config.mailTemplates.template.placeholders.[OBJECT_LINK]#:#Permanent link to the Object
+
 config.mailTemplates.template.noMatrixAccount#:#No Matrix-Account configured
 config.mailTemplates.template.matrixAccount#:#Matrix-Account configured
 
