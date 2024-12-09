@@ -60,6 +60,7 @@ class MailTemplatesTable extends ilTable2GUI
             true
         ));
         $this->setRowTemplate($this->plugin->templatesFolder("table/tpl.mailTemplatesTable_row.html"));
+        $this->setShowRowsSelector(false);
 
         $this->addColumn($this->lng->txt("language"));
         $this->addColumn($this->plugin->txt("config.mailTemplates.template.noMatrixAccount"));
