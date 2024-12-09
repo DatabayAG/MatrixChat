@@ -104,7 +104,11 @@ class MailTemplatesTable extends ilTable2GUI
                         ]
                     )
                 );
-                $tableRow[$templateId] = $this->uiRenderer->render($button);
+                $tableRow[$templateId] = $this->uiRenderer->render($button) . (
+                    $mailTemplate->isExists()
+                        ? ""
+                        : "<span style='color: red;'>" . $this->plugin->txt("config.mailTemplates.template.notConfigured") . "</span>"
+                    );
             }
 
             $tableData[] = $tableRow;

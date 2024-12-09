@@ -74,6 +74,7 @@ class MailTemplatesRepository
     public function save(MailTemplate $mailTemplate): bool
     {
         if ($this->exists($mailTemplate->getTemplateId(), $mailTemplate->getLanguage())) {
+            $mailTemplate->setExists(true);
             return $this->db->manipulateF(
                     "UPDATE " . self::TABLE_NAME . " SET "
                     . "subject = %s, "
@@ -94,7 +95,7 @@ class MailTemplatesRepository
                 ) === 1;
         }
 
-        return $this->db->manipulateF(
+        $result = $this->db->manipulateF(
                 "INSERT INTO " . self::TABLE_NAME . " (template_id, language, subject, content) VALUES (%s, %s, %s, %s)",
                 [ilDBConstants::T_TEXT, ilDBConstants::T_TEXT, ilDBConstants::T_CLOB, ilDBConstants::T_CLOB],
                 [
@@ -104,6 +105,9 @@ class MailTemplatesRepository
                     $mailTemplate->getContent(),
                 ]
             ) === 1;
+
+        $mailTemplate->setExists($result);
+        return $result;
     }
 
     public function read(string $templateId, string $language, bool $returnNewOnNotFound = true): ?MailTemplate
@@ -189,7 +193,8 @@ class MailTemplatesRepository
             $row["template_id"],
             $row["language"],
             $row["subject"],
-            $row["content"]
+            $row["content"],
+            true
         );
     }
 }

@@ -27,13 +27,20 @@ class MailTemplate
     private string $language;
     private string $subject;
     private string $content;
+    private bool $exists;
 
-    public function __construct(string $templateId, string $language, string $subject = "", string $content = "")
-    {
+    public function __construct(
+        string $templateId,
+        string $language,
+        string $subject = "",
+        string $content = "",
+        bool $exists = false
+    ) {
         $this->templateId = $templateId;
         $this->language = $language;
         $this->subject = $subject;
         $this->content = $content;
+        $this->exists = $exists;
     }
 
     public function getTemplateId(): string
@@ -65,6 +72,17 @@ class MailTemplate
     public function setContent(string $content): MailTemplate
     {
         $this->content = $content;
+        return $this;
+    }
+
+    public function isExists(): bool
+    {
+        return $this->exists;
+    }
+
+    public function setExists(bool $exists): MailTemplate
+    {
+        $this->exists = $exists;
         return $this;
     }
 }

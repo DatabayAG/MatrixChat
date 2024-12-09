@@ -103,6 +103,7 @@ config.mailTemplates.template.unsupported.language#:#The language '%s' is not su
 config.mailTemplates.template.unsupported.template#:#No template with the ID '%s' exists.
 config.mailTemplates.template.notFound#:#No template with the ID '%s' could be found for the language '%s'.
 config.mailTemplates.template.saved.success#:#The template was saved successfully!
+config.mailTemplates.template.notConfigured#:#Not configured
 
 config.mailTemplates.template.subject.title#:#Subject
 config.mailTemplates.template.subject.info#:#The subject for the send e-mail. <br> The following placeholders can be used: <br><ul>%s</ul>

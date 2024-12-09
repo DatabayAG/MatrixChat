@@ -104,6 +104,7 @@ config.mailTemplates.template.unsupported.language#:#Die Sprache '%s' wird nicht
 config.mailTemplates.template.unsupported.template#:#Es existiert keine Vorlage mit der ID '%s'.
 config.mailTemplates.template.notFound#:#Es konnte keine Vorlage mit der ID '%s' für die Sprache '%s' gefunden werden.
 config.mailTemplates.template.saved.success#:#Die Vorlage wurde erfolgreich gespeichert!
+config.mailTemplates.template.notConfigured#:#Nicht konfiguriert
 
 config.mailTemplates.template.subject.title#:#Betreff
 config.mailTemplates.template.subject.info#:#Der Betreff für die versendete E-Mail. <br> Die folgenden Platzhalter können verwendet werden: <br><ul>%s</ul>
