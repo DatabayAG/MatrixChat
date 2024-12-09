@@ -78,7 +78,7 @@ class MailTemplatesTable extends ilTable2GUI
 
         foreach ($mailTemplates as $languageId => $mailTemplateData) {
             $tableRow = [
-                "language" => $languageId,
+                "language" => $this->lng->txt("meta_l_$languageId"),
             ];
 
             foreach ($mailTemplateData as $templateId => $mailTemplate) {
