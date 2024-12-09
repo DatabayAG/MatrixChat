@@ -17,8 +17,10 @@ declare(strict_types=1);
 
 use ILIAS\DI\Container;
 use ILIAS\FileUpload\FileUpload;
+use ILIAS\Plugin\Libraries\ControllerHandler\ControllerHandler;
 use ILIAS\Plugin\Libraries\ControllerHandler\UiUtils;
 use ILIAS\Plugin\MatrixChat\Api\MatrixApi;
+use ILIAS\Plugin\MatrixChat\Controller\MailTemplatesController;
 use ILIAS\Plugin\MatrixChat\Form\ChatPageDesignerForm;
 use ILIAS\Plugin\MatrixChat\Form\PluginConfigForm;
 
@@ -39,6 +41,9 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
     public const TAB_PLUGIN_SETTINGS = "tab_plugin_settings";
     public const TAB_CHAT_PAGE_DESIGNER = "tab_chat_page_designer";
 
+    public const TAB_MAIL_TEMPLATES = "tab_mail_temokates";
+
+
     public const CLEANED_VALUE = "************";
 
     protected ilObjUser $user;
@@ -52,6 +57,7 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
     private ilCtrl $ctrl;
     private UiUtils $uiUtil;
     private MatrixApi $matrixApi;
+    private ControllerHandler $controllerHandler;
 
     public function __construct()
     {
@@ -75,6 +81,13 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
         //$this->plugin->denyConfigIfPluginNotActive();
 
         $this->matrixApi = $this->plugin->getMatrixApi();
+
+        $this->controllerHandler = new ControllerHandler(
+            "ILIAS\Plugin\MatrixChat\Controller",
+            $this->plugin->txt("general.cmd.undefined"),
+            $this->plugin->txt("general.cmd.notFound"),
+            $this->plugin->txt("general.plugin.requiredParameterMissing")
+        );
     }
 
     public function showSettings(?PluginConfigForm $form = null): void
@@ -247,6 +260,14 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
             $this->ctrl->getLinkTargetByClass(self::class, self::CMD_SHOW_CHAT_PAGE_DESIGNER)
         );
 
+        /** @var MailTemplatesController $mailTemplatesController */
+        $mailTemplatesController = $this->controllerHandler->getController(MailTemplatesController::class);
+        $this->tabs->addTab(
+            self::TAB_MAIL_TEMPLATES,
+            $this->plugin->txt("config.mailTemplates.title"),
+            $mailTemplatesController->getCommandLink(MailTemplatesController::CMD_SHOW_MAIL_TEMPLATES_CONFIG)
+        );
+
         if ($tabId) {
             $this->tabs->activateTab($tabId);
         }
@@ -259,8 +280,7 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
         if (method_exists($this, $cmd)) {
             $this->{$cmd}();
         } else {
-            $this->uiUtil->sendFailure(sprintf($this->plugin->txt("general.cmd.notFound"), $cmd));
-            $this->{$this->getDefaultCommand()}();
+            $this->controllerHandler->handleCommand($cmd);
         }
     }
 
