@@ -32,7 +32,6 @@ use ILIAS\Plugin\MatrixChat\Form\ConfirmDeleteRoomForm;
 use ILIAS\Plugin\MatrixChat\Model\ChatMember;
 use ILIAS\Plugin\MatrixChat\Model\CourseSettings;
 use ILIAS\Plugin\MatrixChat\Model\MatrixRoom;
-use ILIAS\Plugin\MatrixChat\Model\MatrixUserPowerLevel;
 use ILIAS\Plugin\MatrixChat\Model\UserConfig;
 use ILIAS\Plugin\MatrixChat\Repository\CourseSettingsRepository;
 use ILIAS\Plugin\MatrixChat\Repository\QueuedInvitesRepository;
@@ -97,6 +96,7 @@ class ChatController extends BaseController
     private Services $http;
     private ilLogger $logger;
     private ilObjUser $user;
+    private MailTemplatesController $mailTemplatesController;
 
     public function __construct(Container $dic, ControllerHandler $controllerHandler)
     {
@@ -118,6 +118,8 @@ class ChatController extends BaseController
         $this->courseSettingsRepo = CourseSettingsRepository::getInstance($dic->database());
         $this->courseSettings = $this->courseSettingsRepo->read($this->refId);
         $this->queuedInvitesRepo = QueuedInvitesRepository::getInstance();
+
+        $this->mailTemplatesController = $this->controllerHandler->getController(MailTemplatesController::class);
     }
 
     public function showChat(): void
@@ -303,6 +305,7 @@ class ChatController extends BaseController
 
         $participants = ilParticipants::getInstance($this->refId);
 
+        $mailErrors = [];
         $inviteFailed = false;
         foreach ($userIds as $userId) {
             if (!ilParticipants::_isParticipant($this->refId, $userId)) {
@@ -335,6 +338,18 @@ class ChatController extends BaseController
                 $this->plugin->determinePowerLevelOfParticipant($participants, $user->getId()),
                 false
             );
+
+            $mailError = $this->mailTemplatesController->sendMail(
+                $this->refId,
+                $user,
+                $matrixUser
+                    ? MailTemplatesController::TEMPLATE_MATRIX_ACCOUNT
+                    : MailTemplatesController::TEMPLATE_NO_MATRIX_ACCOUNT,
+                $user->getLanguage()
+            );
+            if ($mailError) {
+                $mailErrors[] = $mailError;
+            }
         }
 
         if ($inviteFailed) {
@@ -342,6 +357,9 @@ class ChatController extends BaseController
         } else {
             $this->uiUtil->sendSuccess($this->plugin->txt("matrix.user.account.invite.multiple.success"), true);
         }
+
+        $this->mailTemplatesController->showMailErrors($mailErrors);
+
         $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
     }
 
@@ -437,6 +455,16 @@ class ChatController extends BaseController
             $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.account.invite.failed"), true);
             $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
         }
+
+        $mailError = $this->mailTemplatesController->sendMail(
+            $this->refId,
+            $user,
+            $matrixUser
+                ? MailTemplatesController::TEMPLATE_MATRIX_ACCOUNT
+                : MailTemplatesController::TEMPLATE_NO_MATRIX_ACCOUNT,
+            $user->getLanguage()
+        );
+        $this->mailTemplatesController->showMailErrors($mailError ? [$mailError] : []);
 
         $this->uiUtil->sendSuccess($this->plugin->txt("matrix.user.account.invite.success"), true);
         $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
