@@ -581,6 +581,7 @@ class ChatController extends BaseController
 
         $participants = ilParticipants::getInstance($courseSettings->getCourseId());
         $objectOffline = ilObject::lookupOfflineStatus(ilObject::_lookupObjId($courseSettings->getCourseId()));
+        $mailErrors = [];
         foreach ($participants->getParticipants() as $participantId) {
             $participantId = (int) $participantId;
             $user = new ilObjUser($participantId);
@@ -602,9 +603,24 @@ class ChatController extends BaseController
                 $this->plugin->determinePowerLevelOfParticipant($participants, $user->getId()),
                 $objectOffline
             );
+
+            $mailError = $this->mailTemplatesController->sendMail(
+                $this->refId,
+                $user,
+                $matrixUser
+                    ? MailTemplatesController::TEMPLATE_MATRIX_ACCOUNT
+                    : MailTemplatesController::TEMPLATE_NO_MATRIX_ACCOUNT,
+                $user->getLanguage()
+            );
+            if ($mailError) {
+                $mailErrors[] = $mailError;
+            }
         }
 
         $this->uiUtil->sendSuccess($this->plugin->txt("general.update.success"), true);
+
+        $this->mailTemplatesController->showMailErrors($mailErrors);
+
         $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS, ["ref_id" => $this->refId]);
     }
 
