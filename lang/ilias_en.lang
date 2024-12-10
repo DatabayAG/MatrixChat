@@ -186,3 +186,5 @@ matrix.restApiUser.login.invalid#:#Rest-API Login invalid
 job.title#:#Process/Check Matrix-Room invitations in queue
 job.description#:#Checks all Matrix-Room invitations if the user can now be invited.
 job.result#:#%s Invites in the queue. <br>%s Invites skipped. <br>%s Invites send. <br> %s Invites not successful.
+
+mail.send.failed#:#An error occurred trying to send mails. Errors: %s

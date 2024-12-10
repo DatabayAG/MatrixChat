@@ -25,17 +25,18 @@ use ILIAS\HTTP\Wrapper\WrapperFactory;
 use ILIAS\Plugin\Libraries\ControllerHandler\BaseController;
 use ILIAS\Plugin\Libraries\ControllerHandler\ControllerHandler;
 use ILIAS\Plugin\MatrixChat\Form\MailTemplateForm;
+use ILIAS\Plugin\MatrixChat\Model\MailError;
 use ILIAS\Plugin\MatrixChat\Model\MailTemplate;
 use ILIAS\Plugin\MatrixChat\Repository\MailTemplatesRepository;
 use ILIAS\Plugin\MatrixChat\Table\MailTemplatesTable;
 use ILIAS\Refinery\Factory;
+use ilLink;
 use ilLogger;
 use ilMail;
 use ilMatrixChatConfigGUI;
 use ilMatrixChatPlugin;
 use ilObject;
 use ilObjUser;
-use ilRepositoryGUI;
 use ilTabsGUI;
 
 class MailTemplatesController extends BaseController
@@ -74,6 +75,7 @@ class MailTemplatesController extends BaseController
         $this->plugin = ilMatrixChatPlugin::getInstance();
         $this->tabs = $this->dic->tabs();
         $this->user = $this->dic->user();
+        $this->logger = $this->dic->logger()->root();
         $this->availableLanguages = $this->dic->language()->getInstalledLanguages();
         $this->mailTemplateRepo = MailTemplatesRepository::getInstance($this->dic->database(), $this->availableLanguages);
     }
@@ -87,7 +89,9 @@ class MailTemplatesController extends BaseController
                 ? ilObject::_lookupTitle(ilObject::_lookupObjId($objRefId))
                 : "",
             "[CHAT_SETTINGS_LINK]" => BaseUserConfigController::buildPermanentLink(),
-            "[OBJECT_LINK]" => $objRefId ? ilLink::_getStaticLink($objRefId, ilObject::_lookupType($objRefId, true)) : "",
+            "[OBJECT_LINK]" => $objRefId
+                ? ilLink::_getStaticLink($objRefId, ilObject::_lookupType($objRefId, true))
+                : "",
         ];
     }
 
@@ -202,6 +206,131 @@ class MailTemplatesController extends BaseController
             $this->redirectToCommand(self::CMD_SHOW_MAIL_TEMPLATES_CONFIG);
         }
         return false;
+    }
+
+    public function sendMail(int $objRefId, ilObjUser $user, string $template, string $language): ?MailError
+    {
+        if (!$this->checkTemplateId($template, false)) {
+            $this->logger->error(sprintf(
+                "Unable to send mail template '%s' (language: '%s') to user with id '%s'. Template does not exist.",
+                $template,
+                $language,
+                $user->getId()
+            ));
+            return new MailError(
+                $user->getLogin(),
+                sprintf(
+                    $this->plugin->txt("config.mailTemplates.template.unsupported.template"),
+                    $template
+                ),
+                $objRefId,
+                $template,
+                $language
+            );
+        }
+
+        if (!$this->checkLanguageId($language, false)) {
+            $this->logger->error(sprintf(
+                "Unable to send mail template '%s' (language: '%s') to user with id '%s'. Language not supported.",
+                $template,
+                $language,
+                $user->getId()
+            ));
+            return new MailError(
+                $user->getLogin(),
+                sprintf(
+                    $this->plugin->txt("config.mailTemplates.template.unsupported.language"),
+                    $language
+                ),
+                $objRefId,
+                $template,
+                $language
+            );
+        }
+
+        $mail = new ilMail(ANONYMOUS_USER_ID);
+
+        $mailTemplate = $this->mailTemplateRepo->read($template, $language);
+        if (!$mailTemplate) {
+            $this->logger->error(sprintf(
+                "No template with the ID '%s' could be found for the language '%s'",
+                $template,
+                $language
+            ));
+
+            return new MailError(
+                $user->getLogin(),
+                sprintf(
+                    $this->plugin->txt("config.mailTemplates.template.notFound"),
+                    $template,
+                    $language
+                ),
+                $objRefId,
+                $template,
+                $language
+            );
+        }
+
+        $subject = $mailTemplate->getSubject();
+        $content = $mailTemplate->getContent();
+
+        foreach ($this->getTemplatePlaceholders($objRefId) as $placeholder => $value) {
+            $subject = str_replace($placeholder, $value, $subject);
+            $content = str_replace($placeholder, $value, $content);
+        }
+
+        $errors = $mail->enqueue(
+            $user->getLogin(),
+            "",
+            "",
+            $subject,
+            $content,
+            []
+        );
+
+        $mailError = null;
+        $errorMessages = [];
+        foreach ($errors as $error) {
+            $errorMessages[] = $error->getLanguageVariable();
+            $this->logger->error(sprintf(
+                "Error occurred trying to send mail to user with id '%s'. Error: %s | obj-ref-id: %s, template: %s, language: %s",
+                $user->getId(),
+                $error->getLanguageVariable(),
+                $objRefId,
+                $template,
+                $language
+            ));
+        }
+
+        if ($errorMessages !== []) {
+            $mailError = new MailError(
+                $user->getLogin(),
+                implode(", ", $errorMessages),
+                $objRefId,
+                $template,
+                $language
+            );
+        }
+
+        return $mailError;
+    }
+
+    /** @param MailError[] $mailErrors */
+    public function showMailErrors(array $mailErrors): void
+    {
+        if ($mailErrors !== []) {
+            $mailErrorMessage = "<br><ul>";
+
+            foreach ($mailErrors as $mailError) {
+                $mailErrorMessage .= "<li>" . $mailError->formatMessage() . "</li>";
+            }
+            $mailErrorMessage .= "</ul>";
+
+            $this->uiUtil->sendFailure(sprintf(
+                $this->plugin->txt("mail.send.failed"),
+                $mailErrorMessage
+            ), true);
+        }
     }
 
     private function checkTemplateId(string $templateId, bool $redirectOnError = true): bool
