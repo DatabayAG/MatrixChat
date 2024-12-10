@@ -30,10 +30,12 @@ class MailTemplatesRepository
 
     /** @var string */
     protected const TABLE_NAME = "mcc_mail_templates";
+
+    /** @var string[] */
     private array $availableLanguages;
     private ilLanguage $lng;
 
-    public function __construct(?ilDBInterface $db = null)
+    public function __construct(?ilDBInterface $db = null, ?array $availableLanguages = null)
     {
         global $DIC;
 
@@ -44,20 +46,18 @@ class MailTemplatesRepository
         }
 
         $this->lng = $DIC->language();
-        $this->availableLanguages = $DIC->language()->getInstalledLanguages();
+        if (!$availableLanguages) {
+            $availableLanguages = $DIC->language()->getInstalledLanguages();
+        }
+        $this->availableLanguages = $availableLanguages;
     }
 
-    public function getAvailableLanguages(): array
-    {
-        return $this->availableLanguages;
-    }
-
-    public static function getInstance(?ilDBInterface $db = null): self
+    public static function getInstance(?ilDBInterface $db = null, ?array $availableLanguages = null): self
     {
         if (self::$instance) {
             return self::$instance;
         }
-        return self::$instance = new self($db);
+        return self::$instance = new self($db, $availableLanguages);
     }
 
     public function exists(string $templateId, string $language): bool

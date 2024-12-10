@@ -29,6 +29,8 @@ use ILIAS\Plugin\MatrixChat\Model\MailTemplate;
 use ILIAS\Plugin\MatrixChat\Repository\MailTemplatesRepository;
 use ILIAS\Plugin\MatrixChat\Table\MailTemplatesTable;
 use ILIAS\Refinery\Factory;
+use ilLogger;
+use ilMail;
 use ilMatrixChatConfigGUI;
 use ilMatrixChatPlugin;
 use ilObject;
@@ -51,18 +53,23 @@ class MailTemplatesController extends BaseController
     private ilMatrixChatPlugin $plugin;
     private ilTabsGUI $tabs;
     private ilObjUser $user;
+    private ilLogger $logger;
+
+    /** @var string[] */
+    private array $availableLanguages;
 
 
     public function __construct(Container $dic, ControllerHandler $controllerHandler)
     {
         parent::__construct($dic, $controllerHandler);
-        $this->mailTemplateRepo = MailTemplatesRepository::getInstance($dic->database());
         $this->configGui = new ilMatrixChatConfigGUI();
         $this->httpWrapper = $dic->http()->wrapper();
         $this->refinery = $dic->refinery();
         $this->plugin = ilMatrixChatPlugin::getInstance();
         $this->tabs = $this->dic->tabs();
         $this->user = $this->dic->user();
+        $this->availableLanguages = $this->dic->language()->getInstalledLanguages();
+        $this->mailTemplateRepo = MailTemplatesRepository::getInstance($this->dic->database(), $this->availableLanguages);
     }
 
     public function getTemplatePlaceholders(?int $objRefId = null): array
@@ -182,7 +189,7 @@ class MailTemplatesController extends BaseController
 
     private function checkLanguageId(string $languageId, bool $redirectOnError = true): bool
     {
-        if (in_array($languageId, $this->mailTemplateRepo->getAvailableLanguages(), true)) {
+        if (in_array($languageId, $this->availableLanguages, true)) {
             return true;
         }
 
