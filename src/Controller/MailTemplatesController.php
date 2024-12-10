@@ -44,7 +44,13 @@ class MailTemplatesController extends BaseController
     public const CMD_EDIT_MAIL_TEMPLATE = "editMailTemplate";
     public const CMD_SAVE_MAIL_TEMPLATE = "saveMailTemplate";
 
-    public const SUPPORTED_TEMPLATES = ["noMatrixAccount", "matrixAccount"];
+    public const TEMPLATE_NO_MATRIX_ACCOUNT = "noMatrixAccount";
+    public const TEMPLATE_MATRIX_ACCOUNT = "matrixAccount";
+
+    public const SUPPORTED_TEMPLATES = [
+        self::TEMPLATE_NO_MATRIX_ACCOUNT,
+        self::TEMPLATE_MATRIX_ACCOUNT
+    ];
 
     private MailTemplatesRepository $mailTemplateRepo;
     private ilMatrixChatConfigGUI $configGui;
