@@ -106,13 +106,15 @@ class MailTemplatesRepository
                 ilDBConstants::T_CLOB,
                 ilDBConstants::T_CLOB,
                 ilDBConstants::T_INTEGER
-            ], [
+            ],
+            [
                 $mailTemplate->getTemplateId(),
                 $mailTemplate->getLanguage(),
                 $mailTemplate->getSubject(),
                 $mailTemplate->getContent(),
                 $mailTemplate->isActive(),
-            ]) === 1;
+            ]
+        ) === 1;
 
         $mailTemplate->setExists($result);
         return $result;
