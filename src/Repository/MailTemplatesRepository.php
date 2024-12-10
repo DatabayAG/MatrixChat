@@ -78,17 +78,20 @@ class MailTemplatesRepository
             return $this->db->manipulateF(
                 "UPDATE " . self::TABLE_NAME . " SET "
                     . "subject = %s, "
-                    . "content = %s "
+                    . "content = %s, "
+                    . "active = %s "
                     . "WHERE template_id = %s AND language = %s",
                 [
                         ilDBConstants::T_CLOB,
                         ilDBConstants::T_CLOB,
+                        ilDBConstants::T_INTEGER,
                         ilDBConstants::T_TEXT,
                         ilDBConstants::T_TEXT,
                     ],
                 [
                         $mailTemplate->getSubject(),
                         $mailTemplate->getContent(),
+                        $mailTemplate->isActive(),
                         $mailTemplate->getTemplateId(),
                         $mailTemplate->getLanguage()
                     ]
@@ -96,15 +99,20 @@ class MailTemplatesRepository
         }
 
         $result = $this->db->manipulateF(
-            "INSERT INTO " . self::TABLE_NAME . " (template_id, language, subject, content) VALUES (%s, %s, %s, %s)",
-            [ilDBConstants::T_TEXT, ilDBConstants::T_TEXT, ilDBConstants::T_CLOB, ilDBConstants::T_CLOB],
+            "INSERT INTO " . self::TABLE_NAME . " (template_id, language, subject, content, active) VALUES (%s, %s, %s, %s, %s)",
             [
-                    $mailTemplate->getTemplateId(),
-                    $mailTemplate->getLanguage(),
-                    $mailTemplate->getSubject(),
-                    $mailTemplate->getContent(),
-                ]
-        ) === 1;
+                ilDBConstants::T_TEXT,
+                ilDBConstants::T_TEXT,
+                ilDBConstants::T_CLOB,
+                ilDBConstants::T_CLOB,
+                ilDBConstants::T_INTEGER
+            ], [
+                $mailTemplate->getTemplateId(),
+                $mailTemplate->getLanguage(),
+                $mailTemplate->getSubject(),
+                $mailTemplate->getContent(),
+                $mailTemplate->isActive(),
+            ]) === 1;
 
         $mailTemplate->setExists($result);
         return $result;
@@ -194,7 +202,8 @@ class MailTemplatesRepository
             $row["language"],
             $row["subject"],
             $row["content"],
-            true
+            true,
+            (bool) $row["active"]
         );
     }
 }

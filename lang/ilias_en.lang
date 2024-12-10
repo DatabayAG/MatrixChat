@@ -109,6 +109,8 @@ config.mailTemplates.template.subject.title#:#Subject
 config.mailTemplates.template.subject.info#:#The subject for the send e-mail. <br> The following placeholders can be used: <br><ul>%s</ul>
 config.mailTemplates.template.content.title#:#Content
 config.mailTemplates.template.content.info#:#The content for the send e-mail. <br> The following placeholders can be used: <br><ul>%s</ul>
+config.mailTemplates.template.active.title#:#Active
+config.mailTemplates.template.active.info#:#Inactive templates are not sent to members.
 
 config.mailTemplates.template.placeholders.[FIRSTNAME]#:#First Name of the Object Member
 config.mailTemplates.template.placeholders.[LASTNAME]#:#Last Name of the Object Member

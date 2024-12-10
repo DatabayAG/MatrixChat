@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChat\Form;
 
+use ilCheckboxInputGUI;
 use ilGlobalPageTemplate;
 use ILIAS\DI\Container;
 use ILIAS\Plugin\MatrixChat\Controller\MailTemplatesController;
@@ -105,6 +106,13 @@ class MailTemplateForm extends ilPropertyFormGUI
             implode("", $placeHolderInfoList)
         ));
         $this->addItem($content);
+
+        $active = new ilCheckboxInputGUI(
+            $this->plugin->txt("config.mailTemplates.template.active.title"),
+            "active"
+        );
+        $active->setInfo($this->plugin->txt("config.mailTemplates.template.active.info"));
+        $this->addItem($active);
 
         $this->addCommandButton(
             MailTemplatesController::getCommand(MailTemplatesController::CMD_SAVE_MAIL_TEMPLATE),

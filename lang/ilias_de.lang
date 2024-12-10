@@ -110,6 +110,8 @@ config.mailTemplates.template.subject.title#:#Betreff
 config.mailTemplates.template.subject.info#:#Der Betreff für die versendete E-Mail. <br> Die folgenden Platzhalter können verwendet werden: <br><ul>%s</ul>
 config.mailTemplates.template.content.title#:#Inhalt
 config.mailTemplates.template.content.info#:#Der Inhalt für die versendete E-Mail. <br> Die folgenden Platzhalter können verwendet werden: <br><ul>%s</ul>
+config.mailTemplates.template.active.title#:#Aktiv
+config.mailTemplates.template.active.info#:#Inaktive Vorlagen werden nicht an Mitglieder gesendet.
 
 config.mailTemplates.template.placeholders.[FIRSTNAME]#:#Vorname des Objekt Mitglieds
 config.mailTemplates.template.placeholders.[LASTNAME]#:#Nachname des Objekt Mitglieds

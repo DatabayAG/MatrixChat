@@ -131,7 +131,8 @@ class MailTemplatesController extends BaseController
             $form = new MailTemplateForm($this, $language, $template);
             $form->setValuesByArray([
                 "subject" => $mailTemplate->getSubject(),
-                "content" => $mailTemplate->getContent()
+                "content" => $mailTemplate->getContent(),
+                "active" => $mailTemplate->isActive()
             ]);
         }
 
@@ -157,7 +158,9 @@ class MailTemplatesController extends BaseController
             $template,
             $language,
             $form->getInput("subject"),
-            $form->getInput("content")
+            $form->getInput("content"),
+            false,
+            (bool) $form->getInput("active")
         );
 
         $this->mailTemplateRepo->save($mailTemplate);
@@ -269,6 +272,10 @@ class MailTemplatesController extends BaseController
                 $template,
                 $language
             );
+        }
+
+        if (!$mailTemplate->isActive()) {
+            return null;
         }
 
         $subject = $mailTemplate->getSubject();

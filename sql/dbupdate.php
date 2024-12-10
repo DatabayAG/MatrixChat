@@ -186,3 +186,20 @@ if ($ilDB->tableExists("mcc_mail_templates")) {
     $ilDB->addPrimaryKey("mcc_mail_templates", ["template_id", "language"]);
 }
 ?>
+<#11>
+<?php
+if ($ilDB->tableExists("mcc_mail_templates")) {
+    if (!$ilDB->tableColumnExists("mcc_mail_templates", "active")) {
+        $ilDB->addTableColumn(
+            "mcc_mail_templates",
+            "active",
+            [
+                "type" => "integer",
+                "length" => 1,
+                "notnull" => true,
+                "default" => true
+            ]
+        );
+    }
+}
+?>
