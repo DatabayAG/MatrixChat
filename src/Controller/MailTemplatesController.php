@@ -80,11 +80,6 @@ class MailTemplatesController extends BaseController
 
     public function getTemplatePlaceholders(?int $objRefId = null): array
     {
-        $objectLink = "";
-        if ($objRefId) {
-            $this->ctrl->setParameterByClass(ilRepositoryGUI::class, "ref_id", $objRefId);
-            $objectLink = $this->ctrl->getLinkTargetByClass(ilRepositoryGUI::class);
-        }
         return [
             "[FIRSTNAME]" => $this->user->getFirstname(),
             "[LASTNAME]" => $this->user->getLastname(),
@@ -92,7 +87,7 @@ class MailTemplatesController extends BaseController
                 ? ilObject::_lookupTitle(ilObject::_lookupObjId($objRefId))
                 : "",
             "[CHAT_SETTINGS_LINK]" => BaseUserConfigController::buildPermanentLink(),
-            "[OBJECT_LINK]" => $objectLink,
+            "[OBJECT_LINK]" => $objRefId ? ilLink::_getStaticLink($objRefId, ilObject::_lookupType($objRefId, true)) : "",
         ];
     }
 
