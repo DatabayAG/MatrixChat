@@ -41,7 +41,7 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
     public const TAB_PLUGIN_SETTINGS = "tab_plugin_settings";
     public const TAB_CHAT_PAGE_DESIGNER = "tab_chat_page_designer";
 
-    public const TAB_MAIL_TEMPLATES = "tab_mail_temokates";
+    public const TAB_MAIL_TEMPLATES = "tab_mail_templates";
 
 
     public const CLEANED_VALUE = "************";
