@@ -99,16 +99,16 @@ config.user.save.success#:#Matrix-Account was saved successfully.
 config.mailTemplates.title#:#E-Mail Templates
 config.mailTemplates.template.edit#:#Edit
 config.mailTemplates.template.editTemplateTitle#:#Edit Template <span style="font-weight: bold;">%s</span> (<span style="font-weight: bold; color: blue;">%s</span>)
-config.mailTemplates.template.unsupported.language#:#The language '%s' is not supported (Not installed).
-config.mailTemplates.template.unsupported.template#:#No template with the ID '%s' exists.
-config.mailTemplates.template.notFound#:#No template with the ID '%s' could be found for the language '%s'.
+config.mailTemplates.template.unsupported.language#:#The language '%s' is not supported (not installed).
+config.mailTemplates.template.unsupported.template#:#Could not find a template with ID '%s'.
+config.mailTemplates.template.notFound#:#Could not find a template with ID '%s' for language '%s'.
 config.mailTemplates.template.saved.success#:#The template was saved successfully!
 config.mailTemplates.template.notConfigured#:#Not configured
 
 config.mailTemplates.template.subject.title#:#Subject
-config.mailTemplates.template.subject.info#:#The subject for the send e-mail. <br> The following placeholders can be used: <br><ul>%s</ul>
-config.mailTemplates.template.content.title#:#Content
-config.mailTemplates.template.content.info#:#The content for the send e-mail. <br> The following placeholders can be used: <br><ul>%s</ul>
+config.mailTemplates.template.subject.info#:#Please enter the subject for the e-mails. <br> The following placeholders can be used: <br><ul>%s</ul>
+config.mailTemplates.template.content.title#:#Body
+config.mailTemplates.template.content.info#:#Please enter the body for the e-mails. <br> The following placeholders can be used: <br><ul>%s</ul>
 config.mailTemplates.template.active.title#:#Active
 config.mailTemplates.template.active.info#:#Inactive templates are not sent to members.
 
@@ -189,4 +189,4 @@ job.title#:#Process/Check Matrix-Room invitations in queue
 job.description#:#Checks all Matrix-Room invitations if the user can now be invited.
 job.result#:#%s Invites in the queue. <br>%s Invites skipped. <br>%s Invites send. <br> %s Invites not successful.
 
-mail.send.failed#:#An error occurred trying to send mails. Errors: %s
+mail.send.failed#:#An error occurred while trying to send mails. Errors: %s

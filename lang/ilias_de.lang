@@ -97,26 +97,26 @@ config.user.externalMatrixUserLookup.info#:#Sie können diese Eingabe dennoch sp
 
 config.user.save.success#:#Matrix-Account erfolgreich gespeichert.
 
-config.mailTemplates.title#:#E-Mail Vorlagen
+config.mailTemplates.title#:#E-Mail-Vorlagen
 config.mailTemplates.template.edit#:#Bearbeiten
 config.mailTemplates.template.editTemplateTitle#:#Vorlage <span style="font-weight: bold;">%s</span> (<span style="font-weight: bold; color: blue;">%s</span>) bearbeiten
-config.mailTemplates.template.unsupported.language#:#Die Sprache '%s' wird nicht unterstützt (Nicht installiert).
+config.mailTemplates.template.unsupported.language#:#Die Sprache '%s' wird nicht unterstützt (nicht installiert).
 config.mailTemplates.template.unsupported.template#:#Es existiert keine Vorlage mit der ID '%s'.
 config.mailTemplates.template.notFound#:#Es konnte keine Vorlage mit der ID '%s' für die Sprache '%s' gefunden werden.
 config.mailTemplates.template.saved.success#:#Die Vorlage wurde erfolgreich gespeichert!
 config.mailTemplates.template.notConfigured#:#Nicht konfiguriert
 
 config.mailTemplates.template.subject.title#:#Betreff
-config.mailTemplates.template.subject.info#:#Der Betreff für die versendete E-Mail. <br> Die folgenden Platzhalter können verwendet werden: <br><ul>%s</ul>
+config.mailTemplates.template.subject.info#:#Bitte geben Sie hier den Betreff für die zu versendende E-Mails an. <br> Die folgenden Platzhalter können verwendet werden: <br><ul>%s</ul>
 config.mailTemplates.template.content.title#:#Inhalt
-config.mailTemplates.template.content.info#:#Der Inhalt für die versendete E-Mail. <br> Die folgenden Platzhalter können verwendet werden: <br><ul>%s</ul>
+config.mailTemplates.template.content.info#:#Bitte geben Sie hier den Textkörper für die zu versendenden E-Mails an. <br> Die folgenden Platzhalter können verwendet werden: <br><ul>%s</ul>
 config.mailTemplates.template.active.title#:#Aktiv
 config.mailTemplates.template.active.info#:#Inaktive Vorlagen werden nicht an Mitglieder gesendet.
 
-config.mailTemplates.template.placeholders.[FIRSTNAME]#:#Vorname des Objekt Mitglieds
-config.mailTemplates.template.placeholders.[LASTNAME]#:#Nachname des Objekt Mitglieds
+config.mailTemplates.template.placeholders.[FIRSTNAME]#:#Vorname des Objekt-Mitglieds
+config.mailTemplates.template.placeholders.[LASTNAME]#:#Nachname des Objekt-Mitglieds
 config.mailTemplates.template.placeholders.[OBJECT_TITLE]#:#Objekt Titel
-config.mailTemplates.template.placeholders.[CHAT_SETTINGS_LINK]#:#Permanent-Link zu <span style="font-weight: bold;">Matrix Chat Einstellungen</span> des Benutzers
+config.mailTemplates.template.placeholders.[CHAT_SETTINGS_LINK]#:#Permanent-Link zu <span style="font-weight: bold;">Matrix Chat-Einstellungen</span> des Benutzers
 config.mailTemplates.template.placeholders.[OBJECT_LINK]#:#Permanent-Link zum Objekt
 
 config.mailTemplates.template.noMatrixAccount#:#Kein Matrix-Konto konfiguriert
