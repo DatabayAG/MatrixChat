@@ -44,6 +44,7 @@ use ilPersonalSettingsGUI;
 use ilRepositoryGUI;
 use ilTabsGUI;
 use ilUIPluginRouterGUI;
+use ReflectionMethod;
 
 abstract class BaseUserConfigController extends BaseController
 {
@@ -275,7 +276,8 @@ abstract class BaseUserConfigController extends BaseController
     public function injectTabs(string $selectedTabId): void
     {
         $gui = new ilPersonalSettingsGUI();
-        $gui->__initSubTabs("showPersonalData");
+        $initSubTabsMethod = new ReflectionMethod($gui, "initSubTabs");
+        $initSubTabsMethod->invoke($gui, "showPersonalData");
         $gui->setHeader();
 
         $this->tabs->setForcePresentationOfSingleTab(true);
