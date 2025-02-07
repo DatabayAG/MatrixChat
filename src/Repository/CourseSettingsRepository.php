@@ -94,13 +94,13 @@ class CourseSettingsRepository
             return $this->db->manipulateF(
                 "UPDATE " . self::TABLE_NAME . " SET matrix_room_id = %s WHERE course_id = %s",
                 [
-                    "text",
-                    "integer"
-                ],
+                        "text",
+                        "integer"
+                    ],
                 [
-                    $courseSettings->getMatrixRoomId() ?: null,
-                    $courseSettings->getCourseId()
-                ]
+                        $courseSettings->getMatrixRoomId() ?: null,
+                        $courseSettings->getCourseId()
+                    ]
             ) === 1;
         }
 
@@ -108,9 +108,9 @@ class CourseSettingsRepository
             "INSERT INTO " . self::TABLE_NAME . " (course_id, matrix_room_id) VALUES (%s, %s)",
             ["integer", "text"],
             [
-                $courseSettings->getCourseId(),
-                $courseSettings->getMatrixRoomId() ?: null
-            ]
+                    $courseSettings->getCourseId(),
+                    $courseSettings->getMatrixRoomId() ?: null
+                ]
         ) === 1;
     }
 

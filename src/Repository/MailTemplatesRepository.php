@@ -101,19 +101,19 @@ class MailTemplatesRepository
         $result = $this->db->manipulateF(
             "INSERT INTO " . self::TABLE_NAME . " (template_id, language, subject, content, active) VALUES (%s, %s, %s, %s, %s)",
             [
-                ilDBConstants::T_TEXT,
-                ilDBConstants::T_TEXT,
-                ilDBConstants::T_CLOB,
-                ilDBConstants::T_CLOB,
-                ilDBConstants::T_INTEGER
-            ],
+                    ilDBConstants::T_TEXT,
+                    ilDBConstants::T_TEXT,
+                    ilDBConstants::T_CLOB,
+                    ilDBConstants::T_CLOB,
+                    ilDBConstants::T_INTEGER
+                ],
             [
-                $mailTemplate->getTemplateId(),
-                $mailTemplate->getLanguage(),
-                $mailTemplate->getSubject(),
-                $mailTemplate->getContent(),
-                $mailTemplate->isActive(),
-            ]
+                    $mailTemplate->getTemplateId(),
+                    $mailTemplate->getLanguage(),
+                    $mailTemplate->getSubject(),
+                    $mailTemplate->getContent(),
+                    $mailTemplate->isActive(),
+                ]
         ) === 1;
 
         $mailTemplate->setExists($result);

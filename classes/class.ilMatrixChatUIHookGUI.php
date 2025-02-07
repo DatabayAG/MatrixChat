@@ -20,12 +20,12 @@ require_once __DIR__ . "/../vendor/autoload.php";
 use ILIAS\DI\Container;
 use ILIAS\HTTP\Wrapper\WrapperFactory;
 use ILIAS\Plugin\Libraries\ControllerHandler\ControllerHandler;
-use ILIAS\Plugin\MatrixChat\Utils\UiUtil;
 use ILIAS\Plugin\MatrixChat\Controller\BaseUserConfigController;
 use ILIAS\Plugin\MatrixChat\Controller\ChatController;
 use ILIAS\Plugin\MatrixChat\Controller\ExternalUserConfigController;
 use ILIAS\Plugin\MatrixChat\Controller\LocalUserConfigController;
 use ILIAS\Plugin\MatrixChat\Repository\CourseSettingsRepository;
+use ILIAS\Plugin\MatrixChat\Utils\UiUtil;
 use ILIAS\Refinery\Factory;
 
 /**

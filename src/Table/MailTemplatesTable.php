@@ -27,7 +27,6 @@ use ILIAS\UI\Factory;
 use ILIAS\UI\Renderer;
 use ilMatrixChatConfigGUI;
 use ilMatrixChatPlugin;
-use ilMatrixChatUIHookGUI;
 use ilTable2GUI;
 
 class MailTemplatesTable extends ilTable2GUI

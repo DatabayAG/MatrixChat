@@ -17,7 +17,6 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChat\Form;
 
-use ilGlobalPageTemplate;
 use ilGlobalTemplateInterface;
 use ILIAS\DI\Container;
 use ILIAS\Plugin\MatrixChat\Controller\BaseUserConfigController;

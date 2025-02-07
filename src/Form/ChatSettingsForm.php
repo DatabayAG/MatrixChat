@@ -19,9 +19,9 @@ namespace ILIAS\Plugin\MatrixChat\Form;
 
 use ILIAS\DI\Container;
 use ILIAS\HTTP\Wrapper\WrapperFactory;
-use ILIAS\Plugin\MatrixChat\Utils\UiUtil;
 use ILIAS\Plugin\MatrixChat\Api\MatrixApi;
 use ILIAS\Plugin\MatrixChat\Controller\ChatController;
+use ILIAS\Plugin\MatrixChat\Utils\UiUtil;
 use ilMatrixChatPlugin;
 use ilPropertyFormGUI;
 use ilTextInputGUI;

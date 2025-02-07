@@ -22,7 +22,6 @@ namespace ILIAS\Plugin\MatrixChat\Form;
 use ILIAS\Plugin\MatrixChat\Controller\BaseUserConfigController;
 use ILIAS\Plugin\MatrixChat\Controller\ExternalUserConfigController;
 use ilObjUser;
-use ilPasswordInputGUI;
 use ilRadioOption;
 
 class ExternalUserConfigForm extends BaseUserConfigForm

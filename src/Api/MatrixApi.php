@@ -321,6 +321,7 @@ class MatrixApi
             return false;
         }
     }
+
     /*
         public function addUserToRoom(MatrixUser $matrixUser, MatrixRoom $matrixRoom): bool
         {

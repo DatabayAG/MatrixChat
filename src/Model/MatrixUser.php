@@ -62,6 +62,7 @@ class MatrixUser
     {
         return $this->exists;
     }
+
     public function setDeviceId(string $deviceId): MatrixUser
     {
         $this->deviceId = $deviceId;

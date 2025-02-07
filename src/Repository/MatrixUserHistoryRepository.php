@@ -20,7 +20,6 @@ namespace ILIAS\Plugin\MatrixChat\Repository;
 use DateTime;
 use ilDBInterface;
 use ILIAS\Plugin\MatrixChat\Model\MatrixUserHistory;
-use ILIAS\Plugin\MatrixChat\Model\UserRoomAddQueue;
 
 class MatrixUserHistoryRepository
 {
@@ -56,11 +55,11 @@ class MatrixUserHistoryRepository
             "INSERT INTO " . self::TABLE_NAME . " (id, user_id, matrix_user_id, created_at) VALUES (%s, %s, %s, %s)",
             ["integer", "integer", "text", "integer"],
             [
-                $matrixUserHistory->getId(),
-                $matrixUserHistory->getUserId(),
-                $matrixUserHistory->getMatrixUserId(),
-                $matrixUserHistory->getCreatedAt()->getTimestamp()
-            ]
+                    $matrixUserHistory->getId(),
+                    $matrixUserHistory->getUserId(),
+                    $matrixUserHistory->getMatrixUserId(),
+                    $matrixUserHistory->getCreatedAt()->getTimestamp()
+                ]
         ) === 1;
     }
 }

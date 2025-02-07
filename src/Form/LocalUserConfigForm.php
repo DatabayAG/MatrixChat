@@ -20,7 +20,6 @@ namespace ILIAS\Plugin\MatrixChat\Form;
 use ILIAS\Plugin\MatrixChat\Controller\BaseUserConfigController;
 use ILIAS\Plugin\MatrixChat\Controller\LocalUserConfigController;
 use ilObjUser;
-use ilPasswordInputGUI;
 use ilRadioOption;
 
 class LocalUserConfigForm extends BaseUserConfigForm

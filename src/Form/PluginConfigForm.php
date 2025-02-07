@@ -21,7 +21,6 @@ use ilCheckboxGroupInputGUI;
 use ilCheckboxInputGUI;
 use ilCheckboxOption;
 use ilFormSectionHeaderGUI;
-use ilGlobalPageTemplate;
 use ilGlobalTemplateInterface;
 use ILIAS\DI\Container;
 use ILIAS\Plugin\MatrixChat\Controller\BaseUserConfigController;

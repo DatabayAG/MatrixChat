@@ -21,7 +21,6 @@ use ILIAS\Plugin\MatrixChat\Form\BaseUserConfigForm;
 use ILIAS\Plugin\MatrixChat\Form\LocalUserConfigForm;
 use ILIAS\Plugin\MatrixChat\Form\LocalUserPasswordChangeForm;
 use ILIAS\Plugin\MatrixChat\Form\PluginConfigForm;
-use ILIAS\Plugin\MatrixChat\Model\MatrixUser;
 use ILIAS\Plugin\MatrixChat\Model\MatrixUserHistory;
 
 class LocalUserConfigController extends BaseUserConfigController

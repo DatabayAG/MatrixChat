@@ -68,9 +68,9 @@ class QueuedInvitesRepository
             "INSERT INTO " . self::TABLE_NAME . " (user_id, ref_id) VALUES (%s, %s)",
             ["integer", "integer"],
             [
-                $userRoomAddQueue->getUserId(),
-                $userRoomAddQueue->getRefId(),
-            ]
+                    $userRoomAddQueue->getUserId(),
+                    $userRoomAddQueue->getRefId(),
+                ]
         ) === 1;
     }
 

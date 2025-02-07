@@ -18,8 +18,8 @@ declare(strict_types=1);
 namespace ILIAS\Plugin\MatrixChat\Form;
 
 use ilCheckboxInputGUI;
-use ILIAS\Plugin\MatrixChat\Utils\UiUtil;
 use ILIAS\Plugin\MatrixChat\Controller\ChatController;
+use ILIAS\Plugin\MatrixChat\Utils\UiUtil;
 use ilMatrixChatPlugin;
 use ilPropertyFormGUI;
 
