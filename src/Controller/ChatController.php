@@ -190,7 +190,7 @@ class ChatController extends BaseController
             );
         }
 
-        $this->renderToMainTemplate($this->uiRenderer->render($toChatSettingsButton) . $this->plugin->getPluginConfig()->getPageDesignerText());
+        $this->renderToMainTemplate($this->uiRenderer->render($toChatSettingsButton) . "<br><br>" . $this->plugin->getPluginConfig()->getPageDesignerText());
     }
 
     public function applyMemberTableFilter(): void
