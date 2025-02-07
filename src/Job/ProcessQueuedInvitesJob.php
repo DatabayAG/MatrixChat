@@ -19,6 +19,7 @@ namespace ILIAS\Plugin\MatrixChat\Job;
 
 use ilCronJob;
 use ilCronJobResult;
+use ILIAS\Cron\Schedule\CronJobScheduleType;
 use ILIAS\DI\Container;
 use ILIAS\Plugin\MatrixChat\Controller\ChatController;
 use ILIAS\Plugin\MatrixChat\Model\UserConfig;
@@ -75,9 +76,9 @@ class ProcessQueuedInvitesJob extends ilCronJob
         return true;
     }
 
-    public function getDefaultScheduleType(): int
+    public function getDefaultScheduleType(): CronJobScheduleType
     {
-        return self::SCHEDULE_TYPE_IN_HOURS;
+        return CronJobScheduleType::SCHEDULE_TYPE_IN_HOURS;
     }
 
     public function getDefaultScheduleValue(): ?int
@@ -143,7 +144,7 @@ class ProcessQueuedInvitesJob extends ilCronJob
             foreach ($queuedInvites as $queuedInvite) {
                 try {
                     $user = new ilObjUser($queuedInvite->getUserId());
-                } catch (Throwable $ex) {
+                } catch (Throwable) {
                     $this->logger->warning(sprintf(
                         "Unable to process invite of user with id '%s' to course with ref-id '%s'",
                         $queuedInvite->getUserId(),

@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace ILIAS\Plugin\MatrixChat\Form;
 
 use ilGlobalPageTemplate;
+use ilGlobalTemplateInterface;
 use ILIAS\DI\Container;
 use ILIAS\Plugin\MatrixChat\Utils\UiUtil;
 use ILIAS\Plugin\MatrixChat\Controller\BaseUserConfigController;
@@ -31,7 +32,7 @@ use ilTextInputGUI;
 abstract class BaseUserConfigForm extends ilPropertyFormGUI
 {
     protected ilMatrixChatPlugin $plugin;
-    protected ilGlobalPageTemplate $mainTpl;
+    protected ilGlobalTemplateInterface $mainTpl;
     protected Container $dic;
     protected BaseUserConfigController $controller;
     protected UiUtil $uiUtil;

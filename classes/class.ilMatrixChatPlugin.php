@@ -42,7 +42,7 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
     /** @var string */
     public const PNAME = "MatrixChat";
 
-    private static ?ilMatrixChatPlugin $instance = null;
+    private static ?self $instance = null;
     private ?PluginConfig $pluginConfig = null;
     private QueuedInvitesRepository $queuedInvitesRepo;
     private CourseSettingsRepository $courseSettingsRepo;
@@ -251,7 +251,7 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
                         $this->logger->warning("Error occurred trying to delete queued invited for object with ref_id '$refId' after object was deleted");
                     }
                 }
-            } catch (Throwable $e) {
+            } catch (Throwable) {
                 //If refID is undefined for some reason, don't cause a crash. It's not mandatory to clean up left over data.
                 return;
             }
@@ -296,7 +296,7 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
         }
 
         $rooms = $this->findMatrixRoomsLinkedToObjId($objId, $a_event, $matrixApi);
-        if($rooms === []) {
+        if ($rooms === []) {
             $this->logger->warning("Unable to continue handling event '$a_event'. No room(s) were found using the obj-id '$objId'");
             return;
         }

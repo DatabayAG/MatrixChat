@@ -252,29 +252,6 @@ class PluginConfig extends SettingsConfig
         return $this;
     }
 
-    /**
-     * @throws Exception
-     */
-    public function save(): void
-    {
-        try {
-            parent::save();
-        } catch (ConfigLoadException $ex) {
-            $errorsFound = 0;
-            foreach ($ex->getUnloadableProperties() as $unloadableProperty) {
-                switch ($unloadableProperty->getProperty()->getName()) {
-                    default:
-                        $errorsFound++;
-                        break;
-                }
-            }
-
-            if ($errorsFound > 0) {
-                throw new Exception("general.update.failed");
-            }
-        }
-    }
-
     public function getMatrixServerName(): string
     {
         if (!$this->getMatrixServerUrl()) {

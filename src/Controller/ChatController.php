@@ -314,7 +314,7 @@ class ChatController extends BaseController
             }
             try {
                 $user = new ilObjUser($userId);
-            } catch (Throwable $ex) {
+            } catch (Throwable) {
                 $inviteFailed = true;
                 $this->logger->warning("Unable to invite user with id '$userId', No User seems to exist with that id");
                 continue;
@@ -423,7 +423,7 @@ class ChatController extends BaseController
 
         try {
             $user = new ilObjUser($userId);
-        } catch (Throwable $ex) {
+        } catch (Throwable) {
             $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.account.invite.failed"));
             $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
             return;
@@ -573,7 +573,7 @@ class ChatController extends BaseController
             $courseSettings->setMatrixRoomId($room->getId());
             try {
                 $this->courseSettingsRepo->save($courseSettings);
-            } catch (Exception $ex) {
+            } catch (Exception) {
                 $this->uiUtil->sendFailure($this->plugin->txt("general.update.failed"));
                 $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS, ["ref_id" => $this->refId]);
             }
@@ -752,14 +752,12 @@ class ChatController extends BaseController
                 $gui->prepareOutput();
                 $guiRefClass = new ReflectionClass($gui);
                 $setSubTabsMethod = $guiRefClass->getMethod("setSubTabs");
-                $setSubTabsMethod->setAccessible(true);
                 $setSubTabsMethod->invoke($gui, "settings");
                 break;
         }
 
         if ($gui) {
             $reflectionMethod = new ReflectionMethod($gui, "setTitleAndDescription");
-            $reflectionMethod->setAccessible(true);
             $reflectionMethod->invoke($gui);
         }
 

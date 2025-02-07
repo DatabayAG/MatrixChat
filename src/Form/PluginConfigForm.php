@@ -22,6 +22,7 @@ use ilCheckboxInputGUI;
 use ilCheckboxOption;
 use ilFormSectionHeaderGUI;
 use ilGlobalPageTemplate;
+use ilGlobalTemplateInterface;
 use ILIAS\DI\Container;
 use ILIAS\Plugin\MatrixChat\Controller\BaseUserConfigController;
 use ilMatrixChatConfigGUI;
@@ -36,7 +37,7 @@ class PluginConfigForm extends ilPropertyFormGUI
 {
     private ilMatrixChatPlugin $plugin;
     private Container $dic;
-    private ilGlobalPageTemplate $mainTpl;
+    private ilGlobalTemplateInterface $mainTpl;
 
     public const SPECIFY_OTHER_MATRIX_ACCOUNT = "specifyOtherMatrixAccount";
     public const CREATE_ON_CONFIGURED_HOMESERVER = "createOnConfiguredHomeserver";

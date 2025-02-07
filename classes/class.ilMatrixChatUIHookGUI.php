@@ -52,7 +52,7 @@ class ilMatrixChatUIHookGUI extends ilUIHookPluginGUI
 {
     private ilMatrixChatPlugin $plugin;
     private Container $dic;
-    private ilCtrl $ctrl;
+    private ilCtrlInterface $ctrl;
     private ControllerHandler $controllerHandler;
     private UiUtil $uiUtil;
     private WrapperFactory $httpWrapper;

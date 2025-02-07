@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace ILIAS\Plugin\MatrixChat\Form;
 
 use ilGlobalPageTemplate;
+use ilGlobalTemplateInterface;
 use ILIAS\DI\Container;
 use ILIAS\Plugin\MatrixChat\Controller\BaseUserConfigController;
 use ILIAS\Plugin\MatrixChat\Controller\LocalUserConfigController;
@@ -30,7 +31,7 @@ use ilTextInputGUI;
 class LocalUserPasswordChangeForm extends ilPropertyFormGUI
 {
     protected ilMatrixChatPlugin $plugin;
-    protected ilGlobalPageTemplate $mainTpl;
+    protected ilGlobalTemplateInterface $mainTpl;
     protected Container $dic;
     protected BaseUserConfigController $controller;
 
