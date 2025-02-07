@@ -239,7 +239,7 @@ class MatrixApi
             $response = $this->sendRequest(
                 "/_synapse/admin/v1/rooms/$matrixSpaceId"
             );
-        } catch (MatrixApiException $ex) {
+        } catch (MatrixApiException) {
             $this->logger->error("Error occurred while trying to retrieve space '$matrixSpaceId'.");
             return null;
         }
@@ -260,7 +260,7 @@ class MatrixApi
             if ($response->getResponseDataValue("room_type") === null && $response->getResponseDataValue("name") === null) {
                 throw new Exception("Faulty room");
             }
-        } catch (MatrixApiException|Exception $ex) {
+        } catch (MatrixApiException|Exception) {
             $this->logger->error("Error occurred while trying to retrieve room '$matrixRoomId'.");
             return null;
         }
@@ -277,7 +277,7 @@ class MatrixApi
     {
         try {
             $response = $this->sendRequest("/_synapse/admin/v1/rooms/$roomId/members");
-        } catch (MatrixApiException $ex) {
+        } catch (MatrixApiException) {
             $this->logger->error("Error occurred while trying to retrieve room members for room '$roomId'.");
             return [];
         }
@@ -310,7 +310,7 @@ class MatrixApi
             }
 
             return $success;
-        } catch (MatrixApiException $ex) {
+        } catch (MatrixApiException) {
             $roomType = $matrixRoom instanceof MatrixSpace ? "space" : "room";
 
             $this->logger->error(sprintf(
@@ -321,6 +321,7 @@ class MatrixApi
             return false;
         }
     }
+
     /*
         public function addUserToRoom(MatrixUser $matrixUser, MatrixRoom $matrixRoom): bool
         {
@@ -350,7 +351,7 @@ class MatrixApi
             return $this->sendRequest(
                 "/_synapse/admin/v2/users/$matrixUserId"
             )->getResponseData() !== [];
-        } catch (MatrixApiException $ex) {
+        } catch (MatrixApiException) {
             $this->logger->error("Error occurred while trying to check if user '$matrixUserId' exists.");
             return false;
         }
@@ -369,7 +370,7 @@ class MatrixApi
                 false
             );
             return $response->getResponseDataValue("available");
-        } catch (MatrixApiException $ex) {
+        } catch (MatrixApiException) {
             return false;
         }
     }
@@ -378,7 +379,7 @@ class MatrixApi
     {
         try {
             return $this->sendRequest("/_synapse/admin/v1/register")->getResponseDataValue("nonce");
-        } catch (MatrixApiException $ex) {
+        } catch (MatrixApiException) {
             $this->logger->error("Error occurred while trying to retrieve nonce from server");
             return null;
         }
@@ -392,7 +393,7 @@ class MatrixApi
             $profile = $this->getMatrixUserProfile($matrixUserId);
             $exists = true;
             $displayName = $profile["displayname"];
-        } catch (MatrixApiException $ex) {
+        } catch (MatrixApiException) {
             //Assume account not yet created
         }
 
@@ -402,7 +403,7 @@ class MatrixApi
     public function removeUserFromRoom(string $matrixUserId, MatrixRoom $room, string $reason): bool
     {
         try {
-            $response = $this->sendRequest(
+            $this->sendRequest(
                 "/_matrix/client/v3/rooms/{$room->getId()}/kick",
                 true,
                 "POST",
@@ -416,7 +417,7 @@ class MatrixApi
             $this->removeUserPowerLevelOnRoom($room, $matrixUserId);
 
             return true;
-        } catch (MatrixApiException $ex) {
+        } catch (MatrixApiException) {
             $this->logger->error(sprintf(
                 "Error occurred while trying to remove user '%s' from room '%s' with reason '%s'.",
                 $matrixUserId,
@@ -435,7 +436,7 @@ class MatrixApi
                 return false;
             }
 
-            $response = $this->sendRequest(
+            $this->sendRequest(
                 "/_synapse/admin/v2/users/$matrixUserId",
                 true,
                 "PUT",
@@ -445,7 +446,7 @@ class MatrixApi
                 ],
             );
             return true;
-        } catch (MatrixApiException $ex) {
+        } catch (MatrixApiException) {
             $this->logger->error("Error occurred while trying to change password of user '$matrixUserId'");
             return false;
         }
@@ -468,13 +469,13 @@ class MatrixApi
                     ));
                 }
             }
-            $response = $this->sendRequest(
+            $this->sendRequest(
                 "/_synapse/admin/v1/rooms/{$room->getId()}",
                 true,
                 "DELETE",
                 ["message" => $reason, "purge" => $purge, "block" => $block],
             );
-        } catch (MatrixApiException $ex) {
+        } catch (MatrixApiException) {
             $this->logger->error("Error occurred while trying to delete room '{$room->getId()}' with reason '$reason'");
             return false;
         }
@@ -486,7 +487,7 @@ class MatrixApi
     {
         try {
             $response = $this->sendRequest("/_matrix/client/v3/account/whoami", true, "GET", [], false, $apiToken);
-        } catch (MatrixApiException $ex) {
+        } catch (MatrixApiException) {
             $this->logger->error("Error occurred while trying to login user with api-token");
             return null;
         }
@@ -496,7 +497,7 @@ class MatrixApi
         try {
             $matrixUserProfile = $this->getMatrixUserProfile($userId);
             $displayName = $matrixUserProfile["displayname"];
-        } catch (MatrixApiException $e) {
+        } catch (MatrixApiException) {
             $displayName = "";
             $this->logger->error("Error occurred while trying to retrieve profile for user '$userId'. Assuming displayname as empty");
         }
@@ -521,7 +522,7 @@ class MatrixApi
                 "password" => $password,
                 "device_id" => $deviceId
             ]);
-        } catch (MatrixApiException $ex) {
+        } catch (MatrixApiException) {
             $this->logger->error("Error occurred while trying to login user with username '$username'");
             return null;
         }
@@ -531,7 +532,7 @@ class MatrixApi
         try {
             $matrixUserProfile = $this->getMatrixUserProfile($userId);
             $displayName = $matrixUserProfile["displayname"];
-        } catch (MatrixApiException $e) {
+        } catch (MatrixApiException) {
             $displayName = "";
             $this->logger->error("Error occurred while trying to retrieve profile for user '$userId'. Assuming displayname as empty");
         }
@@ -550,19 +551,19 @@ class MatrixApi
     public function loginUserWithAdmin(string $matrixUserId): ?MatrixUser
     {
         try {
-            $response = $this->sendRequest(
-                "/_synapse/admin/v1/users/{$matrixUserId}/login",
+            $this->sendRequest(
+                "/_synapse/admin/v1/users/$matrixUserId/login",
                 true,
                 "POST"
             );
-        } catch (MatrixApiException $ex) {
+        } catch (MatrixApiException) {
             $this->logger->error("Error occurred while trying to login into user '$matrixUserId' through the Admin-API");
             return null;
         }
 
         try {
             $displayName = $this->getMatrixUserProfile($matrixUserId)["displayname"];
-        } catch (MatrixApiException $ex) {
+        } catch (MatrixApiException) {
             $displayName = "";
             $this->logger->error("Error occurred while trying to retrieve profile for user '$matrixUserId'. Assuming displayname as empty");
         }
@@ -605,7 +606,7 @@ class MatrixApi
                 ],
                 true
             );
-        } catch (MatrixApiException $e) {
+        } catch (MatrixApiException) {
             $this->logger->error("Error occurred while trying to create space with name '$name'");
             return null;
         }
@@ -629,7 +630,7 @@ class MatrixApi
                 "suggested" => false,
             ], "m.space.child", $room->getId());
             return $response->getStatusCode() === 200;
-        } catch (MatrixApiException $ex) {
+        } catch (MatrixApiException) {
             $this->logger->error("Error occurred while trying to add room '{$room->getId()}' to space '{$space->getId()}'");
             return false;
         }
@@ -673,7 +674,7 @@ class MatrixApi
         try {
             $state = $this->getRoomState($room, "m.room.member", $matrixUserId);
             return $state["membership"];
-        } catch (MatrixApiException $ex) {
+        } catch (MatrixApiException) {
             $this->logger->error("Error occurred while trying to retrieve status of user '$matrixUserId' in room '{$room->getId()}'.");
             return ChatController::USER_STATUS_UNKNOWN;
         }
@@ -687,7 +688,7 @@ class MatrixApi
     {
         try {
             $state = $this->getRoomState($room, "m.room.power_levels");
-        } catch (MatrixApiException $ex) {
+        } catch (MatrixApiException) {
             $this->logger->error("Error occurred while trying to request current state of room '{$room->getId()}'");
             return [];
         }
@@ -759,9 +760,9 @@ class MatrixApi
     }
 
     /**
-     * @param MatrixUserPowerLevel[]|MatrixUserPowerLevel $matrixUserPowerLevelMap
+     * @param MatrixUserPowerLevel|MatrixUserPowerLevel[] $matrixUserPowerLevelMap
      */
-    public function setUserPowerLevelOnRoom(MatrixRoom $room, $matrixUserPowerLevelMap): bool
+    public function setUserPowerLevelOnRoom(MatrixRoom $room, array|MatrixUserPowerLevel $matrixUserPowerLevelMap): bool
     {
         if (!is_array($matrixUserPowerLevelMap)) {
             $matrixUserPowerLevelMap = [$matrixUserPowerLevelMap];
@@ -773,7 +774,7 @@ class MatrixApi
 
         try {
             $state = $this->getRoomState($room, "m.room.power_levels");
-        } catch (MatrixApiException $ex) {
+        } catch (MatrixApiException) {
             $this->logger->error("Error occurred while trying to request current state of room '{$room->getId()}'");
             return false;
         }
@@ -789,7 +790,7 @@ class MatrixApi
         try {
             $response = $this->putRoomStateEvent($room, $state, "m.room.power_levels");
             return $response->getStatusCode() === 200;
-        } catch (MatrixApiException $ex) {
+        } catch (MatrixApiException) {
             $powerLevelsSetString = "";
             foreach ($matrixUserPowerLevelMap as $matrixUserPowerLevel) {
                 $powerLevelsSetString .= "- {$matrixUserPowerLevel->getMatrixUserId()}: {$matrixUserPowerLevel->getPowerLevel()}\n";
@@ -854,7 +855,7 @@ class MatrixApi
                 $postData,
                 true
             );
-        } catch (MatrixApiException $e) {
+        } catch (MatrixApiException) {
             $this->logger->error("Error occurred while trying to create room with name '$name' & assign to parent space '{$parentSpace->getId()}'");
             return null;
         }
@@ -887,7 +888,7 @@ class MatrixApi
             return $response->getStatusCode() === 200
                 && $response->getResponseDataValue("messages_per_second") === 0
                 && $response->getResponseDataValue("burst_count") === 0;
-        } catch (MatrixApiException $ex) {
+        } catch (MatrixApiException) {
             $this->logger->error(sprintf(
                 "Error occurred while trying to get overwrite_ratelimit for user '%s'",
                 $matrixUser->getId()
@@ -909,7 +910,7 @@ class MatrixApi
                 ]
             );
             return $response->getStatusCode() === 200;
-        } catch (MatrixApiException $ex) {
+        } catch (MatrixApiException) {
             $this->logger->error(sprintf(
                 "Error occurred while trying to set overwrite_ratelimit for user '%s', messages_per_second = %s & burst_count = %s",
                 $matrixUser->getId(),
@@ -938,7 +939,7 @@ class MatrixApi
     {
         try {
             $response = $this->sendRequest("/_matrix/federation/v1/version", false);
-        } catch (MatrixApiException $ex) {
+        } catch (MatrixApiException) {
             $this->logger->error("Error occurred while trying to retrieve server version info");
             return null;
         }

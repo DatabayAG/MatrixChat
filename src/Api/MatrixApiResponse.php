@@ -28,8 +28,7 @@ class MatrixApiResponse
         $this->responseData = $responseData;
     }
 
-    /** @return null|string|int|float|bool|array */
-    public function getResponseDataValue(string $key)
+    public function getResponseDataValue(string $key): float|array|bool|int|string|null
     {
         return $this->getResponseData()[$key] ?? null;
     }

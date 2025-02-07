@@ -18,11 +18,11 @@ declare(strict_types=1);
 use ILIAS\DI\Container;
 use ILIAS\FileUpload\FileUpload;
 use ILIAS\Plugin\Libraries\ControllerHandler\ControllerHandler;
-use ILIAS\Plugin\Libraries\ControllerHandler\UiUtils;
 use ILIAS\Plugin\MatrixChat\Api\MatrixApi;
 use ILIAS\Plugin\MatrixChat\Controller\MailTemplatesController;
 use ILIAS\Plugin\MatrixChat\Form\ChatPageDesignerForm;
 use ILIAS\Plugin\MatrixChat\Form\PluginConfigForm;
+use ILIAS\Plugin\MatrixChat\Utils\UiUtil;
 
 require_once __DIR__ . "/../vendor/autoload.php";
 
@@ -49,13 +49,13 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
     protected ilObjUser $user;
     protected ilLogger $logger;
     protected FileUpload $upload;
-    protected ilMatrixChatPlugin $plugin;
+    protected ilMatrixChatPlugin|ilPlugin $plugin;
     protected ilTabsGUI $tabs;
     protected Container $dic;
-    protected ilGlobalPageTemplate $mainTpl;
+    protected ilGlobalTemplateInterface $mainTpl;
     protected ilLanguage $lng;
-    private ilCtrl $ctrl;
-    private UiUtils $uiUtil;
+    private ilCtrlInterface $ctrl;
+    private UiUtil $uiUtil;
     private MatrixApi $matrixApi;
     private ControllerHandler $controllerHandler;
 
@@ -70,7 +70,7 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
         $this->upload = $this->dic->upload();
         $this->logger = $this->dic->logger()->root();
         $this->user = $this->dic->user();
-        $this->uiUtil = new UiUtils();
+        $this->uiUtil = new UiUtil();
 
         /**
          * @var ilComponentFactory $componentFactory
@@ -101,7 +101,7 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
             try {
                 $adminUser = $this->matrixApi->getAdminUser();
                 $matrixAdminPasswordRemoveRateLimit = $this->matrixApi->isOverrideRateLimit($adminUser);
-            } catch (Throwable $ex) {
+            } catch (Throwable) {
                 //Ignore, matrixApi already logged error
                 $matrixAdminPasswordRemoveRateLimit = false;
             }
@@ -109,7 +109,7 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
             try {
                 $restApiUser = $this->matrixApi->getRestApiUser();
                 $matrixRestApiUserRemoveRateLimit = $this->matrixApi->isOverrideRateLimit($restApiUser);
-            } catch (Throwable $ex) {
+            } catch (Throwable) {
                 //Ignore, matrixApi already logged error
                 $matrixRestApiUserRemoveRateLimit = false;
             }
@@ -260,8 +260,7 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
             $this->ctrl->getLinkTargetByClass(self::class, self::CMD_SHOW_CHAT_PAGE_DESIGNER)
         );
 
-        /** @var MailTemplatesController $mailTemplatesController */
-        $mailTemplatesController = $this->controllerHandler->getController(MailTemplatesController::class);
+        $mailTemplatesController = MailTemplatesController::getInstance($this->controllerHandler);
         $this->tabs->addTab(
             self::TAB_MAIL_TEMPLATES,
             $this->plugin->txt("config.mailTemplates.title"),

@@ -16,7 +16,6 @@
 declare(strict_types=1);
 
 use ILIAS\DI\Container;
-use ILIAS\Plugin\Libraries\ControllerHandler\UiUtils;
 use ILIAS\Plugin\MatrixChat\Api\MatrixApi;
 use ILIAS\Plugin\MatrixChat\Job\ProcessQueuedInvitesJob;
 use ILIAS\Plugin\MatrixChat\Model\MatrixRoom;
@@ -27,6 +26,7 @@ use ILIAS\Plugin\MatrixChat\Model\UserConfig;
 use ILIAS\Plugin\MatrixChat\Model\UserRoomAddQueue;
 use ILIAS\Plugin\MatrixChat\Repository\CourseSettingsRepository;
 use ILIAS\Plugin\MatrixChat\Repository\QueuedInvitesRepository;
+use ILIAS\Plugin\MatrixChat\Utils\UiUtil;
 
 require_once __DIR__ . "/../vendor/autoload.php";
 
@@ -42,14 +42,14 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
     /** @var string */
     public const PNAME = "MatrixChat";
 
-    private static ?ilMatrixChatPlugin $instance = null;
+    private static ?self $instance = null;
     private ?PluginConfig $pluginConfig = null;
     private QueuedInvitesRepository $queuedInvitesRepo;
     private CourseSettingsRepository $courseSettingsRepo;
     protected ?MatrixApi $matrixApi = null;
     public Container $dic;
     public ilSetting $settings;
-    private UiUtils $uiUtil;
+    private UiUtil $uiUtil;
     private ilObjUser $user;
     private ilLogger $logger;
 
@@ -60,7 +60,7 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
         $this->settings = new ilSetting(self::class);
         $this->queuedInvitesRepo = QueuedInvitesRepository::getInstance($this->dic->database());
         $this->courseSettingsRepo = CourseSettingsRepository::getInstance($this->dic->database());
-        $this->uiUtil = new UiUtils();
+        $this->uiUtil = new UiUtil();
         $this->user = $this->dic->user();
         $this->logger = $this->dic->logger()->root();
         parent::__construct($db, $component_repository, $id);
@@ -112,18 +112,24 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
 
     public function getUsernameSchemeVariables(): array
     {
+        $truncateLoginVariableLength = $this->getPluginConfig()->getTruncateLoginVariableLength();
+        $truncateExternalAccountVariableLength = $this->getPluginConfig()->getTruncateExternalAccountVariableLength();
         return [
             "CLIENT_ID" => CLIENT_ID,
-            "LOGIN" => mb_substr(
-                $this->user->getLogin(),
-                0,
-                -$this->getPluginConfig()->getTruncateLoginVariableLength()
-            ),
-            "EXTERNAL_ACCOUNT" => mb_substr(
-                $this->user->getExternalAccount(),
-                0,
-                -$this->getPluginConfig()->getTruncateExternalAccountVariableLength()
-            )
+            "LOGIN" => $truncateLoginVariableLength <= 0
+                ? $this->user->getLogin()
+                : mb_substr(
+                    $this->user->getLogin(),
+                    0,
+                    -$truncateLoginVariableLength
+                ),
+            "EXTERNAL_ACCOUNT" => $truncateExternalAccountVariableLength <= 0
+                ? $this->user->getExternalAccount()
+                : mb_substr(
+                    $this->user->getExternalAccount(),
+                    0,
+                    -$truncateExternalAccountVariableLength
+                )
         ];
     }
 
@@ -251,7 +257,7 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
                         $this->logger->warning("Error occurred trying to delete queued invited for object with ref_id '$refId' after object was deleted");
                     }
                 }
-            } catch (Throwable $e) {
+            } catch (Throwable) {
                 //If refID is undefined for some reason, don't cause a crash. It's not mandatory to clean up left over data.
                 return;
             }
@@ -296,7 +302,7 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
         }
 
         $rooms = $this->findMatrixRoomsLinkedToObjId($objId, $a_event, $matrixApi);
-        if($rooms === []) {
+        if ($rooms === []) {
             $this->logger->warning("Unable to continue handling event '$a_event'. No room(s) were found using the obj-id '$objId'");
             return;
         }

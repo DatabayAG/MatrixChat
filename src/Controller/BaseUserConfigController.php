@@ -31,6 +31,7 @@ use ILIAS\Plugin\MatrixChat\Model\UserRoomAddQueue;
 use ILIAS\Plugin\MatrixChat\Repository\CourseSettingsRepository;
 use ILIAS\Plugin\MatrixChat\Repository\MatrixUserHistoryRepository;
 use ILIAS\Plugin\MatrixChat\Repository\QueuedInvitesRepository;
+use ILIAS\Plugin\MatrixChat\Utils\UiUtil;
 use ilLanguage;
 use ilLink;
 use ilLogger;
@@ -43,6 +44,7 @@ use ilPersonalSettingsGUI;
 use ilRepositoryGUI;
 use ilTabsGUI;
 use ilUIPluginRouterGUI;
+use ReflectionMethod;
 
 abstract class BaseUserConfigController extends BaseController
 {
@@ -64,6 +66,7 @@ abstract class BaseUserConfigController extends BaseController
     protected CourseSettingsRepository $courseSettingsRepo;
     private ilLanguage $lng;
     protected MatrixUserHistoryRepository $matrixUserHistoryRepo;
+    protected UiUtil $uiUtil;
 
     public function __construct(Container $dic, ControllerHandler $controllerHandler)
     {
@@ -80,19 +83,18 @@ abstract class BaseUserConfigController extends BaseController
         $this->queuedInvitesRepo = QueuedInvitesRepository::getInstance($this->dic->database());
         $this->courseSettingsRepo = CourseSettingsRepository::getInstance($this->dic->database());
         $this->matrixUserHistoryRepo = MatrixUserHistoryRepository::getInstance($this->dic->database());
+        $this->uiUtil = new UiUtil($this->dic);
     }
 
     protected function verifyCorrectController(): void
     {
         if ($this instanceof LocalUserConfigController && (int) $this->user->getAuthMode(true) !== ilAuthUtils::AUTH_LOCAL) {
-            /** @var ExternalUserConfigController $externalUserConfigController */
-            $externalUserConfigController = $this->controllerHandler->getController(ExternalUserConfigController::class);
+            $externalUserConfigController = ExternalUserConfigController::getInstance($this->controllerHandler);
             $externalUserConfigController->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
         }
 
         if ($this instanceof ExternalUserConfigController && (int) $this->user->getAuthMode(true) === ilAuthUtils::AUTH_LOCAL) {
-            /** @var LocalUserConfigController $localUserConfigController */
-            $localUserConfigController = $this->controllerHandler->getController(LocalUserConfigController::class);
+            $localUserConfigController = LocalUserConfigController::getInstance($this->controllerHandler);
             $localUserConfigController->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
         }
     }
@@ -267,14 +269,15 @@ abstract class BaseUserConfigController extends BaseController
             ->setAuthMethod("")
             ->save();
 
-        $this->uiUtil->sendSuccess($this->plugin->txt("config.user.resetAccountSettings.success"), true);
+        $this->uiUtil->sendSuccess($this->plugin->txt("config.user.resetAccountSettings.success"));
         $this->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
     }
 
     public function injectTabs(string $selectedTabId): void
     {
         $gui = new ilPersonalSettingsGUI();
-        $gui->__initSubTabs("showPersonalData");
+        $initSubTabsMethod = new ReflectionMethod($gui, "initSubTabs");
+        $initSubTabsMethod->invoke($gui, "showPersonalData");
         $gui->setHeader();
 
         $this->tabs->setForcePresentationOfSingleTab(true);

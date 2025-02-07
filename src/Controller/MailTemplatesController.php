@@ -29,6 +29,7 @@ use ILIAS\Plugin\MatrixChat\Model\MailError;
 use ILIAS\Plugin\MatrixChat\Model\MailTemplate;
 use ILIAS\Plugin\MatrixChat\Repository\MailTemplatesRepository;
 use ILIAS\Plugin\MatrixChat\Table\MailTemplatesTable;
+use ILIAS\Plugin\MatrixChat\Utils\UiUtil;
 use ILIAS\Refinery\Factory;
 use ilLink;
 use ilLogger;
@@ -64,6 +65,7 @@ class MailTemplatesController extends BaseController
 
     /** @var string[] */
     private array $availableLanguages;
+    private UiUtil $uiUtil;
 
 
     public function __construct(Container $dic, ControllerHandler $controllerHandler)
@@ -78,6 +80,7 @@ class MailTemplatesController extends BaseController
         $this->logger = $this->dic->logger()->root();
         $this->availableLanguages = $this->dic->language()->getInstalledLanguages();
         $this->mailTemplateRepo = MailTemplatesRepository::getInstance($this->dic->database(), $this->availableLanguages);
+        $this->uiUtil = new UiUtil($this->dic);
     }
 
     public function getTemplatePlaceholders(?int $objRefId = null): array
@@ -123,7 +126,7 @@ class MailTemplatesController extends BaseController
                 $this->plugin->txt("config.mailTemplates.template.notFound"),
                 $template,
                 $language
-            ), true);
+            ));
             $this->redirectToCommand(self::CMD_SHOW_MAIL_TEMPLATES_CONFIG);
         }
 
@@ -164,7 +167,7 @@ class MailTemplatesController extends BaseController
         );
 
         $this->mailTemplateRepo->save($mailTemplate);
-        $this->uiUtil->sendSuccess($this->plugin->txt("config.mailTemplates.template.saved.success"), true);
+        $this->uiUtil->sendSuccess($this->plugin->txt("config.mailTemplates.template.saved.success"));
         $this->redirectToCommand(
             self::CMD_EDIT_MAIL_TEMPLATE,
             [
@@ -186,8 +189,7 @@ class MailTemplatesController extends BaseController
 
         if ($parameter === null) {
             $this->uiUtil->sendFailure(
-                sprintf($this->plugin->txt("general.plugin.requiredParameterMissing"), $parameterName),
-                true
+                sprintf($this->plugin->txt("general.plugin.requiredParameterMissing"), $parameterName)
             );
             $this->redirectToCommand(self::CMD_SHOW_MAIL_TEMPLATES_CONFIG);
         }
@@ -205,7 +207,7 @@ class MailTemplatesController extends BaseController
             $this->uiUtil->sendFailure(sprintf(
                 $this->plugin->txt("config.mailTemplates.template.unsupported.language"),
                 $languageId
-            ), true);
+            ));
             $this->redirectToCommand(self::CMD_SHOW_MAIL_TEMPLATES_CONFIG);
         }
         return false;
@@ -336,7 +338,7 @@ class MailTemplatesController extends BaseController
             $this->uiUtil->sendFailure(sprintf(
                 $this->plugin->txt("mail.send.failed"),
                 $mailErrorMessage
-            ), true);
+            ));
         }
     }
 
@@ -350,7 +352,7 @@ class MailTemplatesController extends BaseController
             $this->uiUtil->sendFailure(sprintf(
                 $this->plugin->txt("config.mailTemplates.template.unsupported.template"),
                 $templateId
-            ), true);
+            ));
             $this->redirectToCommand(self::CMD_SHOW_MAIL_TEMPLATES_CONFIG);
         }
         return false;

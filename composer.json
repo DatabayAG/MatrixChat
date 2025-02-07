@@ -16,12 +16,12 @@
     "classmap": ["./src"]
   },
   "require": {
-    "php": "^7.4 || ^8.0",
+    "php": "^8.1 || ^8.2",
     "symfony/http-client": "^5.4",
     "ext-json": "*",
-    "mbeym/ilias-config-loader": "8.*",
-    "mbeym/user-field-loader": "8.*",
-    "mbeym/controller-handler": "8.*"
+    "mbeym/ilias-config-loader": "9.*",
+    "mbeym/user-field-loader": "9.*",
+    "mbeym/controller-handler": "9.*"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest",

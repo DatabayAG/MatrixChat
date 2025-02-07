@@ -20,12 +20,12 @@ require_once __DIR__ . "/../vendor/autoload.php";
 use ILIAS\DI\Container;
 use ILIAS\HTTP\Wrapper\WrapperFactory;
 use ILIAS\Plugin\Libraries\ControllerHandler\ControllerHandler;
-use ILIAS\Plugin\Libraries\ControllerHandler\UiUtils;
 use ILIAS\Plugin\MatrixChat\Controller\BaseUserConfigController;
 use ILIAS\Plugin\MatrixChat\Controller\ChatController;
 use ILIAS\Plugin\MatrixChat\Controller\ExternalUserConfigController;
 use ILIAS\Plugin\MatrixChat\Controller\LocalUserConfigController;
 use ILIAS\Plugin\MatrixChat\Repository\CourseSettingsRepository;
+use ILIAS\Plugin\MatrixChat\Utils\UiUtil;
 use ILIAS\Refinery\Factory;
 
 /**
@@ -52,9 +52,9 @@ class ilMatrixChatUIHookGUI extends ilUIHookPluginGUI
 {
     private ilMatrixChatPlugin $plugin;
     private Container $dic;
-    private ilCtrl $ctrl;
+    private ilCtrlInterface $ctrl;
     private ControllerHandler $controllerHandler;
-    private UiUtils $uiUtil;
+    private UiUtil $uiUtil;
     private WrapperFactory $httpWrapper;
     private Factory $refinery;
     private ilAccessHandler $access;
@@ -64,7 +64,7 @@ class ilMatrixChatUIHookGUI extends ilUIHookPluginGUI
         $this->plugin = ilMatrixChatPlugin::getInstance();
         $this->dic = $this->plugin->dic;
         $this->ctrl = $this->dic->ctrl();
-        $this->uiUtil = new UiUtils();
+        $this->uiUtil = new UiUtil();
         $this->httpWrapper = $this->dic->http()->wrapper();
         $this->refinery = $this->dic->refinery();
         $this->access = $this->dic->access();
@@ -227,11 +227,8 @@ class ilMatrixChatUIHookGUI extends ilUIHookPluginGUI
             return;
         }
 
-        /** @var LocalUserConfigController $localUserConfigController */
-        $localUserConfigController = $this->controllerHandler->getController(LocalUserConfigController::class);
-
-        /** @var ExternalUserConfigController $externalUserConfigController */
-        $externalUserConfigController = $this->controllerHandler->getController(ExternalUserConfigController::class);
+        $localUserConfigController = LocalUserConfigController::getInstance($this->controllerHandler);
+        $externalUserConfigController = ExternalUserConfigController::getInstance($this->controllerHandler);
 
         $tabs->addTab(
             BaseUserConfigController::TAB_USER_CHAT_CONFIG,
@@ -277,8 +274,7 @@ class ilMatrixChatUIHookGUI extends ilUIHookPluginGUI
                 || $this->access->checkAccess("write", "", $refId)
             ) && !str_starts_with($this->ctrl->getCmd(), "ChatController.")
         ) {
-            /** @var ChatController $chatController */
-            $chatController = $this->controllerHandler->getController(ChatController::class);
+            $chatController = ChatController::getInstance($this->controllerHandler);
 
             $tabs->addTab(
                 ChatController::TAB_CHAT,
