@@ -89,7 +89,7 @@ class ExternalUserConfigController extends BaseUserConfigController
             ->setMatrixUserId($matrixUserId)
             ->save();
 
-        $this->uiUtil->sendSuccess($this->plugin->txt("config.user.save.success"), true);
+        $this->uiUtil->sendSuccess($this->plugin->txt("config.user.save.success"));
 
         if (!$this->matrixUserHistoryRepo->create(new MatrixUserHistory($this->user->getId(), $matrixUserId))) {
             $this->logger->warning(sprintf(
@@ -101,7 +101,7 @@ class ExternalUserConfigController extends BaseUserConfigController
 
         $result = $this->processUserRoomAddQueue($this->user);
         if ($result) {
-            $this->uiUtil->sendInfo($result, true);
+            $this->uiUtil->sendInfo($result);
         }
         $this->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
     }

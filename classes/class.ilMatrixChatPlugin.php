@@ -16,7 +16,7 @@
 declare(strict_types=1);
 
 use ILIAS\DI\Container;
-use ILIAS\Plugin\Libraries\ControllerHandler\UiUtils;
+use ILIAS\Plugin\MatrixChat\Utils\UiUtil;
 use ILIAS\Plugin\MatrixChat\Api\MatrixApi;
 use ILIAS\Plugin\MatrixChat\Job\ProcessQueuedInvitesJob;
 use ILIAS\Plugin\MatrixChat\Model\MatrixRoom;
@@ -49,7 +49,7 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
     protected ?MatrixApi $matrixApi = null;
     public Container $dic;
     public ilSetting $settings;
-    private UiUtils $uiUtil;
+    private UiUtil $uiUtil;
     private ilObjUser $user;
     private ilLogger $logger;
 
@@ -60,7 +60,7 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
         $this->settings = new ilSetting(self::class);
         $this->queuedInvitesRepo = QueuedInvitesRepository::getInstance($this->dic->database());
         $this->courseSettingsRepo = CourseSettingsRepository::getInstance($this->dic->database());
-        $this->uiUtil = new UiUtils();
+        $this->uiUtil = new UiUtil();
         $this->user = $this->dic->user();
         $this->logger = $this->dic->logger()->root();
         parent::__construct($db, $component_repository, $id);

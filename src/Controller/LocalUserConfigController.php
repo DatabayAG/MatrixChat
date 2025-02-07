@@ -95,7 +95,7 @@ class LocalUserConfigController extends BaseUserConfigController
             ->setMatrixUserId($matrixUserId)
             ->save();
 
-        $this->uiUtil->sendSuccess($this->plugin->txt("config.user.save.success"), true);
+        $this->uiUtil->sendSuccess($this->plugin->txt("config.user.save.success"));
 
         if (!$this->matrixUserHistoryRepo->create(new MatrixUserHistory($this->user->getId(), $matrixUserId))) {
             $this->logger->warning(sprintf(
@@ -108,7 +108,7 @@ class LocalUserConfigController extends BaseUserConfigController
 
         $result = $this->processUserRoomAddQueue($this->user);
         if ($result) {
-            $this->uiUtil->sendInfo($result, true);
+            $this->uiUtil->sendInfo($result);
         }
         $this->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
     }
@@ -146,18 +146,17 @@ class LocalUserConfigController extends BaseUserConfigController
 
         if (!$this->matrixApi->userExists($matrixUserId)) {
             $this->uiUtil->sendFailure(
-                $this->plugin->txt("config.user.changeLocalUserPassword.failure.userNotExist"),
-                true
+                $this->plugin->txt("config.user.changeLocalUserPassword.failure.userNotExist")
             );
             $this->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
         }
 
         if (!$this->matrixApi->changePassword($matrixUserId, $newPassword)) {
-            $this->uiUtil->sendFailure($this->plugin->txt("config.user.changeLocalUserPassword.failure.general"), true);
+            $this->uiUtil->sendFailure($this->plugin->txt("config.user.changeLocalUserPassword.failure.general"));
             $this->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
         }
 
-        $this->uiUtil->sendSuccess($this->plugin->txt("config.user.changeLocalUserPassword.success"), true);
+        $this->uiUtil->sendSuccess($this->plugin->txt("config.user.changeLocalUserPassword.success"));
         $this->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
     }
 

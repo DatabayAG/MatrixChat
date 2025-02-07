@@ -18,7 +18,7 @@ declare(strict_types=1);
 use ILIAS\DI\Container;
 use ILIAS\FileUpload\FileUpload;
 use ILIAS\Plugin\Libraries\ControllerHandler\ControllerHandler;
-use ILIAS\Plugin\Libraries\ControllerHandler\UiUtils;
+use ILIAS\Plugin\MatrixChat\Utils\UiUtil;
 use ILIAS\Plugin\MatrixChat\Api\MatrixApi;
 use ILIAS\Plugin\MatrixChat\Controller\MailTemplatesController;
 use ILIAS\Plugin\MatrixChat\Form\ChatPageDesignerForm;
@@ -55,7 +55,7 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
     protected ilGlobalPageTemplate $mainTpl;
     protected ilLanguage $lng;
     private ilCtrl $ctrl;
-    private UiUtils $uiUtil;
+    private UiUtil $uiUtil;
     private MatrixApi $matrixApi;
     private ControllerHandler $controllerHandler;
 
@@ -70,7 +70,7 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
         $this->upload = $this->dic->upload();
         $this->logger = $this->dic->logger()->root();
         $this->user = $this->dic->user();
-        $this->uiUtil = new UiUtils();
+        $this->uiUtil = new UiUtil();
 
         /**
          * @var ilComponentFactory $componentFactory

@@ -31,6 +31,7 @@ use ILIAS\Plugin\MatrixChat\Model\UserRoomAddQueue;
 use ILIAS\Plugin\MatrixChat\Repository\CourseSettingsRepository;
 use ILIAS\Plugin\MatrixChat\Repository\MatrixUserHistoryRepository;
 use ILIAS\Plugin\MatrixChat\Repository\QueuedInvitesRepository;
+use ILIAS\Plugin\MatrixChat\Utils\UiUtil;
 use ilLanguage;
 use ilLink;
 use ilLogger;
@@ -64,6 +65,7 @@ abstract class BaseUserConfigController extends BaseController
     protected CourseSettingsRepository $courseSettingsRepo;
     private ilLanguage $lng;
     protected MatrixUserHistoryRepository $matrixUserHistoryRepo;
+    protected UiUtil $uiUtil;
 
     public function __construct(Container $dic, ControllerHandler $controllerHandler)
     {
@@ -80,6 +82,7 @@ abstract class BaseUserConfigController extends BaseController
         $this->queuedInvitesRepo = QueuedInvitesRepository::getInstance($this->dic->database());
         $this->courseSettingsRepo = CourseSettingsRepository::getInstance($this->dic->database());
         $this->matrixUserHistoryRepo = MatrixUserHistoryRepository::getInstance($this->dic->database());
+        $this->uiUtil = new UiUtil($this->dic);
     }
 
     protected function verifyCorrectController(): void
@@ -265,7 +268,7 @@ abstract class BaseUserConfigController extends BaseController
             ->setAuthMethod("")
             ->save();
 
-        $this->uiUtil->sendSuccess($this->plugin->txt("config.user.resetAccountSettings.success"), true);
+        $this->uiUtil->sendSuccess($this->plugin->txt("config.user.resetAccountSettings.success"));
         $this->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
     }
 

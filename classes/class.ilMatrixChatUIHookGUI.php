@@ -20,7 +20,7 @@ require_once __DIR__ . "/../vendor/autoload.php";
 use ILIAS\DI\Container;
 use ILIAS\HTTP\Wrapper\WrapperFactory;
 use ILIAS\Plugin\Libraries\ControllerHandler\ControllerHandler;
-use ILIAS\Plugin\Libraries\ControllerHandler\UiUtils;
+use ILIAS\Plugin\MatrixChat\Utils\UiUtil;
 use ILIAS\Plugin\MatrixChat\Controller\BaseUserConfigController;
 use ILIAS\Plugin\MatrixChat\Controller\ChatController;
 use ILIAS\Plugin\MatrixChat\Controller\ExternalUserConfigController;
@@ -54,7 +54,7 @@ class ilMatrixChatUIHookGUI extends ilUIHookPluginGUI
     private Container $dic;
     private ilCtrl $ctrl;
     private ControllerHandler $controllerHandler;
-    private UiUtils $uiUtil;
+    private UiUtil $uiUtil;
     private WrapperFactory $httpWrapper;
     private Factory $refinery;
     private ilAccessHandler $access;
@@ -64,7 +64,7 @@ class ilMatrixChatUIHookGUI extends ilUIHookPluginGUI
         $this->plugin = ilMatrixChatPlugin::getInstance();
         $this->dic = $this->plugin->dic;
         $this->ctrl = $this->dic->ctrl();
-        $this->uiUtil = new UiUtils();
+        $this->uiUtil = new UiUtil();
         $this->httpWrapper = $this->dic->http()->wrapper();
         $this->refinery = $this->dic->refinery();
         $this->access = $this->dic->access();
