@@ -16,7 +16,6 @@
 declare(strict_types=1);
 
 use ILIAS\DI\Container;
-use ILIAS\Plugin\MatrixChat\Utils\UiUtil;
 use ILIAS\Plugin\MatrixChat\Api\MatrixApi;
 use ILIAS\Plugin\MatrixChat\Job\ProcessQueuedInvitesJob;
 use ILIAS\Plugin\MatrixChat\Model\MatrixRoom;
@@ -27,6 +26,7 @@ use ILIAS\Plugin\MatrixChat\Model\UserConfig;
 use ILIAS\Plugin\MatrixChat\Model\UserRoomAddQueue;
 use ILIAS\Plugin\MatrixChat\Repository\CourseSettingsRepository;
 use ILIAS\Plugin\MatrixChat\Repository\QueuedInvitesRepository;
+use ILIAS\Plugin\MatrixChat\Utils\UiUtil;
 
 require_once __DIR__ . "/../vendor/autoload.php";
 
@@ -112,18 +112,24 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
 
     public function getUsernameSchemeVariables(): array
     {
+        $truncateLoginVariableLength = $this->getPluginConfig()->getTruncateLoginVariableLength();
+        $truncateExternalAccountVariableLength = $this->getPluginConfig()->getTruncateExternalAccountVariableLength();
         return [
             "CLIENT_ID" => CLIENT_ID,
-            "LOGIN" => mb_substr(
-                $this->user->getLogin(),
-                0,
-                -$this->getPluginConfig()->getTruncateLoginVariableLength()
-            ),
-            "EXTERNAL_ACCOUNT" => mb_substr(
-                $this->user->getExternalAccount(),
-                0,
-                -$this->getPluginConfig()->getTruncateExternalAccountVariableLength()
-            )
+            "LOGIN" => $truncateLoginVariableLength <= 0
+                ? $this->user->getLogin()
+                : mb_substr(
+                    $this->user->getLogin(),
+                    0,
+                    -$truncateLoginVariableLength
+                ),
+            "EXTERNAL_ACCOUNT" => $truncateExternalAccountVariableLength <= 0
+                ? $this->user->getExternalAccount()
+                : mb_substr(
+                    $this->user->getExternalAccount(),
+                    0,
+                    -$truncateExternalAccountVariableLength
+                )
         ];
     }
 
