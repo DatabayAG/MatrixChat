@@ -85,14 +85,12 @@ abstract class BaseUserConfigController extends BaseController
     protected function verifyCorrectController(): void
     {
         if ($this instanceof LocalUserConfigController && (int) $this->user->getAuthMode(true) !== ilAuthUtils::AUTH_LOCAL) {
-            /** @var ExternalUserConfigController $externalUserConfigController */
-            $externalUserConfigController = $this->controllerHandler->getController(ExternalUserConfigController::class);
+            $externalUserConfigController = ExternalUserConfigController::getInstance($this->controllerHandler);
             $externalUserConfigController->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
         }
 
         if ($this instanceof ExternalUserConfigController && (int) $this->user->getAuthMode(true) === ilAuthUtils::AUTH_LOCAL) {
-            /** @var LocalUserConfigController $localUserConfigController */
-            $localUserConfigController = $this->controllerHandler->getController(LocalUserConfigController::class);
+            $localUserConfigController = LocalUserConfigController::getInstance($this->controllerHandler);
             $localUserConfigController->redirectToCommand(self::CMD_SHOW_USER_CHAT_CONFIG);
         }
     }

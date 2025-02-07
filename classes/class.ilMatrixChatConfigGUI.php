@@ -260,8 +260,7 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
             $this->ctrl->getLinkTargetByClass(self::class, self::CMD_SHOW_CHAT_PAGE_DESIGNER)
         );
 
-        /** @var MailTemplatesController $mailTemplatesController */
-        $mailTemplatesController = $this->controllerHandler->getController(MailTemplatesController::class);
+        $mailTemplatesController = MailTemplatesController::getInstance($this->controllerHandler);
         $this->tabs->addTab(
             self::TAB_MAIL_TEMPLATES,
             $this->plugin->txt("config.mailTemplates.title"),

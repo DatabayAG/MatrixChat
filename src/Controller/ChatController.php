@@ -119,7 +119,7 @@ class ChatController extends BaseController
         $this->courseSettings = $this->courseSettingsRepo->read($this->refId);
         $this->queuedInvitesRepo = QueuedInvitesRepository::getInstance();
 
-        $this->mailTemplatesController = $this->controllerHandler->getController(MailTemplatesController::class);
+        $this->mailTemplatesController = MailTemplatesController::getInstance($this->controllerHandler);
     }
 
     public function showChat(): void
@@ -148,11 +148,8 @@ class ChatController extends BaseController
             ), true);
         }
 
-        /** @var LocalUserConfigController $localUserConfigController */
-        $localUserConfigController = $this->controllerHandler->getController(LocalUserConfigController::class);
-
-        /** @var ExternalUserConfigController $externalUserConfigController */
-        $externalUserConfigController = $this->controllerHandler->getController(ExternalUserConfigController::class);
+        $localUserConfigController = LocalUserConfigController::getInstance($this->controllerHandler);
+        $externalUserConfigController = ExternalUserConfigController::getInstance($this->controllerHandler);
 
         $this->ctrl->clearParameterByClass(ilMatrixChatUIHookGUI::class, "ref_id");
         $this->ctrl->clearParameterByClass(ilUIPluginRouterGUI::class, "ref_id");

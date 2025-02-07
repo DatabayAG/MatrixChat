@@ -227,11 +227,8 @@ class ilMatrixChatUIHookGUI extends ilUIHookPluginGUI
             return;
         }
 
-        /** @var LocalUserConfigController $localUserConfigController */
-        $localUserConfigController = $this->controllerHandler->getController(LocalUserConfigController::class);
-
-        /** @var ExternalUserConfigController $externalUserConfigController */
-        $externalUserConfigController = $this->controllerHandler->getController(ExternalUserConfigController::class);
+        $localUserConfigController = LocalUserConfigController::getInstance($this->controllerHandler);
+        $externalUserConfigController = ExternalUserConfigController::getInstance($this->controllerHandler);
 
         $tabs->addTab(
             BaseUserConfigController::TAB_USER_CHAT_CONFIG,
@@ -277,8 +274,7 @@ class ilMatrixChatUIHookGUI extends ilUIHookPluginGUI
                 || $this->access->checkAccess("write", "", $refId)
             ) && !str_starts_with($this->ctrl->getCmd(), "ChatController.")
         ) {
-            /** @var ChatController $chatController */
-            $chatController = $this->controllerHandler->getController(ChatController::class);
+            $chatController = ChatController::getInstance($this->controllerHandler);
 
             $tabs->addTab(
                 ChatController::TAB_CHAT,
