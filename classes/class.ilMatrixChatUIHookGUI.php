@@ -76,7 +76,7 @@ class ilMatrixChatUIHookGUI extends ilUIHookPluginGUI
         );
     }
 
-    public function modifyGUI($a_comp, $a_part, $a_par = array()): void
+    public function modifyGUI($a_comp, $a_part, $a_par = []): void
     {
         if ($a_part !== "sub_tabs") {
             return;

@@ -681,7 +681,6 @@ class MatrixApi
     }
 
     /**
-     * @param MatrixRoom $room
      * @return MatrixUserPowerLevel[]
      */
     public function getUserPowerLevelOnRoom(MatrixRoom $room): array
