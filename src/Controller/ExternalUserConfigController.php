@@ -38,7 +38,7 @@ class ExternalUserConfigController extends BaseUserConfigController
                 $this->user,
                 $this->userConfig->getMatrixUserId(),
                 $this->userConfig->getAuthMethod(),
-                !$this->matrixApi->userExists($this->buildMatrixUserId())
+                $this->matrixApi->userExists($this->buildMatrixUserId())
             );
 
             $form->setValuesByArray(array_merge(
@@ -64,7 +64,7 @@ class ExternalUserConfigController extends BaseUserConfigController
             $this->user,
             null,
             null,
-            !$this->matrixApi->userExists($this->buildMatrixUserId())
+            $this->matrixApi->userExists($this->buildMatrixUserId())
         );
 
         if (!$form->checkInput()) {

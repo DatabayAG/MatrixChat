@@ -27,16 +27,16 @@ use ilRadioOption;
 
 class ExternalUserConfigForm extends BaseUserConfigForm
 {
-    private bool $accountFound;
+    private bool $usernameAvailable;
 
     public function __construct(
         ExternalUserConfigController $controller,
         ilObjUser $user,
         ?string $matrixAccountId = null,
         ?string $selectedAccountOption = null,
-        bool $accountFound = false
+        bool $usernameAvailable = false
     ) {
-        $this->accountFound = $accountFound;
+        $this->usernameAvailable = $usernameAvailable;
         parent::__construct($controller, $user, $matrixAccountId, $selectedAccountOption);
     }
 
@@ -73,7 +73,7 @@ class ExternalUserConfigForm extends BaseUserConfigForm
         $matrixAccountInput->setInfo($this->plugin->txt("matrix.user.name.info"));
         $radioOption->addSubItem($matrixAccountInput);
 
-        if (!$this->accountFound) {
+        if ($this->usernameAvailable) {
             $this->uiUtil->sendInfo($this->plugin->txt("matrix.user.accountNotFound"));
         }
 
