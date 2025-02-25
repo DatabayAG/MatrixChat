@@ -160,8 +160,8 @@ matrix.user.name#:#Matrix-Benutzername
 matrix.user.name.info#:#Nicht editierbar. Vordefiniert durch Server.
 matrix.user.account#:#Matrix-Account
 matrix.user.password#:#Matrix-User Passwort
-matrix.user.accountNotFound#:#Ihr "Erkannter Matrix-Account" konnte nicht gefunden werden. Sie können diesen jedoch trotzdem Speichern und diesen somit vormerken.
 matrix.user.accountFoundButNotLinked#:#Matrix-Kopplung für Ihr ILIAS Konto noch nicht eingerichtet. Bitten wählen Sie aus, welcher Matrix Account für die Kopplung Ihres ILIAS-Accounts benutzt werden soll.
+matrix.user.accountNotFoundButLinked#:#Ihr "Erkannter Matrix-Account" <span style="font-weight: bolder;">%s</span> konnte nicht auf dem Matrix-Homeserver gefunden werden. Bitte loggen Sie sich auf dem Matrix-Homerserver ein um Ihren Matrix-Account dort einzurichten.
 matrix.user.account.joined#:#Sie sind nun mit Ihrem Matrix-Nutzer '%s' dem Chat beigetreten. Wenn Sie chatten möchten, verwenden Sie den Matrix Client Ihrer Wahl. <br>Dort können Sie auch Ihre Mitgliedschat verwalten und ggf. den Chatraum wieder verlassen.
 matrix.user.account.invited#:#Sie wurden mit Ihrem Matrix-Nutzer '%s' zum Chat eingeladen. Sie haben diese Einladung jedoch noch nicht angenommen. <br>Bitte verwenden Sie den Matrix Client Ihrer Wahl. <br>Mit diesem können sie sowohl die Einladung annehmen als auch im Chatraum schreiben.
 matrix.user.account.unconfigured#:#Sie haben noch keinen Matrix-Account konfiguriert. <br>Bitte konfigurieren Sie einen Matrix-Account in Ihren Benutzer-Einstellungen um dem Chatraum hinzugefügt zu werden.
