@@ -158,6 +158,7 @@ matrix.user.name.info#:#Not editable. Predefined by server.
 matrix.user.account#:#Matrix-Account
 matrix.user.password#:#Matrix-User Password
 matrix.user.accountNotFound#:#Your "Recognized Matrix account" could not be found. You can still save it in ILIAS for once it is created.
+matrix.user.accountFoundButNotLinked#:#Matrix link for your ILIAS account not yet set up. Please select which Matrix account should be used to link your ILIAS account.
 matrix.user.account.joined#:#You have now joined the chat with your Matrix user '%s'. If you want to chat, use the Matrix client of your choice. <br>You can also manage your membership chat there and leave the chat room again if desired.
 matrix.user.account.invited#:#You have been invited to the chat with your Matrix user '%s'. However, you have not yet accepted this invitation. <br>>Please use the Matrix client of your choice. <br>With this you can both accept the invitation and write in the chat room.
 matrix.user.account.unconfigured#:#You have not yet configured a Matrix account. <br>Please configure a Matrix account in your user settings to be added to the chat room.
