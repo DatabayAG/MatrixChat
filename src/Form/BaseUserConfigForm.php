@@ -35,12 +35,15 @@ abstract class BaseUserConfigForm extends ilPropertyFormGUI
     protected Container $dic;
     protected BaseUserConfigController $controller;
     protected UiUtils $uiUtil;
+    protected ?string $matrixAccountId;
+    protected bool $usernameAvailable;
 
     public function __construct(
         BaseUserConfigController $controller,
         ilObjUser $user,
         ?string $matrixAccountId = null,
-        ?string $selectedAccountOption = null
+        ?string $selectedAccountOption = null,
+        bool $usernameAvailable = false
     ) {
         global $DIC;
         parent::__construct();
@@ -50,6 +53,8 @@ abstract class BaseUserConfigForm extends ilPropertyFormGUI
         $this->mainTpl = $this->dic->ui()->mainTemplate();
         $this->mainTpl->addCss($this->plugin->cssFolder("userConfigForm.css"));
         $this->controller = $controller;
+        $this->matrixAccountId = $matrixAccountId;
+        $this->usernameAvailable = $usernameAvailable;
 
         $this->setTitle($this->plugin->txt("config.user.generalSettings"));
         $this->setFormAction($controller->getCommandLink(
@@ -72,6 +77,16 @@ abstract class BaseUserConfigForm extends ilPropertyFormGUI
         );
 
         $this->mainTpl->addJavaScript($this->plugin->jsFolder("userConfigForm.js"));
+
+        if (!$this->matrixAccountId) {
+            $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.accountFoundButNotLinked"), false);
+        } else if ($this->usernameAvailable) {
+            $this->uiUtil->sendInfo(sprintf(
+                $this->plugin->txt("matrix.user.accountNotFoundButLinked"),
+                $this->matrixAccountId
+            ), false);
+            //$this->uiUtil->sendInfo($this->plugin->txt("matrix.user.accountNotFound"), false);
+        }
 
         if ($matrixAccountId && !$this->onAuthenticated($selectedAccountOption)) {
             return;

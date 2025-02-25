@@ -351,7 +351,9 @@ class MatrixApi
                 "/_synapse/admin/v2/users/$matrixUserId"
             )->getResponseData() !== [];
         } catch (MatrixApiException $ex) {
-            $this->logger->error("Error occurred while trying to check if user '$matrixUserId' exists.");
+            if ($ex->getErrorCode() !== "M_NOT_FOUND") {
+                $this->logger->error("Error occurred while trying to check if user '$matrixUserId' exists.");
+            }
             return false;
         }
     }
