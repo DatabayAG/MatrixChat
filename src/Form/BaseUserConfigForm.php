@@ -78,6 +78,16 @@ abstract class BaseUserConfigForm extends ilPropertyFormGUI
 
         $this->mainTpl->addJavaScript($this->plugin->jsFolder("userConfigForm.js"));
 
+        if (!$this->matrixAccountId) {
+            $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.accountFoundButNotLinked"), false);
+        } else if ($this->usernameAvailable) {
+            $this->uiUtil->sendInfo(sprintf(
+                $this->plugin->txt("matrix.user.accountNotFoundButLinked"),
+                $this->matrixAccountId
+            ), false);
+            //$this->uiUtil->sendInfo($this->plugin->txt("matrix.user.accountNotFound"), false);
+        }
+
         if ($matrixAccountId && !$this->onAuthenticated($selectedAccountOption)) {
             return;
         }
@@ -93,12 +103,6 @@ abstract class BaseUserConfigForm extends ilPropertyFormGUI
             true
         )) {
             $matrixAuthMethod->addOption($this->getCreateOnConfiguredHomeserverOption());
-
-            if ($this->usernameAvailable) {
-                $this->uiUtil->sendInfo($this->plugin->txt("matrix.user.accountNotFound"), false);
-            } else if (!$this->matrixAccountId) {
-                $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.accountFoundButNotLinked"), false);
-            }
         }
 
         if (in_array(
