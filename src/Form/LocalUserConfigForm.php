@@ -24,17 +24,15 @@ use ilRadioOption;
 
 class LocalUserConfigForm extends BaseUserConfigForm
 {
-    private bool $accountFound;
 
     public function __construct(
         LocalUserConfigController $controller,
         ilObjUser $user,
         ?string $matrixAccountId = null,
         ?string $selectedAccountOption = null,
-        bool $accountFound = false
+        bool $usernameAvailable = false
     ) {
-        $this->accountFound = $accountFound;
-        parent::__construct($controller, $user, $matrixAccountId, $selectedAccountOption);
+        parent::__construct($controller, $user, $matrixAccountId, $selectedAccountOption, $usernameAvailable);
     }
 
     protected function showCommandButton(bool $reset = false): void
@@ -69,10 +67,6 @@ class LocalUserConfigForm extends BaseUserConfigForm
         );
         $matrixAccountInput->setInfo($this->plugin->txt("matrix.user.name.info"));
         $radioOption->addSubItem($matrixAccountInput);
-
-        if (!$this->accountFound) {
-            $this->uiUtil->sendInfo($this->plugin->txt("matrix.user.accountNotFound"));
-        }
 
         return $radioOption;
     }

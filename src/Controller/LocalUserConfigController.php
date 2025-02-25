@@ -42,7 +42,7 @@ class LocalUserConfigController extends BaseUserConfigController
                 $this->user,
                 $this->userConfig->getMatrixUserId(),
                 $this->userConfig->getAuthMethod(),
-                !$this->matrixApi->usernameAvailable($this->buildUsername())
+                $this->matrixApi->usernameAvailable($this->buildUsername())
             );
 
             $form->setValuesByArray(array_merge(
@@ -68,7 +68,7 @@ class LocalUserConfigController extends BaseUserConfigController
             $this->user,
             null,
             null,
-            !$this->matrixApi->usernameAvailable($this->buildUsername())
+            $this->matrixApi->usernameAvailable($this->buildUsername())
         );
 
         if (!$form->checkInput()) {
