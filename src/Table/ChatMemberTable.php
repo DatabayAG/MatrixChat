@@ -36,6 +36,8 @@ use ilTextInputGUI;
 
 class ChatMemberTable extends ilTable2GUI
 {
+    public const ID = "ChatMemberTable";
+
     private ilMatrixChatPlugin $plugin;
     private Container $dic;
     private ChatController $controller;
@@ -55,7 +57,7 @@ class ChatMemberTable extends ilTable2GUI
         $this->uiRenderer = $this->dic->ui()->renderer();
         $this->uiFactory = $this->dic->ui()->factory();
 
-        $this->setId("ChatMemberTable");
+        $this->setId(self::ID);
         $this->setTitle($this->plugin->txt("matrix.chat.members"));
 
         parent::__construct(new ilMatrixChatUIHookGUI());

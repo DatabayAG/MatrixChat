@@ -25,6 +25,7 @@ use ILIAS\Plugin\MatrixChat\Controller\ChatController;
 use ILIAS\Plugin\MatrixChat\Controller\ExternalUserConfigController;
 use ILIAS\Plugin\MatrixChat\Controller\LocalUserConfigController;
 use ILIAS\Plugin\MatrixChat\Repository\CourseSettingsRepository;
+use ILIAS\Plugin\MatrixChat\Table\ChatMemberTable;
 use ILIAS\Plugin\MatrixChat\Utils\UiUtil;
 use ILIAS\Refinery\Factory;
 
@@ -142,6 +143,10 @@ class ilMatrixChatUIHookGUI extends ilUIHookPluginGUI
                 $this->refinery->always(null)
             ])
         );
+
+        $cmd = $this->httpWrapper->query()->has(ChatMemberTable::ID . "_table_nav")
+            ? ChatController::getCommand(ChatController::CMD_SHOW_CHAT_MEMBERS)
+            : $cmd;
 
         if ($nextClass) {
             switch ($nextClass) {
