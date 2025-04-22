@@ -60,7 +60,6 @@ class MailTemplatesController extends BaseController
     private Factory $refinery;
     private ilMatrixChatPlugin $plugin;
     private ilTabsGUI $tabs;
-    private ilObjUser $user;
     private ilLogger $logger;
 
     /** @var string[] */
@@ -76,18 +75,17 @@ class MailTemplatesController extends BaseController
         $this->refinery = $dic->refinery();
         $this->plugin = ilMatrixChatPlugin::getInstance();
         $this->tabs = $this->dic->tabs();
-        $this->user = $this->dic->user();
         $this->logger = $this->dic->logger()->root();
         $this->availableLanguages = $this->dic->language()->getInstalledLanguages();
         $this->mailTemplateRepo = MailTemplatesRepository::getInstance($this->dic->database(), $this->availableLanguages);
         $this->uiUtil = new UiUtil($this->dic);
     }
 
-    public function getTemplatePlaceholders(?int $objRefId = null): array
+    public function getTemplatePlaceholders(ilObjUser $user, ?int $objRefId = null): array
     {
         return [
-            "[FIRSTNAME]" => $this->user->getFirstname(),
-            "[LASTNAME]" => $this->user->getLastname(),
+            "[FIRSTNAME]" => $user->getFirstname(),
+            "[LASTNAME]" => $user->getLastname(),
             "[OBJECT_TITLE]" => $objRefId
                 ? ilObject::_lookupTitle(ilObject::_lookupObjId($objRefId))
                 : "",
@@ -283,7 +281,7 @@ class MailTemplatesController extends BaseController
         $subject = $mailTemplate->getSubject();
         $content = $mailTemplate->getContent();
 
-        foreach ($this->getTemplatePlaceholders($objRefId) as $placeholder => $value) {
+        foreach ($this->getTemplatePlaceholders($user, $objRefId) as $placeholder => $value) {
             $subject = str_replace($placeholder, $value, $subject);
             $content = str_replace($placeholder, $value, $content);
         }
