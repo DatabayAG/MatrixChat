@@ -85,7 +85,7 @@ class MailTemplateForm extends ilPropertyFormGUI
                 . ": "
                 . $this->plugin->txt("config.mailTemplates.template.placeholders.$placeholderKey")
                 . "</li>";
-        }, array_keys($this->controller->getTemplatePlaceholders()));
+        }, array_keys($this->controller->getTemplatePlaceholders($this->user)));
 
         $subject->setRequired(true);
         $subject->setInfo(
