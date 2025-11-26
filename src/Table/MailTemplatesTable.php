@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace ILIAS\Plugin\MatrixChat\Table;
 
 use ILIAS\DI\Container;
+use ILIAS\Plugin\ExportCertificates\Enum\PluginAsset;
 use ILIAS\Plugin\MatrixChat\Controller\MailTemplatesController;
 use ILIAS\Plugin\MatrixChat\Model\MailTemplate;
 use ILIAS\UI\Factory;
@@ -56,7 +57,7 @@ class MailTemplatesTable extends ilTable2GUI
             [],
             true
         ));
-        $this->setRowTemplate($this->plugin->templatesFolder("table/tpl.mailTemplatesTable_row.html"));
+        $this->setRowTemplate($this->plugin->assetsFile(PluginAsset::TEMPLATES, "table/tpl.mailTemplatesTable_row.html", false));
         $this->setShowRowsSelector(false);
 
         $this->addColumn($this->lng->txt("language"));

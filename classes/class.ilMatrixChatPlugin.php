@@ -16,6 +16,7 @@
 declare(strict_types=1);
 
 use ILIAS\DI\Container;
+use ILIAS\Plugin\ExportCertificates\Enum\PluginAsset;
 use ILIAS\Plugin\MatrixChat\Api\MatrixApi;
 use ILIAS\Plugin\MatrixChat\Job\ProcessQueuedInvitesJob;
 use ILIAS\Plugin\MatrixChat\Model\MatrixRoom;
@@ -85,29 +86,15 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
         return self::$instance;
     }
 
-    public function assetsFolder(string $file = ""): string
+    public function getRelativeDirectory(): string
     {
-        return $this->getDirectory() . "/assets/$file";
+        return str_replace(ILIAS_ABSOLUTE_PATH . "/public/", "", realpath($this->getDirectory()));
     }
 
-    public function cssFolder(string $file = ""): string
+    public function assetsFile(PluginAsset $assetType, string $file, bool $relative = true): string
     {
-        return $this->assetsFolder("css/$file");
-    }
-
-    public function imagesFolder(string $file = ""): string
-    {
-        return $this->assetsFolder("images/$file");
-    }
-
-    public function templatesFolder(string $file = ""): string
-    {
-        return $this->assetsFolder("templates/$file");
-    }
-
-    public function jsFolder(string $file = ""): string
-    {
-        return $this->assetsFolder("js/$file");
+        $basePath = $relative ? $this->getRelativeDirectory() : $this->getDirectory();
+        return $basePath . "/assets/" . $assetType->value . "/" . $file;
     }
 
     public function getUsernameSchemeVariables(): array

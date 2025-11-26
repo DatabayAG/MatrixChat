@@ -20,6 +20,7 @@ namespace ILIAS\Plugin\MatrixChat\Table;
 use Exception;
 use ilCtrlInterface;
 use ILIAS\DI\Container;
+use ILIAS\Plugin\ExportCertificates\Enum\PluginAsset;
 use ILIAS\Plugin\MatrixChat\Controller\ChatController;
 use ILIAS\Plugin\MatrixChat\Model\ChatMember;
 use ILIAS\UI\Factory;
@@ -70,7 +71,7 @@ class ChatMemberTable extends ilTable2GUI
             ["ref_id" => $this->refId],
             true
         ));
-        $this->setRowTemplate($this->plugin->templatesFolder("table/tpl.chatMemberTable_row.html"));
+        $this->setRowTemplate($this->plugin->assetsFile(PluginAsset::TEMPLATES, "table/tpl.chatMemberTable_row.html", false));
 
         $this->addColumn("", "", "1%", true);
         $this->addColumns([

@@ -23,6 +23,7 @@ use ilCheckboxOption;
 use ilFormSectionHeaderGUI;
 use ilGlobalTemplateInterface;
 use ILIAS\DI\Container;
+use ILIAS\Plugin\ExportCertificates\Enum\PluginAsset;
 use ILIAS\Plugin\MatrixChat\Controller\BaseUserConfigController;
 use ilMatrixChatConfigGUI;
 use ilMatrixChatPlugin;
@@ -47,7 +48,7 @@ class PluginConfigForm extends ilPropertyFormGUI
         $this->plugin = ilMatrixChatPlugin::getInstance();
         $this->dic = $this->plugin->dic;
         $this->mainTpl = $this->dic->ui()->mainTemplate();
-        $this->mainTpl->addCss($this->plugin->cssFolder("style.css"));
+        $this->mainTpl->addCss($this->plugin->assetsFile(PluginAsset::CSS, "style.css"));
 
         $this->setFormAction(
             $this->ctrl->getFormActionByClass(

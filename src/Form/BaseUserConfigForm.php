@@ -19,6 +19,7 @@ namespace ILIAS\Plugin\MatrixChat\Form;
 
 use ilGlobalTemplateInterface;
 use ILIAS\DI\Container;
+use ILIAS\Plugin\ExportCertificates\Enum\PluginAsset;
 use ILIAS\Plugin\MatrixChat\Controller\BaseUserConfigController;
 use ILIAS\Plugin\MatrixChat\Utils\UiUtil;
 use ilMatrixChatPlugin;
@@ -48,7 +49,7 @@ abstract class BaseUserConfigForm extends ilPropertyFormGUI
         $this->uiUtil = new UiUtil($this->dic);
         $this->plugin = ilMatrixChatPlugin::getInstance();
         $this->mainTpl = $this->dic->ui()->mainTemplate();
-        $this->mainTpl->addCss($this->plugin->cssFolder("userConfigForm.css"));
+        $this->mainTpl->addCss($this->plugin->assetsFile(PluginAsset::CSS, "userConfigForm.css"));
 
         $this->setTitle($this->plugin->txt("config.user.generalSettings"));
         $this->setFormAction($this->controller->getCommandLink(
@@ -70,7 +71,7 @@ abstract class BaseUserConfigForm extends ilPropertyFormGUI
             ], JSON_THROW_ON_ERROR) . ");"
         );
 
-        $this->mainTpl->addJavaScript($this->plugin->jsFolder("userConfigForm.js"));
+        $this->mainTpl->addJavaScript($this->plugin->assetsFile(PluginAsset::JS, "userConfigForm.js"));
 
         if (!$this->matrixAccountId) {
             $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.accountFoundButNotLinked"), false);
