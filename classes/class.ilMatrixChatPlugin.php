@@ -318,7 +318,6 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
                 $matrixUser = null;
             }
 
-
             foreach ($rooms as $objRefId => $room) {
                 $participants = ilParticipants::getInstance($objRefId);
 

@@ -80,7 +80,7 @@ abstract class BaseUserConfigForm extends ilPropertyFormGUI
 
         if (!$this->matrixAccountId) {
             $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.accountFoundButNotLinked"), false);
-        } else if ($this->usernameAvailable) {
+        } elseif ($this->usernameAvailable) {
             $this->uiUtil->sendInfo(sprintf(
                 $this->plugin->txt("matrix.user.accountNotFoundButLinked"),
                 $this->matrixAccountId

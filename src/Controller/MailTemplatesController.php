@@ -66,7 +66,6 @@ class MailTemplatesController extends BaseController
     private array $availableLanguages;
     private UiUtil $uiUtil;
 
-
     public function __construct(Container $dic, ControllerHandler $controllerHandler)
     {
         parent::__construct($dic, $controllerHandler);

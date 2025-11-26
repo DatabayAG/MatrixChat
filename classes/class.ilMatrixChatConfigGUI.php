@@ -43,7 +43,6 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
 
     public const TAB_MAIL_TEMPLATES = "tab_mail_templates";
 
-
     public const CLEANED_VALUE = "************";
 
     protected ilObjUser $user;

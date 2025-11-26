@@ -513,7 +513,6 @@ class ChatController extends BaseController
                 }
             }
 
-
             $chatMembers[] = new ChatMember(
                 $user->getId(),
                 $user->getFullname(),

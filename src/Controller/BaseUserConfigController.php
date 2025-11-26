@@ -152,7 +152,6 @@ abstract class BaseUserConfigController extends BaseController
                 continue;
             }
 
-
             if ($courseSettings->getMatrixRoomId()) {
                 $room = $this->matrixApi->getRoom($courseSettings->getMatrixRoomId());
                 if (!$room) {

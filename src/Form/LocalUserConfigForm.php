@@ -24,7 +24,6 @@ use ilRadioOption;
 
 class LocalUserConfigForm extends BaseUserConfigForm
 {
-
     public function __construct(
         LocalUserConfigController $controller,
         ilObjUser $user,

@@ -104,7 +104,6 @@ class LocalUserConfigController extends BaseUserConfigController
             ));
         }
 
-
         $result = $this->processUserRoomAddQueue($this->user);
         if ($result) {
             $this->uiUtil->sendInfo($result);
