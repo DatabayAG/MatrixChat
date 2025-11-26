@@ -35,10 +35,9 @@ class MailTemplateForm extends ilPropertyFormGUI
     protected ilMatrixChatPlugin $plugin;
     protected ilGlobalTemplateInterface $mainTpl;
     protected Container $dic;
-    protected MailTemplatesController $controller;
 
     public function __construct(
-        MailTemplatesController $controller,
+        protected MailTemplatesController $controller,
         string $language,
         string $template
     ) {
@@ -47,7 +46,6 @@ class MailTemplateForm extends ilPropertyFormGUI
         $this->dic = $DIC;
         $this->plugin = ilMatrixChatPlugin::getInstance();
         $this->mainTpl = $this->dic->ui()->mainTemplate();
-        $this->controller = $controller;
 
         $this->lng->loadLanguageModule("meta");
 
@@ -68,7 +66,7 @@ class MailTemplateForm extends ilPropertyFormGUI
             "template",
             $template
         );
-        $this->setFormAction($controller->getCommandLink(
+        $this->setFormAction($this->controller->getCommandLink(
             MailTemplatesController::CMD_SHOW_MAIL_TEMPLATES_CONFIG,
             [],
             true
@@ -79,13 +77,11 @@ class MailTemplateForm extends ilPropertyFormGUI
             "subject"
         );
 
-        $placeHolderInfoList = array_map(function (string $placeholderKey): string {
-            return "<li>"
-                . "<span style='font-weight: bolder'>$placeholderKey</span>"
-                . ": "
-                . $this->plugin->txt("config.mailTemplates.template.placeholders.$placeholderKey")
-                . "</li>";
-        }, array_keys($this->controller->getTemplatePlaceholders($this->user)));
+        $placeHolderInfoList = array_map(fn (string $placeholderKey): string => "<li>"
+            . "<span style='font-weight: bolder'>$placeholderKey</span>"
+            . ": "
+            . $this->plugin->txt("config.mailTemplates.template.placeholders.$placeholderKey")
+            . "</li>", array_keys($this->controller->getTemplatePlaceholders($this->user)));
 
         $subject->setRequired(true);
         $subject->setInfo(

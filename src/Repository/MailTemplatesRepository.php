@@ -32,8 +32,8 @@ class MailTemplatesRepository
     protected const TABLE_NAME = "mcc_mail_templates";
 
     /** @var string[] */
-    private array $availableLanguages;
-    private ilLanguage $lng;
+    private readonly array $availableLanguages;
+    private readonly ilLanguage $lng;
 
     public function __construct(?ilDBInterface $db = null, ?array $availableLanguages = null)
     {

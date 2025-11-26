@@ -19,13 +19,8 @@ namespace ILIAS\Plugin\MatrixChat\Api;
 
 class MatrixApiResponse
 {
-    private int $statusCode;
-    private array $responseData;
-
-    public function __construct(int $statusCode, array $responseData)
+    public function __construct(private readonly int $statusCode, private readonly array $responseData)
     {
-        $this->statusCode = $statusCode;
-        $this->responseData = $responseData;
     }
 
     public function getResponseDataValue(string $key): float|array|bool|int|string|null

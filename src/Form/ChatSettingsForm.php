@@ -28,11 +28,11 @@ use ilTextInputGUI;
 
 class ChatSettingsForm extends ilPropertyFormGUI
 {
-    private ilMatrixChatPlugin $plugin;
-    private Container $dic;
-    private UiUtil $uiUtil;
-    private WrapperFactory $httpWrapper;
-    private MatrixApi $matrixApi;
+    private readonly ilMatrixChatPlugin $plugin;
+    private readonly Container $dic;
+    private readonly UiUtil $uiUtil;
+    private readonly WrapperFactory $httpWrapper;
+    private readonly MatrixApi $matrixApi;
 
     public function __construct(ChatController $controller, int $refId, string $matrixRoomId = null)
     {

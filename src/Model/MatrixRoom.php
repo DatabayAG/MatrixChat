@@ -21,19 +21,11 @@ use ilMatrixChatPlugin;
 
 class MatrixRoom
 {
-    private string $id;
-    private string $name;
-
-    /** @var string[] */
-    private array $members;
-    private ilMatrixChatPlugin $plugin;
+    private readonly ilMatrixChatPlugin $plugin;
 
     /** @param string[] $members */
-    public function __construct(string $id, string $name, array $members)
+    public function __construct(private readonly string $id, private readonly string $name, private array $members)
     {
-        $this->id = $id;
-        $this->name = $name;
-        $this->members = $members;
         $this->plugin = ilMatrixChatPlugin::getInstance();
     }
 

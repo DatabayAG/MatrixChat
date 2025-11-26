@@ -31,17 +31,15 @@ use ilTable2GUI;
 
 class MailTemplatesTable extends ilTable2GUI
 {
-    private ilMatrixChatPlugin $plugin;
-    private Container $dic;
-    private MailTemplatesController $controller;
-    private Factory $uiFactory;
-    private Renderer $uiRenderer;
+    private readonly ilMatrixChatPlugin $plugin;
+    private readonly Container $dic;
+    private readonly Factory $uiFactory;
+    private readonly Renderer $uiRenderer;
 
-    public function __construct(ilMatrixChatConfigGUI $parentGui, MailTemplatesController $controller)
+    public function __construct(ilMatrixChatConfigGUI $parentGui, private readonly MailTemplatesController $controller)
     {
         global $DIC;
         $this->dic = $DIC;
-        $this->controller = $controller;
         $this->plugin = ilMatrixChatPlugin::getInstance();
         $this->uiRenderer = $this->dic->ui()->renderer();
         $this->uiFactory = $this->dic->ui()->factory();
@@ -53,7 +51,7 @@ class MailTemplatesTable extends ilTable2GUI
 
         $this->setEnableHeader(true);
 
-        $this->setFormAction($controller->getCommandLink(
+        $this->setFormAction($this->controller->getCommandLink(
             MailTemplatesController::CMD_SHOW_MAIL_TEMPLATES_CONFIG,
             [],
             true

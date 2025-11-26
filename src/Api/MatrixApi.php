@@ -35,21 +35,17 @@ class MatrixApi
 {
     private static ?MatrixUser $adminUser = null;
     private static ?MatrixUser $restApiUser = null;
-    private HttpClientInterface $client;
-    private ilMatrixChatPlugin $plugin;
-    private PluginConfig $pluginConfig;
-    private float $requestTimeout;
-    private ilLogger $logger;
+    private readonly HttpClientInterface $client;
+    private readonly ilMatrixChatPlugin $plugin;
+    private readonly ilLogger $logger;
 
     public function __construct(
-        PluginConfig $pluginConfig,
-        float $requestTimeout = 3,
+        private readonly PluginConfig $pluginConfig,
+        private readonly float $requestTimeout = 3,
         ?ilMatrixChatPlugin $plugin = null,
         ?ilLogger $logger = null
     ) {
         $this->client = HttpClient::create();
-        $this->pluginConfig = $pluginConfig;
-        $this->requestTimeout = $requestTimeout;
 
         if (!$plugin) {
             $plugin = ilMatrixChatPlugin::getInstance();

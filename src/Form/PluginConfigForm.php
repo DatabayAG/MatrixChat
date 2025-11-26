@@ -34,9 +34,9 @@ use ilUriInputGUI;
 
 class PluginConfigForm extends ilPropertyFormGUI
 {
-    private ilMatrixChatPlugin $plugin;
-    private Container $dic;
-    private ilGlobalTemplateInterface $mainTpl;
+    private readonly ilMatrixChatPlugin $plugin;
+    private readonly Container $dic;
+    private readonly ilGlobalTemplateInterface $mainTpl;
 
     public const SPECIFY_OTHER_MATRIX_ACCOUNT = "specifyOtherMatrixAccount";
     public const CREATE_ON_CONFIGURED_HOMESERVER = "createOnConfiguredHomeserver";
@@ -60,9 +60,7 @@ class PluginConfigForm extends ilPropertyFormGUI
 
         $serverReachable = $this->plugin->getMatrixApi()->serverReachable();
 
-        $allowedUsernameSchemeCharacters = array_map(static function ($char) {
-            return "<span style='color: blue; font-weight: bold'>$char</span>";
-        }, ["a-z", "0-9", "=", "_", "-", ".", "/", "'"]);
+        $allowedUsernameSchemeCharacters = array_map(static fn ($char) => "<span style='color: blue; font-weight: bold'>$char</span>", ["a-z", "0-9", "=", "_", "-", ".", "/", "'"]);
 
         $this->addGeneralSection();
         $this->addServerSection($serverReachable);
@@ -250,9 +248,7 @@ class PluginConfigForm extends ilPropertyFormGUI
         $usernameScheme->setInfo(sprintf(
             $this->plugin->txt("config.usernameScheme.info"),
             implode(", ", $allowedCharacters),
-            "- " . implode("<br>- ", array_map(static function ($variable): string {
-                return "<span>{</span>$variable<span>}</span>";
-            }, array_keys($this->plugin->getUsernameSchemeVariables())))
+            "- " . implode("<br>- ", array_map(static fn ($variable): string => "<span>{</span>$variable<span>}</span>", array_keys($this->plugin->getUsernameSchemeVariables())))
         ));
         $createOnConfiguredHomeserver->addSubItem($usernameScheme);
 
@@ -290,9 +286,7 @@ class PluginConfigForm extends ilPropertyFormGUI
         $usernameScheme->setInfo(sprintf(
             $this->plugin->txt("config.usernameScheme.info"),
             implode(", ", $allowedCharacters),
-            "- " . implode("<br>- ", array_map(static function ($variable): string {
-                return "<span>{</span>$variable<span>}</span>";
-            }, array_keys($this->plugin->getUsernameSchemeVariables())))
+            "- " . implode("<br>- ", array_map(static fn ($variable): string => "<span>{</span>$variable<span>}</span>", array_keys($this->plugin->getUsernameSchemeVariables())))
         ));
         $createOnConfiguredHomeserver->addSubItem($usernameScheme);
 
@@ -316,9 +310,7 @@ class PluginConfigForm extends ilPropertyFormGUI
         );
         $roomPrefix->setInfo(sprintf(
             $this->plugin->txt("config.room.prefix.info"),
-            "- " . implode("<br>- ", array_map(static function ($variable): string {
-                return "<span>{</span>$variable<span>}</span>";
-            }, array_keys($this->plugin->getRoomSchemeVariables())))
+            "- " . implode("<br>- ", array_map(static fn ($variable): string => "<span>{</span>$variable<span>}</span>", array_keys($this->plugin->getRoomSchemeVariables())))
         ));
         $this->addItem($roomPrefix);
 

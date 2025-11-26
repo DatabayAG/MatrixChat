@@ -25,14 +25,10 @@ use DateTime;
 class MatrixUserHistory
 {
     private int $id;
-    private int $userId;
-    private string $matrixUserId;
     private DateTime $createdAt;
 
-    public function __construct(int $userId, string $matrixUserId)
+    public function __construct(private readonly int $userId, private readonly string $matrixUserId)
     {
-        $this->userId = $userId;
-        $this->matrixUserId = $matrixUserId;
     }
 
     public function setId(int $id): MatrixUserHistory

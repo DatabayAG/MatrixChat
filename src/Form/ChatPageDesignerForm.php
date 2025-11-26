@@ -26,9 +26,9 @@ use ilTextAreaInputGUI;
 
 class ChatPageDesignerForm extends ilPropertyFormGUI
 {
-    private ilMatrixChatPlugin $plugin;
-    private Container $dic;
-    private ilGlobalTemplateInterface $mainTpl;
+    private readonly ilMatrixChatPlugin $plugin;
+    private readonly Container $dic;
+    private readonly ilGlobalTemplateInterface $mainTpl;
 
     public function __construct()
     {

@@ -81,24 +81,24 @@ class ChatController extends BaseController
     public const USER_STATUS_BAN = "ban";
     public const USER_STATUS_QUEUE = "queue";
 
-    private ilTabsGUI $tabs;
-    private ilMatrixChatPlugin $plugin;
-    private CourseSettingsRepository $courseSettingsRepo;
-    private CourseSettings $courseSettings;
-    private int $refId;
-    private ilAccessHandler $access;
-    private MatrixApi $matrixApi;
-    private QueuedInvitesRepository $queuedInvitesRepo;
-    private ilLanguage $lng;
-    private Renderer $uiRenderer;
-    private Factory $uiFactory;
-    private \ILIAS\Refinery\Factory $refinery;
-    private WrapperFactory $httpWrapper;
-    private Services $http;
-    private ilLogger $logger;
-    private ilObjUser $user;
-    private MailTemplatesController $mailTemplatesController;
-    private UiUtil $uiUtil;
+    private readonly ilTabsGUI $tabs;
+    private readonly ilMatrixChatPlugin $plugin;
+    private readonly CourseSettingsRepository $courseSettingsRepo;
+    private readonly CourseSettings $courseSettings;
+    private readonly int $refId;
+    private readonly ilAccessHandler $access;
+    private readonly MatrixApi $matrixApi;
+    private readonly QueuedInvitesRepository $queuedInvitesRepo;
+    private readonly ilLanguage $lng;
+    private readonly Renderer $uiRenderer;
+    private readonly Factory $uiFactory;
+    private readonly \ILIAS\Refinery\Factory $refinery;
+    private readonly WrapperFactory $httpWrapper;
+    private readonly Services $http;
+    private readonly ilLogger $logger;
+    private readonly ilObjUser $user;
+    private readonly MailTemplatesController $mailTemplatesController;
+    private readonly UiUtil $uiUtil;
 
     public function __construct(Container $dic, ControllerHandler $controllerHandler)
     {

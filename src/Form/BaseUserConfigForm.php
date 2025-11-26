@@ -33,17 +33,14 @@ abstract class BaseUserConfigForm extends ilPropertyFormGUI
     protected ilMatrixChatPlugin $plugin;
     protected ilGlobalTemplateInterface $mainTpl;
     protected Container $dic;
-    protected BaseUserConfigController $controller;
     protected UiUtil $uiUtil;
-    protected ?string $matrixAccountId;
-    protected bool $usernameAvailable;
 
     public function __construct(
-        BaseUserConfigController $controller,
+        protected BaseUserConfigController $controller,
         ilObjUser $user,
-        ?string $matrixAccountId = null,
+        protected ?string $matrixAccountId = null,
         ?string $selectedAccountOption = null,
-        bool $usernameAvailable = false
+        protected bool $usernameAvailable = false
     ) {
         global $DIC;
         parent::__construct();
@@ -52,12 +49,9 @@ abstract class BaseUserConfigForm extends ilPropertyFormGUI
         $this->plugin = ilMatrixChatPlugin::getInstance();
         $this->mainTpl = $this->dic->ui()->mainTemplate();
         $this->mainTpl->addCss($this->plugin->cssFolder("userConfigForm.css"));
-        $this->controller = $controller;
-        $this->matrixAccountId = $matrixAccountId;
-        $this->usernameAvailable = $usernameAvailable;
 
         $this->setTitle($this->plugin->txt("config.user.generalSettings"));
-        $this->setFormAction($controller->getCommandLink(
+        $this->setFormAction($this->controller->getCommandLink(
             BaseUserConfigController::CMD_SHOW_USER_CHAT_CONFIG,
             [],
             true
@@ -88,7 +82,7 @@ abstract class BaseUserConfigForm extends ilPropertyFormGUI
             //$this->uiUtil->sendInfo($this->plugin->txt("matrix.user.accountNotFound"), false);
         }
 
-        if ($matrixAccountId && !$this->onAuthenticated($selectedAccountOption)) {
+        if ($this->matrixAccountId && !$this->onAuthenticated($selectedAccountOption)) {
             return;
         }
 

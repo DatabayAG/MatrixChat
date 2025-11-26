@@ -19,13 +19,8 @@ namespace ILIAS\Plugin\MatrixChat\Model;
 
 class CourseSettings
 {
-    private int $courseId;
-    private ?string $matrixRoomId;
-
-    public function __construct(int $courseId, ?string $matrixRoomId = null)
+    public function __construct(private readonly int $courseId, private ?string $matrixRoomId = null)
     {
-        $this->courseId = $courseId;
-        $this->matrixRoomId = $matrixRoomId;
     }
 
     public function getCourseId(): int

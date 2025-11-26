@@ -25,8 +25,8 @@ use ilPropertyFormGUI;
 
 class ConfirmDeleteRoomForm extends ilPropertyFormGUI
 {
-    private ilMatrixChatPlugin $plugin;
-    private UiUtil $uiUtil;
+    private readonly ilMatrixChatPlugin $plugin;
+    private readonly UiUtil $uiUtil;
 
     public function __construct(ChatController $controller, int $refId)
     {

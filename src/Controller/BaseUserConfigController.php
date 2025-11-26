@@ -61,10 +61,10 @@ abstract class BaseUserConfigController extends BaseController
     protected ilMatrixChatPlugin $plugin;
     protected MatrixApi $matrixApi;
     protected ilLogger $logger;
-    private Services $http;
+    private readonly Services $http;
     protected QueuedInvitesRepository $queuedInvitesRepo;
     protected CourseSettingsRepository $courseSettingsRepo;
-    private ilLanguage $lng;
+    private readonly ilLanguage $lng;
     protected MatrixUserHistoryRepository $matrixUserHistoryRepo;
     protected UiUtil $uiUtil;
 

@@ -19,13 +19,8 @@ namespace ILIAS\Plugin\MatrixChat\Model;
 
 class UserRoomAddQueue
 {
-    private int $userId;
-    private int $refId;
-
-    public function __construct($userId, $refId)
+    public function __construct(private readonly int $userId, private readonly int $refId)
     {
-        $this->userId = $userId;
-        $this->refId = $refId;
     }
 
     public function getUserId(): int

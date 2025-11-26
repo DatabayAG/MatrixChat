@@ -22,27 +22,8 @@ namespace ILIAS\Plugin\MatrixChat\Model;
 
 class MailTemplate
 {
-    private string $templateId;
-    private string $language;
-    private string $subject;
-    private string $content;
-    private bool $exists;
-    private bool $active;
-
-    public function __construct(
-        string $templateId,
-        string $language,
-        string $subject = "",
-        string $content = "",
-        bool $exists = false,
-        bool $active = true
-    ) {
-        $this->templateId = $templateId;
-        $this->language = $language;
-        $this->subject = $subject;
-        $this->content = $content;
-        $this->exists = $exists;
-        $this->active = $active;
+    public function __construct(private readonly string $templateId, private readonly string $language, private string $subject = "", private string $content = "", private bool $exists = false, private readonly bool $active = true)
+    {
     }
 
     public function getTemplateId(): string

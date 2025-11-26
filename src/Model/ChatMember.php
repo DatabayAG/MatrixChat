@@ -19,27 +19,8 @@ namespace ILIAS\Plugin\MatrixChat\Model;
 
 class ChatMember
 {
-    private int $userId;
-    private string $name;
-    private string $login;
-    private string $roleText;
-    private string $status;
-    private string $matrixUserId;
-
-    public function __construct(
-        int $userId,
-        string $name,
-        string $login,
-        string $roleText,
-        string $status,
-        string $matrixUserId
-    ) {
-        $this->userId = $userId;
-        $this->name = $name;
-        $this->login = $login;
-        $this->roleText = $roleText;
-        $this->status = $status;
-        $this->matrixUserId = $matrixUserId;
+    public function __construct(private readonly int $userId, private readonly string $name, private readonly string $login, private readonly string $roleText, private readonly string $status, private readonly string $matrixUserId)
+    {
     }
 
     public function getUserId(): int

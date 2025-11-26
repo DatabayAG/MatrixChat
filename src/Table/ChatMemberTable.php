@@ -38,20 +38,16 @@ class ChatMemberTable extends ilTable2GUI
 {
     public const ID = "ChatMemberTable";
 
-    private ilMatrixChatPlugin $plugin;
-    private Container $dic;
-    private ChatController $controller;
-    private ilRbacReview $rbacReview;
-    private int $refId;
-    private Renderer $uiRenderer;
-    private Factory $uiFactory;
+    private readonly ilMatrixChatPlugin $plugin;
+    private readonly Container $dic;
+    private readonly ilRbacReview $rbacReview;
+    private readonly Renderer $uiRenderer;
+    private readonly Factory $uiFactory;
 
-    public function __construct(int $refId, ChatController $controller)
+    public function __construct(private readonly int $refId, private readonly ChatController $controller)
     {
         global $DIC;
         $this->dic = $DIC;
-        $this->refId = $refId;
-        $this->controller = $controller;
         $this->plugin = ilMatrixChatPlugin::getInstance();
         $this->rbacReview = $this->dic->rbac()->review();
         $this->uiRenderer = $this->dic->ui()->renderer();
@@ -69,7 +65,7 @@ class ChatMemberTable extends ilTable2GUI
         $this->setDefaultOrderDirection("desc");
         $this->setEnableHeader(true);
 
-        $this->setFormAction($controller->getCommandLink(
+        $this->setFormAction($this->controller->getCommandLink(
             ChatController::CMD_SHOW_CHAT_MEMBERS,
             ["ref_id" => $this->refId],
             true
@@ -132,23 +128,12 @@ class ChatMemberTable extends ilTable2GUI
                 );
             }
 
-            switch ($chatMember->getStatus()) {
-                case ChatController::USER_STATUS_JOIN:
-                    $statusIcon = $this->uiFactory->symbol()->glyph()->apply();
-                    break;
-                case ChatController::USER_STATUS_INVITE:
-                case ChatController::USER_STATUS_QUEUE:
-                    $statusIcon = $this->uiFactory->symbol()->glyph()->time();
-                    break;
-                case ChatController::USER_STATUS_LEAVE:
-                case ChatController::USER_STATUS_BAN:
-                    $statusIcon = $this->uiFactory->symbol()->glyph()->close();
-                    break;
-                case ChatController::USER_STATUS_NO_INVITE:
-                default:
-                    $statusIcon = $this->uiFactory->symbol()->glyph()->help();
-                    break;
-            }
+            $statusIcon = match ($chatMember->getStatus()) {
+                ChatController::USER_STATUS_JOIN => $this->uiFactory->symbol()->glyph()->apply(),
+                ChatController::USER_STATUS_INVITE, ChatController::USER_STATUS_QUEUE => $this->uiFactory->symbol()->glyph()->time(),
+                ChatController::USER_STATUS_LEAVE, ChatController::USER_STATUS_BAN => $this->uiFactory->symbol()->glyph()->close(),
+                default => $this->uiFactory->symbol()->glyph()->help(),
+            };
 
             $inviteText = "";
             if ($inviteButton && $chatMember->getMatrixUserId()) {

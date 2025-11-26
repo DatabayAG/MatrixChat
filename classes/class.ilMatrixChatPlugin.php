@@ -44,14 +44,14 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
 
     private static ?self $instance = null;
     private ?PluginConfig $pluginConfig = null;
-    private QueuedInvitesRepository $queuedInvitesRepo;
-    private CourseSettingsRepository $courseSettingsRepo;
+    private readonly QueuedInvitesRepository $queuedInvitesRepo;
+    private readonly CourseSettingsRepository $courseSettingsRepo;
     protected ?MatrixApi $matrixApi = null;
     public Container $dic;
     public ilSetting $settings;
-    private UiUtil $uiUtil;
-    private ilObjUser $user;
-    private ilLogger $logger;
+    private readonly UiUtil $uiUtil;
+    private readonly ilObjUser $user;
+    private readonly ilLogger $logger;
 
     public function __construct(ilDBInterface $db, ilComponentRepositoryWrite $component_repository, string $id)
     {
@@ -142,14 +142,11 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
 
     public function getObjGUIClassByType(string $type): ?string
     {
-        switch ($type) {
-            case "crs":
-                return ilObjCourseGUI::class;
-            case "grp":
-                return ilObjGroupGUI::class;
-            default:
-                return null;
-        }
+        return match ($type) {
+            "crs" => ilObjCourseGUI::class,
+            "grp" => ilObjGroupGUI::class,
+            default => null,
+        };
     }
 
     public function redirectToHome(): void

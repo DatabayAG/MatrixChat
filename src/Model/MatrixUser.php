@@ -19,17 +19,11 @@ namespace ILIAS\Plugin\MatrixChat\Model;
 
 class MatrixUser
 {
-    private string $id;
-    private string $displayName;
     private string $accessToken = "";
-    private bool $exists;
     private string $deviceId = "ilias_auth_verification";
 
-    public function __construct(string $id, string $displayName, bool $exists)
+    public function __construct(private readonly string $id, private readonly string $displayName, private readonly bool $exists)
     {
-        $this->id = $id;
-        $this->displayName = $displayName;
-        $this->exists = $exists;
     }
 
     public function getId(): string

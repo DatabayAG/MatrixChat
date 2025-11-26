@@ -36,16 +36,14 @@ use Throwable;
 
 class ProcessQueuedInvitesJob extends ilCronJob
 {
-    private Container $dic;
-    private ilMatrixChatPlugin $plugin;
-    private ilLogger $logger;
-    private QueuedInvitesRepository $queuedInvitesRepo;
-    private CourseSettingsRepository $courseSettingsRepo;
+    private readonly Container $dic;
+    private readonly ilLogger $logger;
+    private readonly QueuedInvitesRepository $queuedInvitesRepo;
+    private readonly CourseSettingsRepository $courseSettingsRepo;
 
-    public function __construct(Container $dic, ilMatrixChatPlugin $plugin)
+    public function __construct(Container $dic, private readonly ilMatrixChatPlugin $plugin)
     {
         $this->dic = $dic;
-        $this->plugin = $plugin;
         $this->logger = $this->dic->logger()->root();
         $this->queuedInvitesRepo = QueuedInvitesRepository::getInstance($this->dic->database());
         $this->courseSettingsRepo = CourseSettingsRepository::getInstance();

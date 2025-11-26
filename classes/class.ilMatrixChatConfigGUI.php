@@ -53,10 +53,10 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
     protected Container $dic;
     protected ilGlobalTemplateInterface $mainTpl;
     protected ilLanguage $lng;
-    private ilCtrlInterface $ctrl;
-    private UiUtil $uiUtil;
-    private MatrixApi $matrixApi;
-    private ControllerHandler $controllerHandler;
+    private readonly ilCtrlInterface $ctrl;
+    private readonly UiUtil $uiUtil;
+    private readonly MatrixApi $matrixApi;
+    private readonly ControllerHandler $controllerHandler;
 
     public function __construct()
     {
