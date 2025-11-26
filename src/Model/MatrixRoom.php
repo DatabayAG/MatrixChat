@@ -24,7 +24,11 @@ class MatrixRoom
     private readonly ilMatrixChatPlugin $plugin;
 
     /** @param string[] $members */
-    public function __construct(private readonly string $id, private readonly string $name, private array $members)
+    public function __construct(
+        private readonly string $id,
+        private readonly string $name,
+        private readonly array $members
+    )
     {
         $this->plugin = ilMatrixChatPlugin::getInstance();
     }
@@ -43,13 +47,6 @@ class MatrixRoom
     public function getMembers(): array
     {
         return $this->members;
-    }
-
-    /** @param string[] $members */
-    public function setMembers(array $members): MatrixRoom
-    {
-        $this->members = $members;
-        return $this;
     }
 
     public function isMember(MatrixUser|string $matrixUserOrId): bool

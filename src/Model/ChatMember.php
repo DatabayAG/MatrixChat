@@ -19,7 +19,14 @@ namespace ILIAS\Plugin\MatrixChat\Model;
 
 class ChatMember
 {
-    public function __construct(private readonly int $userId, private readonly string $name, private readonly string $login, private readonly string $roleText, private readonly string $status, private readonly string $matrixUserId)
+    public function __construct(
+        private readonly int $userId,
+        private readonly string $name,
+        private readonly string $login,
+        private readonly string $roleText,
+        private readonly string $status,
+        private readonly string $matrixUserId
+    )
     {
     }
 

@@ -504,7 +504,8 @@ class MatrixApi
             $userId,
             $displayName,
             true
-        ))->setAccessToken($apiToken)
+        ))
+            ->setAccessToken($apiToken)
             ->setDeviceId($response->getResponseDataValue("device_id"));
     }
 
@@ -539,7 +540,8 @@ class MatrixApi
             $userId,
             $displayName,
             true
-        ))->setAccessToken($response->getResponseDataValue("access_token"))
+        ))
+            ->setAccessToken($response->getResponseDataValue("access_token"))
             ->setDeviceId($deviceId);
     }
 

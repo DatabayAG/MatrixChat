@@ -22,7 +22,11 @@ class MatrixUser
     private string $accessToken = "";
     private string $deviceId = "ilias_auth_verification";
 
-    public function __construct(private readonly string $id, private readonly string $displayName, private readonly bool $exists)
+    public function __construct(
+        private readonly string $id,
+        private readonly string $displayName,
+        private readonly bool $exists
+    )
     {
     }
 

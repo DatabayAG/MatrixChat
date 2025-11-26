@@ -33,15 +33,7 @@ require_once __DIR__ . "/../vendor/autoload.php";
 
 class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobProvider
 {
-    /** @var string */
-    public const CTYPE = "Services";
-    /** @var string */
-    public const CNAME = "UIComponent";
-    /** @var string */
-    public const SLOT_ID = "uihk";
-
-    /** @var string */
-    public const PNAME = "MatrixChat";
+    public const ID = "mcc";
 
     private static ?self $instance = null;
     private ?PluginConfig $pluginConfig = null;
@@ -67,11 +59,6 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
         parent::__construct($db, $component_repository, $id);
     }
 
-    public function getPluginName(): string
-    {
-        return self::PNAME;
-    }
-
     public static function getInstance(): self
     {
         if (self::$instance) {
@@ -82,7 +69,7 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
 
         /** @var ilComponentFactory $componentFactory */
         $componentFactory = $DIC["component.factory"];
-        self::$instance = $componentFactory->getPlugin("mcc");
+        self::$instance = $componentFactory->getPlugin(self::ID);
         return self::$instance;
     }
 

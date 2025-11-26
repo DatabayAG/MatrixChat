@@ -19,7 +19,10 @@ namespace ILIAS\Plugin\MatrixChat\Model;
 
 class CourseSettings
 {
-    public function __construct(private readonly int $courseId, private ?string $matrixRoomId = null)
+    public function __construct(
+        private readonly int $courseId,
+        private ?string $matrixRoomId = null
+    )
     {
     }
 

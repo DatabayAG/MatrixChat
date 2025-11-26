@@ -134,18 +134,16 @@ class PluginConfigForm extends ilPropertyFormGUI
                 $this->plugin->txt("config.section.adminAuthentication.valid"),
                 $this->plugin->txt("matrix.admin.login.valid")
             ));
+        } else if (!$serverReachable) {
+            $section->setTitle(sprintf(
+                $this->plugin->txt("config.section.adminAuthentication.invalid"),
+                $this->plugin->txt("matrix.server.unreachable")
+            ));
         } else {
-            if (!$serverReachable) {
-                $section->setTitle(sprintf(
-                    $this->plugin->txt("config.section.adminAuthentication.invalid"),
-                    $this->plugin->txt("matrix.server.unreachable")
-                ));
-            } else {
-                $section->setTitle(sprintf(
-                    $this->plugin->txt("config.section.adminAuthentication.invalid"),
-                    $this->plugin->txt("matrix.admin.login.invalid")
-                ));
-            }
+            $section->setTitle(sprintf(
+                $this->plugin->txt("config.section.adminAuthentication.invalid"),
+                $this->plugin->txt("matrix.admin.login.invalid")
+            ));
         }
         $this->addItem($section);
 

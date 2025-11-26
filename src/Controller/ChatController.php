@@ -309,7 +309,7 @@ class ChatController extends BaseController
         $inviteFailed = false;
         foreach ($userIds as $userId) {
             if (!ilParticipants::_isParticipant($this->refId, $userId)) {
-                $this->logger->warning("Unable to invite user with id '$userId' to room '{$room->getId()}'. User is not a member of the Course/Group with id '{$this->refId}'");
+                $this->logger->warning("Unable to invite user with id '$userId' to room '{$room->getId()}'. User is not a member of the Course/Group with id '$this->refId'");
                 continue;
             }
             try {
@@ -582,7 +582,6 @@ class ChatController extends BaseController
         $objectOffline = ilObject::lookupOfflineStatus(ilObject::_lookupObjId($courseSettings->getCourseId()));
         $mailErrors = [];
         foreach ($participants->getParticipants() as $participantId) {
-            $participantId = (int) $participantId;
             $user = new ilObjUser($participantId);
             $userConfig = (new UserConfig($user))->load();
 
