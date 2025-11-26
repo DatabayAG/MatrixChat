@@ -4,10 +4,8 @@ require_once __DIR__ . "/vendor/autoload.php";
 
 $dirs = array_filter([
     __DIR__ . "/classes",
-    __DIR__ . "/src"
-], static function (string $dir): bool {
-    return is_dir($dir);
-});
+    __DIR__ . "/src",
+], is_dir(...));
 
 $finder = PhpCsFixer\Finder::create()
     ->exclude([__DIR__ . "/vendor"])
