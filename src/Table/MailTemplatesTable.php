@@ -20,60 +20,100 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChat\Table;
 
+use Generator;
+use ILIAS\Data\Order;
+use ILIAS\Data\Range;
 use ILIAS\DI\Container;
-use ILIAS\Plugin\ExportCertificates\Enum\PluginAsset;
 use ILIAS\Plugin\MatrixChat\Controller\MailTemplatesController;
 use ILIAS\Plugin\MatrixChat\Model\MailTemplate;
-use ILIAS\UI\Factory;
+use ILIAS\Plugin\MatrixChat\Repository\MailTemplatesRepository;
+use ILIAS\UI\Component\Table\Data;
+use ILIAS\UI\Component\Table\DataRetrieval;
+use ILIAS\UI\Component\Table\DataRowBuilder;
+use ILIAS\UI\Component\Table\Factory as TableFactory;
+use ILIAS\UI\Factory as UiFactory;
 use ILIAS\UI\Renderer;
-use ilMatrixChatConfigGUI;
+use ilLanguage;
 use ilMatrixChatPlugin;
-use ilTable2GUI;
+use Psr\Http\Message\ServerRequestInterface;
 
-class MailTemplatesTable extends ilTable2GUI
+class MailTemplatesTable implements DataRetrieval
 {
-    private readonly ilMatrixChatPlugin $plugin;
-    private readonly Container $dic;
-    private readonly Factory $uiFactory;
-    private readonly Renderer $uiRenderer;
+    private ilLanguage $lng;
+    private ilMatrixChatPlugin $plugin;
+    private Data $table;
+    private UiFactory $uiFactory;
+    private Renderer $uiRenderer;
+    private TableFactory $uiTableFactory;
+    private ServerRequestInterface $request;
 
-    public function __construct(ilMatrixChatConfigGUI $parentGui, private readonly MailTemplatesController $controller)
+    public function __construct(
+        private readonly Container               $dic,
+        private readonly MailTemplatesController $controller,
+        private readonly MailTemplatesRepository $repo,
+    )
     {
-        global $DIC;
-        $this->dic = $DIC;
+
         $this->plugin = ilMatrixChatPlugin::getInstance();
-        $this->uiRenderer = $this->dic->ui()->renderer();
+        $this->lng = $dic->language();
         $this->uiFactory = $this->dic->ui()->factory();
+        $this->uiTableFactory = $this->uiFactory->table();
+        $this->uiRenderer = $this->dic->ui()->renderer();
+        $this->request = $this->dic->http()->request();
 
-        $this->setId("MailTemplatesTable");
-        $this->setTitle($this->plugin->txt("config.mailTemplates.title"));
-
-        parent::__construct($parentGui);
-
-        $this->setEnableHeader(true);
-
-        $this->setFormAction($this->controller->getCommandLink(
-            MailTemplatesController::CMD_SHOW_MAIL_TEMPLATES_CONFIG,
-            [],
-            true
-        ));
-        $this->setRowTemplate($this->plugin->assetsFile(PluginAsset::TEMPLATES, "table/tpl.mailTemplatesTable_row.html", false));
-        $this->setShowRowsSelector(false);
-
-        $this->addColumn($this->lng->txt("language"));
-        $this->addColumn($this->plugin->txt("config.mailTemplates.template.noMatrixAccount"));
-        $this->addColumn($this->plugin->txt("config.mailTemplates.template.matrixAccount"));
-
-        $this->lng->loadLanguageModule("meta");
+        $this->table = $this->buildTable();
     }
 
-    /**
-     * @param array<string, array<string, MailTemplate>> $mailTemplates
-     */
-    public function buildTableData(array $mailTemplates): array
+    public function getRows(
+        DataRowBuilder $row_builder,
+        array          $visible_column_ids,
+        Range          $range,
+        Order          $order,
+        ?array         $filter_data,
+        ?array         $additional_parameters
+    ): Generator
     {
-        $tableData = [];
+        $table_rows = $this->buildTableRows($this->repo->readAllMappedByLanguageAndTemplateId());
 
+        foreach ($table_rows as $row) {
+            yield $row_builder->buildDataRow((string) $row["language"], $row);
+        }
+    }
+
+    public function getTotalRowCount(?array $filter_data, ?array $additional_parameters): ?int
+    {
+        return count($this->dic->language()->getInstalledLanguages());
+    }
+
+    private function buildTable(): Data
+    {
+
+        return $this->uiTableFactory->data(
+            $this->plugin->txt("config.mailTemplates.title"),
+            [
+                "language" => $this->uiTableFactory->column()
+                    ->text($this->lng->txt("language"))
+                    ->withIsSortable(false),
+                "noMatrixAccount" => $this->uiTableFactory->column()
+                    ->text($this->plugin->txt("config.mailTemplates.template.noMatrixAccount"))
+                    ->withIsSortable(false),
+                "matrixAccount" => $this->uiTableFactory->column()
+                    ->text($this->plugin->txt("config.mailTemplates.template.matrixAccount"))
+                    ->withIsSortable(false)
+            ],
+            $this
+        )
+            ->withId("MailTemplatesTable")
+            ->withRequest($this->request);
+    }
+
+
+    /**
+     * @param array<string, array{matrixAccount: MailTemplate, noMatrixAccount: MailTemplate}> $mailTemplates
+     * @return list<array{language: string, matrixAccount: string, "noMatrixAccount": string}>
+     */
+    private function buildTableRows(array $mailTemplates): array
+    {
         foreach ($mailTemplates as $languageId => $mailTemplateData) {
             $tableRow = [
                 "language" => $this->lng->txt("meta_l_$languageId"),
@@ -94,11 +134,16 @@ class MailTemplatesTable extends ilTable2GUI
                     $mailTemplate->isExists()
                         ? ""
                         : "<span style='color: red;'>" . $this->plugin->txt("config.mailTemplates.template.notConfigured") . "</span>"
-                );
+                    );
             }
 
             $tableData[] = $tableRow;
         }
         return $tableData;
+    }
+
+    public function render(): string
+    {
+        return $this->uiRenderer->render($this->table);
     }
 }

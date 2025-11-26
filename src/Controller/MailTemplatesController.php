@@ -98,10 +98,14 @@ class MailTemplatesController extends BaseController
     public function showSettings(): void
     {
         $this->injectTabs(ilMatrixChatConfigGUI::TAB_MAIL_TEMPLATES);
-        $table = new MailTemplatesTable($this->configGui, $this);
-        $table->setData($table->buildTableData($this->mailTemplateRepo->readAllMappedByLanguageAndTemplateId()));
 
-        $this->mainTpl->setContent($table->getHTML());
+        $table = new MailTemplatesTable(
+            $this->dic,
+            $this,
+            $this->mailTemplateRepo
+        );
+
+        $this->mainTpl->setContent($table->render());
     }
 
     public function editMailTemplate(?MailTemplateForm $form = null): void
