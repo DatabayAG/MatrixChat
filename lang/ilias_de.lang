@@ -51,6 +51,11 @@ config.room.creationLocation.info#:#Standarteinstellung für den Erstellungsort 
 config.room.creationLocation.space#:#Space
 config.room.creationLocation.independent#:#Unabhängig
 
+config.room.creationLocation.space.selection#:#Auswahl des Spaces
+config.room.creationLocation.space.selection.general.title#:#Allgemeiner Space
+config.room.creationLocation.space.selection.custom.title#:#Eigener Space
+config.room.creationLocation.space.selection.custom.customSpaceTitle.title#:#Titel des Spaces
+
 config.accountOptions.title#:#Account-Optionen
 config.accountOptions.createOnConfiguredHomeserver#:#Account auf konfiguriertem Homeserver anlegen und nutzen.
 config.accountOptions.specifyOtherMatrixAccount#:#Anderen Matrix Account angeben.

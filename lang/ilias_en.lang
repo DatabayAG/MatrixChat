@@ -50,6 +50,11 @@ config.room.creationLocation.info#:#Default setting for the creation location fo
 config.room.creationLocation.space#:#Space
 config.room.creationLocation.independent#:#Independent
 
+config.room.creationLocation.space.selection#:#Selection of the Space
+config.room.creationLocation.space.selection.general.title#:#General Space
+config.room.creationLocation.space.selection.custom.title#:#Custom Space
+config.room.creationLocation.space.selection.custom.customSpaceTitle.title#:#Title of the Space
+
 config.accountOptions.title#:#Account-Options
 config.accountOptions.createOnConfiguredHomeserver#:#Create and Use Account on Configured Homeserver.
 config.accountOptions.specifyOtherMatrixAccount#:#Specify another Matrix Account.

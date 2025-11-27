@@ -27,6 +27,7 @@ use ILIAS\HTTP\Wrapper\WrapperFactory;
 use ILIAS\Plugin\Libraries\ControllerHandler\BaseController;
 use ILIAS\Plugin\Libraries\ControllerHandler\ControllerHandler;
 use ILIAS\Plugin\MatrixChat\Api\MatrixApi;
+use ILIAS\Plugin\MatrixChat\Enum\SpaceSelection;
 use ILIAS\Plugin\MatrixChat\Form\ChatSettingsForm;
 use ILIAS\Plugin\MatrixChat\Form\ConfirmDeleteRoomForm;
 use ILIAS\Plugin\MatrixChat\Model\ChatMember;
@@ -219,7 +220,18 @@ class ChatController extends BaseController
         $matrixRoomId = $this->courseSettings->getMatrixRoomId();
 
         if (!$form) {
-            $form = new ChatSettingsForm($this, $this->refId, $matrixRoomId);
+            $form = new ChatSettingsForm(
+                $this,
+                $this->refId,
+                $matrixRoomId,
+                $this->plugin->getPluginConfig()->getMatrixSpaceName() ?? null
+            );
+            $form->setValuesByArray([
+                "roomCreationLocation" => $matrixRoomId
+                    ? $this->courseSettings->getRoomCreationLocation()->value
+                    : $this->plugin->getPluginConfig()->getRoomCreationLocation()->value,
+                "spaceSelection" => SpaceSelection::GENERAL->value
+            ], true);
         }
 
         $this->renderToMainTemplate($form->getHTML());

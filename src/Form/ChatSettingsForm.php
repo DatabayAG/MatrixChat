@@ -21,9 +21,13 @@ use ILIAS\DI\Container;
 use ILIAS\HTTP\Wrapper\WrapperFactory;
 use ILIAS\Plugin\MatrixChat\Api\MatrixApi;
 use ILIAS\Plugin\MatrixChat\Controller\ChatController;
+use ILIAS\Plugin\MatrixChat\Enum\RoomCreationLocation;
+use ILIAS\Plugin\MatrixChat\Enum\SpaceSelection;
 use ILIAS\Plugin\MatrixChat\Utils\UiUtil;
 use ilMatrixChatPlugin;
 use ilPropertyFormGUI;
+use ilRadioGroupInputGUI;
+use ilRadioOption;
 use ilTextInputGUI;
 
 class ChatSettingsForm extends ilPropertyFormGUI
@@ -34,7 +38,7 @@ class ChatSettingsForm extends ilPropertyFormGUI
     private readonly WrapperFactory $httpWrapper;
     private readonly MatrixApi $matrixApi;
 
-    public function __construct(ChatController $controller, int $refId, string $matrixRoomId = null)
+    public function __construct(ChatController $controller, int $refId, ?string $matrixRoomId = null, ?string $matrixSpaceName = null)
     {
         parent::__construct();
         $this->plugin = ilMatrixChatPlugin::getInstance();
@@ -95,5 +99,66 @@ class ChatSettingsForm extends ilPropertyFormGUI
             $roomName->setValue($room->getName());
             $this->addItem($roomName);
         }
+
+        $this->addItem($this->buildRoomCreationLocationInput($matrixRoomId, $matrixSpaceName));
+    }
+
+    private function buildRoomCreationLocationInput(?string $matrixRoomId, ?string $matrixSpaceName): ilRadioGroupInputGUI
+    {
+        $roomCreationLocation = new ilRadioGroupInputGUI(
+            $this->plugin->txt("config.room.creationLocation.title"),
+            "roomCreationLocation"
+        );
+        $roomCreationLocation->setRequired(true);
+
+        $roomCreationLocation->setInfo($this->plugin->txt("config.room.creationLocation.info"));
+
+        $spaceOption = new ilRadioOption(
+            $this->plugin->txt("config.room.creationLocation.space"),
+            RoomCreationLocation::SPACE->value
+        );
+
+        $spaceSelection = new ilRadioGroupInputGUI(
+            $this->plugin->txt("config.room.creationLocation.space.selection"),
+            "spaceSelection"
+        );
+        $spaceSelection->setRequired(true);
+
+
+        $spaceSelection->addOption(new ilRadioOption(
+            $this->plugin->txt("config.room.creationLocation.space.selection.general.title")
+            . ($matrixSpaceName ? " ($matrixSpaceName)" : ""),
+            SpaceSelection::GENERAL->value
+        ));
+
+        $customSpaceOption = new ilRadioOption(
+            $this->plugin->txt("config.room.creationLocation.space.selection.custom.title"),
+            SpaceSelection::CUSTOM->value
+        );
+        $spaceSelection->addOption($customSpaceOption);
+
+        $customSpaceTitle = new ilTextInputGUI(
+            $this->plugin->txt("config.room.creationLocation.space.selection.custom.customSpaceTitle.title"),
+            "customSpaceTitle"
+        );
+        $customSpaceTitle->setRequired(true);
+        $customSpaceOption->addSubItem($customSpaceTitle);
+        $spaceOption->addSubItem($spaceSelection);
+
+
+        $roomCreationLocation->addOption($spaceOption);
+
+        $roomCreationLocation->addOption(new ilRadioOption(
+            $this->plugin->txt("config.room.creationLocation.independent"),
+            RoomCreationLocation::INDEPENDENT->value
+        ));
+
+        if ($matrixRoomId) {
+            $roomCreationLocation->setDisabled(true);
+            $spaceSelection->setDisabled(true);
+            $customSpaceTitle->setDisabled(true);
+        }
+
+        return $roomCreationLocation;
     }
 }
