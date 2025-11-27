@@ -88,12 +88,12 @@ class ChatSettingsForm extends ilPropertyFormGUI
             }
         }
 
-        $roomName = new ilTextInputGUI($this->plugin->txt("config.room.name"));
-        $roomName->setDisabled(true);
-        $roomName->setValue("");
+
         if ($matrixRoomId && $room) {
+            $roomName = new ilTextInputGUI($this->plugin->txt("config.room.name"));
+            $roomName->setDisabled(true);
             $roomName->setValue($room->getName());
+            $this->addItem($roomName);
         }
-        $this->addItem($roomName);
     }
 }
