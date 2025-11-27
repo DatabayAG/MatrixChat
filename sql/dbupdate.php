@@ -3,15 +3,15 @@
 /** @var $ilDB \ilDBInterface */
 if (!$ilDB->tableExists("mcc_course_settings")) {
     $ilDB->createTable("mcc_course_settings", [
-        'course_id' => [
-            'type' => 'integer',
-            'length' => 8,
-            'notnull' => true,
+        "course_id" => [
+            "type" => "integer",
+            "length" => 8,
+            "notnull" => true,
         ],
         "chat_integration_enabled" => [
             "type" => "integer",
             "length" => 1,
-            'notnull' => true,
+            "notnull" => true,
             "default" => 0,
         ],
         "matrix_room_id" => [
@@ -27,10 +27,10 @@ if (!$ilDB->tableExists("mcc_course_settings")) {
 <?php
 if (!$ilDB->tableExists("mcc_user_device")) {
     $ilDB->createTable("mcc_user_device", [
-        'user_id' => [
-            'type' => 'integer',
-            'length' => 8,
-            'notnull' => true,
+        "user_id" => [
+            "type" => "integer",
+            "length" => 8,
+            "notnull" => true,
         ],
         "device_id" => [
             "type" => "text",
@@ -48,10 +48,10 @@ if ($ilDB->tableExists("mcc_user_device")) {
 }
 if (!$ilDB->tableExists("mcc_user_data")) {
     $ilDB->createTable("mcc_user_data", [
-        'ilias_user_id' => [
-            'type' => 'integer',
-            'length' => 8,
-            'notnull' => true,
+        "ilias_user_id" => [
+            "type" => "integer",
+            "length" => 8,
+            "notnull" => true,
         ],
         "matrix_user_id" => [
             "type" => "text",
@@ -77,10 +77,10 @@ if ($ilDB->tableExists("mcc_user_data")) {
 <?php
 if (!$ilDB->tableExists("mcc_usr_room_add_queue")) {
     $ilDB->createTable("mcc_usr_room_add_queue", [
-        'user_id' => [
-            'type' => 'integer',
-            'length' => 8,
-            'notnull' => true,
+        "user_id" => [
+            "type" => "integer",
+            "length" => 8,
+            "notnull" => true,
         ],
         "ref_id" => [
             "type" => "integer",
