@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace ILIAS\Plugin\MatrixChat\Repository;
 
 use DateTime;
+use ilDBConstants;
 use ilDBInterface;
 use ILIAS\Plugin\MatrixChat\Model\MatrixUserHistory;
 
@@ -53,7 +54,7 @@ class MatrixUserHistoryRepository
         $matrixUserHistory->setId($this->db->nextId(self::TABLE_NAME));
         return $this->db->manipulateF(
             "INSERT INTO " . self::TABLE_NAME . " (id, user_id, matrix_user_id, created_at) VALUES (%s, %s, %s, %s)",
-            ["integer", "integer", "text", "integer"],
+            [ilDBConstants::T_INTEGER, ilDBConstants::T_INTEGER, ilDBConstants::T_TEXT, ilDBConstants::T_INTEGER],
             [
                     $matrixUserHistory->getId(),
                     $matrixUserHistory->getUserId(),

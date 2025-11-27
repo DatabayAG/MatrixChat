@@ -51,7 +51,7 @@ class QueuedInvitesRepository
     {
         $result = $this->db->queryF(
             "SELECT * FROM " . self::TABLE_NAME . " WHERE user_id = %s AND ref_id = %s",
-            ["integer", "integer"],
+            [ilDBConstants::T_INTEGER, ilDBConstants::T_INTEGER],
             [$userId, $refId]
         );
 
@@ -66,7 +66,7 @@ class QueuedInvitesRepository
 
         return $this->db->manipulateF(
             "INSERT INTO " . self::TABLE_NAME . " (user_id, ref_id) VALUES (%s, %s)",
-            ["integer", "integer"],
+            [ilDBConstants::T_INTEGER, ilDBConstants::T_INTEGER],
             [
                     $userRoomAddQueue->getUserId(),
                     $userRoomAddQueue->getRefId(),
@@ -87,7 +87,7 @@ class QueuedInvitesRepository
     {
         return $this->db->manipulateF(
             "DELETE FROM " . self::TABLE_NAME . " WHERE user_id = %s AND ref_id = %s",
-            ["integer", "integer"],
+            [ilDBConstants::T_INTEGER, ilDBConstants::T_INTEGER],
             [
                     $userRoomAddQueue->getUserId(),
                     $userRoomAddQueue->getRefId(),
@@ -99,7 +99,7 @@ class QueuedInvitesRepository
     {
         $result = $this->db->queryF(
             "SELECT * FROM " . self::TABLE_NAME . " WHERE user_id = %s AND ref_id = %s",
-            ["integer", "integer"],
+            [ilDBConstants::T_INTEGER, ilDBConstants::T_INTEGER],
             [$userId, $objRefId]
         );
 
@@ -117,7 +117,7 @@ class QueuedInvitesRepository
     {
         $result = $this->db->queryF(
             "SELECT * FROM " . self::TABLE_NAME . " WHERE user_id = %s",
-            ["integer"],
+            [ilDBConstants::T_INTEGER],
             [$userId]
         );
 

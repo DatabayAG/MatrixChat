@@ -65,7 +65,7 @@ class CourseSettingsRepository
     {
         $result = $this->db->queryF(
             "SELECT * FROM " . self::TABLE_NAME . " WHERE course_id = %s",
-            ["integer"],
+            [ilDBConstants::T_INTEGER],
             [$courseId]
         );
 
@@ -81,7 +81,7 @@ class CourseSettingsRepository
     {
         $result = $this->db->queryF(
             "SELECT course_id FROM " . self::TABLE_NAME . " WHERE course_id = %s",
-            ["integer"],
+            [ilDBConstants::T_INTEGER],
             [$courseId]
         );
 
@@ -94,8 +94,8 @@ class CourseSettingsRepository
             return $this->db->manipulateF(
                 "UPDATE " . self::TABLE_NAME . " SET matrix_room_id = %s WHERE course_id = %s",
                 [
-                        "text",
-                        "integer"
+                        ilDBConstants::T_TEXT,
+                        ilDBConstants::T_INTEGER
                     ],
                 [
                         $courseSettings->getMatrixRoomId() ?: null,
@@ -106,7 +106,7 @@ class CourseSettingsRepository
 
         return $this->db->manipulateF(
             "INSERT INTO " . self::TABLE_NAME . " (course_id, matrix_room_id) VALUES (%s, %s)",
-            ["integer", "text"],
+            [ilDBConstants::T_INTEGER, ilDBConstants::T_TEXT],
             [
                     $courseSettings->getCourseId(),
                     $courseSettings->getMatrixRoomId() ?: null
