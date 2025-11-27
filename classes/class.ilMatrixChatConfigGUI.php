@@ -20,6 +20,7 @@ use ILIAS\FileUpload\FileUpload;
 use ILIAS\Plugin\Libraries\ControllerHandler\ControllerHandler;
 use ILIAS\Plugin\MatrixChat\Api\MatrixApi;
 use ILIAS\Plugin\MatrixChat\Controller\MailTemplatesController;
+use ILIAS\Plugin\MatrixChat\Enum\RoomCreationLocation;
 use ILIAS\Plugin\MatrixChat\Form\ChatPageDesignerForm;
 use ILIAS\Plugin\MatrixChat\Form\PluginConfigForm;
 use ILIAS\Plugin\MatrixChat\Utils\UiUtil;
@@ -154,7 +155,8 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
             ->setModifyParticipantPowerLevel((bool) $form->getInput("modifyParticipantPowerLevel"))
             ->setAdminPowerLevel((int) $form->getInput("adminPowerLevel"))
             ->setTutorPowerLevel((int) $form->getInput("tutorPowerLevel"))
-            ->setMemberPowerLevel((int) $form->getInput("memberPowerLevel"));
+            ->setMemberPowerLevel((int) $form->getInput("memberPowerLevel"))
+            ->setRoomCreationLocation(RoomCreationLocation::from($form->getInput("roomCreationLocation")));
 
         $matrixAdminApiToken = $form->getInput("matrixAdminApiToken");
         if ($matrixAdminApiToken !== self::CLEANED_VALUE) {

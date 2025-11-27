@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace ILIAS\Plugin\MatrixChat\Model;
 
 use ILIAS\Plugin\Libraries\IliasConfigLoader\Model\Config\SettingsConfig;
+use ILIAS\Plugin\MatrixChat\Enum\RoomCreationLocation;
 
 class PluginConfig extends SettingsConfig
 {
@@ -33,6 +34,7 @@ class PluginConfig extends SettingsConfig
     private string $pageDesignerText = "";
     private string $matrixSpaceId = "";
     private string $matrixSpaceName = "";
+    private string $roomCreationLocation = RoomCreationLocation::SPACE->value;
     private bool $enableRoomEncryption = false;
     private bool $modifyParticipantPowerLevel = false;
     private int $adminPowerLevel = 100;
@@ -193,6 +195,16 @@ class PluginConfig extends SettingsConfig
     {
         $this->matrixSpaceName = $matrixSpaceName;
         return $this;
+    }
+
+    public function getRoomCreationLocation(): RoomCreationLocation
+    {
+        return RoomCreationLocation::from($this->roomCreationLocation);
+    }
+
+    public function setRoomCreationLocation(RoomCreationLocation $roomCreationLocation): void
+    {
+        $this->roomCreationLocation = $roomCreationLocation->value;
     }
 
     public function isEnableRoomEncryption(): bool

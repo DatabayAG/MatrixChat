@@ -45,6 +45,11 @@ config.room.name#:#Name of the Chatroom
 config.room.create#:#Create Matrix-Chatroom
 config.room.delete#:#Decouple Matrix-Chatroom
 
+config.room.creationLocation.title#:#Creation Location for Matrix Rooms
+config.room.creationLocation.info#:#Default setting for the creation location for matrix rooms. The selected option is used as the default for the selection when creating the matrix room.
+config.room.creationLocation.space#:#Space
+config.room.creationLocation.independent#:#Independent
+
 config.accountOptions.title#:#Account-Options
 config.accountOptions.createOnConfiguredHomeserver#:#Create and Use Account on Configured Homeserver.
 config.accountOptions.specifyOtherMatrixAccount#:#Specify another Matrix Account.

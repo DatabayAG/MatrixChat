@@ -25,11 +25,14 @@ use ilGlobalTemplateInterface;
 use ILIAS\DI\Container;
 use ILIAS\Plugin\ExportCertificates\Enum\PluginAsset;
 use ILIAS\Plugin\MatrixChat\Controller\BaseUserConfigController;
+use ILIAS\Plugin\MatrixChat\Enum\RoomCreationLocation;
 use ilMatrixChatConfigGUI;
 use ilMatrixChatPlugin;
 use ilNumberInputGUI;
 use ilPasswordInputGUI;
 use ilPropertyFormGUI;
+use ilRadioGroupInputGUI;
+use ilRadioOption;
 use ilTextInputGUI;
 use ilUriInputGUI;
 
@@ -327,6 +330,25 @@ class PluginConfigForm extends ilPropertyFormGUI
 
         $matrixSpaceId->setDisabled(true);
         $this->addItem($matrixSpaceId);
+
+        $roomCreationLocation = new ilRadioGroupInputGUI(
+            $this->plugin->txt("config.room.creationLocation.title"),
+            "roomCreationLocation"
+        );
+        $roomCreationLocation->setRequired(true);
+        $roomCreationLocation->setInfo($this->plugin->txt("config.room.creationLocation.info"));
+
+        $roomCreationLocation->addOption(new ilRadioOption(
+            $this->plugin->txt("config.room.creationLocation.space"),
+            RoomCreationLocation::SPACE->value
+        ));
+
+        $roomCreationLocation->addOption(new ilRadioOption(
+            $this->plugin->txt("config.room.creationLocation.independent"),
+            RoomCreationLocation::INDEPENDENT->value
+        ));
+
+        $this->addItem($roomCreationLocation);
 
         $enableRoomEncryption = new ilCheckboxInputGUI(
             $this->plugin->txt("config.room.encryption.enable.title"),
