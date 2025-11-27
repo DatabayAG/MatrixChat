@@ -203,3 +203,22 @@ if ($ilDB->tableExists("mcc_mail_templates")) {
     }
 }
 ?>
+<#12>
+<?php
+if (
+        $ilDB->tableExists("mcc_course_settings")
+        && !$ilDB->tableColumnExists("mcc_course_settings", "room_creation_location")
+) {
+    $ilDB->addTableColumn(
+        "mcc_course_settings",
+        "room_creation_location",
+        [
+            "type" => "text",
+            "length" => 16,
+            "notnull" => true,
+            "default" => "space"
+        ]
+    );
+}
+
+?>
