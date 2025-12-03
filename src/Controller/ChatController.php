@@ -28,12 +28,14 @@ use ILIAS\HTTP\Wrapper\WrapperFactory;
 use ILIAS\Plugin\Libraries\ControllerHandler\BaseController;
 use ILIAS\Plugin\Libraries\ControllerHandler\ControllerHandler;
 use ILIAS\Plugin\MatrixChat\Api\MatrixApi;
+use ILIAS\Plugin\MatrixChat\Enum\RoomCreationLocation;
 use ILIAS\Plugin\MatrixChat\Enum\SpaceSelection;
 use ILIAS\Plugin\MatrixChat\Form\ChatSettingsForm;
 use ILIAS\Plugin\MatrixChat\Form\ConfirmDeleteRoomForm;
 use ILIAS\Plugin\MatrixChat\Model\ChatMember;
 use ILIAS\Plugin\MatrixChat\Model\CourseSettings;
 use ILIAS\Plugin\MatrixChat\Model\MatrixRoom;
+use ILIAS\Plugin\MatrixChat\Model\PluginConfig;
 use ILIAS\Plugin\MatrixChat\Model\UserConfig;
 use ILIAS\Plugin\MatrixChat\Repository\CourseSettingsRepository;
 use ILIAS\Plugin\MatrixChat\Repository\QueuedInvitesRepository;
@@ -554,8 +556,10 @@ class ChatController extends BaseController
 
         $form->setValuesByPost();
 
+        $isIndependent = false;
+        $matrixSpaceId = $this->determineMatrixSpaceId($form, $pluginConfig, $isIndependent);
+
         $matrixRoomId = $courseSettings->getMatrixRoomId();
-        $matrixSpaceId = $pluginConfig->getMatrixSpaceId();
         $room = null;
         $space = null;
 
@@ -567,7 +571,7 @@ class ChatController extends BaseController
             $space = $this->matrixApi->getSpace($matrixSpaceId);
         }
 
-        if (!$space) {
+        if (!$space && !$isIndependent) {
             $this->uiUtil->sendFailure($this->plugin->txt("matrix.space.notFound"));
             $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS, ["ref_id" => $this->refId]);
         }
@@ -859,5 +863,43 @@ class ChatController extends BaseController
     public function getCtrlClassesForCommand(string $cmd): array
     {
         return [ilUIPluginRouterGUI::class, ilMatrixChatUIHookGUI::class];
+    }
+
+    private function determineMatrixSpaceId(ChatSettingsForm $form, PluginConfig $pluginConfig, bool &$isIndependent): ?string
+    {
+        $roomCreationLocation = RoomCreationLocation::from($form->getInput("roomCreationLocation"));
+
+        switch ($roomCreationLocation) {
+            case RoomCreationLocation::INDEPENDENT:
+                $isIndependent = true;
+                return null;
+            case RoomCreationLocation::SPACE:
+                $spaceSelection = SpaceSelection::from($form->getInput("spaceSelection"));
+
+                switch ($spaceSelection) {
+                    case SpaceSelection::GENERAL:
+                        return $pluginConfig->getMatrixSpaceId();
+                    case SpaceSelection::CUSTOM:
+                        $title = $form->getInput("customSpaceTitle");
+
+                        if (
+                            str_starts_with($title, "!")
+                            && str_ends_with($title, ":" . $pluginConfig->getMatrixServerName())
+                        ) {
+                            return $title;
+                        }
+
+                        $matrixSpace = $this->matrixApi->createSpace($title);
+                        if (!$matrixSpace) {
+                            $this->uiUtil->sendFailure(sprintf($this->plugin->txt("matrix.room.creation.failure"), $title));
+                            $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS, ["ref_id" => $this->refId]);
+                            return null;
+                        }
+                        return $matrixSpace->getId();
+                }
+
+                break;
+        }
+        return null;
     }
 }

@@ -345,7 +345,7 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
         return $rooms;
     }
 
-    public function inviteParticipant(ilObjUser $user, int $objRefId, ?MatrixUser $matrixUser, MatrixRoom $room, MatrixSpace $space, int $powerLevel, bool $objectOffline): void
+    public function inviteParticipant(ilObjUser $user, int $objRefId, ?MatrixUser $matrixUser, MatrixRoom $room, ?MatrixSpace $space, int $powerLevel, bool $objectOffline): void
     {
         $addToQueue = false;
 
@@ -362,7 +362,7 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
         } elseif (
             !$room->isMember($matrixUser)
         ) {
-            if (!$this->getMatrixApi()->inviteUserToRoom($matrixUser, $space)) {
+            if ($space && !$this->getMatrixApi()->inviteUserToRoom($matrixUser, $space)) {
                 $this->logger->warning(sprintf(
                     "Inviting matrix-user '%s' to space '%s' failed",
                     $matrixUser->getId(),
