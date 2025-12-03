@@ -41,10 +41,11 @@ class MatrixApi
 
     public function __construct(
         private readonly PluginConfig $pluginConfig,
-        private readonly float $requestTimeout = 3,
-        ?ilMatrixChatPlugin $plugin = null,
-        ?ilLogger $logger = null
-    ) {
+        private readonly float        $requestTimeout = 3,
+        ?ilMatrixChatPlugin           $plugin = null,
+        ?ilLogger                     $logger = null
+    )
+    {
         $this->client = HttpClient::create();
 
         if (!$plugin) {
@@ -63,14 +64,15 @@ class MatrixApi
      * @throws MatrixApiException
      */
     protected function sendRequest(
-        string $apiCall,
-        bool $requiresAuth = true,
-        string $method = "GET",
-        array $body = [],
-        bool $useRestApiUserAuth = false,
+        string  $apiCall,
+        bool    $requiresAuth = true,
+        string  $method = "GET",
+        array   $body = [],
+        bool    $useRestApiUserAuth = false,
         ?string $overwriteApiToken = null,
-        bool $logApiError = true
-    ): MatrixApiResponse {
+        bool    $logApiError = true
+    ): MatrixApiResponse
+    {
         $options = [
             "timeout" => $this->requestTimeout
         ];
@@ -345,8 +347,8 @@ class MatrixApi
     {
         try {
             return $this->sendRequest(
-                "/_synapse/admin/v2/users/$matrixUserId"
-            )->getResponseData() !== [];
+                    "/_synapse/admin/v2/users/$matrixUserId"
+                )->getResponseData() !== [];
         } catch (MatrixApiException $ex) {
             if ($ex->getErrorCode() !== "M_NOT_FOUND") {
                 $this->logger->error("Error occurred while trying to check if user '$matrixUserId' exists.");
@@ -701,10 +703,11 @@ class MatrixApi
      */
     protected function putRoomStateEvent(
         MatrixRoom $room,
-        array $data,
-        string $eventType,
-        string $stateKey = ""
-    ): MatrixApiResponse {
+        array      $data,
+        string     $eventType,
+        string     $stateKey = ""
+    ): MatrixApiResponse
+    {
         return $this->sendRequest(
             "/_matrix/client/v3/rooms/{$room->getId()}/state/$eventType" . ($stateKey ? "/$stateKey" : ""),
             true,
@@ -845,34 +848,40 @@ class MatrixApi
         }
     }
 
-    public function createRoom(string $name, bool $enableEncryption, MatrixSpace $parentSpace): ?MatrixRoom
+    public function createRoom(string $name, bool $enableEncryption, ?MatrixSpace $parentSpace): ?MatrixRoom
     {
+        $initialState = [
+            [
+                "type" => "m.room.history_visibility",
+                "content" => [
+                    "history_visibility" => "invited"
+                ]
+            ]
+        ];
+
+        if ($parentSpace !== null) {
+            $initialState[] = [
+                "type" => "m.space.parent",
+                "content" => [
+                    "via" => [$this->plugin->getPluginConfig()->getMatrixServerName()],
+                    "canonical" => true
+                ],
+                "state_key" => $parentSpace->getId()
+            ];
+        }
+
+        $initialState[] = [
+            "type" => "m.room.join_rules",
+            "content" => [
+                "join_rule" => "invite"
+            ]
+        ];
+
         $postData = [
             "name" => $name,
             "preset" => "private_chat",
             "visibility" => "private",
-            "initial_state" => [
-                [
-                    "type" => "m.room.history_visibility",
-                    "content" => [
-                        "history_visibility" => "invited"
-                    ]
-                ],
-                [
-                    "type" => "m.space.parent",
-                    "content" => [
-                        "via" => [$this->plugin->getPluginConfig()->getMatrixServerName()],
-                        "canonical" => true
-                    ],
-                    "state_key" => $parentSpace->getId()
-                ],
-                [
-                    "type" => "m.room.join_rules",
-                    "content" => [
-                        "join_rule" => "invite"
-                    ]
-                ]
-            ],
+            "initial_state" => $initialState,
             "power_level_content_override" => [
                 "ban" => 50,
                 "invite" => 50,
@@ -912,7 +921,7 @@ class MatrixApi
             $this->getRoomMembers($matrixRoomId)
         );
 
-        if (!$this->addRoomToSpace($parentSpace, $matrixRoom)) {
+        if ($parentSpace && !$this->addRoomToSpace($parentSpace, $matrixRoom)) {
             $this->logger->error(sprintf(
                 "Room was created but adding room to space as a child failed. Room will not show up under Space '%s' (%s)",
                 $parentSpace->getName(),
