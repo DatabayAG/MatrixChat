@@ -54,6 +54,7 @@ config.room.creationLocation.space.selection#:#Selection of the Space
 config.room.creationLocation.space.selection.general.title#:#General Space
 config.room.creationLocation.space.selection.custom.title#:#Custom Space
 config.room.creationLocation.space.selection.custom.customSpaceTitle.title#:#Title of the Space
+config.room.creationLocation.space.selection.custom.customSpaceTitle.info#:#
 
 config.accountOptions.title#:#Account-Options
 config.accountOptions.createOnConfiguredHomeserver#:#Create and Use Account on Configured Homeserver.

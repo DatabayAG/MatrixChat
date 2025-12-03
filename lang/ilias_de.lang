@@ -55,6 +55,7 @@ config.room.creationLocation.space.selection#:#Auswahl des Spaces
 config.room.creationLocation.space.selection.general.title#:#Allgemeiner Space
 config.room.creationLocation.space.selection.custom.title#:#Eigener Space
 config.room.creationLocation.space.selection.custom.customSpaceTitle.title#:#Titel des Spaces
+config.room.creationLocation.space.selection.custom.customSpaceTitle.info#:#Geben Sie den Namen des Spaces ein, den Sie erstellen oder auswählen wollen. <br>Der allgemeine Space kann nicht ausgewählt werden. Nutzen Sie dazu die andere Option "Allgemeiner Space". <br><br>Dieses Feld unterstützt Autovervollständigung. <br>Bei Eingabe werden ihnen bereits vorhandene Spaces angezeigt, <br>Bei auswahl eines Eintrages wird die Matrix-Raum-ID ins Feld übernommen. <br>Wollen Sie einen neuen Space erstellen, geben Sie einen Namen ein ohne einen Eintrag auszuwählen. <br><br>Wenn Sie die Matrix-Raum-ID des Spaces kennen, können Sie diese auch direkt angeben (Beispiel: <strong>!abcd:meinHomeserver.de</strong>).
 
 config.accountOptions.title#:#Account-Optionen
 config.accountOptions.createOnConfiguredHomeserver#:#Account auf konfiguriertem Homeserver anlegen und nutzen.

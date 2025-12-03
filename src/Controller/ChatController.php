@@ -22,6 +22,7 @@ use ilAccessHandler;
 use ilAuthUtils;
 use ilCourseParticipants;
 use ILIAS\DI\Container;
+use ILIAS\Filesystem\Stream\Streams;
 use ILIAS\HTTP\Services;
 use ILIAS\HTTP\Wrapper\WrapperFactory;
 use ILIAS\Plugin\Libraries\ControllerHandler\BaseController;
@@ -68,6 +69,7 @@ class ChatController extends BaseController
     public const CMD_INVITE_PARTICIPANT = "inviteParticipant";
     public const CMD_APPLY_MEMBER_TABLE_FILTER = "applyMemberTableFilter";
     public const CMD_RESET_MEMBER_TABLE_FILTER = "resetMemberTableFilter";
+    public const AJAX_CMD_AUTOCOMPLETE_SPACE_NAME = "ajaxAutocompleteSpaceName";
 
     public const TAB_CHAT = "tab_chat";
     public const SUB_TAB_CHAT = "sub_tab_chat";
@@ -739,6 +741,40 @@ class ChatController extends BaseController
         }
 
         return $hasAccess;
+    }
+
+    public function ajaxAutocompleteSpaceName(): never
+    {
+        $term = $this->httpWrapper->query()->retrieve(
+            "term",
+            $this->refinery->kindlyTo()->string()
+        );
+        $autocompleteItems = [];
+
+        foreach ($this->matrixApi->getRooms($term, false, "m.space") as $room) {
+            if ($room->getId() === $this->plugin->getPluginConfig()->getMatrixSpaceId()) {
+                continue;
+            }
+            $autocompleteItems[] = [
+                "value" => $room->getId(),
+                "label" => $room->getName() . " ({$room->getId()})"
+            ];
+        }
+
+        $this->http->saveResponse(
+            $this->http->response()->withBody(
+                Streams::ofString(
+                    json_encode([
+                        "items" => $autocompleteItems,
+                        "hasMoreResults" => false
+                    ], JSON_THROW_ON_ERROR)
+                )
+            )
+        );
+        $this->http->sendResponse();
+        $this->http->close();
+        exit;
+
     }
 
     public function redirectToInfoTab(): void

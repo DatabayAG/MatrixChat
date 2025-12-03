@@ -39,6 +39,7 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
 
     public const CMD_SHOW_CHAT_PAGE_DESIGNER = "showChatPageDesigner";
     public const CMD_SAVE_CHAT_PAGE_DESIGNER = "saveChatPageDesigner";
+
     public const TAB_PLUGIN_SETTINGS = "tab_plugin_settings";
     public const TAB_CHAT_PAGE_DESIGNER = "tab_chat_page_designer";
 

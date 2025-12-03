@@ -19,6 +19,7 @@ namespace ILIAS\Plugin\MatrixChat\Form;
 
 use ILIAS\DI\Container;
 use ILIAS\HTTP\Wrapper\WrapperFactory;
+use ILIAS\Plugin\ExportCertificates\Enum\PluginAsset;
 use ILIAS\Plugin\MatrixChat\Api\MatrixApi;
 use ILIAS\Plugin\MatrixChat\Controller\ChatController;
 use ILIAS\Plugin\MatrixChat\Enum\RoomCreationLocation;
@@ -38,7 +39,12 @@ class ChatSettingsForm extends ilPropertyFormGUI
     private readonly WrapperFactory $httpWrapper;
     private readonly MatrixApi $matrixApi;
 
-    public function __construct(ChatController $controller, int $refId, ?string $matrixRoomId = null, ?string $matrixSpaceName = null)
+    public function __construct(
+        private readonly ChatController $controller,
+        int                             $refId,
+        ?string                         $matrixRoomId = null,
+        ?string                         $matrixSpaceName = null
+    )
     {
         parent::__construct();
         $this->plugin = ilMatrixChatPlugin::getInstance();
@@ -111,8 +117,6 @@ class ChatSettingsForm extends ilPropertyFormGUI
         );
         $roomCreationLocation->setRequired(true);
 
-        $roomCreationLocation->setInfo($this->plugin->txt("config.room.creationLocation.info"));
-
         $spaceOption = new ilRadioOption(
             $this->plugin->txt("config.room.creationLocation.space"),
             RoomCreationLocation::SPACE->value
@@ -135,13 +139,25 @@ class ChatSettingsForm extends ilPropertyFormGUI
             $this->plugin->txt("config.room.creationLocation.space.selection.custom.title"),
             SpaceSelection::CUSTOM->value
         );
+
         $spaceSelection->addOption($customSpaceOption);
 
+        $this->dic->ui()->mainTemplate()->addJavaScript(
+            $this->plugin->assetsFile(PluginAsset::JS, "longInputInfoAutocompleteFix.js")
+        );
         $customSpaceTitle = new ilTextInputGUI(
             $this->plugin->txt("config.room.creationLocation.space.selection.custom.customSpaceTitle.title"),
             "customSpaceTitle"
         );
+        $customSpaceTitle->setInfo($this->plugin->txt("config.room.creationLocation.space.selection.custom.customSpaceTitle.info"));
+
         $customSpaceTitle->setRequired(true);
+        $customSpaceTitle->setDataSource($this->ctrl->getLinkTargetByClass(
+            array_values($this->controller->getCtrlClassesForCommand(ChatController::AJAX_CMD_AUTOCOMPLETE_SPACE_NAME)),
+            ChatController::getCommand(ChatController::AJAX_CMD_AUTOCOMPLETE_SPACE_NAME),
+            null,
+            true
+        ));
         $customSpaceOption->addSubItem($customSpaceTitle);
         $spaceOption->addSubItem($spaceSelection);
 
