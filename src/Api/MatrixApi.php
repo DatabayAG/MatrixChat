@@ -637,6 +637,51 @@ class MatrixApi
     }
 
     /**
+     * @return MatrixRoom[]
+     */
+    public function getRooms(?string $searchTerm = null, bool $withMembers = true, string $type = null): array
+    {
+        try {
+            $response = $this->sendRequest(
+                "/_synapse/admin/v1/rooms"
+                . ($searchTerm ? "?search_term=$searchTerm" : ""),
+                true,
+                "GET",
+                [],
+                true
+            );
+        } catch (MatrixApiException $ex) {
+            $this->logger->error("Error occurred trying to determine spaces for autocomplete. Ex.: {$ex->getMessage()}");
+            return [];
+        }
+
+        $rooms = [];
+        foreach ($response->getResponseData()["rooms"] as $roomData) {
+            $matrixRoomId = $roomData["room_id"];
+
+            if ($type !== null && $roomData["room_type"] !== $type) {
+                continue;
+            }
+
+            if ($type === "m.space") {
+                $rooms[] = new MatrixSpace(
+                    $matrixRoomId,
+                    $roomData["name"] ?? "",
+                    $withMembers ? $this->getRoomMembers($matrixRoomId) : []
+                );
+                continue;
+            }
+            $rooms[] = new MatrixRoom(
+                $matrixRoomId,
+                $roomData["name"] ?? "",
+                $withMembers ? $this->getRoomMembers($matrixRoomId) : []
+            );
+        }
+
+        return $rooms;
+    }
+
+    /**
      * @throws MatrixApiException
      */
     protected function getRoomState(MatrixRoom $room, string $eventType, string $stateKey = ""): array
