@@ -157,7 +157,8 @@ config.space.id.info#:#Nicht editierbar. Dieser wert ändert sich wenn 'Name des
 config.space.status.faulty#:#Verbindung zum Chat-Space ist fehlerhaft. Die ID des Spaces ist gespeichert, es konnte jedoch kein Space mit dieser ID gefunden werden.
 config.space.status.disconnected#:#Space nicht Verbunden/Eingerichtet
 
-matrix.space.creation.failure#:#Beim erstellen des Spaces ist ein Fehler aufgetreten.
+matrix.room.creation.failure#:#Beim erstellen des Raumes mit dem Titel <strong>%s</strong> ist ein Fehler aufgetreten.
+matrix.space.creation.failure#:#Beim erstellen des Spaces mit dem Titel <strong>%s</strong> ist ein Fehler aufgetreten.
 matrix.space.notFound#:#Es konnte kein Space gefunden werden, zu dem der Matrix-Raum hinzugefügt werden kann. Erstellen des Raumes nicht möglich.
 
 matrix.room.notYetConfigured#:#Für diesen %s wurde noch kein Matrix-Raum konfiguriert. <br>Klicken Sie auf den Link unten, um zu den Chat-Einstellungen zu gelangen und einen Raum zu erstellen. <br><br><a href="%s">%s</a>

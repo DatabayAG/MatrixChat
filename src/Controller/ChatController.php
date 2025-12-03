@@ -573,13 +573,14 @@ class ChatController extends BaseController
         }
 
         if (!$room) {
+            $matrixRoomName = $this->buildRoomPrefix($courseSettings->getCourseId());
             $room = $this->matrixApi->createRoom(
-                $this->buildRoomPrefix($courseSettings->getCourseId()),
+                $matrixRoomName,
                 $this->plugin->getPluginConfig()->isEnableRoomEncryption(),
                 $space
             );
             if (!$room) {
-                $this->uiUtil->sendFailure($this->plugin->txt("matrix.space.creation.failure"));
+                $this->uiUtil->sendFailure(sprintf($this->plugin->txt("matrix.room.creation.failure"), $matrixRoomName));
                 $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS, ["ref_id" => $this->refId]);
             }
 

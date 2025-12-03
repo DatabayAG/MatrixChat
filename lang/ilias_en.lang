@@ -155,7 +155,8 @@ config.space.id.info#:#Not editable. This value changes when the 'Name of the Sp
 config.space.status.faulty#:#Connection to the space is faulty. The space ID is saved, but no space with this ID could be found.
 config.space.status.disconnected#:#Space not Connected/Setup
 
-matrix.space.creation.failure#:#An error occurred while trying to create MatrixSpace.
+matrix.room.creation.failure#:#An error occurred while trying to create a room with title <strong>%s</strong>.
+matrix.space.creation.failure#:#An error occurred while trying to create a space with title <strong>%s</strong>.
 matrix.space.notFound#:#No Matrix-Space could be found to which the Matrix-Room can be added. Creation of room not possible.
 
 matrix.room.notYetConfigured#:#No Matrix-Room has been configured for this %s, yet. <br>Click on the button bellow to go to the chat settings and create a room. <br><br><a href="%s">%s</a>
