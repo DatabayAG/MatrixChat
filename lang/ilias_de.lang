@@ -46,8 +46,8 @@ config.room.name#:#Name vom Chatraum
 config.room.create#:#Matrix-Chatraum anlegen
 config.room.delete#:#Matrix-Chatraum entkoppeln
 
-config.room.creationLocation.title#:#Erstellungsort für Matrix-Räume
-config.room.creationLocation.info#:#Standarteinstellung für den Erstellungsort für Matrix-Räume. Die ausgewählte Option wird als Standard für die Auswahl beim anlegen des Matrix-Raumes genutzt.
+config.room.creationLocation.title#:#Erstellungsort für Matrix-Raum
+config.room.creationLocation.info#:#Standarteinstellung für den Erstellungsort für Matrix-Räume. Die ausgewählte Option wird als Standard für die Auswahl beim anlegen des Matrix-Raumes innerhalb eines Kurses/Gruppe genutzt.
 config.room.creationLocation.space#:#Space
 config.room.creationLocation.independent#:#Unabhängig
 
