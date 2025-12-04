@@ -260,24 +260,14 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
 
         $matrixApi = $this->getMatrixApi();
 
-        $matrixSpaceId = $this->pluginConfig->getMatrixSpaceId();
-        if (!$matrixSpaceId) {
-            $this->logger->warning("Unable to continue handling event '$a_event'. No Matrix-Space-ID found");
-            return;
-        }
-
-        $space = $matrixApi->getSpace($matrixSpaceId);
-        if (!$space) {
-            $this->logger->warning("Unable to continue handling event '$a_event'. Matrix-Space-ID '$matrixSpaceId' saved but retrieving space failed");
-            return;
-        }
-
         $rooms = $this->findMatrixRoomsLinkedToObjId($objId, $a_event, $matrixApi);
         if ($rooms === []) {
             $this->logger->warning("Unable to continue handling event '$a_event'. No room(s) were found using the obj-id '$objId'");
             return;
         }
 
+        /** @var array<string, MatrixSpace> $spaceCache */
+        $spaceCache = [];
         foreach ($userIds as $userId) {
             $user = new ilObjUser($userId);
             $userConfig = (new UserConfig($user))->load();
@@ -291,6 +281,26 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
 
             foreach ($rooms as $objRefId => $room) {
                 $participants = ilParticipants::getInstance($objRefId);
+
+                $courseSettings = $this->courseSettingsRepo->read($objRefId);
+                $space = null;
+                if ($courseSettings->getMatrixSpaceId()) {
+                    if (isset($spaceCache[$courseSettings->getMatrixSpaceId()])) {
+                        $space = $spaceCache[$courseSettings->getMatrixSpaceId()];
+                    } else {
+                        $space = $matrixApi->getSpace($courseSettings->getMatrixSpaceId());
+                        $spaceCache[$courseSettings->getMatrixSpaceId()] = $space;
+                    }
+
+                    if (!$space) {
+                        $this->logger->warning(sprintf(
+                            "Unable to continue handling event '%s'. Space id configured for object with ref-id '%s' but no space found.",
+                            $a_event,
+                            $objRefId
+                        ));
+                    }
+                }
+
 
                 if ($a_event === "addParticipant" || $a_event === "update") {
                     $this->inviteParticipant(

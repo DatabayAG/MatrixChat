@@ -26,6 +26,7 @@ use ILIAS\Plugin\Libraries\ControllerHandler\ControllerHandler;
 use ILIAS\Plugin\MatrixChat\Api\MatrixApi;
 use ILIAS\Plugin\MatrixChat\Api\MatrixApiException;
 use ILIAS\Plugin\MatrixChat\Form\BaseUserConfigForm;
+use ILIAS\Plugin\MatrixChat\Model\Room\MatrixSpace;
 use ILIAS\Plugin\MatrixChat\Model\UserConfig;
 use ILIAS\Plugin\MatrixChat\Model\UserRoomAddQueue;
 use ILIAS\Plugin\MatrixChat\Repository\CourseSettingsRepository;
@@ -113,16 +114,8 @@ abstract class BaseUserConfigController extends BaseController
 
         $processResults = [];
 
-        $space = null;
-        $matrixSpaceId = $this->plugin->getPluginConfig()->getMatrixSpaceId();
-        if ($matrixSpaceId) {
-            $space = $this->matrixApi->getSpace($matrixSpaceId);
-        }
-        if (!$space) {
-            $this->logger->error("Unable to get space with id '$matrixSpaceId'");
-            return "";
-        }
-
+        /** @var array<string, MatrixSpace> $spaceCache */
+        $spaceCache = [];
         foreach ($this->queuedInvitesRepo->readAllByUserId($user->getId()) as $userRoomAddQueue) {
             if (!ilObject::_exists($userRoomAddQueue->getRefId(), true)) {
                 $this->logger->warning(sprintf(
@@ -154,13 +147,29 @@ abstract class BaseUserConfigController extends BaseController
 
             if ($courseSettings->getMatrixRoomId()) {
                 $room = $this->matrixApi->getRoom($courseSettings->getMatrixRoomId());
+
+                $space = null;
+                if ($courseSettings->getMatrixSpaceId()) {
+                    if (isset($spaceCache[$courseSettings->getMatrixSpaceId()])) {
+                        $space = $spaceCache[$courseSettings->getMatrixSpaceId()];
+                    } else {
+                        $space = $this->matrixApi->getSpace($courseSettings->getMatrixSpaceId());
+                        $spaceCache[$courseSettings->getMatrixSpaceId()] = $space;
+                    }
+
+                    if (!$space) {
+                        $this->logger->error("Unable to get space for object with ref-id '{$courseSettings->getCourseId()}'");
+                        continue;
+                    }
+                }
+
                 if (!$room) {
                     continue;
                 }
 
                 if (!$room->isMember($matrixUser)) {
                     //Todo: Can possibly be replaced with this->plugin->inviteParticipant in the future to reduce code size.
-                    if (!$this->matrixApi->inviteUserToRoom($matrixUser, $space)) {
+                    if ($space && !$this->matrixApi->inviteUserToRoom($matrixUser, $space)) {
                         $this->logger->warning("Inviting matrix-user '{$matrixUser->getId()}' to space '{$space->getId()}' failed");
                     }
                     //Todo: Can possibly be replaced with this->plugin->inviteParticipant in the future to reduce code size.

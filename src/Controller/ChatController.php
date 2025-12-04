@@ -291,18 +291,13 @@ class ChatController extends BaseController
         $space = null;
         $room = null;
 
-        if ($this->plugin->getPluginConfig()->getMatrixSpaceId()) {
-            $space = $this->matrixApi->getSpace($this->plugin->getPluginConfig()->getMatrixSpaceId());
-        } else {
-            $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.account.invite.multiple.failure"));
-            $this->uiUtil->sendInfo($this->plugin->txt("config.space.status.disconnected"));
-            $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
-        }
-
-        if (!$space) {
-            $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.account.invite.multiple.failure"));
-            $this->uiUtil->sendInfo($this->plugin->txt("config.space.status.faulty"));
-            $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
+        if ($this->courseSettings->getMatrixSpaceId()) {
+            $space = $this->matrixApi->getSpace($this->courseSettings->getMatrixSpaceId());
+            if (!$space) {
+                $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.account.invite.multiple.failure"));
+                $this->uiUtil->sendInfo($this->plugin->txt("config.space.status.disconnected"));
+                $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
+            }
         }
 
         if ($this->courseSettings->getMatrixRoomId()) {
@@ -413,11 +408,12 @@ class ChatController extends BaseController
         $space = null;
         $room = null;
 
-        if ($this->plugin->getPluginConfig()->getMatrixSpaceId()) {
-            $space = $this->matrixApi->getSpace($this->plugin->getPluginConfig()->getMatrixSpaceId());
-        } else {
-            $this->uiUtil->sendFailure($this->plugin->txt("config.space.status.disconnected"));
-            $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
+        if ($this->courseSettings->getMatrixSpaceId()) {
+            $space = $this->matrixApi->getSpace($this->courseSettings->getMatrixSpaceId());
+            if (!$space) {
+                $this->uiUtil->sendFailure($this->plugin->txt("config.space.status.disconnected"));
+                $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
+            }
         }
 
         if (!$space) {

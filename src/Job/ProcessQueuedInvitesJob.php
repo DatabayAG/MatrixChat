@@ -95,20 +95,6 @@ class ProcessQueuedInvitesJob extends ilCronJob
         $invited = 0;
         $failed = 0;
 
-        if (!$this->plugin->getPluginConfig()->getMatrixSpaceId()) {
-            $this->logger->error("Unable to continue processing queued invitations. Space not configured");
-            $cronResult->setMessage($this->plugin->txt("config.space.status.disconnected"));
-            $cronResult->setStatus(ilCronJobResult::STATUS_FAIL);
-            return $cronResult;
-        }
-        $space = $matrixApi->getSpace($this->plugin->getPluginConfig()->getMatrixSpaceId());
-        if (!$space) {
-            $this->logger->error("Unable to continue processing queued invitations. Space configured but not found");
-            $cronResult->setMessage($this->plugin->txt("config.space.status.faulty"));
-            $cronResult->setStatus(ilCronJobResult::STATUS_FAIL);
-            return $cronResult;
-        }
-
         /** @var UserRoomAddQueue[] $queuedInvites */
         foreach ($this->queuedInvitesRepo->readAllGroupedByRefId() as $refId => $queuedInvites) {
             $total += count($queuedInvites);
@@ -192,11 +178,25 @@ class ProcessQueuedInvitesJob extends ilCronJob
                     continue;
                 }
 
-                if (!$space->isMember($matrixUser)) {
+                $space = null;
+                if ($courseSettings->getMatrixSpaceId()) {
+                    $space = $matrixApi->getSpace($courseSettings->getMatrixSpaceId());
+                }
+
+                if (!$space && $courseSettings->getMatrixSpaceId()) {
+                    $this->logger->error(sprintf(
+                        "Unable to process queued invitation (user-id: %s, ref-id: %s). Space configured but not found",
+                        $queuedInvite->getUserId(),
+                        $queuedInvite->getRefId()
+                    ));
+                    continue;
+                }
+
+                if ($space && !$space->isMember($matrixUser)) {
                     if ($matrixApi->getStatusOfUserInRoom(
-                        $space,
-                        $matrixUser->getId()
-                    ) === ChatController::USER_STATUS_INVITE) {
+                            $space,
+                            $matrixUser->getId()
+                        ) === ChatController::USER_STATUS_INVITE) {
                         $this->logger->info(sprintf(
                             "Skipping inviting user '%s' to space '%s'. User already invited",
                             $matrixUser->getId(),
@@ -217,9 +217,9 @@ class ProcessQueuedInvitesJob extends ilCronJob
                 }
 
                 if ($matrixApi->getStatusOfUserInRoom(
-                    $room,
-                    $matrixUser->getId()
-                ) === ChatController::USER_STATUS_INVITE) {
+                        $room,
+                        $matrixUser->getId()
+                    ) === ChatController::USER_STATUS_INVITE) {
                     $this->logger->info(sprintf(
                         "Skipping inviting user '%s' to room '%s'. User already invited",
                         $matrixUser->getId(),
