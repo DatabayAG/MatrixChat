@@ -207,16 +207,15 @@ if ($ilDB->tableExists("mcc_mail_templates")) {
 <?php
 if (
         $ilDB->tableExists("mcc_course_settings")
-        && !$ilDB->tableColumnExists("mcc_course_settings", "room_creation_location")
+        && !$ilDB->tableColumnExists("mcc_course_settings", "matrix_space_id")
 ) {
     $ilDB->addTableColumn(
         "mcc_course_settings",
-        "room_creation_location",
+        "matrix_space_id",
         [
-            "type" => "text",
-            "length" => 16,
-            "notnull" => true,
-            "default" => "space"
+            "type" => ilDBConstants::T_TEXT,
+            "length" => 92,
+            "notnull" => false
         ]
     );
 }

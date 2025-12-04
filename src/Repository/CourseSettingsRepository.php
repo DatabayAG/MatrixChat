@@ -19,7 +19,6 @@ namespace ILIAS\Plugin\MatrixChat\Repository;
 
 use ilDBConstants;
 use ilDBInterface;
-use ILIAS\Plugin\MatrixChat\Enum\RoomCreationLocation;
 use ILIAS\Plugin\MatrixChat\Model\CourseSettings;
 
 class CourseSettingsRepository
@@ -58,8 +57,8 @@ class CourseSettingsRepository
         while ($row = $this->db->fetchAssoc($result)) {
             $data[] = new CourseSettings(
                 (int) $row["course_id"],
-                RoomCreationLocation::from($row["room_creation_location"]),
-                $row["matrix_room_id"]
+                $row["matrix_room_id"],
+                $row["matrix_space_id"]
             );
         }
 
@@ -75,17 +74,14 @@ class CourseSettingsRepository
         );
 
         if ($result->numRows() === 0) {
-            return new CourseSettings(
-                $courseId,
-                RoomCreationLocation::SPACE
-            );
+            return new CourseSettings($courseId);
         }
 
         $data = $this->db->fetchAssoc($result);
         return new CourseSettings(
             $courseId,
-            RoomCreationLocation::from($data["room_creation_location"]),
-            $data["matrix_room_id"]
+            $data["matrix_room_id"],
+            $data["matrix_space_id"]
         );
     }
 
@@ -104,39 +100,39 @@ class CourseSettingsRepository
     {
         if ($this->exists($courseSettings->getCourseId())) {
             return $this->db->manipulateF(
-                "UPDATE " . self::TABLE_NAME . " SET matrix_room_id = %s, room_creation_location = %s WHERE course_id = %s",
-                [
+                    "UPDATE " . self::TABLE_NAME . " SET matrix_room_id = %s, matrix_space_id = %s WHERE course_id = %s",
+                    [
                         ilDBConstants::T_TEXT,
                         ilDBConstants::T_TEXT,
                         ilDBConstants::T_INTEGER
                     ],
-                [
+                    [
                         $courseSettings->getMatrixRoomId() ?: null,
-                        $courseSettings->getRoomCreationLocation()->value,
+                        $courseSettings->getMatrixSpaceId(),
                         $courseSettings->getCourseId()
                     ]
-            ) === 1;
+                ) === 1;
         }
 
         return $this->db->manipulateF(
-            "INSERT INTO " . self::TABLE_NAME . " (course_id, matrix_room_id, room_creation_location) VALUES (%s, %s, %s)",
+                "INSERT INTO " . self::TABLE_NAME . " (course_id, matrix_room_id, matrix_space_id) VALUES (%s, %s, %s)",
                 [ilDBConstants::T_INTEGER, ilDBConstants::T_TEXT],
-            [
+                [
                     $courseSettings->getCourseId(),
                     $courseSettings->getMatrixRoomId() ?: null,
-                    $courseSettings->getRoomCreationLocation()
+                    $courseSettings->getMatrixSpaceId()
                 ]
-        ) === 1;
+            ) === 1;
     }
 
     public function delete(CourseSettings $courseSettings): bool
     {
         return $this->db->manipulateF(
-            "DELETE FROM " . self::TABLE_NAME . " WHERE course_id = %s",
-            [ilDBConstants::T_INTEGER],
-            [
+                "DELETE FROM " . self::TABLE_NAME . " WHERE course_id = %s",
+                [ilDBConstants::T_INTEGER],
+                [
                     $courseSettings->getCourseId(),
                 ]
-        ) === 1;
+            ) === 1;
     }
 }

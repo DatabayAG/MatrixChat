@@ -152,8 +152,9 @@ matrix.chat.members#:#Chatteilnehmer
 
 config.space.name#:#Name des Spaces
 config.space.name.info#:#Ändern des Namens führt dazu, das ein neuer Space erstellt wird (ID des Space verändert sich) <br>Räume im alten Space verbleiben in dem zuvor verwendeten!
-config.space.id#:#ID des Allgemeinen Spaces
-config.space.id.info#:#Nicht editierbar. Dieser wert ändert sich wenn 'Name des Spaces' geändert wird.
+config.space.id#:#ID des Spaces
+config.space.id.general#:#ID des Allgemeinen Spaces
+config.space.id.general.info#:#Nicht editierbar. Dieser wert ändert sich wenn 'Name des Spaces' geändert wird.
 config.space.status.faulty#:#Verbindung zum Chat-Space ist fehlerhaft. Die ID des Spaces ist gespeichert, es konnte jedoch kein Space mit dieser ID gefunden werden.
 config.space.status.disconnected#:#Space nicht Verbunden/Eingerichtet
 

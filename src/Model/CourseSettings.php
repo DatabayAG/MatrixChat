@@ -17,14 +17,12 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChat\Model;
 
-use ILIAS\Plugin\MatrixChat\Enum\RoomCreationLocation;
-
 class CourseSettings
 {
     public function __construct(
         private readonly int $courseId,
-        private RoomCreationLocation $roomCreationLocation = RoomCreationLocation::SPACE,
         private ?string $matrixRoomId = null,
+        private ?string $matrixSpaceId = null,
     )
     {
     }
@@ -45,13 +43,13 @@ class CourseSettings
         return $this;
     }
 
-    public function getRoomCreationLocation(): RoomCreationLocation
+    public function getMatrixSpaceId(): ?string
     {
-        return $this->roomCreationLocation;
+        return $this->matrixSpaceId;
     }
 
-    public function setRoomCreationLocation(RoomCreationLocation $roomCreationLocation): void
+    public function setMatrixSpaceId(?string $matrixSpaceId): void
     {
-        $this->roomCreationLocation = $roomCreationLocation;
+        $this->matrixSpaceId = $matrixSpaceId;
     }
 }

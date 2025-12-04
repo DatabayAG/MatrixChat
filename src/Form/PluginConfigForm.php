@@ -323,10 +323,10 @@ class PluginConfigForm extends ilPropertyFormGUI
         $spaceName->setInfo($this->plugin->txt("config.space.name.info"));
         $this->addItem($spaceName);
         $matrixSpaceId = new ilTextInputGUI(
-            $this->plugin->txt("config.space.id"),
+            $this->plugin->txt("config.space.id.general"),
             "matrixSpaceId"
         );
-        $matrixSpaceId->setInfo($this->plugin->txt("config.space.id.info"));
+        $matrixSpaceId->setInfo($this->plugin->txt("config.space.id.general.info"));
 
         $matrixSpaceId->setDisabled(true);
         $this->addItem($matrixSpaceId);

@@ -228,12 +228,12 @@ class ChatController extends BaseController
                 $this,
                 $this->refId,
                 $matrixRoomId,
-                $this->plugin->getPluginConfig()->getMatrixSpaceName() ?? null
+                $this->plugin->getPluginConfig()->getMatrixSpaceName(),
+                $this->courseSettings->getMatrixSpaceId()
             );
+
             $form->setValuesByArray([
-                "roomCreationLocation" => $matrixRoomId
-                    ? $this->courseSettings->getRoomCreationLocation()->value
-                    : $this->plugin->getPluginConfig()->getRoomCreationLocation()->value,
+                "roomCreationLocation" => $this->plugin->getPluginConfig()->getRoomCreationLocation()->value,
                 "spaceSelection" => SpaceSelection::GENERAL->value
             ], true);
         }
@@ -587,14 +587,15 @@ class ChatController extends BaseController
                 $this->uiUtil->sendFailure(sprintf($this->plugin->txt("matrix.room.creation.failure"), $matrixRoomName));
                 $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS, ["ref_id" => $this->refId]);
             }
+        }
 
-            $courseSettings->setMatrixRoomId($room->getId());
-            try {
-                $this->courseSettingsRepo->save($courseSettings);
-            } catch (Exception) {
-                $this->uiUtil->sendFailure($this->plugin->txt("general.update.failed"));
-                $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS, ["ref_id" => $this->refId]);
-            }
+        $courseSettings->setMatrixRoomId($room->getId());
+        $courseSettings->setMatrixSpaceId($matrixSpaceId);
+        try {
+            $this->courseSettingsRepo->save($courseSettings);
+        } catch (Exception) {
+            $this->uiUtil->sendFailure($this->plugin->txt("general.update.failed"));
+            $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS, ["ref_id" => $this->refId]);
         }
 
         $participants = ilParticipants::getInstance($courseSettings->getCourseId());
@@ -687,6 +688,7 @@ class ChatController extends BaseController
 
         if (!$room) {
             $this->courseSettings->setMatrixRoomId(null);
+            $this->courseSettings->setMatrixSpaceId(null);
             if ($this->courseSettingsRepo->save($this->courseSettings)) {
                 $this->uiUtil->sendSuccess(
                     $this->plugin->txt("matrix.chat.room.delete.success")
@@ -702,6 +704,7 @@ class ChatController extends BaseController
             $deleteSuccess = $this->matrixApi->deleteRoom($room, "", $purge, $block);
             if ($deleteSuccess) {
                 $this->courseSettings->setMatrixRoomId(null);
+                $this->courseSettings->setMatrixSpaceId(null);
             }
 
             if ($this->courseSettingsRepo->save($this->courseSettings)) {
