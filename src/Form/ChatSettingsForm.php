@@ -130,13 +130,13 @@ class ChatSettingsForm extends ilPropertyFormGUI
 
 
         $spaceSelection->addOption(new ilRadioOption(
-            $this->plugin->txt("config.room.creationLocation.space.selection.general.title")
+            $this->plugin->txt("config.room.creationLocation.space.general.title")
             . ($matrixSpaceName ? " ($matrixSpaceName)" : ""),
             SpaceSelection::GENERAL->value
         ));
 
         $customSpaceOption = new ilRadioOption(
-            $this->plugin->txt("config.room.creationLocation.space.selection.custom.title"),
+            $this->plugin->txt("config.room.creationLocation.space.custom.title"),
             SpaceSelection::CUSTOM->value
         );
 
@@ -146,10 +146,10 @@ class ChatSettingsForm extends ilPropertyFormGUI
             $this->plugin->assetsFile(PluginAsset::JS, "longInputInfoAutocompleteFix.js")
         );
         $customSpaceTitle = new ilTextInputGUI(
-            $this->plugin->txt("config.room.creationLocation.space.selection.custom.customSpaceTitle.title"),
+            $this->plugin->txt("config.room.creationLocation.space.custom.customSpaceTitle.title"),
             "customSpaceTitle"
         );
-        $customSpaceTitle->setInfo($this->plugin->txt("config.room.creationLocation.space.selection.custom.customSpaceTitle.info"));
+        $customSpaceTitle->setInfo($this->plugin->txt("config.room.creationLocation.space.custom.customSpaceTitle.info"));
 
         $customSpaceTitle->setRequired(true);
         $customSpaceTitle->setDataSource($this->ctrl->getLinkTargetByClass(

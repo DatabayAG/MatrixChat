@@ -48,13 +48,13 @@ config.room.delete#:#Decouple Matrix-Chatroom
 config.room.creationLocation.title#:#Creation Location for Matrix Room
 config.room.creationLocation.info#:#Default setting for the creation location for matrix rooms in a course/group. The selected option is used as the default for the selection when creating the matrix room.
 config.room.creationLocation.space#:#Space
-config.room.creationLocation.independent#:#Independent
+config.room.creationLocation.independent#:#Create Room Separately
 
 config.room.creationLocation.space.selection#:#Selection of the Space
-config.room.creationLocation.space.selection.general.title#:#General Space
-config.room.creationLocation.space.selection.custom.title#:#Custom Space
-config.room.creationLocation.space.selection.custom.customSpaceTitle.title#:#Title of the Space
-config.room.creationLocation.space.selection.custom.customSpaceTitle.info#:#
+config.room.creationLocation.space.general.title#:#General Space
+config.room.creationLocation.space.custom.title#:#Custom Space
+config.room.creationLocation.space.custom.customSpaceTitle.title#:#Title of the Space
+config.room.creationLocation.space.custom.customSpaceTitle.info#:#
 
 config.accountOptions.title#:#Account-Options
 config.accountOptions.createOnConfiguredHomeserver#:#Create and Use Account on Configured Homeserver.
@@ -150,7 +150,7 @@ matrix.chat.members#:#Chat Participants
 
 config.space.name#:#Name of the Space
 config.space.name.info#:#Changing the name causes a new Space to be created (ID of the Space changes) <br>Rooms in the old Space remain in the previously used Space!
-config.space.id#:#ID of the Space
+config.space.id#:#ID of the General Space
 config.space.id.info#:#Not editable. This value changes when the 'Name of the Space' above is changed.
 config.space.status.faulty#:#Connection to the space is faulty. The space ID is saved, but no space with this ID could be found.
 config.space.status.disconnected#:#Space not Connected/Setup
