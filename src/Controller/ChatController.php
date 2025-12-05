@@ -456,14 +456,17 @@ class ChatController extends BaseController
 
         $participants = ilParticipants::getInstance($this->refId);
 
-        //Todo: Can possibly be replaced with this->plugin->inviteParticipant in the future to reduce code size.
-        if (!$this->matrixApi->inviteUserToRoom($matrixUser, $space)) {
-            $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.account.invite.failed"));
-            $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
-        }
+        $invited = $this->plugin->inviteParticipant(
+            $user,
+            $this->refId,
+            $matrixUser,
+            $room,
+            $space,
+            $this->plugin->determinePowerLevelOfParticipant($participants, $user->getId()),
+            false
+        );
 
-        //Todo: Can possibly be replaced with this->plugin->inviteParticipant in the future to reduce code size.
-        if (!$this->matrixApi->inviteUserToRoom($matrixUser, $room, $this->plugin->determinePowerLevelOfParticipant($participants, $user->getId()))) {
+        if (!$invited) {
             $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.account.invite.failed"));
             $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
         }
