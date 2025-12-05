@@ -110,6 +110,7 @@ class MailTemplatesTable implements DataRetrieval
      */
     private function buildTableRows(array $mailTemplates): array
     {
+        $tableData = [];
         foreach ($mailTemplates as $languageId => $mailTemplateData) {
             $tableRow = [
                 "language" => $this->lng->txt("meta_l_$languageId"),
