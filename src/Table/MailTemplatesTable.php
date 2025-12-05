@@ -39,13 +39,13 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class MailTemplatesTable implements DataRetrieval
 {
-    private ilLanguage $lng;
-    private ilMatrixChatPlugin $plugin;
-    private Data $table;
-    private UiFactory $uiFactory;
-    private Renderer $uiRenderer;
-    private TableFactory $uiTableFactory;
-    private ServerRequestInterface $request;
+    private readonly ilLanguage $lng;
+    private readonly ilMatrixChatPlugin $plugin;
+    private readonly Data $table;
+    private readonly UiFactory $uiFactory;
+    private readonly Renderer $uiRenderer;
+    private readonly TableFactory $uiTableFactory;
+    private readonly ServerRequestInterface $request;
 
     public function __construct(
         private readonly Container $dic,
