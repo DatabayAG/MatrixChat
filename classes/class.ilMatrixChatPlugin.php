@@ -355,8 +355,9 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
         return $rooms;
     }
 
-    public function inviteParticipant(ilObjUser $user, int $objRefId, ?MatrixUser $matrixUser, MatrixRoom $room, ?MatrixSpace $space, int $powerLevel, bool $objectOffline): void
+    public function inviteParticipant(ilObjUser $user, int $objRefId, ?MatrixUser $matrixUser, MatrixRoom $room, ?MatrixSpace $space, int $powerLevel, bool $objectOffline): bool
     {
+        $success = true;
         $addToQueue = false;
 
         if (!$objectOffline) {
@@ -378,6 +379,7 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
                     $matrixUser->getId(),
                     $space->getId()
                 ));
+                $success = false;
             }
 
             if (!$this->getMatrixApi()->inviteUserToRoom(
@@ -390,8 +392,11 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
                     $matrixUser->getId(),
                     $room->getId()
                 ));
+                $success = false;
             }
         }
+
+        return $success;
     }
 
     private function removeParticipant(ilObjUser $user, int $objRefId, ?MatrixUser $matrixUser, MatrixRoom $room): void
