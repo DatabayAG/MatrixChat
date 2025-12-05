@@ -411,7 +411,7 @@ class ChatController extends BaseController
         if ($this->courseSettings->getMatrixSpaceId()) {
             $space = $this->matrixApi->getSpace($this->courseSettings->getMatrixSpaceId());
             if (!$space) {
-                $this->uiUtil->sendFailure($this->plugin->txt("config.space.status.disconnected"));
+                $this->uiUtil->sendFailure($this->plugin->txt("config.space.status.faulty"));
                 $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
             }
         }
