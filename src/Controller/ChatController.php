@@ -416,11 +416,6 @@ class ChatController extends BaseController
             }
         }
 
-        if (!$space) {
-            $this->uiUtil->sendFailure($this->plugin->txt("config.space.status.faulty"));
-            $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
-        }
-
         if ($this->courseSettings->getMatrixRoomId()) {
             $room = $this->matrixApi->getRoom($this->courseSettings->getMatrixRoomId());
         } else {
