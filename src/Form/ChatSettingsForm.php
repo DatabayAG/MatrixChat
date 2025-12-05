@@ -122,8 +122,6 @@ class ChatSettingsForm extends ilPropertyFormGUI
 
             $spaceName = new ilTextInputGUI($this->plugin->txt("config.space.name"));
             $spaceName->setDisabled(true);
-
-
             $spaceName->setValue($space ? $space->getName() : "");
             $this->addItem($spaceName);
 
@@ -136,7 +134,7 @@ class ChatSettingsForm extends ilPropertyFormGUI
                         . " (" . $this->plugin->txt("config.room.creationLocation.space.general.title")
                         . ")"
                     )
-                    : ""
+                    : $matrixSpaceId
             );
             $this->addItem($spaceId);
 
