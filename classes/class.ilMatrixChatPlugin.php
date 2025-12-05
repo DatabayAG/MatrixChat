@@ -406,25 +406,23 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
             return;
         }
 
-        if ($matrixUser->isExists()) {
-            if (!$this->getMatrixApi()->removeUserFromRoom(
-                $matrixUser->getId(),
-                $room,
-                "Removed from course/group"
-            )) {
-                $this->logger->warning(sprintf(
-                    "Removing matrixuser '%s' from room '%s'. with Reason 'Removed from Course/Group object' failed.",
-                    $matrixUser->getId(),
-                    $room->getId()
-                ));
-            }
-
-            $this->logger->info(sprintf(
-                "Removed matrix user '%s' from room '%s'. Reason: Removed from Course/Group object.",
+        if (!$this->getMatrixApi()->removeUserFromRoom(
+            $matrixUser->getId(),
+            $room,
+            "Removed from course/group"
+        )) {
+            $this->logger->warning(sprintf(
+                "Removing matrixuser '%s' from room '%s'. with Reason 'Removed from Course/Group object' failed.",
                 $matrixUser->getId(),
                 $room->getId()
             ));
         }
+
+        $this->logger->info(sprintf(
+            "Removed matrix user '%s' from room '%s'. Reason: Removed from Course/Group object.",
+            $matrixUser->getId(),
+            $room->getId()
+        ));
     }
 
     public function determinePowerLevelOfParticipant(ilParticipants $participants, int $participantId): int

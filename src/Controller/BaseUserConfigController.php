@@ -211,64 +211,63 @@ abstract class BaseUserConfigController extends BaseController
     {
         $oldMatrixUserId = $this->userConfig->getMatrixUserId();
         $matrixUser = $this->matrixApi->getUser($oldMatrixUserId);
-        if ($matrixUser->isExists()) {
-            foreach ($this->courseSettingsRepo->readAll() as $courseSetting) {
-                if (!$courseSetting->getMatrixRoomId()) {
-                    //No need to remove user from room because no room configured
-                    continue;
-                }
 
-                $matrixRoom = $this->matrixApi->getRoom($courseSetting->getMatrixRoomId());
-                if (!$matrixRoom) {
-                    //No need to remove user from room because no room found
-                    continue;
-                }
+        foreach ($this->courseSettingsRepo->readAll() as $courseSetting) {
+            if (!$courseSetting->getMatrixRoomId()) {
+                //No need to remove user from room because no room configured
+                continue;
+            }
 
-                if ($matrixRoom->isMember($matrixUser)) {
-                    $reason = "Removed Matrix-Account from ILIAS-Plattform";
-                    if (!$this->matrixApi->removeUserFromRoom($matrixUser->getId(), $matrixRoom, $reason)) {
-                        $this->logger->warning(sprintf(
-                            "Removing user '%s' from room '%s' for reason '%s' failed.",
-                            $matrixUser->getId(),
-                            $matrixRoom->getId(),
-                            $reason
-                        ));
-                    }
+            $matrixRoom = $this->matrixApi->getRoom($courseSetting->getMatrixRoomId());
+            if (!$matrixRoom) {
+                //No need to remove user from room because no room found
+                continue;
+            }
 
-                    //If no entry in the queue exists anymore,
-                    //create a new one so the user gets re-added to the matrix room once the matrix-account is configured again
-                    if (
-                        !$this->queuedInvitesRepo->exists($this->user->getId(), $courseSetting->getCourseId())
-                        && !$this->queuedInvitesRepo->create(new UserRoomAddQueue(
-                            $this->user->getId(),
-                            $courseSetting->getCourseId()
-                        ))
-                    ) {
-                        $this->logger->warning(sprintf(
-                            "ILIAS-User with id '%s' (matrix: '%s') could not be added back to queue after removing user from room '%s' when user reset matrix-account settings",
-                            $this->user->getId(),
-                            $matrixUser->getId(),
-                            $matrixRoom->getId()
-                        ));
-                    }
-                }
-
-                $statusOfUserInRoom = $this->matrixApi->getStatusOfUserInRoom(
-                    $matrixRoom,
-                    $matrixUser->getId()
-                );
-
-                if ($statusOfUserInRoom === ChatController::USER_STATUS_INVITE && !$this->matrixApi->removeUserFromRoom(
-                    $matrixUser->getId(),
-                    $matrixRoom,
-                    "Invite redacted because Matrix-Account of user was reset"
-                )) {
+            if ($matrixRoom->isMember($matrixUser)) {
+                $reason = "Removed Matrix-Account from ILIAS-Plattform";
+                if (!$this->matrixApi->removeUserFromRoom($matrixUser->getId(), $matrixRoom, $reason)) {
                     $this->logger->warning(sprintf(
-                        "Error occurred while trying to remove invited user '%s' from room '%s' after matrix-account of user was reset",
+                        "Removing user '%s' from room '%s' for reason '%s' failed.",
+                        $matrixUser->getId(),
+                        $matrixRoom->getId(),
+                        $reason
+                    ));
+                }
+
+                //If no entry in the queue exists anymore,
+                //create a new one so the user gets re-added to the matrix room once the matrix-account is configured again
+                if (
+                    !$this->queuedInvitesRepo->exists($this->user->getId(), $courseSetting->getCourseId())
+                    && !$this->queuedInvitesRepo->create(new UserRoomAddQueue(
+                        $this->user->getId(),
+                        $courseSetting->getCourseId()
+                    ))
+                ) {
+                    $this->logger->warning(sprintf(
+                        "ILIAS-User with id '%s' (matrix: '%s') could not be added back to queue after removing user from room '%s' when user reset matrix-account settings",
+                        $this->user->getId(),
                         $matrixUser->getId(),
                         $matrixRoom->getId()
                     ));
                 }
+            }
+
+            $statusOfUserInRoom = $this->matrixApi->getStatusOfUserInRoom(
+                $matrixRoom,
+                $matrixUser->getId()
+            );
+
+            if ($statusOfUserInRoom === ChatController::USER_STATUS_INVITE && !$this->matrixApi->removeUserFromRoom(
+                    $matrixUser->getId(),
+                    $matrixRoom,
+                    "Invite redacted because Matrix-Account of user was reset"
+                )) {
+                $this->logger->warning(sprintf(
+                    "Error occurred while trying to remove invited user '%s' from room '%s' after matrix-account of user was reset",
+                    $matrixUser->getId(),
+                    $matrixRoom->getId()
+                ));
             }
         }
 
