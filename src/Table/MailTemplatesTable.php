@@ -104,8 +104,6 @@ class MailTemplatesTable implements DataRetrieval
             ->withId("MailTemplatesTable")
             ->withRequest($this->request);
     }
-
-
     /**
      * @param array<string, array{matrixAccount: MailTemplate, noMatrixAccount: MailTemplate}> $mailTemplates
      * @return list<array{language: string, matrixAccount: string, "noMatrixAccount": string}>

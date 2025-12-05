@@ -300,8 +300,6 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
                         ));
                     }
                 }
-
-
                 if ($a_event === "addParticipant" || $a_event === "update") {
                     $this->inviteParticipant(
                         $user,

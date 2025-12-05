@@ -98,8 +98,6 @@ class ChatSettingsForm extends ilPropertyFormGUI
                 $roomStatus->setValue($this->plugin->txt("config.room.status.connected"));
             }
         }
-
-
         if ($matrixRoomId && $room) {
             $roomName = new ilTextInputGUI($this->plugin->txt("config.room.name"));
             $roomName->setDisabled(true);
@@ -136,8 +134,6 @@ class ChatSettingsForm extends ilPropertyFormGUI
                     : $matrixSpaceId
             );
             $this->addItem($spaceId);
-
-
         }
     }
 
@@ -159,8 +155,6 @@ class ChatSettingsForm extends ilPropertyFormGUI
             "spaceSelection"
         );
         $spaceSelection->setRequired(true);
-
-
         $spaceSelection->addOption(new ilRadioOption(
             $this->plugin->txt("config.room.creationLocation.space.general.title")
             . ($matrixSpaceName ? " ($matrixSpaceName)" : ""),
@@ -192,8 +186,6 @@ class ChatSettingsForm extends ilPropertyFormGUI
         ));
         $customSpaceOption->addSubItem($customSpaceTitle);
         $spaceOption->addSubItem($spaceSelection);
-
-
         $roomCreationLocation->addOption($spaceOption);
 
         $roomCreationLocation->addOption(new ilRadioOption(
