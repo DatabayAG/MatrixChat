@@ -194,9 +194,9 @@ class ProcessQueuedInvitesJob extends ilCronJob
 
                 if ($space && !$space->isMember($matrixUser)) {
                     if ($matrixApi->getStatusOfUserInRoom(
-                            $space,
-                            $matrixUser->getId()
-                        ) === ChatController::USER_STATUS_INVITE) {
+                        $space,
+                        $matrixUser->getId()
+                    ) === ChatController::USER_STATUS_INVITE) {
                         $this->logger->info(sprintf(
                             "Skipping inviting user '%s' to space '%s'. User already invited",
                             $matrixUser->getId(),
@@ -217,9 +217,9 @@ class ProcessQueuedInvitesJob extends ilCronJob
                 }
 
                 if ($matrixApi->getStatusOfUserInRoom(
-                        $room,
-                        $matrixUser->getId()
-                    ) === ChatController::USER_STATUS_INVITE) {
+                    $room,
+                    $matrixUser->getId()
+                ) === ChatController::USER_STATUS_INVITE) {
                     $this->logger->info(sprintf(
                         "Skipping inviting user '%s' to room '%s'. User already invited",
                         $matrixUser->getId(),

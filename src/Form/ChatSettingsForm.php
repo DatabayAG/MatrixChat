@@ -42,12 +42,11 @@ class ChatSettingsForm extends ilPropertyFormGUI
 
     public function __construct(
         private readonly ChatController $controller,
-        int                             $refId,
-        ?string                         $matrixRoomId = null,
-        ?string                         $generalMatrixSpaceName = null,
-        ?string                         $matrixSpaceId = null
-    )
-    {
+        int $refId,
+        ?string $matrixRoomId = null,
+        ?string $generalMatrixSpaceName = null,
+        ?string $matrixSpaceId = null
+    ) {
         parent::__construct();
         $this->plugin = ilMatrixChatPlugin::getInstance();
         global $DIC;
@@ -110,7 +109,7 @@ class ChatSettingsForm extends ilPropertyFormGUI
 
         if (!$matrixRoomId) {
             $this->addItem($this->buildRoomCreationLocationInput($generalMatrixSpaceName));
-        } else if ($matrixSpaceId) {
+        } elseif ($matrixSpaceId) {
             $space = $this->matrixApi->getRoom($matrixSpaceId);
 
             if (!$space) {

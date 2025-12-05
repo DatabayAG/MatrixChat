@@ -23,8 +23,7 @@ class CourseSettings
         private readonly int $courseId,
         private ?string $matrixRoomId = null,
         private ?string $matrixSpaceId = null,
-    )
-    {
+    ) {
     }
 
     public function getCourseId(): int

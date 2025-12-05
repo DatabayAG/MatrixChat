@@ -48,11 +48,10 @@ class MailTemplatesTable implements DataRetrieval
     private ServerRequestInterface $request;
 
     public function __construct(
-        private readonly Container               $dic,
+        private readonly Container $dic,
         private readonly MailTemplatesController $controller,
         private readonly MailTemplatesRepository $repo,
-    )
-    {
+    ) {
 
         $this->plugin = ilMatrixChatPlugin::getInstance();
         $this->lng = $dic->language();
@@ -66,13 +65,12 @@ class MailTemplatesTable implements DataRetrieval
 
     public function getRows(
         DataRowBuilder $row_builder,
-        array          $visible_column_ids,
-        Range          $range,
-        Order          $order,
-        ?array         $filter_data,
-        ?array         $additional_parameters
-    ): Generator
-    {
+        array $visible_column_ids,
+        Range $range,
+        Order $order,
+        ?array $filter_data,
+        ?array $additional_parameters
+    ): Generator {
         $table_rows = $this->buildTableRows($this->repo->readAllMappedByLanguageAndTemplateId());
 
         foreach ($table_rows as $row) {
@@ -134,7 +132,7 @@ class MailTemplatesTable implements DataRetrieval
                     $mailTemplate->isExists()
                         ? ""
                         : "<span style='color: red;'>" . $this->plugin->txt("config.mailTemplates.template.notConfigured") . "</span>"
-                    );
+                );
             }
 
             $tableData[] = $tableRow;
