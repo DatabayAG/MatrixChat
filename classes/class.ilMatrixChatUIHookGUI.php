@@ -51,14 +51,14 @@ use ILIAS\Refinery\Factory;
  */
 class ilMatrixChatUIHookGUI extends ilUIHookPluginGUI
 {
-    private ilMatrixChatPlugin $plugin;
-    private Container $dic;
-    private ilCtrlInterface $ctrl;
-    private ControllerHandler $controllerHandler;
-    private UiUtil $uiUtil;
-    private WrapperFactory $httpWrapper;
-    private Factory $refinery;
-    private ilAccessHandler $access;
+    private readonly ilMatrixChatPlugin $plugin;
+    private readonly Container $dic;
+    private readonly ilCtrlInterface $ctrl;
+    private readonly ControllerHandler $controllerHandler;
+    private readonly UiUtil $uiUtil;
+    private readonly WrapperFactory $httpWrapper;
+    private readonly Factory $refinery;
+    private readonly ilAccessHandler $access;
 
     public function __construct()
     {

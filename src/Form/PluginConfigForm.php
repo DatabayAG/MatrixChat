@@ -23,20 +23,24 @@ use ilCheckboxOption;
 use ilFormSectionHeaderGUI;
 use ilGlobalTemplateInterface;
 use ILIAS\DI\Container;
+use ILIAS\Plugin\ExportCertificates\Enum\PluginAsset;
 use ILIAS\Plugin\MatrixChat\Controller\BaseUserConfigController;
+use ILIAS\Plugin\MatrixChat\Enum\RoomCreationLocation;
 use ilMatrixChatConfigGUI;
 use ilMatrixChatPlugin;
 use ilNumberInputGUI;
 use ilPasswordInputGUI;
 use ilPropertyFormGUI;
+use ilRadioGroupInputGUI;
+use ilRadioOption;
 use ilTextInputGUI;
 use ilUriInputGUI;
 
 class PluginConfigForm extends ilPropertyFormGUI
 {
-    private ilMatrixChatPlugin $plugin;
-    private Container $dic;
-    private ilGlobalTemplateInterface $mainTpl;
+    private readonly ilMatrixChatPlugin $plugin;
+    private readonly Container $dic;
+    private readonly ilGlobalTemplateInterface $mainTpl;
 
     public const SPECIFY_OTHER_MATRIX_ACCOUNT = "specifyOtherMatrixAccount";
     public const CREATE_ON_CONFIGURED_HOMESERVER = "createOnConfiguredHomeserver";
@@ -47,7 +51,7 @@ class PluginConfigForm extends ilPropertyFormGUI
         $this->plugin = ilMatrixChatPlugin::getInstance();
         $this->dic = $this->plugin->dic;
         $this->mainTpl = $this->dic->ui()->mainTemplate();
-        $this->mainTpl->addCss($this->plugin->cssFolder("style.css"));
+        $this->mainTpl->addCss($this->plugin->assetsFile(PluginAsset::CSS, "style.css"));
 
         $this->setFormAction(
             $this->ctrl->getFormActionByClass(
@@ -60,9 +64,7 @@ class PluginConfigForm extends ilPropertyFormGUI
 
         $serverReachable = $this->plugin->getMatrixApi()->serverReachable();
 
-        $allowedUsernameSchemeCharacters = array_map(static function ($char) {
-            return "<span style='color: blue; font-weight: bold'>$char</span>";
-        }, ["a-z", "0-9", "=", "_", "-", ".", "/", "'"]);
+        $allowedUsernameSchemeCharacters = array_map(static fn ($char) => "<span style='color: blue; font-weight: bold'>$char</span>", ["a-z", "0-9", "=", "_", "-", ".", "/", "'"]);
 
         $this->addGeneralSection();
         $this->addServerSection($serverReachable);
@@ -135,18 +137,16 @@ class PluginConfigForm extends ilPropertyFormGUI
                 $this->plugin->txt("config.section.adminAuthentication.valid"),
                 $this->plugin->txt("matrix.admin.login.valid")
             ));
+        } elseif (!$serverReachable) {
+            $section->setTitle(sprintf(
+                $this->plugin->txt("config.section.adminAuthentication.invalid"),
+                $this->plugin->txt("matrix.server.unreachable")
+            ));
         } else {
-            if (!$serverReachable) {
-                $section->setTitle(sprintf(
-                    $this->plugin->txt("config.section.adminAuthentication.invalid"),
-                    $this->plugin->txt("matrix.server.unreachable")
-                ));
-            } else {
-                $section->setTitle(sprintf(
-                    $this->plugin->txt("config.section.adminAuthentication.invalid"),
-                    $this->plugin->txt("matrix.admin.login.invalid")
-                ));
-            }
+            $section->setTitle(sprintf(
+                $this->plugin->txt("config.section.adminAuthentication.invalid"),
+                $this->plugin->txt("matrix.admin.login.invalid")
+            ));
         }
         $this->addItem($section);
 
@@ -250,9 +250,7 @@ class PluginConfigForm extends ilPropertyFormGUI
         $usernameScheme->setInfo(sprintf(
             $this->plugin->txt("config.usernameScheme.info"),
             implode(", ", $allowedCharacters),
-            "- " . implode("<br>- ", array_map(static function ($variable): string {
-                return "<span>{</span>$variable<span>}</span>";
-            }, array_keys($this->plugin->getUsernameSchemeVariables())))
+            "- " . implode("<br>- ", array_map(static fn ($variable): string => "<span>{</span>$variable<span>}</span>", array_keys($this->plugin->getUsernameSchemeVariables())))
         ));
         $createOnConfiguredHomeserver->addSubItem($usernameScheme);
 
@@ -290,9 +288,7 @@ class PluginConfigForm extends ilPropertyFormGUI
         $usernameScheme->setInfo(sprintf(
             $this->plugin->txt("config.usernameScheme.info"),
             implode(", ", $allowedCharacters),
-            "- " . implode("<br>- ", array_map(static function ($variable): string {
-                return "<span>{</span>$variable<span>}</span>";
-            }, array_keys($this->plugin->getUsernameSchemeVariables())))
+            "- " . implode("<br>- ", array_map(static fn ($variable): string => "<span>{</span>$variable<span>}</span>", array_keys($this->plugin->getUsernameSchemeVariables())))
         ));
         $createOnConfiguredHomeserver->addSubItem($usernameScheme);
 
@@ -316,9 +312,7 @@ class PluginConfigForm extends ilPropertyFormGUI
         );
         $roomPrefix->setInfo(sprintf(
             $this->plugin->txt("config.room.prefix.info"),
-            "- " . implode("<br>- ", array_map(static function ($variable): string {
-                return "<span>{</span>$variable<span>}</span>";
-            }, array_keys($this->plugin->getRoomSchemeVariables())))
+            "- " . implode("<br>- ", array_map(static fn ($variable): string => "<span>{</span>$variable<span>}</span>", array_keys($this->plugin->getRoomSchemeVariables())))
         ));
         $this->addItem($roomPrefix);
 
@@ -329,13 +323,32 @@ class PluginConfigForm extends ilPropertyFormGUI
         $spaceName->setInfo($this->plugin->txt("config.space.name.info"));
         $this->addItem($spaceName);
         $matrixSpaceId = new ilTextInputGUI(
-            $this->plugin->txt("config.space.id"),
+            $this->plugin->txt("config.space.id.general"),
             "matrixSpaceId"
         );
-        $matrixSpaceId->setInfo($this->plugin->txt("config.space.id.info"));
+        $matrixSpaceId->setInfo($this->plugin->txt("config.space.id.general.info"));
 
         $matrixSpaceId->setDisabled(true);
         $this->addItem($matrixSpaceId);
+
+        $roomCreationLocation = new ilRadioGroupInputGUI(
+            $this->plugin->txt("config.room.creationLocation.title"),
+            "roomCreationLocation"
+        );
+        $roomCreationLocation->setRequired(true);
+        $roomCreationLocation->setInfo($this->plugin->txt("config.room.creationLocation.info"));
+
+        $roomCreationLocation->addOption(new ilRadioOption(
+            $this->plugin->txt("config.room.creationLocation.space"),
+            RoomCreationLocation::SPACE->value
+        ));
+
+        $roomCreationLocation->addOption(new ilRadioOption(
+            $this->plugin->txt("config.room.creationLocation.independent"),
+            RoomCreationLocation::INDEPENDENT->value
+        ));
+
+        $this->addItem($roomCreationLocation);
 
         $enableRoomEncryption = new ilCheckboxInputGUI(
             $this->plugin->txt("config.room.encryption.enable.title"),

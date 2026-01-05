@@ -22,6 +22,7 @@ use ilDBInterface;
 use ILIAS\Plugin\MatrixChat\Controller\MailTemplatesController;
 use ILIAS\Plugin\MatrixChat\Model\MailTemplate;
 use ilLanguage;
+use ilMatrixChatPlugin;
 
 class MailTemplatesRepository
 {
@@ -32,8 +33,8 @@ class MailTemplatesRepository
     protected const TABLE_NAME = "mcc_mail_templates";
 
     /** @var string[] */
-    private array $availableLanguages;
-    private ilLanguage $lng;
+    private readonly array $availableLanguages;
+    private readonly ilLanguage $lng;
 
     public function __construct(?ilDBInterface $db = null, ?array $availableLanguages = null)
     {
@@ -188,7 +189,7 @@ class MailTemplatesRepository
 
     private function constructFallbackNewMailTemplate(string $templateId, string $language): MailTemplate
     {
-        $fallbackText = $this->lng->txtlng("ui_uihk_mcc", "ui_uihk_mcc_config.mailTemplates.template.$templateId", $language);
+        $fallbackText = $this->lng->txtlng("ui_uihk_" . ilMatrixChatPlugin::ID, "ui_uihk_mcc_config.mailTemplates.template.$templateId", $language);
         return new MailTemplate(
             $templateId,
             $language,

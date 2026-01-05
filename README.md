@@ -2,10 +2,10 @@
 
 ## Requirements
 
-| Component | Version(s)                                                                                           | Link                      |
-|-----------|------------------------------------------------------------------------------------------------------|---------------------------|
-| PHP       | ![](https://img.shields.io/badge/8.1-blue.svg) ![](https://img.shields.io/badge/8.2-blue.svg)        | [PHP](https://php.net)    |
-| ILIAS     | ![](https://img.shields.io/badge/9-orange.svg) to ![](https://img.shields.io/badge/9.999-orange.svg) | [ILIAS](https://ilias.de) |
+| Component | Version(s)                                                                                    | Link                      |
+|-----------|-----------------------------------------------------------------------------------------------|---------------------------|
+| PHP       | ![](https://img.shields.io/badge/8.2-blue.svg) ![](https://img.shields.io/badge/8.3-blue.svg) | [PHP](https://php.net)    |
+| ILIAS     | ![](https://img.shields.io/badge/10-orange.svg)                                               | [ILIAS](https://ilias.de) |
 
 ---
 ## Table of contents
@@ -44,10 +44,10 @@
 
 ## Installation
 
-1. Clone this repository to **Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/MatrixChat**
+1. Clone this repository to **public/Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/MatrixChat**
 2. Install the Composer dependencies
    ```bash
-   cd Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/MatrixChat
+   cd public/Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/MatrixChat
    composer install --no-dev
    ```
    Developers **MUST** omit the `--no-dev` argument.

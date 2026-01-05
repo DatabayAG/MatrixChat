@@ -55,7 +55,11 @@ class CourseSettingsRepository
         $data = [];
 
         while ($row = $this->db->fetchAssoc($result)) {
-            $data[] = (new CourseSettings((int) $row["course_id"], $row["matrix_room_id"]));
+            $data[] = new CourseSettings(
+                (int) $row["course_id"],
+                $row["matrix_room_id"],
+                $row["matrix_space_id"]
+            );
         }
 
         return $data;
@@ -65,7 +69,7 @@ class CourseSettingsRepository
     {
         $result = $this->db->queryF(
             "SELECT * FROM " . self::TABLE_NAME . " WHERE course_id = %s",
-            ["integer"],
+            [ilDBConstants::T_INTEGER],
             [$courseId]
         );
 
@@ -74,14 +78,18 @@ class CourseSettingsRepository
         }
 
         $data = $this->db->fetchAssoc($result);
-        return (new CourseSettings($courseId, $data["matrix_room_id"]));
+        return new CourseSettings(
+            $courseId,
+            $data["matrix_room_id"],
+            $data["matrix_space_id"]
+        );
     }
 
     public function exists(int $courseId): bool
     {
         $result = $this->db->queryF(
             "SELECT course_id FROM " . self::TABLE_NAME . " WHERE course_id = %s",
-            ["integer"],
+            [ilDBConstants::T_INTEGER],
             [$courseId]
         );
 
@@ -92,24 +100,27 @@ class CourseSettingsRepository
     {
         if ($this->exists($courseSettings->getCourseId())) {
             return $this->db->manipulateF(
-                "UPDATE " . self::TABLE_NAME . " SET matrix_room_id = %s WHERE course_id = %s",
+                "UPDATE " . self::TABLE_NAME . " SET matrix_room_id = %s, matrix_space_id = %s WHERE course_id = %s",
                 [
-                        "text",
-                        "integer"
+                        ilDBConstants::T_TEXT,
+                        ilDBConstants::T_TEXT,
+                        ilDBConstants::T_INTEGER
                     ],
                 [
                         $courseSettings->getMatrixRoomId() ?: null,
+                        $courseSettings->getMatrixSpaceId(),
                         $courseSettings->getCourseId()
                     ]
             ) === 1;
         }
 
         return $this->db->manipulateF(
-            "INSERT INTO " . self::TABLE_NAME . " (course_id, matrix_room_id) VALUES (%s, %s)",
-            ["integer", "text"],
+            "INSERT INTO " . self::TABLE_NAME . " (course_id, matrix_room_id, matrix_space_id) VALUES (%s, %s, %s)",
+            [ilDBConstants::T_INTEGER, ilDBConstants::T_TEXT],
             [
                     $courseSettings->getCourseId(),
-                    $courseSettings->getMatrixRoomId() ?: null
+                    $courseSettings->getMatrixRoomId() ?: null,
+                    $courseSettings->getMatrixSpaceId()
                 ]
         ) === 1;
     }

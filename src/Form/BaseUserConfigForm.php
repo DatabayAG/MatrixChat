@@ -19,6 +19,7 @@ namespace ILIAS\Plugin\MatrixChat\Form;
 
 use ilGlobalTemplateInterface;
 use ILIAS\DI\Container;
+use ILIAS\Plugin\ExportCertificates\Enum\PluginAsset;
 use ILIAS\Plugin\MatrixChat\Controller\BaseUserConfigController;
 use ILIAS\Plugin\MatrixChat\Utils\UiUtil;
 use ilMatrixChatPlugin;
@@ -33,17 +34,14 @@ abstract class BaseUserConfigForm extends ilPropertyFormGUI
     protected ilMatrixChatPlugin $plugin;
     protected ilGlobalTemplateInterface $mainTpl;
     protected Container $dic;
-    protected BaseUserConfigController $controller;
     protected UiUtil $uiUtil;
-    protected ?string $matrixAccountId;
-    protected bool $usernameAvailable;
 
     public function __construct(
-        BaseUserConfigController $controller,
+        protected BaseUserConfigController $controller,
         ilObjUser $user,
-        ?string $matrixAccountId = null,
+        protected ?string $matrixAccountId = null,
         ?string $selectedAccountOption = null,
-        bool $usernameAvailable = false
+        protected bool $usernameAvailable = false
     ) {
         global $DIC;
         parent::__construct();
@@ -51,13 +49,10 @@ abstract class BaseUserConfigForm extends ilPropertyFormGUI
         $this->uiUtil = new UiUtil($this->dic);
         $this->plugin = ilMatrixChatPlugin::getInstance();
         $this->mainTpl = $this->dic->ui()->mainTemplate();
-        $this->mainTpl->addCss($this->plugin->cssFolder("userConfigForm.css"));
-        $this->controller = $controller;
-        $this->matrixAccountId = $matrixAccountId;
-        $this->usernameAvailable = $usernameAvailable;
+        $this->mainTpl->addCss($this->plugin->assetsFile(PluginAsset::CSS, "userConfigForm.css"));
 
         $this->setTitle($this->plugin->txt("config.user.generalSettings"));
-        $this->setFormAction($controller->getCommandLink(
+        $this->setFormAction($this->controller->getCommandLink(
             BaseUserConfigController::CMD_SHOW_USER_CHAT_CONFIG,
             [],
             true
@@ -76,11 +71,11 @@ abstract class BaseUserConfigForm extends ilPropertyFormGUI
             ], JSON_THROW_ON_ERROR) . ");"
         );
 
-        $this->mainTpl->addJavaScript($this->plugin->jsFolder("userConfigForm.js"));
+        $this->mainTpl->addJavaScript($this->plugin->assetsFile(PluginAsset::JS, "userConfigForm.js"));
 
         if (!$this->matrixAccountId) {
             $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.accountFoundButNotLinked"), false);
-        } else if ($this->usernameAvailable) {
+        } elseif ($this->usernameAvailable) {
             $this->uiUtil->sendInfo(sprintf(
                 $this->plugin->txt("matrix.user.accountNotFoundButLinked"),
                 $this->matrixAccountId
@@ -88,7 +83,7 @@ abstract class BaseUserConfigForm extends ilPropertyFormGUI
             //$this->uiUtil->sendInfo($this->plugin->txt("matrix.user.accountNotFound"), false);
         }
 
-        if ($matrixAccountId && !$this->onAuthenticated($selectedAccountOption)) {
+        if ($this->matrixAccountId && !$this->onAuthenticated($selectedAccountOption)) {
             return;
         }
 

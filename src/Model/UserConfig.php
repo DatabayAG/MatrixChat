@@ -17,8 +17,6 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChat\Model;
 
-use Exception;
-use ILIAS\Plugin\Libraries\IliasConfigLoader\Exception\ConfigLoadException;
 use ILIAS\Plugin\Libraries\IliasConfigLoader\Model\Config\UserPrefConfig;
 use ilObjUser;
 
@@ -52,25 +50,5 @@ class UserConfig extends UserPrefConfig
     {
         $this->matrixUserId = $matrixUserId;
         return $this;
-    }
-
-    public function save(): void
-    {
-        try {
-            parent::save();
-        } catch (ConfigLoadException $ex) {
-            $errorsFound = 0;
-            foreach ($ex->getUnloadableProperties() as $unloadableProperty) {
-                switch ($unloadableProperty->getProperty()->getName()) {
-                    default:
-                        $errorsFound++;
-                        break;
-                }
-            }
-
-            if ($errorsFound > 0) {
-                throw new Exception("general.update.failed");
-            }
-        }
     }
 }

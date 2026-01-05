@@ -25,15 +25,15 @@ use ilPropertyFormGUI;
 
 class ConfirmDeleteRoomForm extends ilPropertyFormGUI
 {
-    private ilMatrixChatPlugin $plugin;
-    private UiUtil $uiUtil;
+    private readonly ilMatrixChatPlugin $plugin;
+    private readonly UiUtil $uiUtil;
 
     public function __construct(ChatController $controller, int $refId)
     {
         parent::__construct();
         $this->plugin = ilMatrixChatPlugin::getInstance();
         $this->uiUtil = new UiUtil();
-        $this->uiUtil->sendQuestion($this->plugin->txt("matrix.chat.room.delete.confirm"));
+        $this->uiUtil->sendQuestion($this->plugin->txt("matrix.chat.room.delete.confirm"), false);
 
         $this->setFormAction($controller->getCommandLink(
             ChatController::CMD_SHOW_CHAT_SETTINGS,

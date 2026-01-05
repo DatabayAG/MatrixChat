@@ -32,10 +32,9 @@ class LocalUserPasswordChangeForm extends ilPropertyFormGUI
     protected ilMatrixChatPlugin $plugin;
     protected ilGlobalTemplateInterface $mainTpl;
     protected Container $dic;
-    protected BaseUserConfigController $controller;
 
     public function __construct(
-        LocalUserConfigController $controller,
+        protected BaseUserConfigController $controller,
         UserConfig $userConfig
     ) {
         global $DIC;
@@ -43,10 +42,9 @@ class LocalUserPasswordChangeForm extends ilPropertyFormGUI
         $this->dic = $DIC;
         $this->plugin = ilMatrixChatPlugin::getInstance();
         $this->mainTpl = $this->dic->ui()->mainTemplate();
-        $this->controller = $controller;
 
         $this->setTitle($this->plugin->txt("config.user.changeLocalUserPassword.title"));
-        $this->setFormAction($controller->getCommandLink(
+        $this->setFormAction($this->controller->getCommandLink(
             BaseUserConfigController::CMD_SHOW_USER_CHAT_CONFIG,
             [],
             true

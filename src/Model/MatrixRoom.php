@@ -21,19 +21,14 @@ use ilMatrixChatPlugin;
 
 class MatrixRoom
 {
-    private string $id;
-    private string $name;
-
-    /** @var string[] */
-    private array $members;
-    private ilMatrixChatPlugin $plugin;
+    private readonly ilMatrixChatPlugin $plugin;
 
     /** @param string[] $members */
-    public function __construct(string $id, string $name, array $members)
-    {
-        $this->id = $id;
-        $this->name = $name;
-        $this->members = $members;
+    public function __construct(
+        private readonly string $id,
+        private readonly string $name,
+        private readonly array $members
+    ) {
         $this->plugin = ilMatrixChatPlugin::getInstance();
     }
 
@@ -51,13 +46,6 @@ class MatrixRoom
     public function getMembers(): array
     {
         return $this->members;
-    }
-
-    /** @param string[] $members */
-    public function setMembers(array $members): MatrixRoom
-    {
-        $this->members = $members;
-        return $this;
     }
 
     public function isMember(MatrixUser|string $matrixUserOrId): bool

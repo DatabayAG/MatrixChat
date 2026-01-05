@@ -26,6 +26,7 @@ use ILIAS\Plugin\Libraries\ControllerHandler\ControllerHandler;
 use ILIAS\Plugin\MatrixChat\Api\MatrixApi;
 use ILIAS\Plugin\MatrixChat\Api\MatrixApiException;
 use ILIAS\Plugin\MatrixChat\Form\BaseUserConfigForm;
+use ILIAS\Plugin\MatrixChat\Model\Room\MatrixSpace;
 use ILIAS\Plugin\MatrixChat\Model\UserConfig;
 use ILIAS\Plugin\MatrixChat\Model\UserRoomAddQueue;
 use ILIAS\Plugin\MatrixChat\Repository\CourseSettingsRepository;
@@ -61,10 +62,10 @@ abstract class BaseUserConfigController extends BaseController
     protected ilMatrixChatPlugin $plugin;
     protected MatrixApi $matrixApi;
     protected ilLogger $logger;
-    private Services $http;
+    private readonly Services $http;
     protected QueuedInvitesRepository $queuedInvitesRepo;
     protected CourseSettingsRepository $courseSettingsRepo;
-    private ilLanguage $lng;
+    private readonly ilLanguage $lng;
     protected MatrixUserHistoryRepository $matrixUserHistoryRepo;
     protected UiUtil $uiUtil;
 
@@ -113,16 +114,8 @@ abstract class BaseUserConfigController extends BaseController
 
         $processResults = [];
 
-        $space = null;
-        $matrixSpaceId = $this->plugin->getPluginConfig()->getMatrixSpaceId();
-        if ($matrixSpaceId) {
-            $space = $this->matrixApi->getSpace($matrixSpaceId);
-        }
-        if (!$space) {
-            $this->logger->error("Unable to get space with id '$matrixSpaceId'");
-            return "";
-        }
-
+        /** @var array<string, MatrixSpace> $spaceCache */
+        $spaceCache = [];
         foreach ($this->queuedInvitesRepo->readAllByUserId($user->getId()) as $userRoomAddQueue) {
             if (!ilObject::_exists($userRoomAddQueue->getRefId(), true)) {
                 $this->logger->warning(sprintf(
@@ -152,26 +145,39 @@ abstract class BaseUserConfigController extends BaseController
                 continue;
             }
 
-
             if ($courseSettings->getMatrixRoomId()) {
                 $room = $this->matrixApi->getRoom($courseSettings->getMatrixRoomId());
+
+                $space = null;
+                if ($courseSettings->getMatrixSpaceId()) {
+                    if (isset($spaceCache[$courseSettings->getMatrixSpaceId()])) {
+                        $space = $spaceCache[$courseSettings->getMatrixSpaceId()];
+                    } else {
+                        $space = $this->matrixApi->getSpace($courseSettings->getMatrixSpaceId());
+                        $spaceCache[$courseSettings->getMatrixSpaceId()] = $space;
+                    }
+
+                    if (!$space) {
+                        $this->logger->error("Unable to get space for object with ref-id '{$courseSettings->getCourseId()}'");
+                        continue;
+                    }
+                }
+
                 if (!$room) {
                     continue;
                 }
 
                 if (!$room->isMember($matrixUser)) {
-                    //Todo: Can possibly be replaced with this->plugin->inviteParticipant in the future to reduce code size.
-                    if (!$this->matrixApi->inviteUserToRoom($matrixUser, $space)) {
-                        $this->logger->warning("Inviting matrix-user '{$matrixUser->getId()}' to space '{$space->getId()}' failed");
-                    }
-                    //Todo: Can possibly be replaced with this->plugin->inviteParticipant in the future to reduce code size.
-                    if (!$this->matrixApi->inviteUserToRoom(
+                    $invited = $this->plugin->inviteParticipant(
+                        $user,
+                        $userRoomAddQueue->getRefId(),
                         $matrixUser,
                         $room,
-                        $this->plugin->determinePowerLevelOfParticipant($participants, $user->getId())
-                    )) {
-                        $this->logger->warning("Inviting matrix-user '{$matrixUser->getId()}' to room '{$room->getId()}' failed");
-                    }
+                        $space,
+                        $this->plugin->determinePowerLevelOfParticipant($participants, $user->getId()),
+                        false
+                    );
+
                     $this->ctrl->setParameterByClass(ilRepositoryGUI::class, "ref_id", $courseSettings->getCourseId());
                     $objectLink = $this->ctrl->getLinkTargetByClass(ilRepositoryGUI::class, "view");
 
@@ -203,64 +209,63 @@ abstract class BaseUserConfigController extends BaseController
     {
         $oldMatrixUserId = $this->userConfig->getMatrixUserId();
         $matrixUser = $this->matrixApi->getUser($oldMatrixUserId);
-        if ($matrixUser->isExists()) {
-            foreach ($this->courseSettingsRepo->readAll() as $courseSetting) {
-                if (!$courseSetting->getMatrixRoomId()) {
-                    //No need to remove user from room because no room configured
-                    continue;
-                }
 
-                $matrixRoom = $this->matrixApi->getRoom($courseSetting->getMatrixRoomId());
-                if (!$matrixRoom) {
-                    //No need to remove user from room because no room found
-                    continue;
-                }
+        foreach ($this->courseSettingsRepo->readAll() as $courseSetting) {
+            if (!$courseSetting->getMatrixRoomId()) {
+                //No need to remove user from room because no room configured
+                continue;
+            }
 
-                if ($matrixRoom->isMember($matrixUser)) {
-                    $reason = "Removed Matrix-Account from ILIAS-Plattform";
-                    if (!$this->matrixApi->removeUserFromRoom($matrixUser->getId(), $matrixRoom, $reason)) {
-                        $this->logger->warning(sprintf(
-                            "Removing user '%s' from room '%s' for reason '%s' failed.",
-                            $matrixUser->getId(),
-                            $matrixRoom->getId(),
-                            $reason
-                        ));
-                    }
+            $matrixRoom = $this->matrixApi->getRoom($courseSetting->getMatrixRoomId());
+            if (!$matrixRoom) {
+                //No need to remove user from room because no room found
+                continue;
+            }
 
-                    //If no entry in the queue exists anymore,
-                    //create a new one so the user gets re-added to the matrix room once the matrix-account is configured again
-                    if (
-                        !$this->queuedInvitesRepo->exists($this->user->getId(), $courseSetting->getCourseId())
-                        && !$this->queuedInvitesRepo->create(new UserRoomAddQueue(
-                            $this->user->getId(),
-                            $courseSetting->getCourseId()
-                        ))
-                    ) {
-                        $this->logger->warning(sprintf(
-                            "ILIAS-User with id '%s' (matrix: '%s') could not be added back to queue after removing user from room '%s' when user reset matrix-account settings",
-                            $this->user->getId(),
-                            $matrixUser->getId(),
-                            $matrixRoom->getId()
-                        ));
-                    }
-                }
-
-                $statusOfUserInRoom = $this->matrixApi->getStatusOfUserInRoom(
-                    $matrixRoom,
-                    $matrixUser->getId()
-                );
-
-                if ($statusOfUserInRoom === ChatController::USER_STATUS_INVITE && !$this->matrixApi->removeUserFromRoom(
-                    $matrixUser->getId(),
-                    $matrixRoom,
-                    "Invite redacted because Matrix-Account of user was reset"
-                )) {
+            if ($matrixRoom->isMember($matrixUser)) {
+                $reason = "Removed Matrix-Account from ILIAS-Plattform";
+                if (!$this->matrixApi->removeUserFromRoom($matrixUser->getId(), $matrixRoom, $reason)) {
                     $this->logger->warning(sprintf(
-                        "Error occurred while trying to remove invited user '%s' from room '%s' after matrix-account of user was reset",
+                        "Removing user '%s' from room '%s' for reason '%s' failed.",
+                        $matrixUser->getId(),
+                        $matrixRoom->getId(),
+                        $reason
+                    ));
+                }
+
+                //If no entry in the queue exists anymore,
+                //create a new one so the user gets re-added to the matrix room once the matrix-account is configured again
+                if (
+                    !$this->queuedInvitesRepo->exists($this->user->getId(), $courseSetting->getCourseId())
+                    && !$this->queuedInvitesRepo->create(new UserRoomAddQueue(
+                        $this->user->getId(),
+                        $courseSetting->getCourseId()
+                    ))
+                ) {
+                    $this->logger->warning(sprintf(
+                        "ILIAS-User with id '%s' (matrix: '%s') could not be added back to queue after removing user from room '%s' when user reset matrix-account settings",
+                        $this->user->getId(),
                         $matrixUser->getId(),
                         $matrixRoom->getId()
                     ));
                 }
+            }
+
+            $statusOfUserInRoom = $this->matrixApi->getStatusOfUserInRoom(
+                $matrixRoom,
+                $matrixUser->getId()
+            );
+
+            if ($statusOfUserInRoom === ChatController::USER_STATUS_INVITE && !$this->matrixApi->removeUserFromRoom(
+                $matrixUser->getId(),
+                $matrixRoom,
+                "Invite redacted because Matrix-Account of user was reset"
+            )) {
+                $this->logger->warning(sprintf(
+                    "Error occurred while trying to remove invited user '%s' from room '%s' after matrix-account of user was reset",
+                    $matrixUser->getId(),
+                    $matrixRoom->getId()
+                ));
             }
         }
 

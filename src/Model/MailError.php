@@ -22,19 +22,13 @@ namespace ILIAS\Plugin\MatrixChat\Model;
 
 class MailError
 {
-    private string $userLogin;
-    private string $error;
-    private int $objRefId;
-    private string $templateId;
-    private string $language;
-
-    public function __construct(string $userLogin, string $error, int $objRefId, string $templateId, string $language)
-    {
-        $this->userLogin = $userLogin;
-        $this->error = $error;
-        $this->objRefId = $objRefId;
-        $this->templateId = $templateId;
-        $this->language = $language;
+    public function __construct(
+        private readonly string $userLogin,
+        private readonly string $error,
+        private readonly int $objRefId,
+        private readonly string $templateId,
+        private readonly string $language
+    ) {
     }
 
     public function getUserLogin(): string

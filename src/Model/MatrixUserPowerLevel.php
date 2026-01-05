@@ -19,13 +19,8 @@ namespace ILIAS\Plugin\MatrixChat\Model;
 
 class MatrixUserPowerLevel
 {
-    private string $matrixUserId;
-    private int $powerLevel;
-
-    public function __construct(string $matrixUserId, int $powerLevel)
+    public function __construct(private readonly string $matrixUserId, private int $powerLevel)
     {
-        $this->matrixUserId = $matrixUserId;
-        $this->powerLevel = $powerLevel;
     }
 
     public function getMatrixUserId(): string

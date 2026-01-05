@@ -54,18 +54,17 @@ class MailTemplatesController extends BaseController
         self::TEMPLATE_MATRIX_ACCOUNT
     ];
 
-    private MailTemplatesRepository $mailTemplateRepo;
-    private ilMatrixChatConfigGUI $configGui;
-    private WrapperFactory $httpWrapper;
-    private Factory $refinery;
-    private ilMatrixChatPlugin $plugin;
-    private ilTabsGUI $tabs;
-    private ilLogger $logger;
+    private readonly MailTemplatesRepository $mailTemplateRepo;
+    private readonly ilMatrixChatConfigGUI $configGui;
+    private readonly WrapperFactory $httpWrapper;
+    private readonly Factory $refinery;
+    private readonly ilMatrixChatPlugin $plugin;
+    private readonly ilTabsGUI $tabs;
+    private readonly ilLogger $logger;
 
     /** @var string[] */
-    private array $availableLanguages;
-    private UiUtil $uiUtil;
-
+    private readonly array $availableLanguages;
+    private readonly UiUtil $uiUtil;
 
     public function __construct(Container $dic, ControllerHandler $controllerHandler)
     {
@@ -99,10 +98,14 @@ class MailTemplatesController extends BaseController
     public function showSettings(): void
     {
         $this->injectTabs(ilMatrixChatConfigGUI::TAB_MAIL_TEMPLATES);
-        $table = new MailTemplatesTable($this->configGui, $this);
-        $table->setData($table->buildTableData($this->mailTemplateRepo->readAllMappedByLanguageAndTemplateId()));
 
-        $this->mainTpl->setContent($table->getHTML());
+        $table = new MailTemplatesTable(
+            $this->dic,
+            $this,
+            $this->mailTemplateRepo
+        );
+
+        $this->mainTpl->setContent($table->render());
     }
 
     public function editMailTemplate(?MailTemplateForm $form = null): void

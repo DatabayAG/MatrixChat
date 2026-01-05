@@ -3,19 +3,19 @@
 /** @var $ilDB \ilDBInterface */
 if (!$ilDB->tableExists("mcc_course_settings")) {
     $ilDB->createTable("mcc_course_settings", [
-        'course_id' => [
-            'type' => 'integer',
-            'length' => 8,
-            'notnull' => true,
+        "course_id" => [
+            "type" => ilDBConstants::T_INTEGER,
+            "length" => 8,
+            "notnull" => true,
         ],
         "chat_integration_enabled" => [
-            "type" => "integer",
+            "type" => ilDBConstants::T_INTEGER,
             "length" => 1,
-            'notnull' => true,
+            "notnull" => true,
             "default" => 0,
         ],
         "matrix_room_id" => [
-            "type" => "text",
+            "type" => ilDBConstants::T_TEXT,
             "length" => 92,
             "notnull" => false,
         ]
@@ -27,13 +27,13 @@ if (!$ilDB->tableExists("mcc_course_settings")) {
 <?php
 if (!$ilDB->tableExists("mcc_user_device")) {
     $ilDB->createTable("mcc_user_device", [
-        'user_id' => [
-            'type' => 'integer',
-            'length' => 8,
-            'notnull' => true,
+        "user_id" => [
+            "type" => ilDBConstants::T_INTEGER,
+            "length" => 8,
+            "notnull" => true,
         ],
         "device_id" => [
-            "type" => "text",
+            "type" => ilDBConstants::T_TEXT,
             "length" => 96,
             "notnull" => true,
         ],
@@ -48,18 +48,18 @@ if ($ilDB->tableExists("mcc_user_device")) {
 }
 if (!$ilDB->tableExists("mcc_user_data")) {
     $ilDB->createTable("mcc_user_data", [
-        'ilias_user_id' => [
-            'type' => 'integer',
-            'length' => 8,
-            'notnull' => true,
+        "ilias_user_id" => [
+            "type" => ilDBConstants::T_INTEGER,
+            "length" => 8,
+            "notnull" => true,
         ],
         "matrix_user_id" => [
-            "type" => "text",
+            "type" => ilDBConstants::T_TEXT,
             "length" => 96,
             "notnull" => true,
         ],
         "matrix_device_id" => [
-            "type" => "text",
+            "type" => ilDBConstants::T_TEXT,
             "length" => 96,
             "notnull" => true,
         ],
@@ -77,13 +77,13 @@ if ($ilDB->tableExists("mcc_user_data")) {
 <?php
 if (!$ilDB->tableExists("mcc_usr_room_add_queue")) {
     $ilDB->createTable("mcc_usr_room_add_queue", [
-        'user_id' => [
-            'type' => 'integer',
-            'length' => 8,
-            'notnull' => true,
+        "user_id" => [
+            "type" => ilDBConstants::T_INTEGER,
+            "length" => 8,
+            "notnull" => true,
         ],
         "ref_id" => [
-            "type" => "integer",
+            "type" => ilDBConstants::T_INTEGER,
             "length" => 8,
             "notnull" => true,
         ],
@@ -114,22 +114,22 @@ if ($ilDB->tableExists("mcc_usr_room_add_queue")) {
 if (!$ilDB->tableExists("mcc_usr_matrix_user_history")) {
     $ilDB->createTable("mcc_matrix_usr_history", [
         "id" => [
-            "type" => "integer",
+            "type" => ilDBConstants::T_INTEGER,
             "length" => 8,
             "notnull" => true,
         ],
         "user_id" => [
-            "type" => "integer",
+            "type" => ilDBConstants::T_INTEGER,
             "length" => 8,
             "notnull" => true,
         ],
         "matrix_user_id" => [
-            "type" => "text",
+            "type" => ilDBConstants::T_TEXT,
             "length" => 255,
             "notnull" => true,
         ],
         "created_at" => [
-            "type" => "integer",
+            "type" => ilDBConstants::T_INTEGER,
             "length" => 8,
             "notnull" => true,
         ],
@@ -143,16 +143,16 @@ if (!$ilDB->tableExists("mcc_usr_matrix_user_history")) {
 if (!$ilDB->tableExists("mcc_mail_templates")) {
     $ilDB->createTable("mcc_mail_templates", [
         "language" => [
-            "type" => "text",
+            "type" => ilDBConstants::T_TEXT,
             "length" => 64,
             "notnull" => true,
         ],
         "no_matrix_account_content" => [
-            "type" => "clob",
+            "type" => ilDBConstants::T_CLOB,
             "notnull" => true,
         ],
         "matrix_account_content" => [
-            "type" => "clob",
+            "type" => ilDBConstants::T_CLOB,
             "notnull" => true,
         ]
     ]);
@@ -165,21 +165,21 @@ if ($ilDB->tableExists("mcc_mail_templates")) {
     $ilDB->dropTable("mcc_mail_templates");
     $ilDB->createTable("mcc_mail_templates", [
         "template_id" => [
-            "type" => "text",
+            "type" => ilDBConstants::T_TEXT,
             "length" => 64,
             "notnull" => true,
         ],
         "language" => [
-            "type" => "text",
+            "type" => ilDBConstants::T_TEXT,
             "length" => 8,
             "notnull" => true,
         ],
         "subject" => [
-            "type" => "clob",
+            "type" => ilDBConstants::T_CLOB,
             "notnull" => true,
         ],
         "content" => [
-            "type" => "clob",
+            "type" => ilDBConstants::T_CLOB,
             "notnull" => true,
         ]
     ]);
@@ -194,7 +194,7 @@ if ($ilDB->tableExists("mcc_mail_templates")) {
             "mcc_mail_templates",
             "active",
             [
-                "type" => "integer",
+                "type" => ilDBConstants::T_INTEGER,
                 "length" => 1,
                 "notnull" => true,
                 "default" => true
@@ -202,4 +202,22 @@ if ($ilDB->tableExists("mcc_mail_templates")) {
         );
     }
 }
+?>
+<#12>
+<?php
+if (
+        $ilDB->tableExists("mcc_course_settings")
+        && !$ilDB->tableColumnExists("mcc_course_settings", "matrix_space_id")
+) {
+    $ilDB->addTableColumn(
+        "mcc_course_settings",
+        "matrix_space_id",
+        [
+            "type" => ilDBConstants::T_TEXT,
+            "length" => 92,
+            "notnull" => false
+        ]
+    );
+}
+
 ?>

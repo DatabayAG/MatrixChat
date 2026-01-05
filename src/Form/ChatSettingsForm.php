@@ -17,25 +17,36 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChat\Form;
 
+use ilFormSectionHeaderGUI;
 use ILIAS\DI\Container;
 use ILIAS\HTTP\Wrapper\WrapperFactory;
+use ILIAS\Plugin\ExportCertificates\Enum\PluginAsset;
 use ILIAS\Plugin\MatrixChat\Api\MatrixApi;
 use ILIAS\Plugin\MatrixChat\Controller\ChatController;
+use ILIAS\Plugin\MatrixChat\Enum\RoomCreationLocation;
+use ILIAS\Plugin\MatrixChat\Enum\SpaceSelection;
 use ILIAS\Plugin\MatrixChat\Utils\UiUtil;
 use ilMatrixChatPlugin;
 use ilPropertyFormGUI;
+use ilRadioGroupInputGUI;
+use ilRadioOption;
 use ilTextInputGUI;
 
 class ChatSettingsForm extends ilPropertyFormGUI
 {
-    private ilMatrixChatPlugin $plugin;
-    private Container $dic;
-    private UiUtil $uiUtil;
-    private WrapperFactory $httpWrapper;
-    private MatrixApi $matrixApi;
+    private readonly ilMatrixChatPlugin $plugin;
+    private readonly Container $dic;
+    private readonly UiUtil $uiUtil;
+    private readonly WrapperFactory $httpWrapper;
+    private readonly MatrixApi $matrixApi;
 
-    public function __construct(ChatController $controller, int $refId, string $matrixRoomId = null)
-    {
+    public function __construct(
+        private readonly ChatController $controller,
+        int $refId,
+        ?string $matrixRoomId = null,
+        ?string $generalMatrixSpaceName = null,
+        ?string $matrixSpaceId = null
+    ) {
         parent::__construct();
         $this->plugin = ilMatrixChatPlugin::getInstance();
         global $DIC;
@@ -87,13 +98,101 @@ class ChatSettingsForm extends ilPropertyFormGUI
                 $roomStatus->setValue($this->plugin->txt("config.room.status.connected"));
             }
         }
-
-        $roomName = new ilTextInputGUI($this->plugin->txt("config.room.name"));
-        $roomName->setDisabled(true);
-        $roomName->setValue("");
         if ($matrixRoomId && $room) {
+            $roomName = new ilTextInputGUI($this->plugin->txt("config.room.name"));
+            $roomName->setDisabled(true);
             $roomName->setValue($room->getName());
+            $this->addItem($roomName);
         }
-        $this->addItem($roomName);
+
+        if (!$matrixRoomId) {
+            $this->addItem($this->buildRoomCreationLocationInput($generalMatrixSpaceName));
+        } elseif ($matrixSpaceId) {
+            $space = $this->matrixApi->getRoom($matrixSpaceId);
+
+            if (!$space) {
+                $this->uiUtil->sendFailure($this->plugin->txt("config.space.status.faulty"));
+            }
+            $spaceSection = new ilFormSectionHeaderGUI();
+            $spaceSection->setTitle($this->plugin->txt("config.room.creationLocation.space"));
+            $this->addItem($spaceSection);
+
+            $spaceName = new ilTextInputGUI($this->plugin->txt("config.space.name"));
+            $spaceName->setDisabled(true);
+            $spaceName->setValue($space ? $space->getName() : "");
+            $this->addItem($spaceName);
+
+            $spaceId = new ilTextInputGUI($this->plugin->txt("config.space.id"));
+            $spaceId->setDisabled(true);
+            $spaceId->setValue(
+                $matrixSpaceId === $this->plugin->getPluginConfig()->getMatrixSpaceId()
+                    ? (
+                        $matrixSpaceId
+                        . " (" . $this->plugin->txt("config.room.creationLocation.space.general.title")
+                        . ")"
+                    )
+                    : $matrixSpaceId
+            );
+            $this->addItem($spaceId);
+        }
+    }
+
+    private function buildRoomCreationLocationInput(?string $matrixSpaceName): ilRadioGroupInputGUI
+    {
+        $roomCreationLocation = new ilRadioGroupInputGUI(
+            $this->plugin->txt("config.room.creationLocation.title"),
+            "roomCreationLocation"
+        );
+        $roomCreationLocation->setRequired(true);
+
+        $spaceOption = new ilRadioOption(
+            $this->plugin->txt("config.room.creationLocation.space"),
+            RoomCreationLocation::SPACE->value
+        );
+
+        $spaceSelection = new ilRadioGroupInputGUI(
+            $this->plugin->txt("config.room.creationLocation.space.selection"),
+            "spaceSelection"
+        );
+        $spaceSelection->setRequired(true);
+        $spaceSelection->addOption(new ilRadioOption(
+            $this->plugin->txt("config.room.creationLocation.space.general.title")
+            . ($matrixSpaceName ? " ($matrixSpaceName)" : ""),
+            SpaceSelection::GENERAL->value
+        ));
+
+        $customSpaceOption = new ilRadioOption(
+            $this->plugin->txt("config.room.creationLocation.space.custom.title"),
+            SpaceSelection::CUSTOM->value
+        );
+
+        $spaceSelection->addOption($customSpaceOption);
+
+        $this->dic->ui()->mainTemplate()->addJavaScript(
+            $this->plugin->assetsFile(PluginAsset::JS, "longInputInfoAutocompleteFix.js")
+        );
+        $customSpaceTitle = new ilTextInputGUI(
+            $this->plugin->txt("config.room.creationLocation.space.custom.customSpaceTitle.title"),
+            "customSpaceTitle"
+        );
+        $customSpaceTitle->setInfo($this->plugin->txt("config.room.creationLocation.space.custom.customSpaceTitle.info"));
+
+        $customSpaceTitle->setRequired(true);
+        $customSpaceTitle->setDataSource($this->ctrl->getLinkTargetByClass(
+            array_values($this->controller->getCtrlClassesForCommand(ChatController::AJAX_CMD_AUTOCOMPLETE_SPACE_NAME)),
+            ChatController::getCommand(ChatController::AJAX_CMD_AUTOCOMPLETE_SPACE_NAME),
+            null,
+            true
+        ));
+        $customSpaceOption->addSubItem($customSpaceTitle);
+        $spaceOption->addSubItem($spaceSelection);
+        $roomCreationLocation->addOption($spaceOption);
+
+        $roomCreationLocation->addOption(new ilRadioOption(
+            $this->plugin->txt("config.room.creationLocation.independent"),
+            RoomCreationLocation::INDEPENDENT->value
+        ));
+
+        return $roomCreationLocation;
     }
 }
