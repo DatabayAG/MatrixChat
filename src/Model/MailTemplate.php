@@ -27,10 +27,9 @@ class MailTemplate
         private readonly string $language,
         private readonly string $subject = "",
         private readonly string $content = "",
-        private bool            $exists = false,
-        private readonly bool   $active = true
-    )
-    {
+        private bool $exists = false,
+        private readonly bool $active = true
+    ) {
     }
 
     public function getTemplateId(): string

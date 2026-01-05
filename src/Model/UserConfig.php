@@ -17,8 +17,6 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\MatrixChat\Model;
 
-use Exception;
-use ILIAS\Plugin\Libraries\IliasConfigLoader\Exception\ConfigLoadException;
 use ILIAS\Plugin\Libraries\IliasConfigLoader\Model\Config\UserPrefConfig;
 use ilObjUser;
 

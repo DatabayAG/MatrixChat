@@ -28,8 +28,7 @@ class MatrixRoom
         private readonly string $id,
         private readonly string $name,
         private readonly array $members
-    )
-    {
+    ) {
         $this->plugin = ilMatrixChatPlugin::getInstance();
     }
 

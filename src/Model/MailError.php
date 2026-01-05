@@ -28,8 +28,7 @@ class MailError
         private readonly int $objRefId,
         private readonly string $templateId,
         private readonly string $language
-    )
-    {
+    ) {
     }
 
     public function getUserLogin(): string

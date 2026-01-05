@@ -20,6 +20,7 @@ use ILIAS\FileUpload\FileUpload;
 use ILIAS\Plugin\Libraries\ControllerHandler\ControllerHandler;
 use ILIAS\Plugin\MatrixChat\Api\MatrixApi;
 use ILIAS\Plugin\MatrixChat\Controller\MailTemplatesController;
+use ILIAS\Plugin\MatrixChat\Enum\RoomCreationLocation;
 use ILIAS\Plugin\MatrixChat\Form\ChatPageDesignerForm;
 use ILIAS\Plugin\MatrixChat\Form\PluginConfigForm;
 use ILIAS\Plugin\MatrixChat\Utils\UiUtil;
@@ -38,6 +39,7 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
 
     public const CMD_SHOW_CHAT_PAGE_DESIGNER = "showChatPageDesigner";
     public const CMD_SAVE_CHAT_PAGE_DESIGNER = "saveChatPageDesigner";
+
     public const TAB_PLUGIN_SETTINGS = "tab_plugin_settings";
     public const TAB_CHAT_PAGE_DESIGNER = "tab_chat_page_designer";
 
@@ -154,7 +156,8 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
             ->setModifyParticipantPowerLevel((bool) $form->getInput("modifyParticipantPowerLevel"))
             ->setAdminPowerLevel((int) $form->getInput("adminPowerLevel"))
             ->setTutorPowerLevel((int) $form->getInput("tutorPowerLevel"))
-            ->setMemberPowerLevel((int) $form->getInput("memberPowerLevel"));
+            ->setMemberPowerLevel((int) $form->getInput("memberPowerLevel"))
+            ->setRoomCreationLocation(RoomCreationLocation::from($form->getInput("roomCreationLocation")));
 
         $matrixAdminApiToken = $form->getInput("matrixAdminApiToken");
         if ($matrixAdminApiToken !== self::CLEANED_VALUE) {
@@ -188,7 +191,7 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
             //Create new Matrix Space
             $space = $this->matrixApi->createSpace($matrixSpaceName);
             if (!$space) {
-                $this->uiUtil->sendFailure($this->plugin->txt("matrix.space.creation.failure"), true);
+                $this->uiUtil->sendFailure(sprintf($this->plugin->txt("matrix.space.creation.failure"), $matrixSpaceName), true);
                 $this->ctrl->redirectByClass(self::class, self::CMD_SHOW_SETTINGS);
             }
 

@@ -22,16 +22,20 @@ use ilAccessHandler;
 use ilAuthUtils;
 use ilCourseParticipants;
 use ILIAS\DI\Container;
+use ILIAS\Filesystem\Stream\Streams;
 use ILIAS\HTTP\Services;
 use ILIAS\HTTP\Wrapper\WrapperFactory;
 use ILIAS\Plugin\Libraries\ControllerHandler\BaseController;
 use ILIAS\Plugin\Libraries\ControllerHandler\ControllerHandler;
 use ILIAS\Plugin\MatrixChat\Api\MatrixApi;
+use ILIAS\Plugin\MatrixChat\Enum\RoomCreationLocation;
+use ILIAS\Plugin\MatrixChat\Enum\SpaceSelection;
 use ILIAS\Plugin\MatrixChat\Form\ChatSettingsForm;
 use ILIAS\Plugin\MatrixChat\Form\ConfirmDeleteRoomForm;
 use ILIAS\Plugin\MatrixChat\Model\ChatMember;
 use ILIAS\Plugin\MatrixChat\Model\CourseSettings;
 use ILIAS\Plugin\MatrixChat\Model\MatrixRoom;
+use ILIAS\Plugin\MatrixChat\Model\PluginConfig;
 use ILIAS\Plugin\MatrixChat\Model\UserConfig;
 use ILIAS\Plugin\MatrixChat\Repository\CourseSettingsRepository;
 use ILIAS\Plugin\MatrixChat\Repository\QueuedInvitesRepository;
@@ -67,6 +71,7 @@ class ChatController extends BaseController
     public const CMD_INVITE_PARTICIPANT = "inviteParticipant";
     public const CMD_APPLY_MEMBER_TABLE_FILTER = "applyMemberTableFilter";
     public const CMD_RESET_MEMBER_TABLE_FILTER = "resetMemberTableFilter";
+    public const AJAX_CMD_AUTOCOMPLETE_SPACE_NAME = "ajaxAutocompleteSpaceName";
 
     public const TAB_CHAT = "tab_chat";
     public const SUB_TAB_CHAT = "sub_tab_chat";
@@ -219,7 +224,18 @@ class ChatController extends BaseController
         $matrixRoomId = $this->courseSettings->getMatrixRoomId();
 
         if (!$form) {
-            $form = new ChatSettingsForm($this, $this->refId, $matrixRoomId);
+            $form = new ChatSettingsForm(
+                $this,
+                $this->refId,
+                $matrixRoomId,
+                $this->plugin->getPluginConfig()->getMatrixSpaceName(),
+                $this->courseSettings->getMatrixSpaceId()
+            );
+
+            $form->setValuesByArray([
+                "roomCreationLocation" => $this->plugin->getPluginConfig()->getRoomCreationLocation()->value,
+                "spaceSelection" => SpaceSelection::GENERAL->value
+            ], true);
         }
 
         $this->renderToMainTemplate($form->getHTML());
@@ -275,18 +291,13 @@ class ChatController extends BaseController
         $space = null;
         $room = null;
 
-        if ($this->plugin->getPluginConfig()->getMatrixSpaceId()) {
-            $space = $this->matrixApi->getSpace($this->plugin->getPluginConfig()->getMatrixSpaceId());
-        } else {
-            $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.account.invite.multiple.failure"));
-            $this->uiUtil->sendInfo($this->plugin->txt("config.space.status.disconnected"));
-            $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
-        }
-
-        if (!$space) {
-            $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.account.invite.multiple.failure"));
-            $this->uiUtil->sendInfo($this->plugin->txt("config.space.status.faulty"));
-            $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
+        if ($this->courseSettings->getMatrixSpaceId()) {
+            $space = $this->matrixApi->getSpace($this->courseSettings->getMatrixSpaceId());
+            if (!$space) {
+                $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.account.invite.multiple.failure"));
+                $this->uiUtil->sendInfo($this->plugin->txt("config.space.status.disconnected"));
+                $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
+            }
         }
 
         if ($this->courseSettings->getMatrixRoomId()) {
@@ -397,16 +408,12 @@ class ChatController extends BaseController
         $space = null;
         $room = null;
 
-        if ($this->plugin->getPluginConfig()->getMatrixSpaceId()) {
-            $space = $this->matrixApi->getSpace($this->plugin->getPluginConfig()->getMatrixSpaceId());
-        } else {
-            $this->uiUtil->sendFailure($this->plugin->txt("config.space.status.disconnected"));
-            $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
-        }
-
-        if (!$space) {
-            $this->uiUtil->sendFailure($this->plugin->txt("config.space.status.faulty"));
-            $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
+        if ($this->courseSettings->getMatrixSpaceId()) {
+            $space = $this->matrixApi->getSpace($this->courseSettings->getMatrixSpaceId());
+            if (!$space) {
+                $this->uiUtil->sendFailure($this->plugin->txt("config.space.status.faulty"));
+                $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
+            }
         }
 
         if ($this->courseSettings->getMatrixRoomId()) {
@@ -444,14 +451,17 @@ class ChatController extends BaseController
 
         $participants = ilParticipants::getInstance($this->refId);
 
-        //Todo: Can possibly be replaced with this->plugin->inviteParticipant in the future to reduce code size.
-        if (!$this->matrixApi->inviteUserToRoom($matrixUser, $space)) {
-            $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.account.invite.failed"));
-            $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
-        }
+        $invited = $this->plugin->inviteParticipant(
+            $user,
+            $this->refId,
+            $matrixUser,
+            $room,
+            $space,
+            $this->plugin->determinePowerLevelOfParticipant($participants, $user->getId()),
+            false
+        );
 
-        //Todo: Can possibly be replaced with this->plugin->inviteParticipant in the future to reduce code size.
-        if (!$this->matrixApi->inviteUserToRoom($matrixUser, $room, $this->plugin->determinePowerLevelOfParticipant($participants, $user->getId()))) {
+        if (!$invited) {
             $this->uiUtil->sendFailure($this->plugin->txt("matrix.user.account.invite.failed"));
             $this->redirectToCommand(self::CMD_SHOW_CHAT_MEMBERS, ["ref_id" => $this->refId]);
         }
@@ -540,8 +550,10 @@ class ChatController extends BaseController
 
         $form->setValuesByPost();
 
+        $isIndependent = false;
+        $matrixSpaceId = $this->determineMatrixSpaceId($form, $pluginConfig, $isIndependent);
+
         $matrixRoomId = $courseSettings->getMatrixRoomId();
-        $matrixSpaceId = $pluginConfig->getMatrixSpaceId();
         $room = null;
         $space = null;
 
@@ -553,29 +565,31 @@ class ChatController extends BaseController
             $space = $this->matrixApi->getSpace($matrixSpaceId);
         }
 
-        if (!$space) {
+        if (!$space && !$isIndependent) {
             $this->uiUtil->sendFailure($this->plugin->txt("matrix.space.notFound"));
             $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS, ["ref_id" => $this->refId]);
         }
 
         if (!$room) {
+            $matrixRoomName = $this->buildRoomPrefix($courseSettings->getCourseId());
             $room = $this->matrixApi->createRoom(
-                $this->buildRoomPrefix($courseSettings->getCourseId()),
+                $matrixRoomName,
                 $this->plugin->getPluginConfig()->isEnableRoomEncryption(),
                 $space
             );
             if (!$room) {
-                $this->uiUtil->sendFailure($this->plugin->txt("matrix.space.creation.failure"));
+                $this->uiUtil->sendFailure(sprintf($this->plugin->txt("matrix.room.creation.failure"), $matrixRoomName));
                 $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS, ["ref_id" => $this->refId]);
             }
+        }
 
-            $courseSettings->setMatrixRoomId($room->getId());
-            try {
-                $this->courseSettingsRepo->save($courseSettings);
-            } catch (Exception) {
-                $this->uiUtil->sendFailure($this->plugin->txt("general.update.failed"));
-                $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS, ["ref_id" => $this->refId]);
-            }
+        $courseSettings->setMatrixRoomId($room->getId());
+        $courseSettings->setMatrixSpaceId($matrixSpaceId);
+        try {
+            $this->courseSettingsRepo->save($courseSettings);
+        } catch (Exception) {
+            $this->uiUtil->sendFailure($this->plugin->txt("general.update.failed"));
+            $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS, ["ref_id" => $this->refId]);
         }
 
         $participants = ilParticipants::getInstance($courseSettings->getCourseId());
@@ -668,6 +682,7 @@ class ChatController extends BaseController
 
         if (!$room) {
             $this->courseSettings->setMatrixRoomId(null);
+            $this->courseSettings->setMatrixSpaceId(null);
             if ($this->courseSettingsRepo->save($this->courseSettings)) {
                 $this->uiUtil->sendSuccess(
                     $this->plugin->txt("matrix.chat.room.delete.success")
@@ -683,6 +698,7 @@ class ChatController extends BaseController
             $deleteSuccess = $this->matrixApi->deleteRoom($room, "", $purge, $block);
             if ($deleteSuccess) {
                 $this->courseSettings->setMatrixRoomId(null);
+                $this->courseSettings->setMatrixSpaceId(null);
             }
 
             if ($this->courseSettingsRepo->save($this->courseSettings)) {
@@ -727,6 +743,40 @@ class ChatController extends BaseController
         }
 
         return $hasAccess;
+    }
+
+    public function ajaxAutocompleteSpaceName(): never
+    {
+        $term = $this->httpWrapper->query()->retrieve(
+            "term",
+            $this->refinery->kindlyTo()->string()
+        );
+        $autocompleteItems = [];
+
+        foreach ($this->matrixApi->getRooms($term, false, "m.space") as $room) {
+            if ($room->getId() === $this->plugin->getPluginConfig()->getMatrixSpaceId()) {
+                continue;
+            }
+            $autocompleteItems[] = [
+                "value" => $room->getId(),
+                "label" => $room->getName() . " ({$room->getId()})"
+            ];
+        }
+
+        $this->http->saveResponse(
+            $this->http->response()->withBody(
+                Streams::ofString(
+                    json_encode([
+                        "items" => $autocompleteItems,
+                        "hasMoreResults" => false
+                    ], JSON_THROW_ON_ERROR)
+                )
+            )
+        );
+        $this->http->sendResponse();
+        $this->http->close();
+        exit;
+
     }
 
     public function redirectToInfoTab(): void
@@ -810,5 +860,43 @@ class ChatController extends BaseController
     public function getCtrlClassesForCommand(string $cmd): array
     {
         return [ilUIPluginRouterGUI::class, ilMatrixChatUIHookGUI::class];
+    }
+
+    private function determineMatrixSpaceId(ChatSettingsForm $form, PluginConfig $pluginConfig, bool &$isIndependent): ?string
+    {
+        $roomCreationLocation = RoomCreationLocation::from($form->getInput("roomCreationLocation"));
+
+        switch ($roomCreationLocation) {
+            case RoomCreationLocation::INDEPENDENT:
+                $isIndependent = true;
+                return null;
+            case RoomCreationLocation::SPACE:
+                $spaceSelection = SpaceSelection::from($form->getInput("spaceSelection"));
+
+                switch ($spaceSelection) {
+                    case SpaceSelection::GENERAL:
+                        return $pluginConfig->getMatrixSpaceId();
+                    case SpaceSelection::CUSTOM:
+                        $title = $form->getInput("customSpaceTitle");
+
+                        if (
+                            str_starts_with($title, "!")
+                            && str_ends_with($title, ":" . $pluginConfig->getMatrixServerName())
+                        ) {
+                            return $title;
+                        }
+
+                        $matrixSpace = $this->matrixApi->createSpace($title);
+                        if (!$matrixSpace) {
+                            $this->uiUtil->sendFailure(sprintf($this->plugin->txt("matrix.room.creation.failure"), $title));
+                            $this->redirectToCommand(self::CMD_SHOW_CHAT_SETTINGS, ["ref_id" => $this->refId]);
+                            return null;
+                        }
+                        return $matrixSpace->getId();
+                }
+
+                break;
+        }
+        return null;
     }
 }

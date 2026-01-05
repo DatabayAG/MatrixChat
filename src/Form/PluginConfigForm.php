@@ -25,11 +25,14 @@ use ilGlobalTemplateInterface;
 use ILIAS\DI\Container;
 use ILIAS\Plugin\ExportCertificates\Enum\PluginAsset;
 use ILIAS\Plugin\MatrixChat\Controller\BaseUserConfigController;
+use ILIAS\Plugin\MatrixChat\Enum\RoomCreationLocation;
 use ilMatrixChatConfigGUI;
 use ilMatrixChatPlugin;
 use ilNumberInputGUI;
 use ilPasswordInputGUI;
 use ilPropertyFormGUI;
+use ilRadioGroupInputGUI;
+use ilRadioOption;
 use ilTextInputGUI;
 use ilUriInputGUI;
 
@@ -134,7 +137,7 @@ class PluginConfigForm extends ilPropertyFormGUI
                 $this->plugin->txt("config.section.adminAuthentication.valid"),
                 $this->plugin->txt("matrix.admin.login.valid")
             ));
-        } else if (!$serverReachable) {
+        } elseif (!$serverReachable) {
             $section->setTitle(sprintf(
                 $this->plugin->txt("config.section.adminAuthentication.invalid"),
                 $this->plugin->txt("matrix.server.unreachable")
@@ -320,13 +323,32 @@ class PluginConfigForm extends ilPropertyFormGUI
         $spaceName->setInfo($this->plugin->txt("config.space.name.info"));
         $this->addItem($spaceName);
         $matrixSpaceId = new ilTextInputGUI(
-            $this->plugin->txt("config.space.id"),
+            $this->plugin->txt("config.space.id.general"),
             "matrixSpaceId"
         );
-        $matrixSpaceId->setInfo($this->plugin->txt("config.space.id.info"));
+        $matrixSpaceId->setInfo($this->plugin->txt("config.space.id.general.info"));
 
         $matrixSpaceId->setDisabled(true);
         $this->addItem($matrixSpaceId);
+
+        $roomCreationLocation = new ilRadioGroupInputGUI(
+            $this->plugin->txt("config.room.creationLocation.title"),
+            "roomCreationLocation"
+        );
+        $roomCreationLocation->setRequired(true);
+        $roomCreationLocation->setInfo($this->plugin->txt("config.room.creationLocation.info"));
+
+        $roomCreationLocation->addOption(new ilRadioOption(
+            $this->plugin->txt("config.room.creationLocation.space"),
+            RoomCreationLocation::SPACE->value
+        ));
+
+        $roomCreationLocation->addOption(new ilRadioOption(
+            $this->plugin->txt("config.room.creationLocation.independent"),
+            RoomCreationLocation::INDEPENDENT->value
+        ));
+
+        $this->addItem($roomCreationLocation);
 
         $enableRoomEncryption = new ilCheckboxInputGUI(
             $this->plugin->txt("config.room.encryption.enable.title"),

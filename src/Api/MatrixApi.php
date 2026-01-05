@@ -637,6 +637,51 @@ class MatrixApi
     }
 
     /**
+     * @return MatrixRoom[]
+     */
+    public function getRooms(?string $searchTerm = null, bool $withMembers = true, string $type = null): array
+    {
+        try {
+            $response = $this->sendRequest(
+                "/_synapse/admin/v1/rooms"
+                . ($searchTerm ? "?search_term=$searchTerm" : ""),
+                true,
+                "GET",
+                [],
+                true
+            );
+        } catch (MatrixApiException $ex) {
+            $this->logger->error("Error occurred trying to determine spaces for autocomplete. Ex.: {$ex->getMessage()}");
+            return [];
+        }
+
+        $rooms = [];
+        foreach ($response->getResponseData()["rooms"] as $roomData) {
+            $matrixRoomId = $roomData["room_id"];
+
+            if ($type !== null && $roomData["room_type"] !== $type) {
+                continue;
+            }
+
+            if ($type === "m.space") {
+                $rooms[] = new MatrixSpace(
+                    $matrixRoomId,
+                    $roomData["name"] ?? "",
+                    $withMembers ? $this->getRoomMembers($matrixRoomId) : []
+                );
+                continue;
+            }
+            $rooms[] = new MatrixRoom(
+                $matrixRoomId,
+                $roomData["name"] ?? "",
+                $withMembers ? $this->getRoomMembers($matrixRoomId) : []
+            );
+        }
+
+        return $rooms;
+    }
+
+    /**
      * @throws MatrixApiException
      */
     protected function getRoomState(MatrixRoom $room, string $eventType, string $stateKey = ""): array
@@ -800,34 +845,40 @@ class MatrixApi
         }
     }
 
-    public function createRoom(string $name, bool $enableEncryption, MatrixSpace $parentSpace): ?MatrixRoom
+    public function createRoom(string $name, bool $enableEncryption, ?MatrixSpace $parentSpace): ?MatrixRoom
     {
+        $initialState = [
+            [
+                "type" => "m.room.history_visibility",
+                "content" => [
+                    "history_visibility" => "invited"
+                ]
+            ]
+        ];
+
+        if ($parentSpace !== null) {
+            $initialState[] = [
+                "type" => "m.space.parent",
+                "content" => [
+                    "via" => [$this->plugin->getPluginConfig()->getMatrixServerName()],
+                    "canonical" => true
+                ],
+                "state_key" => $parentSpace->getId()
+            ];
+        }
+
+        $initialState[] = [
+            "type" => "m.room.join_rules",
+            "content" => [
+                "join_rule" => "invite"
+            ]
+        ];
+
         $postData = [
             "name" => $name,
             "preset" => "private_chat",
             "visibility" => "private",
-            "initial_state" => [
-                [
-                    "type" => "m.room.history_visibility",
-                    "content" => [
-                        "history_visibility" => "invited"
-                    ]
-                ],
-                [
-                    "type" => "m.space.parent",
-                    "content" => [
-                        "via" => [$this->plugin->getPluginConfig()->getMatrixServerName()],
-                        "canonical" => true
-                    ],
-                    "state_key" => $parentSpace->getId()
-                ],
-                [
-                    "type" => "m.room.join_rules",
-                    "content" => [
-                        "join_rule" => "invite"
-                    ]
-                ]
-            ],
+            "initial_state" => $initialState,
             "power_level_content_override" => [
                 "ban" => 50,
                 "invite" => 50,
@@ -867,7 +918,7 @@ class MatrixApi
             $this->getRoomMembers($matrixRoomId)
         );
 
-        if (!$this->addRoomToSpace($parentSpace, $matrixRoom)) {
+        if ($parentSpace && !$this->addRoomToSpace($parentSpace, $matrixRoom)) {
             $this->logger->error(sprintf(
                 "Room was created but adding room to space as a child failed. Room will not show up under Space '%s' (%s)",
                 $parentSpace->getName(),

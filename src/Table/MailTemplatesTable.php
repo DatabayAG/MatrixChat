@@ -39,20 +39,19 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class MailTemplatesTable implements DataRetrieval
 {
-    private ilLanguage $lng;
-    private ilMatrixChatPlugin $plugin;
-    private Data $table;
-    private UiFactory $uiFactory;
-    private Renderer $uiRenderer;
-    private TableFactory $uiTableFactory;
-    private ServerRequestInterface $request;
+    private readonly ilLanguage $lng;
+    private readonly ilMatrixChatPlugin $plugin;
+    private readonly Data $table;
+    private readonly UiFactory $uiFactory;
+    private readonly Renderer $uiRenderer;
+    private readonly TableFactory $uiTableFactory;
+    private readonly ServerRequestInterface $request;
 
     public function __construct(
-        private readonly Container               $dic,
+        private readonly Container $dic,
         private readonly MailTemplatesController $controller,
         private readonly MailTemplatesRepository $repo,
-    )
-    {
+    ) {
 
         $this->plugin = ilMatrixChatPlugin::getInstance();
         $this->lng = $dic->language();
@@ -66,13 +65,12 @@ class MailTemplatesTable implements DataRetrieval
 
     public function getRows(
         DataRowBuilder $row_builder,
-        array          $visible_column_ids,
-        Range          $range,
-        Order          $order,
-        ?array         $filter_data,
-        ?array         $additional_parameters
-    ): Generator
-    {
+        array $visible_column_ids,
+        Range $range,
+        Order $order,
+        ?array $filter_data,
+        ?array $additional_parameters
+    ): Generator {
         $table_rows = $this->buildTableRows($this->repo->readAllMappedByLanguageAndTemplateId());
 
         foreach ($table_rows as $row) {
@@ -106,14 +104,13 @@ class MailTemplatesTable implements DataRetrieval
             ->withId("MailTemplatesTable")
             ->withRequest($this->request);
     }
-
-
     /**
      * @param array<string, array{matrixAccount: MailTemplate, noMatrixAccount: MailTemplate}> $mailTemplates
      * @return list<array{language: string, matrixAccount: string, "noMatrixAccount": string}>
      */
     private function buildTableRows(array $mailTemplates): array
     {
+        $tableData = [];
         foreach ($mailTemplates as $languageId => $mailTemplateData) {
             $tableRow = [
                 "language" => $this->lng->txt("meta_l_$languageId"),
@@ -134,7 +131,7 @@ class MailTemplatesTable implements DataRetrieval
                     $mailTemplate->isExists()
                         ? ""
                         : "<span style='color: red;'>" . $this->plugin->txt("config.mailTemplates.template.notConfigured") . "</span>"
-                    );
+                );
             }
 
             $tableData[] = $tableRow;

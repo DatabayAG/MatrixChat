@@ -26,8 +26,7 @@ class MatrixUser
         private readonly string $id,
         private readonly string $displayName,
         private readonly bool $exists
-    )
-    {
+    ) {
     }
 
     public function getId(): string

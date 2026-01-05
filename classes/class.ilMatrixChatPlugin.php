@@ -195,7 +195,7 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
 
     public function handleEvent(string $a_component, string $a_event, $a_parameter): void
     {
-        if (!in_array($a_component, ["Modules/Course", "Modules/Group"])) {
+        if (!in_array($a_component, ["components/ILIAS/Course", "components/ILIAS/Group"])) {
             return;
         }
 
@@ -260,24 +260,14 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
 
         $matrixApi = $this->getMatrixApi();
 
-        $matrixSpaceId = $this->pluginConfig->getMatrixSpaceId();
-        if (!$matrixSpaceId) {
-            $this->logger->warning("Unable to continue handling event '$a_event'. No Matrix-Space-ID found");
-            return;
-        }
-
-        $space = $matrixApi->getSpace($matrixSpaceId);
-        if (!$space) {
-            $this->logger->warning("Unable to continue handling event '$a_event'. Matrix-Space-ID '$matrixSpaceId' saved but retrieving space failed");
-            return;
-        }
-
         $rooms = $this->findMatrixRoomsLinkedToObjId($objId, $a_event, $matrixApi);
         if ($rooms === []) {
             $this->logger->warning("Unable to continue handling event '$a_event'. No room(s) were found using the obj-id '$objId'");
             return;
         }
 
+        /** @var array<string, MatrixSpace> $spaceCache */
+        $spaceCache = [];
         foreach ($userIds as $userId) {
             $user = new ilObjUser($userId);
             $userConfig = (new UserConfig($user))->load();
@@ -292,6 +282,24 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
             foreach ($rooms as $objRefId => $room) {
                 $participants = ilParticipants::getInstance($objRefId);
 
+                $courseSettings = $this->courseSettingsRepo->read($objRefId);
+                $space = null;
+                if ($courseSettings->getMatrixSpaceId()) {
+                    if (isset($spaceCache[$courseSettings->getMatrixSpaceId()])) {
+                        $space = $spaceCache[$courseSettings->getMatrixSpaceId()];
+                    } else {
+                        $space = $matrixApi->getSpace($courseSettings->getMatrixSpaceId());
+                        $spaceCache[$courseSettings->getMatrixSpaceId()] = $space;
+                    }
+
+                    if (!$space) {
+                        $this->logger->warning(sprintf(
+                            "Unable to continue handling event '%s'. Space id configured for object with ref-id '%s' but no space found.",
+                            $a_event,
+                            $objRefId
+                        ));
+                    }
+                }
                 if ($a_event === "addParticipant" || $a_event === "update") {
                     $this->inviteParticipant(
                         $user,
@@ -345,8 +353,9 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
         return $rooms;
     }
 
-    public function inviteParticipant(ilObjUser $user, int $objRefId, ?MatrixUser $matrixUser, MatrixRoom $room, MatrixSpace $space, int $powerLevel, bool $objectOffline): void
+    public function inviteParticipant(ilObjUser $user, int $objRefId, ?MatrixUser $matrixUser, MatrixRoom $room, ?MatrixSpace $space, int $powerLevel, bool $objectOffline): bool
     {
+        $success = true;
         $addToQueue = false;
 
         if (!$objectOffline) {
@@ -362,12 +371,13 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
         } elseif (
             !$room->isMember($matrixUser)
         ) {
-            if (!$this->getMatrixApi()->inviteUserToRoom($matrixUser, $space)) {
+            if ($space && !$this->getMatrixApi()->inviteUserToRoom($matrixUser, $space)) {
                 $this->logger->warning(sprintf(
                     "Inviting matrix-user '%s' to space '%s' failed",
                     $matrixUser->getId(),
                     $space->getId()
                 ));
+                $success = false;
             }
 
             if (!$this->getMatrixApi()->inviteUserToRoom(
@@ -380,8 +390,11 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
                     $matrixUser->getId(),
                     $room->getId()
                 ));
+                $success = false;
             }
         }
+
+        return $success;
     }
 
     private function removeParticipant(ilObjUser $user, int $objRefId, ?MatrixUser $matrixUser, MatrixRoom $room): void
@@ -396,25 +409,23 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
             return;
         }
 
-        if ($matrixUser->isExists()) {
-            if (!$this->getMatrixApi()->removeUserFromRoom(
-                $matrixUser->getId(),
-                $room,
-                "Removed from course/group"
-            )) {
-                $this->logger->warning(sprintf(
-                    "Removing matrixuser '%s' from room '%s'. with Reason 'Removed from Course/Group object' failed.",
-                    $matrixUser->getId(),
-                    $room->getId()
-                ));
-            }
-
-            $this->logger->info(sprintf(
-                "Removed matrix user '%s' from room '%s'. Reason: Removed from Course/Group object.",
+        if (!$this->getMatrixApi()->removeUserFromRoom(
+            $matrixUser->getId(),
+            $room,
+            "Removed from course/group"
+        )) {
+            $this->logger->warning(sprintf(
+                "Removing matrixuser '%s' from room '%s'. with Reason 'Removed from Course/Group object' failed.",
                 $matrixUser->getId(),
                 $room->getId()
             ));
         }
+
+        $this->logger->info(sprintf(
+            "Removed matrix user '%s' from room '%s'. Reason: Removed from Course/Group object.",
+            $matrixUser->getId(),
+            $room->getId()
+        ));
     }
 
     public function determinePowerLevelOfParticipant(ilParticipants $participants, int $participantId): int

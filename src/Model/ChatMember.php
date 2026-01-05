@@ -26,8 +26,7 @@ class ChatMember
         private readonly string $roleText,
         private readonly string $status,
         private readonly string $matrixUserId
-    )
-    {
+    ) {
     }
 
     public function getUserId(): int
