@@ -16,7 +16,7 @@
 declare(strict_types=1);
 
 use ILIAS\DI\Container;
-use ILIAS\Plugin\ExportCertificates\Enum\PluginAsset;
+use ILIAS\Plugin\MatrixChat\Enum\PluginAsset;
 use ILIAS\Plugin\MatrixChat\Api\MatrixApi;
 use ILIAS\Plugin\MatrixChat\Job\ProcessQueuedInvitesJob;
 use ILIAS\Plugin\MatrixChat\Model\MatrixRoom;

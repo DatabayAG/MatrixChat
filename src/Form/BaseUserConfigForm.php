@@ -19,7 +19,7 @@ namespace ILIAS\Plugin\MatrixChat\Form;
 
 use ilGlobalTemplateInterface;
 use ILIAS\DI\Container;
-use ILIAS\Plugin\ExportCertificates\Enum\PluginAsset;
+use ILIAS\Plugin\MatrixChat\Enum\PluginAsset;
 use ILIAS\Plugin\MatrixChat\Controller\BaseUserConfigController;
 use ILIAS\Plugin\MatrixChat\Utils\UiUtil;
 use ilMatrixChatPlugin;

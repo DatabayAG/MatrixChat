@@ -20,7 +20,7 @@ namespace ILIAS\Plugin\MatrixChat\Table;
 use Exception;
 use ilCtrlInterface;
 use ILIAS\DI\Container;
-use ILIAS\Plugin\ExportCertificates\Enum\PluginAsset;
+use ILIAS\Plugin\MatrixChat\Enum\PluginAsset;
 use ILIAS\Plugin\MatrixChat\Controller\ChatController;
 use ILIAS\Plugin\MatrixChat\Model\ChatMember;
 use ILIAS\UI\Factory;
