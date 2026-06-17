@@ -23,7 +23,7 @@ use ilCheckboxOption;
 use ilFormSectionHeaderGUI;
 use ilGlobalTemplateInterface;
 use ILIAS\DI\Container;
-use ILIAS\Plugin\ExportCertificates\Enum\PluginAsset;
+use ILIAS\Plugin\MatrixChat\Enum\PluginAsset;
 use ILIAS\Plugin\MatrixChat\Controller\BaseUserConfigController;
 use ILIAS\Plugin\MatrixChat\Enum\RoomCreationLocation;
 use ilMatrixChatConfigGUI;

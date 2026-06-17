@@ -20,7 +20,7 @@ namespace ILIAS\Plugin\MatrixChat\Form;
 use ilFormSectionHeaderGUI;
 use ILIAS\DI\Container;
 use ILIAS\HTTP\Wrapper\WrapperFactory;
-use ILIAS\Plugin\ExportCertificates\Enum\PluginAsset;
+use ILIAS\Plugin\MatrixChat\Enum\PluginAsset;
 use ILIAS\Plugin\MatrixChat\Api\MatrixApi;
 use ILIAS\Plugin\MatrixChat\Controller\ChatController;
 use ILIAS\Plugin\MatrixChat\Enum\RoomCreationLocation;
