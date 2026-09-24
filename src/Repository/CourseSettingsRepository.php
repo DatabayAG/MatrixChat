@@ -116,7 +116,7 @@ class CourseSettingsRepository
 
         return $this->db->manipulateF(
             "INSERT INTO " . self::TABLE_NAME . " (course_id, matrix_room_id, matrix_space_id) VALUES (%s, %s, %s)",
-            [ilDBConstants::T_INTEGER, ilDBConstants::T_TEXT],
+            [ilDBConstants::T_INTEGER, ilDBConstants::T_TEXT, ilDBConstants::T_TEXT],
             [
                     $courseSettings->getCourseId(),
                     $courseSettings->getMatrixRoomId() ?: null,
