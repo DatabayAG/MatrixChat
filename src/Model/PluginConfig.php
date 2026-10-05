@@ -18,10 +18,13 @@ declare(strict_types=1);
 namespace ILIAS\Plugin\MatrixChat\Model;
 
 use ILIAS\Plugin\Libraries\IliasConfigLoader\Model\Config\SettingsConfig;
+use ILIAS\Plugin\MatrixChat\Enum\ServerNameDetermination;
 
 class PluginConfig extends SettingsConfig
 {
     private string $matrixServerUrl = "";
+    private string $matrixServerNameDetermination = "auto";
+    private string $matrixServerName = "";
     private string $matrixAdminApiToken = "";
     private string $matrixRestApiUserApiToken = "";
     private string $externalUserScheme = "";
@@ -51,6 +54,37 @@ class PluginConfig extends SettingsConfig
         $this->matrixServerUrl = $matrixServerUrl;
         return $this;
     }
+
+    public function getMatrixServerNameDetermination(): ServerNameDetermination
+    {
+        return ServerNameDetermination::tryFrom($this->matrixServerNameDetermination) ?? ServerNameDetermination::AUTO;
+    }
+
+    public function setMatrixServerNameDetermination(ServerNameDetermination $matrixServerNameDetermination): self
+    {
+        $this->matrixServerNameDetermination = $matrixServerNameDetermination->value;
+        return $this;
+    }
+
+    public function setMatrixServerName(string $matrixServerName): self
+    {
+        $this->matrixServerName = $matrixServerName;
+        return $this;
+    }
+
+    public function getMatrixServerName(): string
+    {
+        if ($this->getMatrixServerNameDetermination() === ServerNameDetermination::AUTO) {
+            if (!$this->getMatrixServerUrl()) {
+                return "";
+            }
+            $url = parse_url($this->getMatrixServerUrl());
+            return $url["host"] ?? "";
+        }
+
+        return $this->matrixServerName;
+    }
+
 
     public function getMatrixAdminApiToken(): string
     {
@@ -248,14 +282,5 @@ class PluginConfig extends SettingsConfig
     {
         $this->memberPowerLevel = $memberPowerLevel;
         return $this;
-    }
-
-    public function getMatrixServerName(): string
-    {
-        if (!$this->getMatrixServerUrl()) {
-            return "";
-        }
-        $url = parse_url($this->getMatrixServerUrl());
-        return $url["host"] ?? "";
     }
 }
