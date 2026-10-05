@@ -25,6 +25,7 @@ use ilGlobalTemplateInterface;
 use ILIAS\DI\Container;
 use ILIAS\Plugin\MatrixChat\Enum\PluginAsset;
 use ILIAS\Plugin\MatrixChat\Controller\BaseUserConfigController;
+use ILIAS\Plugin\MatrixChat\Enum\ServerNameDetermination;
 use ILIAS\Plugin\MatrixChat\Enum\RoomCreationLocation;
 use ilMatrixChatConfigGUI;
 use ilMatrixChatPlugin;
@@ -127,6 +128,33 @@ class PluginConfigForm extends ilPropertyFormGUI
         $matrixServerUrl = new ilUriInputGUI($this->plugin->txt("matrix.server.url"), "matrixServerUrl");
         $matrixServerUrl->setRequired(true);
         $this->addItem($matrixServerUrl);
+
+        $matrix_server_name_determination = new ilRadioGroupInputGUI(
+            $this->plugin->txt("matrix.server.server_name.determination.title"),
+            "matrixServerNameDetermination"
+        );
+        $this->addItem($matrix_server_name_determination);
+
+        $matrix_server_name_determination->addOption(new ilRadioOption(
+            $this->plugin->txt("matrix.server.server_name.determination.auto.title"),
+            ServerNameDetermination::AUTO->value,
+            $this->plugin->txt("matrix.server.server_name.determination.auto.info")
+        ));
+
+        $server_name_determination_manual = new ilRadioOption(
+            $this->plugin->txt("matrix.server.server_name.determination.manual.title"),
+            ServerNameDetermination::MANUAL->value,
+            $this->plugin->txt("matrix.server.server_name.determination.manual.info")
+        );
+        $matrix_server_name_determination->addOption($server_name_determination_manual);
+
+        $server_name = new ilTextInputGUI(
+            $this->plugin->txt("matrix.server.server_name.title"),
+            "matrixServerName"
+        );
+        $server_name->setRequired(true);
+        $server_name->setInfo($this->plugin->txt("matrix.server.server_name.info"));
+        $server_name_determination_manual->addSubItem($server_name);
     }
 
     protected function addAdminUserSection(bool $serverReachable): void
