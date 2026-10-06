@@ -886,6 +886,12 @@ class ChatController extends BaseController
                             return $title;
                         }
 
+                        foreach ($this->matrixApi->getRooms($title, false, "m.space") as $existingSpace) {
+                            if (strcasecmp($existingSpace->getName(), $title) === 0) {
+                                return $existingSpace->getId();
+                            }
+                        }
+
                         $matrixSpace = $this->matrixApi->createSpace($title);
                         if (!$matrixSpace) {
                             $this->uiUtil->sendFailure(sprintf($this->plugin->txt("matrix.room.creation.failure"), $title));
