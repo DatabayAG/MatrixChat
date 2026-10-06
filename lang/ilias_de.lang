@@ -137,6 +137,16 @@ matrix.server.url#:#Matrix Server (Synapse) URL
 matrix.server.reachable#:#Server erreichbar
 matrix.server.unreachable#:#Server nicht erreichbar
 
+matrix.server.server_name.title#:#Server-Name
+matrix.server.server_name.info#:#Der eingegebene Server-Name muss dem <strong>server_name</strong> aus der homeserver.yaml des Matrix Servers entsprechen.
+matrix.server.server_name.determination.title#:#Ermittlung des Server-Namen
+
+matrix.server.server_name.determination.auto.title#:#Automatisch
+matrix.server.server_name.determination.auto.info#:#Server-Name wird anhand der konfigurierten URL ermittelt.
+
+matrix.server.server_name.determination.manual.title#:#Manuell
+matrix.server.server_name.determination.manual.info#:#Server-Name wird manuell festgelegt.
+
 matrix.chat.room.notFound#:#Raum konnte nicht gefunden werden.
 matrix.chat.room.delete.confirm#:#Sind Sie sicher das Sie den Matrix-Chatraum löschen wollen? <br>Alle Benutzer werden aus diesem entfernt!
 matrix.chat.room.delete.success#:#Chatraum erfolgreich gelöscht
