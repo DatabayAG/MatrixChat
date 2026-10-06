@@ -17,7 +17,9 @@ declare(strict_types=1);
 
 use ILIAS\DI\Container;
 use ILIAS\Plugin\MatrixChat\Enum\PluginAsset;
+use ILIAS\Plugin\Libraries\ControllerHandler\ControllerHandler;
 use ILIAS\Plugin\MatrixChat\Api\MatrixApi;
+use ILIAS\Plugin\MatrixChat\Controller\MailTemplatesController;
 use ILIAS\Plugin\MatrixChat\Job\ProcessQueuedInvitesJob;
 use ILIAS\Plugin\MatrixChat\Model\MatrixRoom;
 use ILIAS\Plugin\MatrixChat\Model\MatrixUser;
@@ -266,6 +268,14 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
             return;
         }
 
+        $controllerHandler = new ControllerHandler(
+            "ILIAS\Plugin\MatrixChat\Controller",
+            $this->txt("general.cmd.undefined"),
+            $this->txt("general.cmd.notFound"),
+            $this->txt("general.plugin.requiredParameterMissing")
+        );
+        $mailTemplatesController = MailTemplatesController::getInstance($controllerHandler);
+
         /** @var array<string, MatrixSpace> $spaceCache */
         $spaceCache = [];
         foreach ($userIds as $userId) {
@@ -310,6 +320,17 @@ class ilMatrixChatPlugin extends ilUserInterfaceHookPlugin implements ilCronJobP
                         $this->determinePowerLevelOfParticipant($participants, $user->getId()),
                         $a_event === "update" ? $newOfflineStatus : ilObject::lookupOfflineStatus($objId)
                     );
+
+                    if ($a_event === "addParticipant") {
+                        $mailTemplatesController->sendMail(
+                            $objRefId,
+                            $user,
+                            $matrixUser
+                                ? MailTemplatesController::TEMPLATE_MATRIX_ACCOUNT
+                                : MailTemplatesController::TEMPLATE_NO_MATRIX_ACCOUNT,
+                            $user->getLanguage()
+                        );
+                    }
                 }
 
                 if ($a_event === "deleteParticipant") {
