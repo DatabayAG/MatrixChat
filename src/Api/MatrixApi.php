@@ -644,11 +644,11 @@ class MatrixApi
         try {
             $response = $this->sendRequest(
                 "/_synapse/admin/v1/rooms"
-                . ($searchTerm ? "?search_term=$searchTerm" : ""),
+                . ($searchTerm ? "?search_term=" . urlencode($searchTerm) : ""),
                 true,
                 "GET",
                 [],
-                true
+                false
             );
         } catch (MatrixApiException $ex) {
             $this->logger->error("Error occurred trying to determine spaces for autocomplete. Ex.: {$ex->getMessage()}");
@@ -659,7 +659,7 @@ class MatrixApi
         foreach ($response->getResponseData()["rooms"] as $roomData) {
             $matrixRoomId = $roomData["room_id"];
 
-            if ($type !== null && $roomData["room_type"] !== $type) {
+            if ($type !== null && ($roomData["room_type"] ?? null) !== $type) {
                 continue;
             }
 
