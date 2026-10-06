@@ -45,7 +45,16 @@ class MatrixApi
         ?ilMatrixChatPlugin $plugin = null,
         ?ilLogger $logger = null
     ) {
-        $this->client = HttpClient::create();
+        $options = [];
+        if (class_exists('\ilProxySettings') && \ilProxySettings::_getInstance()->isActive()) {
+            $proxyHost = \ilProxySettings::_getInstance()->getHost();
+            $proxyPort = \ilProxySettings::_getInstance()->getPort();
+            if ($proxyHost !== '') {
+                $options['proxy'] = $proxyHost . ($proxyPort ? ':' . $proxyPort : '');
+            }
+        }
+
+        $this->client = HttpClient::create($options);
 
         if (!$plugin) {
             $plugin = ilMatrixChatPlugin::getInstance();
