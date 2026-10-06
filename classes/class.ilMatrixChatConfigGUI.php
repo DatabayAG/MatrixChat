@@ -20,6 +20,7 @@ use ILIAS\FileUpload\FileUpload;
 use ILIAS\Plugin\Libraries\ControllerHandler\ControllerHandler;
 use ILIAS\Plugin\MatrixChat\Api\MatrixApi;
 use ILIAS\Plugin\MatrixChat\Controller\MailTemplatesController;
+use ILIAS\Plugin\MatrixChat\Enum\ServerNameDetermination;
 use ILIAS\Plugin\MatrixChat\Form\ChatPageDesignerForm;
 use ILIAS\Plugin\MatrixChat\Form\PluginConfigForm;
 use ILIAS\Plugin\MatrixChat\Utils\UiUtil;
@@ -143,6 +144,8 @@ class ilMatrixChatConfigGUI extends ilPluginConfigGUI
 
         $this->plugin->getPluginConfig()
             ->setMatrixServerUrl(rtrim($form->getInput("matrixServerUrl"), "/"))
+            ->setMatrixServerNameDetermination(ServerNameDetermination::tryFrom($form->getInput("matrixServerNameDetermination")) ?? ServerNameDetermination::AUTO)
+            ->setMatrixServerName($form->getInput("matrixServerName"))
             ->setTruncateLoginVariableLength((int) $form->getInput("truncateLoginVariableLength"))
             ->setTruncateExternalAccountVariableLength((int) $form->getInput("truncateExternalAccountVariableLength"))
             ->setExternalUserScheme($form->getInput("externalUserScheme"))

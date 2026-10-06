@@ -18,10 +18,13 @@ declare(strict_types=1);
 namespace ILIAS\Plugin\MatrixChat\Model;
 
 use ILIAS\Plugin\Libraries\IliasConfigLoader\Model\Config\SettingsConfig;
+use ILIAS\Plugin\MatrixChat\Enum\ServerNameDetermination;
 
 class PluginConfig extends SettingsConfig
 {
     private string $matrixServerUrl = "";
+    private string $matrixServerNameDetermination = "auto";
+    private string $matrixServerName = "";
     private string $matrixAdminApiToken = "";
     private string $matrixRestApiUserApiToken = "";
     private string $externalUserScheme = "";
@@ -46,18 +49,49 @@ class PluginConfig extends SettingsConfig
         return $this->matrixServerUrl;
     }
 
-    public function setMatrixServerUrl(string $matrixServerUrl): PluginConfig
+    public function setMatrixServerUrl(string $matrixServerUrl): self
     {
         $this->matrixServerUrl = $matrixServerUrl;
         return $this;
     }
+
+    public function getMatrixServerNameDetermination(): ServerNameDetermination
+    {
+        return ServerNameDetermination::tryFrom($this->matrixServerNameDetermination) ?? ServerNameDetermination::AUTO;
+    }
+
+    public function setMatrixServerNameDetermination(ServerNameDetermination $matrixServerNameDetermination): self
+    {
+        $this->matrixServerNameDetermination = $matrixServerNameDetermination->value;
+        return $this;
+    }
+
+    public function setMatrixServerName(string $matrixServerName): self
+    {
+        $this->matrixServerName = $matrixServerName;
+        return $this;
+    }
+
+    public function getMatrixServerName(): string
+    {
+        if ($this->getMatrixServerNameDetermination() === ServerNameDetermination::AUTO) {
+            if (!$this->getMatrixServerUrl()) {
+                return "";
+            }
+            $url = parse_url($this->getMatrixServerUrl());
+            return $url["host"] ?? "";
+        }
+
+        return $this->matrixServerName;
+    }
+
 
     public function getMatrixAdminApiToken(): string
     {
         return $this->matrixAdminApiToken;
     }
 
-    public function setMatrixAdminApiToken(string $matrixAdminApiToken): PluginConfig
+    public function setMatrixAdminApiToken(string $matrixAdminApiToken): self
     {
         $this->matrixAdminApiToken = $matrixAdminApiToken;
         return $this;
@@ -68,7 +102,7 @@ class PluginConfig extends SettingsConfig
         return $this->matrixRestApiUserApiToken;
     }
 
-    public function setMatrixRestApiUserApiToken(string $matrixRestApiUserApiToken): PluginConfig
+    public function setMatrixRestApiUserApiToken(string $matrixRestApiUserApiToken): self
     {
         $this->matrixRestApiUserApiToken = $matrixRestApiUserApiToken;
         return $this;
@@ -79,7 +113,7 @@ class PluginConfig extends SettingsConfig
         return $this->truncateLoginVariableLength;
     }
 
-    public function setTruncateLoginVariableLength(int $truncateLoginVariableLength): PluginConfig
+    public function setTruncateLoginVariableLength(int $truncateLoginVariableLength): self
     {
         $this->truncateLoginVariableLength = $truncateLoginVariableLength;
         return $this;
@@ -90,7 +124,7 @@ class PluginConfig extends SettingsConfig
         return $this->truncateExternalAccountVariableLength;
     }
 
-    public function setTruncateExternalAccountVariableLength(int $truncateExternalAccountVariableLength): PluginConfig
+    public function setTruncateExternalAccountVariableLength(int $truncateExternalAccountVariableLength): self
     {
         $this->truncateExternalAccountVariableLength = $truncateExternalAccountVariableLength;
         return $this;
@@ -101,7 +135,7 @@ class PluginConfig extends SettingsConfig
         return $this->externalUserScheme;
     }
 
-    public function setExternalUserScheme(string $externalUserScheme): PluginConfig
+    public function setExternalUserScheme(string $externalUserScheme): self
     {
         $this->externalUserScheme = $externalUserScheme;
         return $this;
@@ -112,7 +146,7 @@ class PluginConfig extends SettingsConfig
         return $this->localUserScheme;
     }
 
-    public function setLocalUserScheme(string $localUserScheme): PluginConfig
+    public function setLocalUserScheme(string $localUserScheme): self
     {
         $this->localUserScheme = $localUserScheme;
         return $this;
@@ -123,7 +157,7 @@ class PluginConfig extends SettingsConfig
         return $this->roomPrefix;
     }
 
-    public function setRoomPrefix(string $roomPrefix): PluginConfig
+    public function setRoomPrefix(string $roomPrefix): self
     {
         $this->roomPrefix = $roomPrefix;
         return $this;
@@ -134,7 +168,7 @@ class PluginConfig extends SettingsConfig
         return $this->externalUserOptions;
     }
 
-    public function setExternalUserOptions(array $externalUserOptions): PluginConfig
+    public function setExternalUserOptions(array $externalUserOptions): self
     {
         $this->externalUserOptions = $externalUserOptions;
         return $this;
@@ -145,7 +179,7 @@ class PluginConfig extends SettingsConfig
         return $this->localUserOptions;
     }
 
-    public function setLocalUserOptions(array $localUserOptions): PluginConfig
+    public function setLocalUserOptions(array $localUserOptions): self
     {
         $this->localUserOptions = $localUserOptions;
         return $this;
@@ -156,7 +190,7 @@ class PluginConfig extends SettingsConfig
         return $this->supportedObjectTypes;
     }
 
-    public function setSupportedObjectTypes(array $supportedObjectTypes): PluginConfig
+    public function setSupportedObjectTypes(array $supportedObjectTypes): self
     {
         $this->supportedObjectTypes = $supportedObjectTypes;
         return $this;
@@ -167,7 +201,7 @@ class PluginConfig extends SettingsConfig
         return $this->pageDesignerText;
     }
 
-    public function setPageDesignerText(string $pageDesignerText): PluginConfig
+    public function setPageDesignerText(string $pageDesignerText): self
     {
         $this->pageDesignerText = $pageDesignerText;
         return $this;
@@ -178,7 +212,7 @@ class PluginConfig extends SettingsConfig
         return $this->matrixSpaceId;
     }
 
-    public function setMatrixSpaceId(string $matrixSpaceId): PluginConfig
+    public function setMatrixSpaceId(string $matrixSpaceId): self
     {
         $this->matrixSpaceId = $matrixSpaceId;
         return $this;
@@ -189,7 +223,7 @@ class PluginConfig extends SettingsConfig
         return $this->matrixSpaceName;
     }
 
-    public function setMatrixSpaceName(string $matrixSpaceName): PluginConfig
+    public function setMatrixSpaceName(string $matrixSpaceName): self
     {
         $this->matrixSpaceName = $matrixSpaceName;
         return $this;
@@ -200,7 +234,7 @@ class PluginConfig extends SettingsConfig
         return $this->enableRoomEncryption;
     }
 
-    public function setEnableRoomEncryption(bool $enableRoomEncryption): PluginConfig
+    public function setEnableRoomEncryption(bool $enableRoomEncryption): self
     {
         $this->enableRoomEncryption = $enableRoomEncryption;
         return $this;
@@ -211,7 +245,7 @@ class PluginConfig extends SettingsConfig
         return $this->modifyParticipantPowerLevel;
     }
 
-    public function setModifyParticipantPowerLevel(bool $modifyParticipantPowerLevel): PluginConfig
+    public function setModifyParticipantPowerLevel(bool $modifyParticipantPowerLevel): self
     {
         $this->modifyParticipantPowerLevel = $modifyParticipantPowerLevel;
         return $this;
@@ -222,7 +256,7 @@ class PluginConfig extends SettingsConfig
         return $this->adminPowerLevel;
     }
 
-    public function setAdminPowerLevel(int $adminPowerLevel): PluginConfig
+    public function setAdminPowerLevel(int $adminPowerLevel): self
     {
         $this->adminPowerLevel = $adminPowerLevel;
         return $this;
@@ -233,7 +267,7 @@ class PluginConfig extends SettingsConfig
         return $this->tutorPowerLevel;
     }
 
-    public function setTutorPowerLevel(int $tutorPowerLevel): PluginConfig
+    public function setTutorPowerLevel(int $tutorPowerLevel): self
     {
         $this->tutorPowerLevel = $tutorPowerLevel;
         return $this;
@@ -244,18 +278,9 @@ class PluginConfig extends SettingsConfig
         return $this->memberPowerLevel;
     }
 
-    public function setMemberPowerLevel(int $memberPowerLevel): PluginConfig
+    public function setMemberPowerLevel(int $memberPowerLevel): self
     {
         $this->memberPowerLevel = $memberPowerLevel;
         return $this;
-    }
-
-    public function getMatrixServerName(): string
-    {
-        if (!$this->getMatrixServerUrl()) {
-            return "";
-        }
-        $url = parse_url($this->getMatrixServerUrl());
-        return $url["host"] ?? "";
     }
 }
