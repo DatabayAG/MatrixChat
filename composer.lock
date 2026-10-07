@@ -41,11 +41,11 @@
         },
         {
             "name": "mbeym/ilias-config-loader",
-            "version": "9.0.4",
+            "version": "9.1.0",
             "source": {
                 "type": "git",
                 "url": "https://public-deploy:AN-vXiUY9q8e5ZKetPAw@gitlab.databay.de/mbeym/IliasConfigLoader",
-                "reference": "823df1e4cc1fc240c313757350e8f7fed259e36c"
+                "reference": "f341d82657eea79dcb0deddf167b3b6cfe6f5e59"
             },
             "require": {
                 "php": ">=8.1 <8.3"
@@ -73,7 +73,7 @@
                 }
             ],
             "description": "A utility for easily loading plugin config data from and to object, ",
-            "time": "2025-05-09T12:33:29+00:00"
+            "time": "2025-11-26T12:20:56+00:00"
         },
         {
             "name": "mbeym/user-field-loader",
