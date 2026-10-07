@@ -26,6 +26,7 @@ use ILIAS\Plugin\MatrixChat\Model\PluginConfig;
 use ILIAS\Plugin\MatrixChat\Model\Room\MatrixSpace;
 use ilLogger;
 use ilMatrixChatPlugin;
+use ilProxySettings;
 use JsonException;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -45,7 +46,15 @@ class MatrixApi
         ?ilMatrixChatPlugin $plugin = null,
         ?ilLogger $logger = null
     ) {
-        $this->client = HttpClient::create();
+        $options = [];
+        if (ilProxySettings::_getInstance()->isActive()) {
+            $proxy_host = ilProxySettings::_getInstance()->getHost();
+            $proxy_port = ilProxySettings::_getInstance()->getPort();
+            if ($proxy_host) {
+                $options["proxy"] = $proxy_host . ($proxy_port ? ":$proxy_port" : '');
+            }
+        }
+        $this->client = HttpClient::create($options);
 
         if (!$plugin) {
             $plugin = ilMatrixChatPlugin::getInstance();
