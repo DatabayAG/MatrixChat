@@ -49,6 +49,11 @@ use ILIAS\Refinery\Factory;
  * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilContainerNewsSettingsGUI
  * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilCourseRegistrationGUI
  * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilObjectCustomUserFieldsGUI
+ * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilBookingGatewayGUI
+ * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilCourseContentGUI
+ * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilBadgeManagementGUI
+ * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilContainerSkillGUI
+ * @ilCtrl_Calls       ilMatrixChatUIHookGUI: ilLOEditorGUI
  */
 class ilMatrixChatUIHookGUI extends ilUIHookPluginGUI
 {
