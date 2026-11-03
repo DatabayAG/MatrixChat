@@ -99,6 +99,18 @@ abstract class BaseUserConfigController extends BaseController
         }
     }
 
+
+    protected function checkPermission(): void
+    {
+        if (
+            $this->user->isAnonymous()
+            || !$this->user->getActive()
+        ) {
+            $this->uiUtil->sendFailure($this->lng->txt("permission_denied"));
+            $this->plugin->redirectToHome();
+        }
+    }
+
     public function processUserRoomAddQueue(ilObjUser $user): ?string
     {
         $userConfig = (new UserConfig($user))->load();
