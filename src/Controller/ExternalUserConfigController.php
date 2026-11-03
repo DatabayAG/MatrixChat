@@ -26,6 +26,7 @@ class ExternalUserConfigController extends BaseUserConfigController
 {
     public function showUserChatConfig(?BaseUserConfigForm $form = null): void
     {
+        $this->checkPermission();
         $this->verifyCorrectController();
         self::buildPermanentLink(true);
 
@@ -57,6 +58,7 @@ class ExternalUserConfigController extends BaseUserConfigController
 
     public function saveUserChatConfig(): void
     {
+        $this->checkPermission();
         $this->verifyCorrectController();
 
         $form = new ExternalUserConfigForm(

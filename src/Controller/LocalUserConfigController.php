@@ -30,6 +30,7 @@ class LocalUserConfigController extends BaseUserConfigController
 
     public function showUserChatConfig(?BaseUserConfigForm $form = null): void
     {
+        $this->checkPermission();
         $this->verifyCorrectController();
         self::buildPermanentLink(true);
 
@@ -61,6 +62,7 @@ class LocalUserConfigController extends BaseUserConfigController
 
     public function saveUserChatConfig(): void
     {
+        $this->checkPermission();
         $this->verifyCorrectController();
 
         $form = new LocalUserConfigForm(
@@ -114,6 +116,7 @@ class LocalUserConfigController extends BaseUserConfigController
 
     public function showPasswordChange(?LocalUserPasswordChangeForm $form = null): void
     {
+        $this->checkPermission();
         $this->verifyCorrectController();
 
         $this->injectTabs(self::TAB_USER_CHAT_CONFIG);
@@ -128,6 +131,7 @@ class LocalUserConfigController extends BaseUserConfigController
 
     public function savePasswordChange(): void
     {
+        $this->checkPermission();
         $this->verifyCorrectController();
 
         $form = new LocalUserPasswordChangeForm($this, $this->userConfig);
